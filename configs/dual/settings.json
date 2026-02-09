@@ -49,8 +49,8 @@
       "Glob(*)",
       "Grep(*)",
       "Task(*)",
-      "WebFetch(*)",
-      "WebSearch(*)"
+      "WebFetch(domain:*)",
+      "WebSearch"
     ],
     "deny": [
       "Bash(rm -rf /)",
