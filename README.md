@@ -43,10 +43,23 @@ No Vibeship, no Mind MCP, no Spawner. Pure Claude Code + file system.
 
 ## Quick Start
 
-### 1. Setup (One-time)
+### One-Line Install
 
 ```bash
-# Clone the repo
+# Default (CLI mode)
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project
+
+# Choose your mode
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode ide
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode omni
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode dual
+```
+
+This will clone, configure, and guide you through setup.
+
+### Manual Setup
+
+```bash
 git clone https://github.com/w-3-art/genius-team.git my-project
 cd my-project
 
