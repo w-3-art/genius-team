@@ -3,6 +3,22 @@ name: genius-architect
 description: Technical architecture and task planning skill. Creates project structure, technology decisions, and task list in .claude/plan.md (SINGLE SOURCE OF TRUTH). Use for "architecture", "plan the build", "create tasks", "technical design", "system design", "break it down".
 ---
 
+## ⚠️ MANDATORY ARTIFACT
+
+**This skill MUST generate:**
+- Markdown: `ARCHITECTURE.md`
+- HTML Playground: `.genius/outputs/ARCHITECTURE.html`
+
+**Before transitioning to next skill:**
+1. Verify ARCHITECTURE.md exists
+2. Verify HTML playground exists
+3. Update state.json checkpoint
+4. Announce transition
+
+**If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
 # Genius Architect v9.0 — The Master Blueprint
 
 **Breaking down the vision into executable tasks for Agent Teams.**
@@ -33,6 +49,71 @@ Append to `.genius/memory/decisions.json`:
 - `SPECIFICATIONS.xml` from genius-specs (approved)
 - `design-config.json` from genius-designer
 - `INTEGRATIONS.md` from genius-integration-guide (optional)
+
+---
+
+## Playground Integration
+
+### Architecture Explorer
+Use the interactive playground at `.genius/outputs/ARCHITECTURE.html` for visual architecture design.
+
+**Template:** `playgrounds/templates/architecture-explorer.html`
+
+### Workflow
+1. **Design initial architecture** based on specifications
+2. **Generate playground** with initial components:
+   ```bash
+   cp playgrounds/templates/architecture-explorer.html .genius/outputs/ARCHITECTURE.html
+   ```
+3. **User explores and adjusts:**
+   - Drag & drop nodes onto the canvas
+   - Create visual connections between components
+   - Configure each node (technology, endpoints, env vars)
+   - Apply presets for quick starts
+4. **Copy prompt output** — the validated architecture in markdown
+
+### Node Types
+| Type | Icon | Description |
+|------|------|-------------|
+| `frontend` | 🖥️ | Web clients, SPAs, SSR apps |
+| `api` | ⚙️ | Backend servers, API gateways |
+| `database` | 🗄️ | Databases, data stores |
+| `external` | 🔌 | Third-party services, APIs |
+| `queue` | 📬 | Message queues, event buses |
+| `cache` | ⚡ | Cache layers, KV stores |
+
+### Node Data Format
+```javascript
+{
+  id: number,        // Unique identifier
+  type: string,      // frontend | api | database | external | queue | cache
+  name: string,      // Display name (e.g., "Web App")
+  tech: string,      // Technology (e.g., "Next.js", "PostgreSQL")
+  endpoint: string,  // API path or URL (e.g., "/api/v1")
+  port: number,      // Service port (e.g., 3000)
+  envVars: string,   // Environment variables (KEY=value format)
+  notes: string,     // Additional notes
+  x: number,         // Canvas X position
+  y: number          // Canvas Y position
+}
+```
+
+### Presets Available
+- **Monolith:** Frontend → Backend → Database (simple stack)
+- **Microservices:** Gateway + multiple services + databases + event bus
+- **Serverless:** SPA + Lambda functions + DynamoDB + Auth0 + Edge Cache
+- **JAMstack:** Static site + Edge functions + Headless CMS + CDN
+
+### Prompt Output
+The playground generates a markdown specification with:
+- Component inventory grouped by type
+- Technology stack per component
+- Endpoints and ports
+- Environment variable keys
+- Data flow diagram (connections)
+- Tech stack summary
+
+Use this output as input for `.claude/plan.md` task generation.
 
 ---
 

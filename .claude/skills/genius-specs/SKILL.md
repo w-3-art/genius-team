@@ -3,6 +3,22 @@ name: genius-specs
 description: Transforms discovery findings into formal specifications with user stories, use cases, business rules, and acceptance criteria. REQUIRES USER APPROVAL before continuing to design phase. Use for "specs", "specifications", "requirements", "user stories", "acceptance criteria", "write specs".
 ---
 
+## ⚠️ MANDATORY ARTIFACT
+
+**This skill MUST generate:**
+- XML: `.claude/discovery/SPECIFICATIONS.xml`
+- HTML Playground: `.genius/outputs/SPECIFICATIONS.html`
+
+**Before transitioning to next skill:**
+1. Verify XML exists
+2. Verify HTML playground exists
+3. Update state.json checkpoint
+4. Announce transition
+
+**If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
 # Genius Specs v9.0 — Requirements Architect
 
 **Transforming discoveries into crystal-clear specifications.**
@@ -84,6 +100,88 @@ Ready to move to the design phase?
 --> "yes" or "approved" to proceed
 --> "change [aspect]" to revise
 ```
+
+---
+
+## Playground Integration
+
+### Overview
+The User Journey Builder playground provides an interactive way for users to:
+- **Reorder priorities** via drag & drop
+- **Adjust scope** (MVP / V1 / Full)
+- **Configure sprint capacity** and duration
+- **Validate the prioritized backlog** before proceeding
+
+### Updated Flow
+
+1. **Generate user stories** from the discovery phase
+2. **Create `.genius/outputs/SPECIFICATIONS.html`** with stories pre-injected
+3. **Open the playground** (via canvas) for user interaction
+4. **User validates** the final backlog → output prompt becomes the approved spec
+
+### Story Format for Injection
+
+When injecting stories into the playground, use this JavaScript structure:
+
+```javascript
+{
+  id: number,           // Unique identifier (timestamp or sequential)
+  title: string,        // User story title (e.g., "User can sign up with email")
+  priority: "must" | "should" | "could" | "wont",  // MoSCoW priority
+  estimation: "S" | "M" | "L" | "XL",              // T-shirt sizing
+  phase: "MVP" | "V1" | "Full"                     // Delivery phase
+}
+```
+
+**Estimation Points:**
+- `S` = 1 point
+- `M` = 3 points
+- `L` = 5 points
+- `XL` = 8 points
+
+**Priority Mapping:**
+- `must` → MVP (core features, must ship)
+- `should` → V1 (important but not blocking)
+- `could` → Full (nice to have)
+- `wont` → Full (parking lot / future)
+
+### Creating SPECIFICATIONS.html
+
+1. Copy template from `playgrounds/templates/user-journey-builder.html`
+2. Inject stories into the `state.stories` array in the `<script>` section
+3. Save to `.genius/outputs/SPECIFICATIONS.html`
+
+**Example injection:**
+```javascript
+// Replace the loadFromLocalStorage() call with pre-populated data
+document.addEventListener('DOMContentLoaded', () => {
+    state.stories = [
+        { id: 1, title: "User can register with email", priority: "must", estimate: "M", scope: "mvp" },
+        { id: 2, title: "User can login/logout", priority: "must", estimate: "S", scope: "mvp" },
+        { id: 3, title: "User can reset password", priority: "should", estimate: "M", scope: "v1" },
+        // ... more stories from discovery
+    ];
+    state.projectName = "Project Name from Discovery";
+    updateAll();
+});
+```
+
+### Opening the Playground
+
+Use canvas to present the generated HTML:
+```
+canvas:present .genius/outputs/SPECIFICATIONS.html
+```
+
+### Output: Validated Backlog
+
+The user copies the **Generated Prompt** from the playground, which contains:
+- Sprint planning configuration
+- Prioritized backlog by MoSCoW categories
+- Implementation order (user-defined via drag & drop)
+- Estimated sprints and timeline
+
+This validated output becomes the authoritative specification for the design and architecture phases.
 
 ---
 

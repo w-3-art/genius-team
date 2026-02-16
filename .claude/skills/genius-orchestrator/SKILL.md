@@ -27,6 +27,22 @@ hooks:
       once: true
 ---
 
+## ⚠️ MANDATORY ARTIFACT
+
+**This skill MUST generate:**
+- Plan: `.claude/plan.md`
+- HTML Playground: `.genius/outputs/PROGRESS.html`
+
+**Before transitioning to next skill:**
+1. Verify .claude/plan.md exists
+2. Verify HTML playground exists
+3. Update state.json checkpoint
+4. Announce transition
+
+**If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
 # Genius Orchestrator v9.0 — Agent Teams Execution Engine
 
 **Build while you sleep. Agent Teams. Mandatory QA. No pauses.**
@@ -65,6 +81,126 @@ Append to `.genius/memory/errors.json`:
 Append to `.genius/memory/decisions.json`:
 ```json
 {"id": "d-XXX", "decision": "what", "reason": "why", "timestamp": "ISO-date", "tags": ["execution"]}
+```
+
+---
+
+## Playground Integration
+
+### Progress Dashboard
+The orchestrator maintains a **real-time visual dashboard** for sprint progress tracking.
+
+**Template:** `playgrounds/templates/progress-dashboard.html`
+**Live Output:** `.genius/outputs/PROGRESS.html`
+**State File:** `.genius/state.json`
+
+### State Structure (`.genius/state.json`)
+```json
+{
+  "sprint": {
+    "name": "Sprint Name",
+    "startedAt": "ISO-date",
+    "eta": "ISO-date"
+  },
+  "tasks": [
+    {
+      "id": "t-001",
+      "title": "Task description",
+      "status": "todo|inprogress|review|done",
+      "agent": "dev|qa|debugger|reviewer",
+      "priority": "high|medium|low",
+      "estimated": 4,
+      "actual": 2.5,
+      "startDay": 0,
+      "completedAt": null
+    }
+  ],
+  "agents": [
+    {
+      "id": "dev",
+      "name": "Dev Agent",
+      "status": "busy|online|offline",
+      "currentTask": "t-001"
+    }
+  ],
+  "history": [
+    {"taskId": "t-001", "action": "completed", "timestamp": "ISO-date"}
+  ],
+  "stats": {
+    "totalTasks": 10,
+    "completed": 5,
+    "inProgress": 2,
+    "inReview": 1,
+    "todo": 2,
+    "progressPercent": 50,
+    "totalEstimatedHours": 40,
+    "totalActualHours": 22
+  }
+}
+```
+
+### Dashboard Features
+The playground visualizes:
+- **📋 Kanban View** — Tasks organized by status columns (TODO, In Progress, Review, Done)
+- **📊 Gantt View** — Timeline visualization with task bars and dependencies
+- **👥 Agent Status** — Each agent's current task and availability
+- **📈 Progress Bar** — Global completion percentage with ETA
+- **📜 Completion History** — Recent task completions with timestamps
+- **🎯 Filters** — Filter by priority (high/medium/low) or by agent
+
+### Update Protocol (MANDATORY)
+
+**On Sprint Start:**
+```bash
+# Initialize state
+mkdir -p .genius/outputs
+cp playgrounds/templates/progress-dashboard.html .genius/outputs/PROGRESS.html
+echo '{"sprint":{},"tasks":[],"agents":[],"history":[],"stats":{}}' > .genius/state.json
+```
+
+**On Task Status Change:**
+Update `.genius/state.json` and regenerate PROGRESS.html:
+```bash
+# After updating state.json, inject state into HTML
+node -e "
+const fs = require('fs');
+const state = JSON.parse(fs.readFileSync('.genius/state.json', 'utf8'));
+let html = fs.readFileSync('.genius/outputs/PROGRESS.html', 'utf8');
+html = html.replace(/const state = \{[\s\S]*?\};/, 'const state = ' + JSON.stringify(state, null, 2) + ';');
+fs.writeFileSync('.genius/outputs/PROGRESS.html', html);
+"
+```
+
+**When to Update:**
+- `[ ]` → `[~]` (task started) → Update agent status to "busy", task to "inprogress"
+- `[~]` → QA pass → Update task to "review"  
+- QA fail → spawn debugger → Update task to "inprogress", add to history
+- `[~]` → `[x]` (task done) → Update task to "done", add completedAt, update stats
+- `[~]` → `[!]` (task blocked) → Update task status, log reason
+
+**Every 5 Tasks or On Completion:**
+The prompt output panel auto-generates a sprint summary containing:
+- Progress percentage and ETA
+- Status breakdown by column
+- Agent workload summary
+- Blockers and risks
+
+### Sprint Summary Output
+When execution completes, copy the prompt output from the dashboard which includes:
+```markdown
+# 📊 Sprint Progress Report
+
+## Overview
+- **Progress:** X% complete (Y/Z tasks)
+- **ETA:** N working days
+- **Total Estimated:** Xh
+- **Total Spent:** Yh
+
+## Status Breakdown
+[... detailed breakdown ...]
+
+## Agent Status
+[... agent workload ...]
 ```
 
 ---

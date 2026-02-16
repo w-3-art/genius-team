@@ -1,6 +1,6 @@
 ---
 name: genius-updater
-description: Detects Claude Code version changes and proposes repo updates. Runs at SessionStart to compare versions, fetches changelogs, and suggests modifications. Use for "check for updates", "new claude code version", "update check".
+description: Detects Claude Code AND Genius Team version changes. Proposes updates for both. Use for "check for updates", "update check", "upgrade genius team".
 user-invocable: true
 allowed-tools:
   - Read(*)
@@ -13,11 +13,12 @@ allowed-tools:
   - Bash(claude *)
   - Bash(cat *)
   - Bash(echo *)
+  - Bash(curl *)
 ---
 
-# Genius Updater v9.0 — Self-Update Protocol
+# Genius Updater v10.0 — Self-Update Protocol
 
-**Keep your repo in sync with Claude Code evolution.**
+**Keep your repo in sync with Claude Code AND Genius Team evolution.**
 
 ## Memory Integration
 
@@ -27,13 +28,13 @@ Read `@.genius/memory/BRIEFING.md` for context.
 ### On New Version Detected
 Append to `.genius/memory/decisions.json`:
 ```json
-{"id": "d-XXX", "decision": "CLAUDE CODE UPDATE: [old] → [new]", "reason": "new version detected", "timestamp": "ISO-date", "tags": ["updater", "version"]}
+{"id": "d-XXX", "decision": "UPDATE DETECTED: [component] [old] → [new]", "reason": "new version detected", "timestamp": "ISO-date", "tags": ["updater", "version"]}
 ```
 
 ### On Update Applied
 Append to `.genius/memory/decisions.json`:
 ```json
-{"id": "d-XXX", "decision": "REPO UPDATED for Claude Code [version]: [changes]", "reason": "user approved", "timestamp": "ISO-date", "tags": ["updater", "applied"]}
+{"id": "d-XXX", "decision": "UPDATED [component] to [version]: [changes]", "reason": "user approved", "timestamp": "ISO-date", "tags": ["updater", "applied"]}
 ```
 
 ---
@@ -42,13 +43,30 @@ Append to `.genius/memory/decisions.json`:
 
 ### Automatic Detection (SessionStart)
 
-The SessionStart hook compares:
+The SessionStart hook checks TWO things:
+
+#### 1. Claude Code Version
+Compares:
 - **Stored version**: `.genius/claude-code-version.txt`
 - **Current version**: `claude --version`
 
-If they differ, the hook outputs a `<version_change>` tag that prompts you to run `/update-check`.
+If they differ, outputs a `<version_change>` tag.
 
-### Manual Check: `/update-check`
+#### 2. Genius Team Version
+```bash
+# Check Genius Team version
+LOCAL_GT=$(cat VERSION 2>/dev/null || echo "9.0.0")
+REMOTE_GT=$(curl -sfL https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION 2>/dev/null || echo "$LOCAL_GT")
+if [ "$LOCAL_GT" != "$REMOTE_GT" ]; then
+  echo "<genius_team_update>New Genius Team version: $LOCAL_GT → $REMOTE_GT. Run /genius-upgrade</genius_team_update>"
+fi
+```
+
+---
+
+## Manual Check: `/update-check`
+
+### Step 1: Check Claude Code
 
 1. Run `claude --version` and compare with stored version
 2. If new version detected:
@@ -58,32 +76,86 @@ If they differ, the hook outputs a `<version_change>` tag that prompts you to ru
      - Community posts
    - Analyze what's new (new tools, syntax changes, capabilities)
    - Propose specific repo modifications
-3. Present to user:
+
+### Step 2: Check Genius Team
+
+1. Read local `VERSION` file (or default to current installed version)
+2. Fetch remote version:
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION
+   ```
+3. If versions differ:
+   - Fetch `CHANGELOG.md` from GitHub to see what's new
+   - Propose running `/genius-upgrade`
+
+### Step 3: Present Combined Results
 
 ```
-🔄 Nouvelle version Claude Code détectée!
+🔄 Update Check
 
-Version: {old} → {new}
+Claude Code: v1.0.50 ✅ (à jour)
 
+Genius Team: v9.0.0 → v10.0.0 disponible! 🆕
 Nouveautés:
-- [feature 1]
-- [feature 2]
-- [feature 3]
+- 12 playgrounds interactifs
+- Système anti-dérive
+- Mémoire persistante
 
-Modifications proposées:
-1. [change 1] — [why]
-2. [change 2] — [why]
-3. [change 3] — [why]
-
-Souhaites-tu que je procède? (oui/non)
+Exécuter /genius-upgrade pour mettre à jour.
 ```
 
-4. **Only apply changes after explicit approval**
-5. Update `.genius/claude-code-version.txt` after successful update
+If both are up-to-date:
+```
+🔄 Update Check
+
+Claude Code: v1.0.50 ✅ (à jour)
+Genius Team: v10.0.0 ✅ (à jour)
+
+Tout est à jour! 🎉
+```
 
 ---
 
-## What Gets Updated
+## Genius Team Updates
+
+### Version Detection
+
+**Local version sources (in priority order):**
+1. `VERSION` file in repo root
+2. `.genius/state.json` → `version` field
+3. Default: "9.0.0" (legacy)
+
+**Remote version:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION
+```
+
+### Fetching Changelog
+
+When new version detected, fetch what's new:
+```bash
+curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/CHANGELOG.md
+```
+
+Parse the latest version section to extract:
+- New features
+- Breaking changes
+- Migration notes
+
+### Upgrade Process: `/genius-upgrade`
+
+The upgrade command:
+1. Backs up current configuration
+2. Fetches latest from GitHub
+3. Runs migration scripts if needed
+4. Updates `VERSION` file
+5. Logs to `decisions.json`
+
+---
+
+## Claude Code Updates
+
+### What Gets Updated
 
 Depending on the changelog, the updater may propose changes to:
 
@@ -93,9 +165,7 @@ Depending on the changelog, the updater may propose changes to:
 - Orchestrator — New Task() features, Agent Teams improvements
 - Memory scripts — New hook types for extraction
 
----
-
-## Version File
+### Version File
 
 `.genius/claude-code-version.txt` contains the last known Claude Code version.
 Format: single line with the version string from `claude --version`.
@@ -118,4 +188,4 @@ Format: single line with the version string from `claude --version`.
 Provides: New features that could improve skills
 
 ### From SessionStart hook
-Triggered: When version mismatch detected
+Triggered: When version mismatch detected (Claude Code or Genius Team)

@@ -1,23 +1,36 @@
 # Changelog
 
-## [9.0.0] - 2026-02-09
+## [10.0.0] - 2026-02-16
 
 ### Added
-- Agent Teams integration (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS)
-- File-based memory system (.genius/memory/)
-- 4 operating modes: CLI, IDE, Omni, Dual
-- 21+ specialized skills
-- Mandatory QA loop (dev → qa-micro → fix → re-qa)
-- Save-token mode for cost optimization
-- Self-update detection (genius-updater)
-- Mode-specific CLAUDE.md and configurations
+- 🎮 12 interactive HTML playgrounds (one per skill)
+  - Project Canvas, Market Simulator, User Journey Builder, Design System Builder
+  - GTM Simulator, Copy A/B Tester, Stack Configurator, Architecture Explorer
+  - Progress Dashboard, Test Coverage Map, Risk Matrix, Deploy Checklist
+- 🛡️ Anti-drift guard system
+  - GENIUS_GUARD.md with absolute rules
+  - /guard-check and /guard-recover commands
+  - Blocking handoffs if artifacts missing
+  - PreToolUse hook detects code written outside genius-dev
+- 🧠 Persistent memory system
+  - memory-capture.sh for structured event capture
+  - memory-rollup.sh for daily summaries
+  - memory-recover.sh for reconstruction
+  - /memory-status, /memory-add, /memory-search, /memory-recover, /memory-forget commands
+- 🔄 Self-update system
+  - /genius-upgrade command
+  - scripts/upgrade.sh for v9→v10 migration
+  - VERSION file for version detection
+  - genius-updater now checks Genius Team version (not just Claude Code)
 
 ### Changed
-- Complete rewrite from v8 to v9
-- Removed all external MCP dependencies (Vibeship, Mind)
-- Memory system: external MCPs → file-based JSON + BRIEFING.md
+- All 12 skills now have MANDATORY ARTIFACT sections
+- settings.json hooks enriched for memory capture
+- BRIEFING.md now includes Recent Events, Key Decisions, Milestones
+- Router (genius-team skill) now has blocking handoffs
 
-### Removed
-- Vibeship dependency
-- Mind MCP dependency
-- External service requirements
+## [9.0.0] - 2026-02-08
+- Initial open source release
+- Agent Teams support
+- File-based memory system
+- 4 operating modes (CLI, IDE, Omni, Dual)

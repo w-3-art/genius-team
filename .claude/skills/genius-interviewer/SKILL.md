@@ -14,6 +14,22 @@ hooks:
       once: true
 ---
 
+## ⚠️ MANDATORY ARTIFACT
+
+**This skill MUST generate:**
+- XML: `.claude/discovery/DISCOVERY.xml`
+- HTML Playground: `.genius/outputs/DISCOVERY.html`
+
+**Before transitioning to next skill:**
+1. Verify XML exists
+2. Verify HTML playground exists
+3. Update state.json checkpoint
+4. Announce transition
+
+**If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
 # Genius Interviewer v9.0 — The Discovery Master
 
 **Understanding your vision before we build.**
@@ -117,6 +133,121 @@ Generate `.claude/discovery/DISCOVERY.xml` with full structured output including
 - Risks
 - Open questions
 - Next steps → genius-product-market-analyst
+
+---
+
+## Playground Integration
+
+### State Collection During Interview
+
+While conducting the interview, maintain an internal state object with all discoveries:
+
+```javascript
+// Mental model - collect this data throughout the interview
+interviewState = {
+    projectName: "",      // Layer 2-5 answers
+    problem: "",          // Layer 1 - core pain
+    solution: "",         // How we solve it
+    users: "",            // Target personas
+    value: "",            // Unique value proposition
+    features: "",         // Key features (bullet list)
+    notes: {
+        problem: "",      // Deep problem insights
+        solution: "",     // Technical approach notes
+        users: "",        // User research findings
+        value: "",        // Competitive analysis
+        features: ""      // Priority/roadmap notes
+    },
+    tags: {
+        problem: [],      // e.g., ["Urgent", "Expensive"]
+        solution: [],     // e.g., ["AI-powered", "Automated"]
+        users: [],        // e.g., ["B2B", "Enterprise"]
+        value: [],        // e.g., ["Faster", "Better UX"]
+        features: []      // e.g., ["MVP", "V2"]
+    }
+}
+```
+
+### Generate Interactive Canvas
+
+After the interview is complete, generate the visual playground:
+
+```bash
+# 1. Ensure output directory exists
+mkdir -p .genius/outputs
+
+# 2. Copy the template
+cp playgrounds/templates/project-canvas.html .genius/outputs/DISCOVERY.html
+
+# 3. Inject the interview data into the HTML
+# Use sed or inline script to populate the state object
+# The template has a `state` object in JavaScript that we populate
+
+# 4. Open the playground for user validation
+open .genius/outputs/DISCOVERY.html
+```
+
+### Data Injection
+
+Inject collected data by replacing the empty state initialization in the HTML:
+
+```javascript
+// Find and replace the state initialization with populated data:
+const state = {
+    projectName: 'YOUR_PROJECT_NAME',
+    problem: 'YOUR_PROBLEM_STATEMENT',
+    solution: 'YOUR_SOLUTION',
+    users: 'YOUR_TARGET_USERS',
+    value: 'YOUR_VALUE_PROP',
+    features: 'YOUR_FEATURES_LIST',
+    notes: {
+        problem: 'DEEP_PROBLEM_NOTES',
+        solution: 'TECHNICAL_NOTES',
+        users: 'USER_RESEARCH',
+        value: 'COMPETITIVE_ANALYSIS',
+        features: 'PRIORITY_NOTES'
+    },
+    tags: {
+        problem: ['tag1', 'tag2'],
+        solution: ['tag1'],
+        users: ['B2B'],
+        value: ['Faster'],
+        features: ['MVP']
+    }
+};
+```
+
+Also populate the textarea values using JavaScript at the end of init():
+```javascript
+// Add after state injection - populate form fields
+document.getElementById('project-name').value = state.projectName;
+document.getElementById('problem').value = state.problem;
+document.getElementById('solution').value = state.solution;
+document.getElementById('users').value = state.users;
+document.getElementById('value').value = state.value;
+document.getElementById('features').value = state.features;
+document.getElementById('note-problem').value = state.notes.problem;
+document.getElementById('note-solution').value = state.notes.solution;
+document.getElementById('note-users').value = state.notes.users;
+document.getElementById('note-value').value = state.notes.value;
+document.getElementById('note-features').value = state.notes.features;
+updateAll();
+```
+
+### User Validation Flow
+
+1. **Open playground**: User sees the visual mind map with all interview data
+2. **Adjust if needed**: User can drag nodes, edit text, toggle tags
+3. **Copy Summary**: User clicks "📋 Copy Summary" to get the structured output
+4. **Proceed**: The copied prompt output becomes input for `genius-product-market-analyst`
+
+### Dual Output (Compatibility)
+
+Always generate BOTH outputs:
+1. `.genius/outputs/DISCOVERY.html` — Interactive playground for visual validation
+2. `.claude/discovery/DISCOVERY.xml` — Structured XML for agent handoffs
+
+The **prompt output from the playground** (what user copies) is the canonical input for the next phase.
 
 ---
 

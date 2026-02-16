@@ -33,6 +33,19 @@ nav .nav-links a:hover{color:var(--text)}
 .nav-cta:hover{opacity:.9}
 .mobile-toggle{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer}
 
+/* UPDATE BANNER */
+.update-banner{position:fixed;top:60px;left:0;right:0;z-index:99;background:linear-gradient(135deg,#7c3aed 0%,#3b82f6 50%,#06b6d4 100%);padding:.75rem 1rem;display:flex;justify-content:center;transition:transform .3s ease,opacity .3s ease}
+.update-banner.hidden{transform:translateY(-100%);opacity:0;pointer-events:none}
+.banner-content{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center;max-width:1200px}
+.banner-badge{background:rgba(255,255,255,.2);padding:.25rem .6rem;border-radius:6px;font-size:.7rem;font-weight:700;color:#fff}
+.banner-text{color:#fff;font-size:.9rem}
+.banner-features{color:rgba(255,255,255,.85);font-size:.8rem;display:none}
+.banner-link{color:#fff;font-weight:600;font-size:.85rem;text-decoration:underline;text-underline-offset:2px}
+.banner-link:hover{opacity:.9}
+.banner-close{background:none;border:none;color:#fff;font-size:1.25rem;cursor:pointer;padding:0 .5rem;opacity:.8;transition:opacity .2s}
+.banner-close:hover{opacity:1}
+@media(min-width:768px){.banner-features{display:inline}}
+
 /* SECTIONS */
 section{padding:6rem 2rem}
 .container{max-width:1100px;margin:0 auto}
@@ -41,7 +54,7 @@ section{padding:6rem 2rem}
 .section-sub{color:var(--text2);font-size:1.05rem;max-width:650px;margin-bottom:3rem}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding-top:100px}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding-top:140px}
 .hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(124,58,237,.15) 0%,rgba(59,130,246,.08) 40%,transparent 70%);pointer-events:none}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:100px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);font-size:.8rem;color:var(--purple);font-weight:500;margin-bottom:2rem}
 .hero h1{font-size:clamp(2.5rem,7vw,4.5rem);font-weight:800;line-height:1.05;margin-bottom:1.5rem;letter-spacing:-.02em}
@@ -90,7 +103,7 @@ section{padding:6rem 2rem}
 .prereq-title{font-weight:600;font-size:1rem;margin-bottom:1rem;color:var(--text)}
 .prereq-link{display:inline-block;color:var(--accent);font-size:.9rem;font-weight:500;text-decoration:none;transition:opacity .2s}
 .prereq-link:hover{opacity:.8;text-decoration:underline}
-.mode-tabs{display:flex;gap:.5rem;margin-bottom:1rem}
+.mode-tabs{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
 .mode-tab{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text3);padding:.4rem 1.2rem;border-radius:8px;font-size:.8rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all .2s}
 .mode-tab:hover{background:rgba(255,255,255,.08);color:var(--text)}
 .mode-tab.active{background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(59,130,246,.3));border-color:rgba(139,92,246,.5);color:#fff}
@@ -101,6 +114,27 @@ section{padding:6rem 2rem}
 .code-block .comment{color:#8b949e}
 .code-block .string{color:#a5d6ff}
 .code-block .flag{color:#d2a8ff}
+
+/* PROJECT NAME INPUT */
+.project-name-input{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem}
+.project-name-input label{display:block;font-size:.9rem;font-weight:600;margin-bottom:.75rem;color:var(--text)}
+.project-name-input input{width:100%;max-width:300px;padding:.75rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.9rem;transition:border-color .2s}
+.project-name-input input:focus{outline:none;border-color:var(--purple)}
+.project-name-input input::placeholder{color:var(--text3)}
+
+/* STEP INDICATOR */
+.step-indicator{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem}
+.step-number{width:28px;height:28px;border-radius:50%;background:var(--grad);color:#fff;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step-title{font-size:1rem;font-weight:600;color:var(--text)}
+
+/* COLLAPSIBLE */
+.collapsible{margin-top:1.5rem}
+.collapsible-toggle{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.75rem 1rem;width:100%;text-align:left;color:var(--text2);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s}
+.collapsible-toggle:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.collapsible-toggle .arrow{transition:transform .2s}
+.collapsible-toggle.open .arrow{transform:rotate(180deg)}
+.collapsible-content{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.collapsible-content.open{max-height:500px}
 
 /* SKILLS GRID */
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
@@ -126,6 +160,62 @@ section{padding:6rem 2rem}
 .phase-label{font-size:.8rem;font-weight:600;padding:.4rem 1rem;border-radius:8px;background:rgba(124,58,237,.1);color:#a78bfa;min-width:160px;text-align:center}
 .phase-arrow{color:var(--text3)}
 
+/* UPGRADE SECTION */
+.upgrade-section{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(59,130,246,.05))}
+.whats-new{margin-top:2rem;padding:1.5rem;background:var(--bg);border-radius:var(--radius);border:1px solid rgba(255,255,255,.06)}
+.whats-new h4{font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
+.whats-new ul{list-style:none}
+.whats-new li{padding:.5rem 0;color:var(--text2);font-size:.9rem;display:flex;align-items:flex-start;gap:.5rem}
+.whats-new li strong{color:var(--text)}
+
+/* FAQ SECTION */
+.faq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem}
+.faq-item{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:1.5rem;transition:all .3s}
+.faq-item:hover{border-color:rgba(124,58,237,.25);transform:translateY(-2px)}
+.faq-item h4{font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text)}
+.faq-item p{color:var(--text2);font-size:.85rem;line-height:1.6}
+.faq-item code{background:rgba(124,58,237,.15);color:#a78bfa;padding:.15rem .4rem;border-radius:4px;font-size:.8rem}
+.faq-item a{color:var(--purple);text-decoration:underline;text-underline-offset:2px}
+
+/* CHAT WIDGET */
+.chat-widget{position:fixed;bottom:24px;right:24px;z-index:1000}
+.chat-toggle{display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--grad);border:none;border-radius:100px;color:#fff;font-weight:600;font-size:.9rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);transition:all .3s}
+.chat-toggle:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(124,58,237,.5)}
+.chat-icon{font-size:1.2rem}
+.chat-window{display:none;position:absolute;bottom:70px;right:0;width:380px;max-width:calc(100vw - 48px);height:500px;max-height:calc(100vh - 120px);background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.chat-window.open{display:flex}
+.chat-header{display:flex;align-items:center;justify-content:space-between;padding:16px;background:rgba(124,58,237,.1);border-bottom:1px solid rgba(255,255,255,.06)}
+.chat-header-info{display:flex;align-items:center;gap:8px;font-weight:600}
+.chat-header-icon{font-size:1.2rem}
+.chat-close{background:none;border:none;color:var(--text2);font-size:1.5rem;cursor:pointer;padding:0;line-height:1}
+.chat-close:hover{color:var(--text)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chat-message{display:flex;flex-direction:column;max-width:85%}
+.chat-message.user{align-self:flex-end}
+.chat-message.assistant{align-self:flex-start}
+.message-content{padding:12px 16px;border-radius:16px;font-size:.9rem;line-height:1.5}
+.chat-message.user .message-content{background:var(--grad);color:#fff;border-bottom-right-radius:4px}
+.chat-message.assistant .message-content{background:rgba(255,255,255,.06);color:var(--text);border-bottom-left-radius:4px}
+.chat-message.assistant .message-content code{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:4px;font-size:.85em}
+.chat-input-container{display:flex;gap:8px;padding:16px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.2)}
+#chatInput{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;color:var(--text);font-size:.9rem;font-family:inherit}
+#chatInput:focus{outline:none;border-color:rgba(124,58,237,.5)}
+#chatInput::placeholder{color:var(--text3)}
+.chat-send{background:var(--grad);border:none;border-radius:12px;padding:12px;cursor:pointer;color:#fff;transition:opacity .2s}
+.chat-send:hover{opacity:.9}
+.chat-send:disabled{opacity:.5;cursor:not-allowed}
+.typing-indicator{display:flex;gap:4px;padding:8px 12px}
+.typing-indicator span{width:8px;height:8px;background:var(--text3);border-radius:50%;animation:typing 1.4s infinite}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+@media(max-width:480px){
+  .chat-widget{bottom:16px;right:16px}
+  .chat-label{display:none}
+  .chat-toggle{padding:14px}
+  .chat-window{width:calc(100vw - 32px);height:calc(100vh - 100px);bottom:60px;right:-8px}
+}
+
 /* FOOTER */
 footer{padding:3rem 2rem;border-top:1px solid rgba(255,255,255,.06);text-align:center}
 footer p{color:var(--text3);font-size:.85rem}
@@ -145,8 +235,10 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
   section{padding:4rem 1.25rem}
   .what-text{grid-template-columns:1fr}
   .hero h1{font-size:2.2rem}
+  .hero{padding-top:160px}
   .features-grid{grid-template-columns:1fr}
   .skills-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .faq-grid{grid-template-columns:1fr}
 }
 
 /* Glow orbs */
@@ -169,17 +261,29 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       <a href="#modes">Modes</a>
       <a href="#features">Features</a>
       <a href="#quickstart">Quick Start</a>
-      <a href="#skills">Skills</a>
+      <a href="#upgrade">Upgrade</a>
+      <a href="#faq">FAQ</a>
       <a href="https://github.com/w-3-art/genius-team" class="nav-cta" target="_blank">GitHub →</a>
     </div>
   </div>
 </nav>
 
+<!-- UPDATE BANNER -->
+<div class="update-banner" id="updateBanner">
+  <div class="banner-content">
+    <span class="banner-badge">🆕 NEW</span>
+    <span class="banner-text"><strong>Genius Team v10.0</strong> is here!</span>
+    <span class="banner-features">12 Interactive Playgrounds • Anti-Drift Guard • Persistent Memory</span>
+    <a href="#upgrade" class="banner-link">Upgrade now →</a>
+    <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
+  </div>
+</div>
+
 <!-- HERO -->
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v9.0 — Agent Teams + File-Based Memory</div>
+      <div class="hero-badge">✨ v10.0 — Interactive Playgrounds + Anti-Drift Guard</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
       <p>An open-source starter kit of 21+ specialized AI skills for Claude Code that work together to build your project from start to finish.</p>
       <div class="hero-btns">
@@ -284,8 +388,20 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <p>Built on Claude Code's experimental agent teams. The Lead orchestrates while teammates execute in parallel with git worktree isolation.</p>
       </div>
       <div class="feature">
-        <h3>🧠 File-Based Memory</h3>
-        <p>No external MCPs. Memory lives in <code>.genius/memory/</code> with auto-generated BRIEFING.md loaded at every session.</p>
+        <h3>🎮 Interactive Playgrounds</h3>
+        <p>12 visual decision-making playgrounds for each phase. See options, make choices, understand trade-offs — all in a guided interface.</p>
+      </div>
+      <div class="feature">
+        <h3>🛡️ Anti-Drift Guard</h3>
+        <p>Keeps Claude on track and prevents going off-rails. Auto-detects when the AI drifts from the plan and brings it back.</p>
+        <ul>
+          <li>/guard-check — See current status</li>
+          <li>/guard-recover — Get back on track</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <h3>🧠 Persistent Memory</h3>
+        <p>Nothing is ever forgotten between sessions. Memory lives in <code>.genius/memory/</code> with auto-generated BRIEFING.md loaded at every session.</p>
         <ul>
           <li>decisions.json — Key decisions</li>
           <li>patterns.json — Code conventions</li>
@@ -301,14 +417,6 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <h3>💰 Save-Token Mode</h3>
         <p>Toggle <code>/save-tokens</code> to use Sonnet for high-volume roles while keeping Opus for lead and architect. Cut costs without cutting quality.</p>
       </div>
-      <div class="feature">
-        <h3>✂️ Zero Dependencies</h3>
-        <p>No Vibeship, no Mind MCP, no Spawner. Pure Claude Code + file system. Install and go.</p>
-      </div>
-      <div class="feature">
-        <h3>🔄 Self-Update</h3>
-        <p>Detects Claude Code version changes at session start and proposes repo updates automatically.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -319,11 +427,16 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     <div class="fade-in">
       <div class="section-label">Quick Start</div>
       <div class="section-title">Up and running in 30 seconds</div>
-      <div class="section-sub">One command. That's all it takes.</div>
+      <div class="section-sub">Three simple steps. That's all it takes.</div>
     </div>
+    
+    <!-- STEP 1 -->
     <div class="fade-in">
+      <div class="step-indicator">
+        <span class="step-number">1</span>
+        <span class="step-title">Install Claude Code (prerequisite)</span>
+      </div>
       <div class="prereq-box">
-        <div class="prereq-title">📋 Prerequisites — Install Claude Code CLI</div>
         <div class="code-block" style="margin-bottom:.75rem">
           <div class="code-header"><span class="code-lang">macOS / Linux / WSL</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
           <pre>curl -fsSL https://claude.ai/install.sh | bash</pre>
@@ -331,46 +444,118 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <a href="https://code.claude.com/docs/en/overview" target="_blank" class="prereq-link">Or get it from the official website →</a>
       </div>
     </div>
+    
+    <!-- STEP 2 -->
     <div class="fade-in">
+      <div class="step-indicator">
+        <span class="step-number">2</span>
+        <span class="step-title">Create Your Project</span>
+      </div>
+      
+      <div class="project-name-input">
+        <label>📁 Your project name:</label>
+        <input type="text" id="projectName" placeholder="my-awesome-app" oninput="updateProjectName(this.value)">
+      </div>
+      
       <div class="mode-tabs">
         <button class="mode-tab active" onclick="switchInstallMode('cli', this)">CLI</button>
         <button class="mode-tab" onclick="switchInstallMode('ide', this)">IDE</button>
         <button class="mode-tab" onclick="switchInstallMode('omni', this)">Omni</button>
         <button class="mode-tab" onclick="switchInstallMode('dual', this)">Dual</button>
       </div>
+      
       <div class="code-block" id="install-cli" style="display:block">
         <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project</pre>
+        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) <span class="project-name-placeholder">my-awesome-app</span></pre>
       </div>
       <div class="code-block" id="install-ide" style="display:none">
         <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode ide</pre>
+        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) <span class="project-name-placeholder">my-awesome-app</span> --mode ide</pre>
       </div>
       <div class="code-block" id="install-omni" style="display:none">
         <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode omni</pre>
+        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) <span class="project-name-placeholder">my-awesome-app</span> --mode omni</pre>
       </div>
       <div class="code-block" id="install-dual" style="display:none">
         <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode dual</pre>
+        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) <span class="project-name-placeholder">my-awesome-app</span> --mode dual</pre>
       </div>
-      <div class="code-block" style="margin-top:.5rem">
-        <div class="code-header"><span class="code-lang">bash</span><span style="color:var(--text3);font-size:.75rem">Manual setup</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre>git clone https://github.com/w-3-art/genius-team.git my-project
-cd my-project
-./scripts/setup.sh</pre>
+    </div>
+    
+    <!-- STEP 3 -->
+    <div class="fade-in">
+      <div class="step-indicator">
+        <span class="step-number">3</span>
+        <span class="step-title">Start Building</span>
       </div>
       <div class="code-block">
-        <div class="code-header"><span class="code-lang">Claude Code</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="comment"># Open Claude Code and run:</span>
-/genius-start
+        <div class="code-header"><span class="code-lang">bash + Claude Code</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="comment"># Enter your project</span>
+cd <span class="project-name-placeholder">my-awesome-app</span>
 
-<span class="comment"># Then describe what you want:</span>
-I want to build a booking system for a hair salon</pre>
+<span class="comment"># Launch Claude Code</span>
+claude
+
+<span class="comment"># Start the Genius Team workflow</span>
+/genius-start</pre>
       </div>
-      <p style="color:var(--text2);margin-top:1.5rem;font-size:.9rem">
-        <strong>Requirements:</strong> Claude Code (latest) · Claude Opus 4 · jq · Git · Node.js 18+
+      <p style="color:var(--text2);margin-top:1rem;font-size:.9rem">
+        Then just describe what you want to build! The AI will guide you through the rest.
       </p>
+    </div>
+    
+    <!-- ADVANCED MANUAL SETUP -->
+    <div class="collapsible fade-in">
+      <button class="collapsible-toggle" onclick="toggleCollapsible(this)">
+        <span>⚙️ Advanced: Manual setup</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="collapsible-content">
+        <div class="code-block" style="margin-top:1rem">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre>git clone https://github.com/w-3-art/genius-team.git <span class="project-name-placeholder">my-awesome-app</span>
+cd <span class="project-name-placeholder">my-awesome-app</span>
+./scripts/setup.sh</pre>
+        </div>
+      </div>
+    </div>
+    
+    <p style="color:var(--text2);margin-top:2rem;font-size:.85rem" class="fade-in">
+      <strong>Requirements:</strong> Claude Code (latest) · Claude Opus 4 · jq · Git · Node.js 18+
+    </p>
+  </div>
+</section>
+
+<!-- UPGRADE SECTION -->
+<section id="upgrade" class="upgrade-section">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Upgrading from v9?</div>
+      <div class="section-title">Get v10.0 in one command</div>
+    </div>
+    
+    <div class="fade-in">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)</pre>
+      </div>
+      
+      <p style="color:var(--text2);font-size:.9rem;margin-bottom:1rem">Or from inside Claude Code:</p>
+      
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Claude Code</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre>/genius-upgrade</pre>
+      </div>
+      
+      <div class="whats-new">
+        <h4>What's new in v10.0:</h4>
+        <ul>
+          <li>🎮 <strong>12 Interactive Playgrounds</strong> — Visual decision-making for each phase</li>
+          <li>🛡️ <strong>Anti-Drift Guard</strong> — Keeps Claude on track, prevents going off-rails</li>
+          <li>🧠 <strong>Persistent Memory</strong> — Nothing is ever forgotten between sessions</li>
+          <li>🔄 <strong>/genius-upgrade</strong> — One command updates for future versions</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -410,6 +595,68 @@ I want to build a booking system for a hair salon</pre>
   </div>
 </section>
 
+<!-- FAQ SECTION -->
+<section id="faq" style="background:var(--bg2)">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">FAQ & Troubleshooting</div>
+      <div class="section-title">Common questions</div>
+    </div>
+    
+    <div class="faq-grid fade-in">
+      <div class="faq-item">
+        <h4>❓ I get "command not found: claude"</h4>
+        <p>Claude Code CLI isn't installed. Run: <code>curl -fsSL https://claude.ai/install.sh | bash</code> then restart your terminal.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ I get "permission denied"</h4>
+        <p>The script needs execute permission. Try: <code>chmod +x scripts/setup.sh</code> or run with <code>bash scripts/setup.sh</code></p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ What is a terminal?</h4>
+        <p>It's the app where you type commands. On Mac: search "Terminal". On Windows: use WSL or Git Bash. On VS Code: press <code>Ctrl+`</code> to open it.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ How do I open the terminal in my project?</h4>
+        <p>In VS Code: File → Open Folder → select your project → then <code>Ctrl+`</code> (backtick) to open terminal. Or right-click the folder in Finder/Explorer and "Open in Terminal".</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ The command says "my-project" but I want a different name</h4>
+        <p>Replace "my-project" with YOUR project name! Example: <code>...create.sh) booking-app</code>. No spaces, use dashes.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ Claude seems stuck or keeps repeating</h4>
+        <p>Run <code>/guard-check</code> to see if something went wrong. If needed, <code>/guard-recover</code> gets you back on track.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ I closed the terminal and lost my progress</h4>
+        <p>No worries! Just <code>cd</code> back to your project folder, run <code>claude</code>, then <code>/continue</code>. The memory system remembers everything.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ Do I need to pay for Claude?</h4>
+        <p>Yes, Genius Team uses Claude Code which requires a Claude Pro or API subscription. Check <a href="https://claude.ai/pricing" target="_blank">claude.ai/pricing</a>.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ Can I use this with GPT/Gemini/other models?</h4>
+        <p>Genius Team is built for Claude Code. Some modes (Omni) can use secondary providers, but the core requires Claude.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ How do I update to a new version?</h4>
+        <p>Run <code>/genius-upgrade</code> inside your project, or use the upgrade command from the terminal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="container">
@@ -418,9 +665,39 @@ I want to build a booking system for a hair salon</pre>
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v9.0</strong> — Agent Teams + File-Based Memory</p>
+    <p>Built with 🧠 <strong>Genius Team v10.0</strong> — Interactive Playgrounds + Anti-Drift Guard</p>
   </div>
 </footer>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget" id="chatWidget">
+  <button class="chat-toggle" onclick="toggleChat()" aria-label="Open chat">
+    <span class="chat-icon">💬</span>
+    <span class="chat-label">Ask Genius</span>
+  </button>
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <span class="chat-header-icon">🧠</span>
+        <span>Genius Team Assistant</span>
+      </div>
+      <button class="chat-close" onclick="toggleChat()" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message assistant">
+        <div class="message-content">Hi! I'm the Genius Team Assistant. Ask me anything about installing or using Genius Team! 🚀</div>
+      </div>
+    </div>
+    <div class="chat-input-container">
+      <input type="text" id="chatInput" placeholder="Ask about installation, features..." onkeypress="handleChatKeypress(event)">
+      <button class="chat-send" onclick="sendChatMessage()" aria-label="Send message">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
 
 <script>
 // Fade-in on scroll
@@ -429,7 +706,7 @@ const obs = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 
-// Copy code
+// Switch install mode
 function switchInstallMode(mode, btn) {
   document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
@@ -438,6 +715,16 @@ function switchInstallMode(mode, btn) {
     if (el) el.style.display = m === mode ? 'block' : 'none';
   });
 }
+
+// Update project name dynamically
+function updateProjectName(value) {
+  const name = value.trim().replace(/\s+/g, '-').toLowerCase() || 'my-awesome-app';
+  document.querySelectorAll('.project-name-placeholder').forEach(el => {
+    el.textContent = name;
+  });
+}
+
+// Copy code
 function copyCode(btn) {
   const pre = btn.closest('.code-block').querySelector('pre');
   navigator.clipboard.writeText(pre.textContent).then(() => {
@@ -445,6 +732,121 @@ function copyCode(btn) {
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
+}
+
+// Close banner
+function closeBanner() {
+  const banner = document.getElementById('updateBanner');
+  banner.classList.add('hidden');
+  localStorage.setItem('bannerClosed', 'v10');
+}
+
+// Check if banner was closed
+if (localStorage.getItem('bannerClosed') === 'v10') {
+  document.getElementById('updateBanner').classList.add('hidden');
+}
+
+// Toggle collapsible
+function toggleCollapsible(btn) {
+  btn.classList.toggle('open');
+  const content = btn.nextElementSibling;
+  content.classList.toggle('open');
+}
+
+// Chat functionality
+let chatHistory = [];
+
+function toggleChat() {
+  const chatWindow = document.getElementById('chatWindow');
+  chatWindow.classList.toggle('open');
+  if (chatWindow.classList.contains('open')) {
+    document.getElementById('chatInput').focus();
+  }
+}
+
+function handleChatKeypress(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const message = input.value.trim();
+  if (!message) return;
+
+  const messagesContainer = document.getElementById('chatMessages');
+  
+  // Add user message
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-message user';
+  userDiv.innerHTML = `<div class="message-content">${escapeHtml(message)}</div>`;
+  messagesContainer.appendChild(userDiv);
+  
+  // Clear input
+  input.value = '';
+  
+  // Add to history
+  chatHistory.push({ role: 'user', content: message });
+  
+  // Show typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-message assistant';
+  typingDiv.id = 'typingIndicator';
+  typingDiv.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+  messagesContainer.appendChild(typingDiv);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+  // Disable send button
+  document.querySelector('.chat-send').disabled = true;
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        message, 
+        history: chatHistory.slice(-10) 
+      }),
+    });
+
+    const data = await response.json();
+    
+    // Remove typing indicator
+    document.getElementById('typingIndicator')?.remove();
+    
+    if (data.error) {
+      addAssistantMessage('Sorry, I encountered an error. Please try again or check the FAQ section below.');
+    } else {
+      addAssistantMessage(data.message);
+      chatHistory.push({ role: 'assistant', content: data.message });
+    }
+  } catch (error) {
+    document.getElementById('typingIndicator')?.remove();
+    addAssistantMessage('Sorry, I couldn\'t connect. Please check your internet connection and try again.');
+  }
+  
+  document.querySelector('.chat-send').disabled = false;
+}
+
+function addAssistantMessage(text) {
+  const messagesContainer = document.getElementById('chatMessages');
+  const assistantDiv = document.createElement('div');
+  assistantDiv.className = 'chat-message assistant';
+  // Simple markdown-like formatting for code
+  const formattedText = text
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+  assistantDiv.innerHTML = `<div class="message-content">${formattedText}</div>`;
+  messagesContainer.appendChild(assistantDiv);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 // Close mobile nav on link click

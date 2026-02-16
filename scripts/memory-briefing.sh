@@ -1,11 +1,12 @@
 #!/bin/bash
-# Genius Team v9.0 — Generate BRIEFING.md from memory JSON files
+# Genius Team v9.0 — Generate BRIEFING.md from memory JSON files + events system
 # Called by SessionStart hook and after memory-extract.sh
-# Budget: architecture 25, decisions 25, patterns 25, errors 20, progress 30, context 15 = ~140 lines max
+# Now supports: events/*.jsonl (new) + legacy JSON files (backwards compatible)
 
 set -euo pipefail
 
 MEMORY_DIR=".genius/memory"
+EVENTS_DIR="$MEMORY_DIR/events"
 BRIEFING="$MEMORY_DIR/BRIEFING.md"
 STATE=".genius/state.json"
 CONFIG=".genius/config.json"
@@ -28,6 +29,38 @@ safe_jq() {
   fi
 }
 
+# Helper: read all events from JSONL files, output as JSON array
+read_all_events() {
+  if [ -d "$EVENTS_DIR" ] && ls "$EVENTS_DIR"/events-*.jsonl >/dev/null 2>&1; then
+    cat "$EVENTS_DIR"/events-*.jsonl 2>/dev/null | jq -s '.' 2>/dev/null || echo "[]"
+  else
+    echo "[]"
+  fi
+}
+
+# Helper: count events by type
+count_events_by_type() {
+  local events="$1"
+  local type="$2"
+  echo "$events" | jq "[.[] | select(.type == \"$type\")] | length" 2>/dev/null || echo "0"
+}
+
+# Helper: get events by type
+get_events_by_type() {
+  local events="$1"
+  local type="$2"
+  echo "$events" | jq "[.[] | select(.type == \"$type\")]" 2>/dev/null || echo "[]"
+}
+
+# Read all events once
+ALL_EVENTS=$(read_all_events)
+TOTAL_EVENTS=$(echo "$ALL_EVENTS" | jq 'length' 2>/dev/null || echo "0")
+
+# Count by type
+EVENTS_DECISIONS=$(count_events_by_type "$ALL_EVENTS" "decision")
+EVENTS_MILESTONES=$(count_events_by_type "$ALL_EVENTS" "milestone")
+EVENTS_ERRORS=$(count_events_by_type "$ALL_EVENTS" "error")
+
 # Start building briefing
 {
   echo "# Project Briefing"
@@ -35,7 +68,7 @@ safe_jq() {
   echo "> Auto-generated on $(date '+%Y-%m-%d %H:%M'). Do not edit manually."
   echo ""
 
-  # ── Architecture & State (budget: 25 lines) ──
+  # ── Status ──
   echo "## Status"
   PHASE=$(safe_jq "$STATE" '.phase' 'NOT_STARTED')
   CURRENT_SKILL=$(safe_jq "$STATE" '.currentSkill // "none"' 'none')
@@ -86,34 +119,84 @@ safe_jq() {
     echo ""
   fi
 
-  # ── Key Decisions (budget: 25 lines) ──
+  # ── Recent Events (NEW - from events JSONL) ──
+  if [ "$TOTAL_EVENTS" -gt 0 ]; then
+    echo "## Recent Events"
+    echo "$ALL_EVENTS" | jq -r '
+      sort_by(.timestamp) | reverse | .[0:10][] |
+      "- [\(.timestamp | split("T")[1] | split(".")[0] | .[0:5] // "??:??")] \(.type): \(.content)"
+    ' 2>/dev/null || echo "- Error reading events"
+    echo ""
+  fi
+
+  # ── Key Decisions (enhanced: events + legacy) ──
+  echo "## Key Decisions"
+  
+  # From events system (grouped by date)
+  if [ "$EVENTS_DECISIONS" -gt 0 ]; then
+    echo "$ALL_EVENTS" | jq -r '
+      [.[] | select(.type == "decision")] |
+      sort_by(.timestamp) | reverse | .[0:10] |
+      group_by(.timestamp | split("T")[0])[] |
+      (.[0].timestamp | split("T")[0]) as $date |
+      "### \($date)",
+      (.[] | "- **\(.content)** — \(.metadata.reason // "no reason") [\(.metadata.tags // [] | join(", "))]")
+    ' 2>/dev/null || true
+    echo ""
+  fi
+
+  # Legacy decisions.json (fallback/supplement)
   DECISIONS_COUNT=$(json_len "$MEMORY_DIR/decisions.json")
-  if [ "$DECISIONS_COUNT" -gt 0 ]; then
-    echo "## Key Decisions (last 10)"
+  if [ "$DECISIONS_COUNT" -gt 0 ] && [ "$EVENTS_DECISIONS" -eq 0 ]; then
+    echo "*(from legacy decisions.json)*"
     jq -r 'sort_by(.timestamp) | reverse | .[0:10][] | "- **\(.decision)** — \(.reason) [\(.tags | join(", "))] (\(.timestamp // "no date"))"' \
       "$MEMORY_DIR/decisions.json" 2>/dev/null || echo "- Error reading decisions"
     echo ""
   fi
 
-  # ── Patterns (budget: 25 lines) ──
+  # ── Milestones (NEW - skills completed timeline) ──
+  if [ "$EVENTS_MILESTONES" -gt 0 ]; then
+    echo "## Milestones"
+    echo "$ALL_EVENTS" | jq -r '
+      [.[] | select(.type == "milestone")] |
+      sort_by(.timestamp) | reverse | .[0:15][] |
+      "- 🏆 [\(.timestamp | split("T")[0])] **\(.content)** \(if .metadata.skill then "(\(.metadata.skill))" else "" end)"
+    ' 2>/dev/null || echo "- Error reading milestones"
+    echo ""
+  fi
+
+  # ── Patterns (legacy) ──
   PATTERNS_COUNT=$(json_len "$MEMORY_DIR/patterns.json")
   if [ "$PATTERNS_COUNT" -gt 0 ]; then
-    echo "## Active Patterns (last 10)"
+    echo "## Active Patterns"
     jq -r 'sort_by(.timestamp) | reverse | .[0:10][] | "- **\(.pattern)** — \(.context) (\(.timestamp // "no date"))"' \
       "$MEMORY_DIR/patterns.json" 2>/dev/null || echo "- Error reading patterns"
     echo ""
   fi
 
-  # ── Errors & Solutions (budget: 20 lines) ──
+  # ── Errors & Solutions (enhanced: events + legacy) ──
+  echo "## Errors & Solutions"
+  
+  # From events system
+  if [ "$EVENTS_ERRORS" -gt 0 ]; then
+    echo "$ALL_EVENTS" | jq -r '
+      [.[] | select(.type == "error")] |
+      sort_by(.timestamp) | reverse | .[0:10][] |
+      "- ❌ **Error:** \(.content)\n  ✅ **Solution:** \(.metadata.solution // "pending")"
+    ' 2>/dev/null || true
+    echo ""
+  fi
+
+  # Legacy errors.json (fallback/supplement)
   ERRORS_COUNT=$(json_len "$MEMORY_DIR/errors.json")
-  if [ "$ERRORS_COUNT" -gt 0 ]; then
-    echo "## Recent Errors & Solutions (last 8)"
+  if [ "$ERRORS_COUNT" -gt 0 ] && [ "$EVENTS_ERRORS" -eq 0 ]; then
+    echo "*(from legacy errors.json)*"
     jq -r 'sort_by(.timestamp) | reverse | .[0:8][] | "- ❌ **\(.error)** → ✅ \(.solution) (\(.timestamp // "no date"))"' \
       "$MEMORY_DIR/errors.json" 2>/dev/null || echo "- Error reading errors"
     echo ""
   fi
 
-  # ── Progress (budget: 30 lines, 7-day decay) ──
+  # ── Progress (legacy, 7-day decay) ──
   PROGRESS_COUNT=$(json_len "$MEMORY_DIR/progress.json")
   if [ "$PROGRESS_COUNT" -gt 0 ]; then
     CUTOFF=$(date -v-7d '+%Y-%m-%d' 2>/dev/null || date -d '7 days ago' '+%Y-%m-%d' 2>/dev/null || echo "2000-01-01")
@@ -126,7 +209,7 @@ safe_jq() {
     echo ""
   fi
 
-  # ── Context footer (budget: 15 lines) ──
+  # ── Session Context ──
   echo "## Session Context"
   echo "- **Memory files:** decisions=$DECISIONS_COUNT patterns=$PATTERNS_COUNT errors=$ERRORS_COUNT progress=$PROGRESS_COUNT"
 
@@ -143,6 +226,12 @@ safe_jq() {
 
   echo ""
   echo "---"
+  
+  # ── Memory Stats (NEW) ──
+  LAST_CAPTURE=$(date '+%Y-%m-%d %H:%M')
+  echo "Memory stats: $TOTAL_EVENTS events | $EVENTS_DECISIONS decisions | $EVENTS_MILESTONES milestones | $EVENTS_ERRORS errors"
+  echo "Last capture: $LAST_CAPTURE"
+  echo ""
   echo "*Read the full JSON files in .genius/memory/ for detailed history.*"
 
 } > "$BRIEFING"

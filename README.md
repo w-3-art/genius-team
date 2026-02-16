@@ -1,6 +1,6 @@
-# Genius Team v9.0
+# Genius Team v10.0
 
-[![Version](https://img.shields.io/badge/version-9.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-10.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Opus%204-purple.svg)](https://docs.anthropic.com/claude-code)
 
@@ -75,6 +75,29 @@ cd my-project
 # Dual Mode (builder + challenger adversarial workflow)
 ./scripts/setup.sh --mode dual
 ```
+
+## 🔄 Upgrading from v9
+
+If you already have a Genius Team v9 project, upgrade to v10 with:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)
+```
+
+This will:
+- Create a backup of your current installation
+- Download all v10 files
+- Preserve your `.genius/memory/` data
+- Update your project to v10.0
+
+### What's new in v10.0
+
+- 🎮 **12 Interactive Playgrounds** — Visual decision-making tools for each skill
+- 🛡️ **Anti-Drift Guard System** — Prevents Claude from going off-rails
+- 🧠 **Persistent Memory** — Active capture, rollup, and recovery
+- 🔄 **Self-Update System** — `/genius-upgrade` command for future updates
+
+After upgrading, run `/genius-start` to initialize the new features.
 
 ### 2. Start a Project
 
@@ -254,4 +277,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v9.0** — Agent Teams + File-Based Memory
+**Built with** 🧠 **Genius Team v10.0** — Agent Teams + File-Based Memory + Interactive Playgrounds

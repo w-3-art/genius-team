@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v9.0 — Setup Script
+# Genius Team v10.0 — Setup Script
 # No external MCPs required. Pure Claude Code + Agent Teams.
 set -e
 
@@ -35,7 +35,7 @@ fi
 # (All modes are now supported)
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║  🧠 Genius Team v9.0 — Setup (${MODE} mode)                    ║"
+echo "║  🧠 Genius Team v10.0 — Setup (${MODE} mode)                   ║"
 echo "║  Agent Teams + File-Based Memory                           ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
@@ -264,7 +264,7 @@ if [ ! -f ".genius/state.json" ]; then
   NOW=$(date -Iseconds 2>/dev/null || date '+%Y-%m-%dT%H:%M:%S')
   cat > .genius/state.json << EOF
 {
-  "version": "9.0.0",
+  "version": "10.0.0",
   "phase": "NOT_STARTED",
   "currentSkill": null,
   "skillHistory": [],
@@ -358,7 +358,7 @@ if [ $ERRORS -eq 0 ]; then
   echo "║  ✅ Setup Complete! (${MODE} mode)                          ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
-  echo "Genius Team v9.0 is ready in ${MODE} mode."
+  echo "Genius Team v10.0 is ready in ${MODE} mode."
   echo ""
   echo "Features:"
   echo -e "  ${GREEN}✓${NC} Agent Teams (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS)"

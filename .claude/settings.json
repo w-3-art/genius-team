@@ -64,7 +64,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 9.0\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
+            "command": "bash -c 'if [ ! -f .genius/memory/BRIEFING.md ] || [ $(wc -l < .genius/memory/BRIEFING.md 2>/dev/null || echo 0) -lt 10 ]; then ./scripts/memory-recover.sh 2>/dev/null || true; fi; echo \"╔══════════════════════════════════════════════════════════╗\"; echo \"║            🛡️  GENIUS TEAM GUARD ACTIVE  🛡️              ║\"; echo \"╚══════════════════════════════════════════════════════════╝\"; echo \"\"; if [ -f GENIUS_GUARD.md ]; then echo \"<genius_guard>\"; cat GENIUS_GUARD.md; echo \"</genius_guard>\"; echo \"\"; fi; echo \"<genius_team_context>\"; echo \"Version: 9.0\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<current_state>\"; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null); echo \"🎯 CURRENT SKILL: $SKILL\"; echo \"📍 PHASE: $PHASE\"; echo \"\"; if [ \"$SKILL\" != \"none\" ] && [ \"$SKILL\" != \"null\" ]; then SKILL_FILE=\"skills/${SKILL}.md\"; if [ -f \"$SKILL_FILE\" ]; then echo \"✅ Skill file exists: $SKILL_FILE\"; ARTIFACTS=$(grep -E \"^\\\\s*-\\\\s*\\\\[\" \"$SKILL_FILE\" 2>/dev/null | grep -v \"\\\\[x\\\\]\" | head -5); if [ -n \"$ARTIFACTS\" ]; then echo \"📋 MISSING ARTIFACTS:\"; echo \"$ARTIFACTS\"; fi; else echo \"⚠️ Skill file NOT FOUND: $SKILL_FILE\"; fi; fi; echo \"</current_state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"\"; echo \"⚠️  RAPPEL: Tu dois continuer le skill \\\"$SKILL\\\" - NE PAS dévier!\"; echo \"</genius_team_context>\"'"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'TOOL=\"$TOOL_NAME\"; INPUT=\"$TOOL_INPUT\"; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); TIMESTAMP=$(date \"+%Y-%m-%d %H:%M:%S\"); echo \"[$TIMESTAMP] TOOL=$TOOL SKILL=$SKILL INPUT=${INPUT:0:100}\" >> .genius/guard.log 2>/dev/null; if [ \"$SKILL\" = \"none\" ] || [ \"$SKILL\" = \"null\" ] || [ -z \"$SKILL\" ]; then if echo \"$TOOL\" | grep -qE \"^(Write|Edit|Bash)$\"; then echo \"⚠️ GUARD WARNING: Action $TOOL without active skill! Run a skill first.\"; fi; fi'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=\"$TOOL_INPUT\"; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); if echo \"$INPUT\" | grep -qE \"\\\\.(ts|js|tsx|jsx|py|go|rs)$\"; then if [ \"$SKILL\" != \"genius-dev\" ] && [ \"$SKILL\" != \"genius-refactor\" ] && [ \"$SKILL\" != \"genius-fix\" ]; then echo \"╔═══════════════════════════════════════════════════════════════╗\"; echo \"║  ⛔ ALERT: Writing code outside of a dev skill!              ║\"; echo \"║  Current skill: $SKILL\"; echo \"║  File: ${INPUT:0:50}\"; echo \"║                                                               ║\"; echo \"║  Tu devrais utiliser genius-dev, genius-refactor ou          ║\"; echo \"║  genius-fix pour écrire du code!                              ║\"; echo \"╚═══════════════════════════════════════════════════════════════╝\"; fi; fi'"
           }
         ]
       }
@@ -74,17 +94,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'bash scripts/memory-extract.sh \"$(cat PROGRESS.md 2>/dev/null; echo ---; grep -E \"^- \\\\[\" .claude/plan.md 2>/dev/null | head -30; echo ---; cat .genius/state.json 2>/dev/null)\" 2>/dev/null || true; echo \"<critical_context>\"; if [ -f .genius/memory/BRIEFING.md ]; then cat .genius/memory/BRIEFING.md; fi; echo \"</critical_context>\"'"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'if [ -f .claude/plan.md ] && [ -f .genius/state.json ]; then total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); jq --arg t \"$total\" --arg c \"$completed\" --arg now \"$(date -Iseconds 2>/dev/null || date)\" \".tasks.total = ($t | tonumber) | .tasks.completed = ($c | tonumber) | .updated_at = \\\"$now\\\"\" .genius/state.json > .genius/state.json.tmp && mv .genius/state.json.tmp .genius/state.json; fi 2>/dev/null || true'"
+            "command": "bash -c 'SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); CHECKPOINT=$(jq -r \".checkpoint // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); CONTEXT=\"skill:$SKILL phase:$PHASE checkpoint:$CHECKPOINT\"; ./scripts/memory-capture.sh conversation \"Pre-compaction context\" \"$CONTEXT\" 2>/dev/null || true; ./scripts/memory-rollup.sh --force 2>/dev/null || true; bash scripts/memory-extract.sh \"$(cat PROGRESS.md 2>/dev/null; echo ---; grep -E \"^- \\\\[\" .claude/plan.md 2>/dev/null | head -30; echo ---; cat .genius/state.json 2>/dev/null)\" 2>/dev/null || true; echo \"╔═══════════════════════════════════════════════════════════════╗\"; echo \"║          🧠 GENIUS TEAM - CONTEXT PRESERVATION 🧠            ║\"; echo \"╚═══════════════════════════════════════════════════════════════╝\"; echo \"\"; echo \"<critical_context>\"; echo \"🎯 ACTIVE SKILL: $SKILL\"; echo \"📍 PHASE: $PHASE\"; echo \"📌 CHECKPOINT: $CHECKPOINT\"; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/activity.log ]; then echo \"<recent_artifacts>\"; echo \"Files modified in this session:\"; tail -20 .genius/activity.log 2>/dev/null; echo \"</recent_artifacts>\"; fi; echo \"\"; echo \"════════════════════════════════════════════════════════════════\"; echo \"⚠️  INSTRUCTION CRITIQUE POST-COMPACTION:\"; echo \"\"; echo \"Tu es dans Genius Team. Après compaction, tu DOIS:\"; echo \"1. Relire GENIUS_GUARD.md\"; echo \"2. Reprendre le skill: $SKILL\"; echo \"3. Continuer depuis le checkpoint: $CHECKPOINT\"; echo \"4. NE PAS commencer de nouveau skill sans finir celui-ci\"; echo \"\"; echo \"Si tu ne sais plus quoi faire: /skill-status\"; echo \"════════════════════════════════════════════════════════════════\"; echo \"</critical_context>\"'"
           }
         ]
       }
@@ -95,7 +105,26 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"[$(date +%H:%M:%S)] FILE: $TOOL_INPUT\" >> .genius/activity.log 2>/dev/null || true'"
+            "command": "bash -c 'TIMESTAMP=$(date \"+%H:%M:%S\"); FILE=\"$TOOL_INPUT\"; echo \"[$TIMESTAMP] FILE: $FILE\" >> .genius/activity.log 2>/dev/null || true; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); if echo \"$FILE\" | grep -qE \"\\.(html|xml|md)$\"; then ./scripts/memory-capture.sh artifact \"$FILE\" \"Generated by skill:$SKILL\" 2>/dev/null || true; else ./scripts/memory-capture.sh action \"Modified: $FILE\" \"skill:$SKILL\" 2>/dev/null || true; fi'"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c './scripts/memory-capture.sh action \"Delegated: $TOOL_INPUT\" \"subagent\" 2>/dev/null || true'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CHECKPOINT=$(jq -r \".checkpoint // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); if [ \"$CHECKPOINT\" != \"none\" ] && [ \"$CHECKPOINT\" != \"null\" ]; then ./scripts/memory-capture.sh milestone \"Session ended\" \"checkpoint:$CHECKPOINT\" 2>/dev/null || true; fi; ./scripts/memory-rollup.sh --days 1 2>/dev/null || true; if [ -f .claude/plan.md ] && [ -f .genius/state.json ]; then total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); jq --arg t \"$total\" --arg c \"$completed\" --arg now \"$(date -Iseconds 2>/dev/null || date)\" \".tasks.total = ($t | tonumber) | .tasks.completed = ($c | tonumber) | .updated_at = \\\"$now\\\"\" .genius/state.json > .genius/state.json.tmp && mv .genius/state.json.tmp .genius/state.json; fi 2>/dev/null || true'"
           }
         ]
       }
@@ -103,6 +132,6 @@
   },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "GENIUS_TEAM_VERSION": "9.0.0"
+    "GENIUS_TEAM_VERSION": "10.0.0"
   }
 }
