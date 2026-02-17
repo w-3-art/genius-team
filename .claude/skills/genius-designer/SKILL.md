@@ -164,9 +164,9 @@ The unified dashboard reads from state.json. No need to:
 **MANDATORY. Do NOT continue automatically.**
 
 ```
-🎨 DESIGN SYSTEM PLAYGROUND READY
+🎨 DESIGN SYSTEM READY
 
-Open `.genius/outputs/DESIGN-SYSTEM.html` in your browser.
+Check the **Design** tab in your Project Dashboard (already open at http://localhost:8888/project-dashboard.html).
 
 I've prepared 3 design directions for [Project Name]:
 
@@ -174,8 +174,8 @@ I've prepared 3 design directions for [Project Name]:
 • 🎨 [Option 2 Name] — [Brief description: e.g., "Bold and energetic with warm colors"]  
 • ✨ [Option 3 Name] — [Brief description: e.g., "Professional and trustworthy blues"]
 
-**In the playground you can:**
-- Click preset buttons to switch between options
+**In the dashboard you can:**
+- Switch between preset options
 - Fine-tune any color, font, spacing, or shadow
 - Toggle light/dark mode preview
 - See live component previews (buttons, inputs, cards)
@@ -225,7 +225,7 @@ Copy the "Prompt" output and paste it here so I can save your final configuratio
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `DESIGN-SYSTEM.html` | `.genius/outputs/` | Interactive playground with custom presets |
+| `state.json` | `.genius/outputs/` | Unified state with design presets (phases.design.data) |
 | `design-config.json` | `.genius/` | Final validated design tokens |
 
 ---

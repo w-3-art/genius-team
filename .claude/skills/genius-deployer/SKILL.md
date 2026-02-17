@@ -310,10 +310,9 @@ User: Deploy to production
 
 Agent:
 1. Reads BRIEFING.md for deployment context
-2. Copies deploy-checklist.html to .genius/outputs/
-3. Pre-fills project info
-4. Presents checklist via Canvas
-5. Waits for GO status
-6. Executes deployment protocol
-7. Records decision in memory
+2. Updates state.json with deploy checklist data
+3. User views Deploy tab in unified dashboard
+4. Waits for GO status in state.json
+5. Executes deployment protocol
+6. Records decision in memory
 ```
