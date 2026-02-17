@@ -475,19 +475,19 @@
     <div class="container">
         <header>
             <h1>📊 Market Simulator</h1>
-            <p>Simulez votre stratégie marché et analysez votre positionnement concurrentiel</p>
+            <p>Simulate your market strategy and analyze your competitive positioning</p>
         </header>
 
         <div class="main-grid">
             <!-- Control Panel -->
             <aside class="panel">
-                <div class="panel-title">Paramètres de simulation</div>
+                <div class="panel-title">Simulation Parameters</div>
 
                 <!-- Presets -->
                 <div class="presets">
-                    <button class="preset-btn pessimistic" onclick="applyPreset('pessimistic')">😟 Pessimiste</button>
-                    <button class="preset-btn realistic active" onclick="applyPreset('realistic')">😐 Réaliste</button>
-                    <button class="preset-btn optimistic" onclick="applyPreset('optimistic')">🚀 Optimiste</button>
+                    <button class="preset-btn pessimistic" onclick="applyPreset('pessimistic')">😟 Pessimistic</button>
+                    <button class="preset-btn realistic active" onclick="applyPreset('realistic')">😐 Realistic</button>
+                    <button class="preset-btn optimistic" onclick="applyPreset('optimistic')">🚀 Optimistic</button>
                 </div>
 
                 <!-- Sliders -->
@@ -501,7 +501,7 @@
 
                 <div class="slider-group">
                     <div class="slider-label">
-                        <span>🎯 Taille marché cible (TAM)</span>
+                        <span>🎯 Target Market Size (TAM)</span>
                         <span class="slider-value" id="tam-value">500K</span>
                     </div>
                     <input type="range" id="tam" min="10000" max="10000000" value="500000" step="10000" oninput="updateAll()">
@@ -509,7 +509,7 @@
 
                 <div class="slider-group">
                     <div class="slider-label">
-                        <span>📈 Taux de conversion</span>
+                        <span>📈 Conversion Rate</span>
                         <span class="slider-value" id="conversion-value">2.5%</span>
                     </div>
                     <input type="range" id="conversion" min="0.1" max="15" value="2.5" step="0.1" oninput="updateAll()">
@@ -517,7 +517,7 @@
 
                 <div class="slider-group">
                     <div class="slider-label">
-                        <span>📉 Churn mensuel</span>
+                        <span>📉 Monthly Churn</span>
                         <span class="slider-value" id="churn-value">5%</span>
                     </div>
                     <input type="range" id="churn" min="0.5" max="25" value="5" step="0.5" oninput="updateAll()">
@@ -525,7 +525,7 @@
 
                 <div class="slider-group">
                     <div class="slider-label">
-                        <span>💸 Coût acquisition (CAC)</span>
+                        <span>💸 Acquisition Cost (CAC)</span>
                         <span class="slider-value" id="cac-value">25€</span>
                     </div>
                     <input type="range" id="cac" min="1" max="200" value="25" oninput="updateAll()">
@@ -544,7 +544,7 @@
             <main class="viz-grid">
                 <!-- KPIs -->
                 <div class="viz-panel full-width">
-                    <div class="viz-title">📊 Indicateurs clés</div>
+                    <div class="viz-title">📊 Key Metrics</div>
                     <div class="kpi-grid">
                         <div class="kpi-card" id="kpi-ltv">
                             <div class="kpi-value">980€</div>
@@ -618,32 +618,32 @@
 
                 <!-- Revenue Projection -->
                 <div class="viz-panel full-width">
-                    <div class="viz-title">📈 Projection Revenue 12 mois</div>
+                    <div class="viz-title">📈 12-Month Revenue Projection</div>
                     <div class="chart-container">
                         <canvas id="revenue-chart" class="chart-canvas"></canvas>
                     </div>
                     <div class="chart-legend">
                         <div class="chart-legend-item">
                             <div class="chart-legend-dot" style="background: var(--accent-red)"></div>
-                            <span>Pessimiste</span>
+                            <span>Pessimistic</span>
                         </div>
                         <div class="chart-legend-item">
                             <div class="chart-legend-dot" style="background: var(--accent-orange)"></div>
-                            <span>Réaliste</span>
+                            <span>Realistic</span>
                         </div>
                         <div class="chart-legend-item">
                             <div class="chart-legend-dot" style="background: var(--accent-green)"></div>
-                            <span>Optimiste</span>
+                            <span>Optimistic</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Prompt Output -->
                 <div class="viz-panel full-width prompt-section">
-                    <div class="viz-title">📝 Analyse stratégique</div>
+                    <div class="viz-title">📝 Strategic Analysis</div>
                     <div class="prompt-output" id="prompt-output"></div>
                     <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">
-                        📋 Copier l'analyse
+                        📋 Copy Analysis
                     </button>
                 </div>
             </main>
@@ -662,7 +662,7 @@
             cac: 25,
             preset: 'realistic',
             competitors: [
-                { name: 'Votre produit', color: '#58a6ff', scores: { prix: 7, features: 8, ux: 8, brand: 5, support: 7 } },
+                { name: 'Your Product', color: '#58a6ff', scores: { prix: 7, features: 8, ux: 8, brand: 5, support: 7 } },
                 { name: 'Competitor A', color: '#f85149', scores: { prix: 6, features: 9, ux: 7, brand: 9, support: 6 } },
                 { name: 'Competitor B', color: '#3fb950', scores: { prix: 8, features: 6, ux: 6, brand: 7, support: 8 } },
                 { name: 'Competitor C', color: '#d29922', scores: { prix: 5, features: 7, ux: 9, brand: 6, support: 5 } }
@@ -827,7 +827,7 @@
                     labels,
                     datasets: [
                         {
-                            label: 'Pessimiste',
+                            label: 'Pessimistic',
                             data: metrics.revenuePessimistic,
                             borderColor: '#f85149',
                             backgroundColor: 'rgba(248, 81, 73, 0.1)',
@@ -835,7 +835,7 @@
                             fill: true
                         },
                         {
-                            label: 'Réaliste',
+                            label: 'Realistic',
                             data: metrics.revenueRealistic,
                             borderColor: '#d29922',
                             backgroundColor: 'rgba(210, 153, 34, 0.1)',
@@ -843,7 +843,7 @@
                             fill: true
                         },
                         {
-                            label: 'Optimiste',
+                            label: 'Optimistic',
                             data: metrics.revenueOptimistic,
                             borderColor: '#3fb950',
                             backgroundColor: 'rgba(63, 185, 80, 0.1)',
@@ -882,7 +882,7 @@
 
         function renderRadarChart() {
             const ctx = document.getElementById('radar-chart').getContext('2d');
-            const labels = ['Prix', 'Features', 'UX', 'Brand', 'Support'];
+            const labels = ['Price', 'Features', 'UX', 'Brand', 'Support'];
             
             const datasets = state.competitors.map(c => ({
                 label: c.name,
@@ -943,20 +943,20 @@
             let health = '🟢 HEALTHY';
             
             if (ltvCacRatio < 2) {
-                health = '🔴 CRITIQUE';
-                recommendation = `⚠️ ALERTE: Ratio LTV/CAC de ${ltvCacRatio.toFixed(1)}x est insuffisant (< 2x).
-Action recommandée: Réduire le CAC de ${cac}€ à ${Math.floor(ltv/3)}€ minimum, ou augmenter le prix/réduire le churn.`;
+                health = '🔴 CRITICAL';
+                recommendation = `⚠️ ALERT: LTV/CAC ratio of ${ltvCacRatio.toFixed(1)}x is insufficient (< 2x).
+Recommended action: Reduce CAC from ${cac}€ to ${Math.floor(ltv/3)}€ minimum, or increase price/reduce churn.`;
             } else if (ltvCacRatio < 3) {
-                health = '🟡 À SURVEILLER';
-                recommendation = `⚠️ ATTENTION: Ratio LTV/CAC de ${ltvCacRatio.toFixed(1)}x est viable mais fragile.
-Objectif: Atteindre 3x minimum pour une croissance saine.`;
+                health = '🟡 WATCH';
+                recommendation = `⚠️ CAUTION: LTV/CAC ratio of ${ltvCacRatio.toFixed(1)}x is viable but fragile.
+Goal: Reach 3x minimum for healthy growth.`;
             } else if (paybackMonths > 12) {
-                health = '🟡 À SURVEILLER';
-                recommendation = `💡 Payback period de ${paybackMonths.toFixed(1)} mois est long.
-Suggestion: Envisager un plan annuel avec réduction pour accélérer le cash-flow.`;
+                health = '🟡 WATCH';
+                recommendation = `💡 Payback period of ${paybackMonths.toFixed(1)} months is long.
+Suggestion: Consider annual plans with discounts to accelerate cash-flow.`;
             } else {
-                recommendation = `✅ Unit economics solides! Ratio LTV/CAC de ${ltvCacRatio.toFixed(1)}x avec payback en ${paybackMonths.toFixed(1)} mois.
-Stratégie: Accélérer l'acquisition tout en maintenant la qualité du produit.`;
+                recommendation = `✅ Solid unit economics! LTV/CAC ratio of ${ltvCacRatio.toFixed(1)}x with ${paybackMonths.toFixed(1)} months payback.
+Strategy: Accelerate acquisition while maintaining product quality.`;
             }
 
             // Competitive analysis
@@ -969,17 +969,17 @@ Stratégie: Accélérer l'acquisition tout en maintenant la qualité du produit.
 
             const prompt = `
 ╔══════════════════════════════════════════════════════════════╗
-║                    📊 ANALYSE DE MARCHÉ                       ║
+║                    📊 MARKET ANALYSIS                         ║
 ╚══════════════════════════════════════════════════════════════╝
 
-═══ PARAMÈTRES ═══
-• Prix unitaire: ${price}€/mois
-• Marché cible (TAM): ${formatNumber(tam)} utilisateurs
-• Taux de conversion: ${conversion}%
-• Churn mensuel: ${churn}%
-• Coût d'acquisition: ${cac}€
+═══ PARAMETERS ═══
+• Unit price: ${price}€/month
+• Target market (TAM): ${formatNumber(tam)} users
+• Conversion rate: ${conversion}%
+• Monthly churn: ${churn}%
+• Acquisition cost: ${cac}€
 
-═══ TAILLE DE MARCHÉ ═══
+═══ MARKET SIZE ═══
 • TAM (Total Addressable Market): ${formatCurrency(metrics.tam)}
 • SAM (Serviceable Available Market): ${formatCurrency(metrics.sam)}
 • SOM (Serviceable Obtainable Market): ${formatCurrency(metrics.som)}
@@ -988,25 +988,25 @@ Stratégie: Accélérer l'acquisition tout en maintenant la qualité du produit.
 • LTV (Lifetime Value): ${formatCurrency(ltv)}
 • CAC (Customer Acquisition Cost): ${cac}€
 • LTV/CAC Ratio: ${ltvCacRatio.toFixed(1)}x ${ltvCacRatio >= 3 ? '✓' : ltvCacRatio >= 2 ? '○' : '✗'}
-• Payback Period: ${paybackMonths.toFixed(1)} mois
+• Payback Period: ${paybackMonths.toFixed(1)} months
 
-═══ PROJECTION 12 MOIS ═══
-• MRR fin M12: ${formatCurrency(mrrM12)}
-• ARR fin M12: ${formatCurrency(arrM12)}
-• Clients fin M12: ${formatNumber(customersM12)}
+═══ 12-MONTH PROJECTION ═══
+• MRR end of M12: ${formatCurrency(mrrM12)}
+• ARR end of M12: ${formatCurrency(arrM12)}
+• Customers end of M12: ${formatNumber(customersM12)}
 
-═══ ANALYSE CONCURRENTIELLE ═══
-• Score moyen (vous): ${yourAvg.toFixed(1)}/10
-• Score moyen (marché): ${marketAvg.toFixed(1)}/10
-• Position: ${yourAvg > marketAvg ? 'AU-DESSUS' : yourAvg < marketAvg ? 'EN-DESSOUS' : 'ALIGNÉ'} du marché
+═══ COMPETITIVE ANALYSIS ═══
+• Average score (you): ${yourAvg.toFixed(1)}/10
+• Average score (market): ${marketAvg.toFixed(1)}/10
+• Position: ${yourAvg > marketAvg ? 'ABOVE' : yourAvg < marketAvg ? 'BELOW' : 'ALIGNED WITH'} market
 
-═══ RECOMMANDATION STRATÉGIQUE ═══
+═══ STRATEGIC RECOMMENDATION ═══
 ${recommendation}
 
-═══ PROCHAINES ACTIONS ═══
-1. ${ltvCacRatio < 3 ? 'Optimiser les unit economics avant de scaler' : 'Augmenter le budget acquisition'}
-2. ${churn > 5 ? 'Implémenter un programme de rétention' : 'Maintenir la qualité de service'}
-3. ${yourAvg < marketAvg ? 'Investir dans les features/UX pour rattraper' : 'Capitaliser sur les avantages concurrentiels'}
+═══ NEXT ACTIONS ═══
+1. ${ltvCacRatio < 3 ? 'Optimize unit economics before scaling' : 'Increase acquisition budget'}
+2. ${churn > 5 ? 'Implement a retention program' : 'Maintain service quality'}
+3. ${yourAvg < marketAvg ? 'Invest in features/UX to catch up' : 'Capitalize on competitive advantages'}
 `.trim();
 
             document.getElementById('prompt-output').textContent = prompt;
@@ -1017,10 +1017,10 @@ ${recommendation}
             navigator.clipboard.writeText(text).then(() => {
                 const btn = document.getElementById('copy-btn');
                 btn.classList.add('copied');
-                btn.innerHTML = '✅ Copié!';
+                btn.innerHTML = '✅ Copied!';
                 setTimeout(() => {
                     btn.classList.remove('copied');
-                    btn.innerHTML = '📋 Copier l\'analyse';
+                    btn.innerHTML = '📋 Copy Analysis';
                 }, 2000);
             });
         }

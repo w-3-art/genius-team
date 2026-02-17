@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Dashboard — Genius Team</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-purple: #a371f7;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --accent-pink: #db61a2;
+            --accent-cyan: #39c5cf;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-name {
+            color: var(--accent-purple);
+        }
+
+        .live-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            transition: background 0.3s;
+        }
+
+        .live-status.connected .live-dot {
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        .live-status.polling .live-dot {
+            background: var(--accent-orange);
+            animation: pulse 0.5s infinite;
+        }
+
+        .live-status.offline .live-dot {
+            background: var(--accent-red);
+        }
+
+        .live-status.manual .live-dot {
+            background: var(--accent-blue);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .engine-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .engine-badge.claude { background: rgba(163, 113, 247, 0.2); color: var(--accent-purple); }
+        .engine-badge.codex { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+        .engine-badge.dual { background: rgba(210, 153, 34, 0.2); color: var(--accent-orange); }
+
+        /* ========== PHASE TABS ========== */
+        .phase-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .phase-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .phase-tab:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .phase-tab.active {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-purple);
+            color: var(--text-primary);
+        }
+
+        .phase-tab.completed {
+            color: var(--accent-green);
+        }
+
+        .phase-tab.in-progress {
+            color: var(--accent-orange);
+        }
+
+        .phase-tab.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .phase-status {
+            font-size: 14px;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .content-area {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* ========== PHASE SECTIONS ========== */
+        .phase-section {
+            display: none;
+        }
+
+        .phase-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-status {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .section-status.completed { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+        .section-status.in-progress { background: rgba(210, 153, 34, 0.2); color: var(--accent-orange); }
+        .section-status.pending { background: var(--bg-tertiary); color: var(--text-secondary); }
+
+        /* ========== CARDS ========== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--accent-purple);
+        }
+
+        .card.updated {
+            animation: cardPulse 0.5s ease;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.01); box-shadow: 0 0 20px rgba(163, 113, 247, 0.3); }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .card-icon.red { background: rgba(248, 81, 73, 0.2); }
+        .card-icon.green { background: rgba(63, 185, 80, 0.2); }
+        .card-icon.blue { background: rgba(88, 166, 255, 0.2); }
+        .card-icon.orange { background: rgba(210, 153, 34, 0.2); }
+        .card-icon.purple { background: rgba(163, 113, 247, 0.2); }
+        .card-icon.pink { background: rgba(219, 97, 162, 0.2); }
+        .card-icon.cyan { background: rgba(57, 197, 207, 0.2); }
+
+        .card-content {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .card-content p {
+            margin-bottom: 8px;
+        }
+
+        .card-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card-content li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .card-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-purple);
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--accent-purple);
+        }
+
+        /* ========== EMPTY STATE ========== */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            max-width: 400px;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* ========== PROGRESS TIMELINE ========== */
+        .progress-timeline {
+            margin-bottom: 24px;
+        }
+
+        .progress-timeline h4 {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 36px;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item.completed::after {
+            background: var(--accent-green);
+        }
+
+        .timeline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .timeline-item.active .timeline-dot {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .timeline-item.completed .timeline-title {
+            color: var(--accent-green);
+        }
+
+        .timeline-item.active .timeline-title {
+            color: var(--accent-orange);
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* ========== SUMMARY BOX ========== */
+        .summary-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .summary-box h4 {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .summary-content {
+            font-size: 13px;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* ========== ACTIONS ========== */
+        .sidebar-actions {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8957e5;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+        }
+
+        /* ========== FEEDBACK ========== */
+        .copy-feedback {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copy-feedback.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-left: none;
+                border-top: 1px solid var(--border-color);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .phase-tabs {
+                padding: 12px 16px;
+            }
+
+            .content-area {
+                padding: 16px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1>🚀 <span class="project-name" id="projectName">New Project</span></h1>
+            <div class="live-status offline" id="liveStatus">
+                <span class="live-dot"></span>
+                <span id="statusText">Manual Mode</span>
+            </div>
+            <span class="engine-badge claude" id="engineBadge">Claude</span>
+        </div>
+    </header>
+
+    <!-- Phase Tabs -->
+    <nav class="phase-tabs">
+        <button class="phase-tab active" data-phase="discovery" onclick="switchPhase('discovery')">
+            <span class="phase-status">🎯</span>
+            <span>Discovery</span>
+        </button>
+        <button class="phase-tab locked" data-phase="market" onclick="switchPhase('market')">
+            <span class="phase-status">📊</span>
+            <span>Market</span>
+        </button>
+        <button class="phase-tab locked" data-phase="specs" onclick="switchPhase('specs')">
+            <span class="phase-status">📋</span>
+            <span>Specs</span>
+        </button>
+        <button class="phase-tab locked" data-phase="design" onclick="switchPhase('design')">
+            <span class="phase-status">🎨</span>
+            <span>Design</span>
+        </button>
+        <button class="phase-tab locked" data-phase="dev" onclick="switchPhase('dev')">
+            <span class="phase-status">💻</span>
+            <span>Development</span>
+        </button>
+        <button class="phase-tab locked" data-phase="qa" onclick="switchPhase('qa')">
+            <span class="phase-status">🧪</span>
+            <span>QA</span>
+        </button>
+        <button class="phase-tab locked" data-phase="deploy" onclick="switchPhase('deploy')">
+            <span class="phase-status">🚀</span>
+            <span>Deploy</span>
+        </button>
+    </nav>
+
+    <div class="main-content">
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Discovery Phase -->
+            <section class="phase-section active" id="phase-discovery">
+                <div class="section-header">
+                    <h2 class="section-title">🎯 Discovery</h2>
+                    <span class="section-status in-progress" id="discovery-status">In Progress</span>
+                </div>
+
+                <div class="card-grid" id="discovery-cards">
+                    <div class="card" id="card-problem">
+                        <div class="card-header">
+                            <span class="card-icon red">🔥</span>
+                            <span>Problem</span>
+                        </div>
+                        <div class="card-content" id="discovery-problem">
+                            <p class="placeholder">Waiting for interview...</p>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-solution">
+                        <div class="card-header">
+                            <span class="card-icon green">💡</span>
+                            <span>Solution</span>
+                        </div>
+                        <div class="card-content" id="discovery-solution">
+                            <p class="placeholder">Waiting for interview...</p>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-users">
+                        <div class="card-header">
+                            <span class="card-icon blue">👥</span>
+                            <span>Target Users</span>
+                        </div>
+                        <div class="card-content" id="discovery-users">
+                            <p class="placeholder">Waiting for interview...</p>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-value">
+                        <div class="card-header">
+                            <span class="card-icon orange">💎</span>
+                            <span>Value Proposition</span>
+                        </div>
+                        <div class="card-content" id="discovery-value">
+                            <p class="placeholder">Waiting for interview...</p>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-features">
+                        <div class="card-header">
+                            <span class="card-icon pink">⚡</span>
+                            <span>Key Features</span>
+                        </div>
+                        <div class="card-content" id="discovery-features">
+                            <p class="placeholder">Waiting for interview...</p>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card-constraints">
+                        <div class="card-header">
+                            <span class="card-icon purple">⚙️</span>
+                            <span>Constraints</span>
+                        </div>
+                        <div class="card-content" id="discovery-constraints">
+                            <p class="placeholder">Waiting for interview...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Market Phase -->
+            <section class="phase-section" id="phase-market">
+                <div class="section-header">
+                    <h2 class="section-title">📊 Market Analysis</h2>
+                    <span class="section-status pending" id="market-status">Pending</span>
+                </div>
+
+                <div class="empty-state" id="market-empty">
+                    <div class="empty-state-icon">📊</div>
+                    <h3>Market Analysis Not Started</h3>
+                    <p>Complete the Discovery phase first. Market analysis will appear here once started.</p>
+                </div>
+
+                <div class="card-grid" id="market-cards" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Specs Phase -->
+            <section class="phase-section" id="phase-specs">
+                <div class="section-header">
+                    <h2 class="section-title">📋 Specifications</h2>
+                    <span class="section-status pending" id="specs-status">Pending</span>
+                </div>
+
+                <div class="empty-state" id="specs-empty">
+                    <div class="empty-state-icon">📋</div>
+                    <h3>Specifications Not Started</h3>
+                    <p>Complete Discovery and Market Analysis first.</p>
+                </div>
+
+                <div class="card-grid" id="specs-cards" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Design Phase -->
+            <section class="phase-section" id="phase-design">
+                <div class="section-header">
+                    <h2 class="section-title">🎨 Design System</h2>
+                    <span class="section-status pending" id="design-status">Pending</span>
+                </div>
+
+                <div class="empty-state" id="design-empty">
+                    <div class="empty-state-icon">🎨</div>
+                    <h3>Design Not Started</h3>
+                    <p>Complete Specifications first.</p>
+                </div>
+
+                <div class="card-grid" id="design-cards" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Dev Phase -->
+            <section class="phase-section" id="phase-dev">
+                <div class="section-header">
+                    <h2 class="section-title">💻 Development</h2>
+                    <span class="section-status pending" id="dev-status">Pending</span>
+                </div>
+
+                <div class="empty-state" id="dev-empty">
+                    <div class="empty-state-icon">💻</div>
+                    <h3>Development Not Started</h3>
+                    <p>Complete Design first.</p>
+                </div>
+
+                <div class="card-grid" id="dev-cards" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- QA Phase -->
+            <section class="phase-section" id="phase-qa">
+                <div class="section-header">
+                    <h2 class="section-title">🧪 Quality Assurance</h2>
+                    <span class="section-status pending" id="qa-status">Pending</span>
+                </div>
+
+                <div class="empty-state" id="qa-empty">
+                    <div class="empty-state-icon">🧪</div>
+                    <h3>QA Not Started</h3>
+                    <p>Complete Development first.</p>
+                </div>
+
+                <div class="card-grid" id="qa-cards" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- Deploy Phase -->
+            <section class="phase-section" id="phase-deploy">
+                <div class="section-header">
+                    <h2 class="section-title">🚀 Deployment</h2>
+                    <span class="section-status pending" id="deploy-status">Pending</span>
+                </div>
+
+                <div class="empty-state" id="deploy-empty">
+                    <div class="empty-state-icon">🚀</div>
+                    <h3>Deployment Not Started</h3>
+                    <p>Complete QA first.</p>
+                </div>
+
+                <div class="card-grid" id="deploy-cards" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">📋 Project Progress</div>
+            <div class="sidebar-content">
+                <!-- Timeline -->
+                <div class="progress-timeline">
+                    <h4>Timeline</h4>
+                    <div class="timeline-item active" id="timeline-discovery">
+                        <div class="timeline-dot">1</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Discovery</div>
+                            <div class="timeline-time" id="time-discovery">In progress...</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="timeline-market">
+                        <div class="timeline-dot">2</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Market Analysis</div>
+                            <div class="timeline-time" id="time-market">Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="timeline-specs">
+                        <div class="timeline-dot">3</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Specifications</div>
+                            <div class="timeline-time" id="time-specs">Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="timeline-design">
+                        <div class="timeline-dot">4</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Design</div>
+                            <div class="timeline-time" id="time-design">Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="timeline-dev">
+                        <div class="timeline-dot">5</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Development</div>
+                            <div class="timeline-time" id="time-dev">Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="timeline-qa">
+                        <div class="timeline-dot">6</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">QA</div>
+                            <div class="timeline-time" id="time-qa">Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="timeline-deploy">
+                        <div class="timeline-dot">7</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Deploy</div>
+                            <div class="timeline-time" id="time-deploy">Pending</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Summary -->
+                <div class="summary-box">
+                    <h4>📝 Current Summary</h4>
+                    <div class="summary-content" id="currentSummary">
+Start filling in the Discovery phase to see a summary here...
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="btn btn-secondary" onclick="exportProject()">📥 Export</button>
+                <button class="btn btn-primary" onclick="copySummary()">📋 Copy</button>
+            </div>
+        </aside>
+    </div>
+
+    <div class="copy-feedback" id="copyFeedback">✅ Copied to clipboard!</div>
+
+    <script>
+        // ============ STATE ============
+        const state = {
+            projectName: 'New Project',
+            engine: 'claude', // claude | codex | dual
+            currentPhase: 'discovery',
+            phases: {
+                discovery: {
+                    status: 'in-progress',
+                    startedAt: new Date().toISOString(),
+                    completedAt: null,
+                    data: {
+                        problem: '',
+                        solution: '',
+                        users: '',
+                        value: '',
+                        features: '',
+                        constraints: '',
+                        tags: {}
+                    }
+                },
+                market: { status: 'pending', startedAt: null, completedAt: null, data: {} },
+                specs: { status: 'pending', startedAt: null, completedAt: null, data: {} },
+                design: { status: 'pending', startedAt: null, completedAt: null, data: {} },
+                dev: { status: 'pending', startedAt: null, completedAt: null, data: {} },
+                qa: { status: 'pending', startedAt: null, completedAt: null, data: {} },
+                deploy: { status: 'pending', startedAt: null, completedAt: null, data: {} }
+            },
+            lastUpdate: null
+        };
+
+        // ============ LIVE POLLING ============
+        let pollInterval = null;
+        let lastStateHash = '';
+        let consecutiveFailures = 0;
+        const MAX_FAILURES = 5;
+
+        function startLivePolling() {
+            if (window.location.protocol === 'http:' && window.location.hostname === 'localhost') {
+                console.log('🔴 Starting live polling...');
+                pollInterval = setInterval(pollState, 2000);
+                pollState();
+            } else {
+                setStatus('manual', 'Manual Mode');
+            }
+        }
+
+        async function pollState() {
+            setStatus('polling', 'Polling...');
+            
+            try {
+                const response = await fetch('/state.json?t=' + Date.now(), { cache: 'no-store' });
+                
+                if (!response.ok) throw new Error('State file not found');
+                
+                const newState = await response.json();
+                const newHash = JSON.stringify(newState);
+                
+                if (newHash !== lastStateHash) {
+                    console.log('📥 State updated!');
+                    applyLiveState(newState);
+                    lastStateHash = newHash;
+                }
+                
+                consecutiveFailures = 0;
+                setStatus('connected', 'Live');
+                
+            } catch (error) {
+                consecutiveFailures++;
+                console.log('⚠️ Poll failed:', consecutiveFailures, error.message);
+                
+                if (consecutiveFailures >= MAX_FAILURES) {
+                    stopLivePolling();
+                    setStatus('manual', 'Manual Mode');
+                } else {
+                    setStatus('offline', 'Connecting...');
+                }
+            }
+        }
+
+        function stopLivePolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        function setStatus(statusClass, text) {
+            const statusEl = document.getElementById('liveStatus');
+            const statusText = document.getElementById('statusText');
+            statusEl.className = 'live-status ' + statusClass;
+            statusText.textContent = text;
+        }
+
+        function applyLiveState(newState) {
+            // Update project name
+            if (newState.projectName) {
+                state.projectName = newState.projectName;
+                document.getElementById('projectName').textContent = newState.projectName;
+            }
+
+            // Update engine
+            if (newState.engine) {
+                state.engine = newState.engine;
+                const badge = document.getElementById('engineBadge');
+                badge.className = 'engine-badge ' + newState.engine;
+                badge.textContent = newState.engine.charAt(0).toUpperCase() + newState.engine.slice(1);
+            }
+
+            // Update current phase
+            if (newState.currentPhase) {
+                state.currentPhase = newState.currentPhase;
+            }
+
+            // Update phases data
+            if (newState.phases) {
+                Object.keys(newState.phases).forEach(phase => {
+                    if (state.phases[phase]) {
+                        Object.assign(state.phases[phase], newState.phases[phase]);
+                    }
+                });
+            }
+
+            // Legacy support: direct discovery fields
+            if (newState.problem || newState.solution || newState.users || newState.value || newState.features) {
+                state.phases.discovery.data = {
+                    problem: newState.problem || state.phases.discovery.data.problem,
+                    solution: newState.solution || state.phases.discovery.data.solution,
+                    users: newState.users || state.phases.discovery.data.users,
+                    value: newState.value || state.phases.discovery.data.value,
+                    features: newState.features || state.phases.discovery.data.features,
+                    constraints: newState.constraints || state.phases.discovery.data.constraints,
+                    tags: newState.tags || state.phases.discovery.data.tags
+                };
+            }
+
+            state.lastUpdate = new Date();
+            renderAll();
+        }
+
+        // ============ RENDER ============
+        function renderAll() {
+            renderTabs();
+            renderTimeline();
+            renderDiscovery();
+            renderSummary();
+        }
+
+        function renderTabs() {
+            document.querySelectorAll('.phase-tab').forEach(tab => {
+                const phase = tab.dataset.phase;
+                const phaseData = state.phases[phase];
+                
+                tab.classList.remove('active', 'completed', 'in-progress', 'locked');
+                
+                if (phase === state.currentPhase) {
+                    tab.classList.add('active');
+                }
+                
+                if (phaseData.status === 'completed') {
+                    tab.classList.add('completed');
+                    tab.querySelector('.phase-status').textContent = '✅';
+                } else if (phaseData.status === 'in-progress') {
+                    tab.classList.add('in-progress');
+                    tab.querySelector('.phase-status').textContent = '🔄';
+                } else {
+                    tab.classList.add('locked');
+                }
+            });
+        }
+
+        function renderTimeline() {
+            const phases = ['discovery', 'market', 'specs', 'design', 'dev', 'qa', 'deploy'];
+            
+            phases.forEach(phase => {
+                const item = document.getElementById('timeline-' + phase);
+                const timeEl = document.getElementById('time-' + phase);
+                const phaseData = state.phases[phase];
+                
+                item.classList.remove('completed', 'active');
+                
+                if (phaseData.status === 'completed') {
+                    item.classList.add('completed');
+                    item.querySelector('.timeline-dot').textContent = '✓';
+                    timeEl.textContent = phaseData.completedAt ? formatTime(phaseData.completedAt) : 'Completed';
+                } else if (phaseData.status === 'in-progress') {
+                    item.classList.add('active');
+                    timeEl.textContent = 'In progress...';
+                } else {
+                    timeEl.textContent = 'Pending';
+                }
+            });
+        }
+
+        function renderDiscovery() {
+            const data = state.phases.discovery.data;
+            
+            const fields = ['problem', 'solution', 'users', 'value', 'features', 'constraints'];
+            fields.forEach(field => {
+                const el = document.getElementById('discovery-' + field);
+                const card = document.getElementById('card-' + field);
+                
+                if (data[field]) {
+                    el.innerHTML = formatContent(data[field]);
+                    if (card) card.classList.add('updated');
+                    setTimeout(() => card?.classList.remove('updated'), 500);
+                }
+            });
+
+            // Update status
+            const statusEl = document.getElementById('discovery-status');
+            const phaseStatus = state.phases.discovery.status;
+            statusEl.className = 'section-status ' + phaseStatus;
+            statusEl.textContent = phaseStatus === 'completed' ? 'Completed' : 
+                                   phaseStatus === 'in-progress' ? 'In Progress' : 'Pending';
+        }
+
+        function renderSummary() {
+            const data = state.phases.discovery.data;
+            let summary = '';
+
+            if (state.projectName && state.projectName !== 'New Project') {
+                summary += `🎯 Project: ${state.projectName}\n\n`;
+            }
+
+            if (data.problem) summary += `🔥 Problem:\n${data.problem}\n\n`;
+            if (data.solution) summary += `💡 Solution:\n${data.solution}\n\n`;
+            if (data.users) summary += `👥 Users:\n${data.users}\n\n`;
+            if (data.value) summary += `💎 Value:\n${data.value}\n\n`;
+            if (data.features) summary += `⚡ Features:\n${data.features}\n\n`;
+            if (data.constraints) summary += `⚙️ Constraints:\n${data.constraints}\n\n`;
+
+            document.getElementById('currentSummary').textContent = 
+                summary || 'Start filling in the Discovery phase to see a summary here...';
+        }
+
+        // ============ HELPERS ============
+        function formatContent(text) {
+            if (!text) return '<p class="placeholder">Waiting for data...</p>';
+            
+            // Convert bullet points
+            const lines = text.split('\n').map(line => {
+                if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
+                    return '<li>' + line.replace(/^[•\-]\s*/, '') + '</li>';
+                }
+                return '<p>' + line + '</p>';
+            });
+            
+            let html = '';
+            let inList = false;
+            
+            lines.forEach(line => {
+                if (line.startsWith('<li>')) {
+                    if (!inList) {
+                        html += '<ul>';
+                        inList = true;
+                    }
+                    html += line;
+                } else {
+                    if (inList) {
+                        html += '</ul>';
+                        inList = false;
+                    }
+                    html += line;
+                }
+            });
+            
+            if (inList) html += '</ul>';
+            
+            return html;
+        }
+
+        function formatTime(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // ============ INTERACTIONS ============
+        function switchPhase(phase) {
+            const tab = document.querySelector(`[data-phase="${phase}"]`);
+            if (tab.classList.contains('locked')) return;
+
+            state.currentPhase = phase;
+            
+            // Update tabs
+            document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.phase-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('phase-' + phase).classList.add('active');
+        }
+
+        function copySummary() {
+            const text = document.getElementById('currentSummary').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showFeedback('✅ Copied to clipboard!');
+            });
+        }
+
+        function exportProject() {
+            const data = JSON.stringify(state, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = (state.projectName || 'project') + '-export.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showFeedback('📥 Project exported!');
+        }
+
+        function showFeedback(message) {
+            const feedback = document.getElementById('copyFeedback');
+            feedback.textContent = message;
+            feedback.classList.add('show');
+            setTimeout(() => feedback.classList.remove('show'), 2000);
+        }
+
+        // ============ INIT ============
+        document.addEventListener('DOMContentLoaded', () => {
+            startLivePolling();
+            renderAll();
+        });
+    </script>
+</body>
+</html>
