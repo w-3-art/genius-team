@@ -56,16 +56,37 @@ check_json() {
 }
 
 # ═══════════════════════════════════════════════════════════════
+# 0. Detect Engine Type
+# ═══════════════════════════════════════════════════════════════
+ENGINE="claude"  # default
+if [ -f ".genius/config.json" ]; then
+  ENGINE=$(jq -r '.engine // "claude"' .genius/config.json 2>/dev/null)
+fi
+echo "🔧 Engine: $ENGINE"
+echo ""
+
+# ═══════════════════════════════════════════════════════════════
 # 1. Project Structure
 # ═══════════════════════════════════════════════════════════════
 echo "📁 Checking project structure..."
 
-check_file "CLAUDE.md"
-check_dir ".claude"
-check_file ".claude/settings.json"
-check_dir ".claude/commands"
-check_dir ".claude/agents"
-check_dir ".claude/skills"
+# Engine-specific checks
+if [ "$ENGINE" = "claude" ] || [ "$ENGINE" = "dual" ]; then
+  check_file "CLAUDE.md"
+  check_dir ".claude"
+  check_file ".claude/settings.json"
+  check_dir ".claude/commands"
+  check_dir ".claude/agents"
+  check_dir ".claude/skills"
+fi
+
+if [ "$ENGINE" = "codex" ] || [ "$ENGINE" = "dual" ]; then
+  check_file "AGENTS.md"
+  check_dir ".agents"
+  check_dir ".agents/skills"
+fi
+
+# Common directories
 check_dir ".genius"
 check_dir ".genius/memory"
 check_dir ".genius/memory/session-logs"
@@ -129,10 +150,17 @@ SKILLS=(
   "genius-team-optimizer"
 )
 
+# Determine skills directory based on engine
+if [ "$ENGINE" = "codex" ]; then
+  SKILLS_DIR=".agents/skills"
+else
+  SKILLS_DIR=".claude/skills"
+fi
+
 SKILL_COUNT=0
 SKILL_MISSING=0
 for skill in "${SKILLS[@]}"; do
-  if [ -f ".claude/skills/$skill/SKILL.md" ]; then
+  if [ -f "$SKILLS_DIR/$skill/SKILL.md" ]; then
     SKILL_COUNT=$((SKILL_COUNT + 1))
   else
     echo -e "  ${RED}✗${NC} $skill (missing)"
@@ -148,7 +176,7 @@ else
 fi
 
 # Check for new updater skill
-if [ -f ".claude/skills/genius-updater/SKILL.md" ]; then
+if [ -f "$SKILLS_DIR/genius-updater/SKILL.md" ]; then
   echo -e "  ${GREEN}✓${NC} genius-updater (bonus skill)"
 else
   echo -e "  ${YELLOW}○${NC} genius-updater (optional)"
@@ -158,26 +186,32 @@ fi
 echo ""
 
 # ═══════════════════════════════════════════════════════════════
-# 5. Commands
+# 5. Commands (Claude Code only)
 # ═══════════════════════════════════════════════════════════════
-echo "⚡ Checking commands..."
+if [ "$ENGINE" = "claude" ] || [ "$ENGINE" = "dual" ]; then
+  echo "⚡ Checking commands..."
 
-COMMANDS=("genius-start" "status" "continue" "reset" "hydrate-tasks" "save-tokens" "update-check")
-for cmd in "${COMMANDS[@]}"; do
-  check_file ".claude/commands/$cmd.md"
-done
+  COMMANDS=("genius-start" "status" "continue" "reset" "hydrate-tasks" "save-tokens" "update-check")
+  for cmd in "${COMMANDS[@]}"; do
+    check_file ".claude/commands/$cmd.md"
+  done
 
-echo ""
+  echo ""
+fi
 
 # ═══════════════════════════════════════════════════════════════
-# 6. Agents
+# 6. Agents (Claude Code only)
 # ═══════════════════════════════════════════════════════════════
-echo "🤖 Checking agents..."
+if [ "$ENGINE" = "claude" ] || [ "$ENGINE" = "dual" ]; then
+  echo "🤖 Checking agents..."
 
-AGENTS=("genius-dev" "genius-qa-micro" "genius-debugger" "genius-reviewer")
-for agent in "${AGENTS[@]}"; do
-  check_file ".claude/agents/$agent.md"
-done
+  AGENTS=("genius-dev" "genius-qa-micro" "genius-debugger" "genius-reviewer")
+  for agent in "${AGENTS[@]}"; do
+    check_file ".claude/agents/$agent.md"
+  done
+
+  echo ""
+fi
 
 echo ""
 
