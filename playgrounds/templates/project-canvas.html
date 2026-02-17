@@ -46,6 +46,12 @@
             z-index: 100;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
         .header h1 {
             font-size: 20px;
             font-weight: 600;
@@ -56,6 +62,61 @@
 
         .header h1::before {
             content: '🎯';
+        }
+
+        /* Live Status Indicator */
+        .live-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            transition: background 0.3s;
+        }
+
+        .live-status.connected .live-dot {
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        .live-status.polling .live-dot {
+            background: var(--accent-orange);
+            animation: pulse 0.5s infinite;
+        }
+
+        .live-status.offline .live-dot {
+            background: var(--accent-red);
+        }
+
+        .live-status.manual .live-dot {
+            background: var(--accent-blue);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .interview-phase {
+            padding: 4px 10px;
+            background: var(--accent-purple);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .preset-bar {
@@ -84,6 +145,11 @@
             background: var(--accent-purple);
             color: white;
             border-color: var(--accent-purple);
+        }
+
+        .preset-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .main-container {
@@ -130,7 +196,7 @@
             max-width: 280px;
             cursor: grab;
             z-index: 10;
-            transition: box-shadow 0.2s, border-color 0.2s;
+            transition: box-shadow 0.2s, border-color 0.2s, transform 0.3s;
         }
 
         .node:hover {
@@ -141,6 +207,15 @@
             cursor: grabbing;
             z-index: 100;
             box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        .node.updated {
+            animation: nodeUpdate 0.5s ease;
+        }
+
+        @keyframes nodeUpdate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(163, 113, 247, 0.5); }
         }
 
         .node.center-node {
@@ -192,6 +267,7 @@
             resize: vertical;
             min-height: 60px;
             font-family: inherit;
+            transition: background 0.3s;
         }
 
         .node-content textarea:focus {
@@ -201,6 +277,11 @@
 
         .node-content textarea::placeholder {
             color: var(--text-secondary);
+        }
+
+        .node-content textarea.live-readonly {
+            background: var(--bg-primary);
+            cursor: default;
         }
 
         .tags-container {
@@ -276,6 +357,68 @@
         .prompt-text .highlight {
             color: var(--accent-purple);
             font-weight: 500;
+        }
+
+        /* Interview Progress */
+        .interview-progress {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .interview-progress h4 {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-phases {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-phase {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .progress-phase.active {
+            color: var(--accent-purple);
+            font-weight: 500;
+        }
+
+        .progress-phase.completed {
+            color: var(--accent-green);
+        }
+
+        .progress-phase .phase-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .progress-phase.active .phase-icon {
+            border-color: var(--accent-purple);
+            background: rgba(163, 113, 247, 0.2);
+        }
+
+        .progress-phase.completed .phase-icon {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
         }
 
         .sidebar-actions {
@@ -398,6 +541,15 @@
             color: var(--text-secondary);
         }
 
+        /* Last update timestamp */
+        .last-update {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+
         @media (max-width: 1200px) {
             .main-container {
                 grid-template-columns: 1fr;
@@ -417,8 +569,15 @@
 </head>
 <body>
     <header class="header">
-        <h1>Project Canvas</h1>
-        <div class="preset-bar">
+        <div class="header-left">
+            <h1>Project Canvas</h1>
+            <div class="live-status offline" id="liveStatus">
+                <span class="live-dot"></span>
+                <span id="statusText">Manual Mode</span>
+            </div>
+            <span class="interview-phase" id="interviewPhase" style="display: none;">Phase 1</span>
+        </div>
+        <div class="preset-bar" id="presetBar">
             <button class="preset-btn" onclick="loadPreset('blank')">🆕 Blank</button>
             <button class="preset-btn" onclick="loadPreset('b2b-saas')">💼 B2B SaaS</button>
             <button class="preset-btn" onclick="loadPreset('marketplace')">🛒 Marketplace</button>
@@ -531,6 +690,37 @@
         <aside class="sidebar">
             <div class="sidebar-header">Project Summary</div>
             <div class="prompt-output">
+                <!-- Interview Progress (shown in live mode) -->
+                <div class="interview-progress" id="interviewProgress" style="display: none;">
+                    <h4>📋 Interview Progress</h4>
+                    <div class="progress-phases">
+                        <div class="progress-phase" id="phase-vision">
+                            <span class="phase-icon">1</span>
+                            <span>Vision & Problem</span>
+                        </div>
+                        <div class="progress-phase" id="phase-users">
+                            <span class="phase-icon">2</span>
+                            <span>Target Users</span>
+                        </div>
+                        <div class="progress-phase" id="phase-features">
+                            <span class="phase-icon">3</span>
+                            <span>Core Features</span>
+                        </div>
+                        <div class="progress-phase" id="phase-constraints">
+                            <span class="phase-icon">4</span>
+                            <span>Constraints</span>
+                        </div>
+                        <div class="progress-phase" id="phase-business">
+                            <span class="phase-icon">5</span>
+                            <span>Business Model</span>
+                        </div>
+                        <div class="progress-phase" id="phase-risks">
+                            <span class="phase-icon">6</span>
+                            <span>Risks & Validation</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="prompt-text" id="prompt-output">
                     <em style="color: var(--text-secondary);">Start filling in the canvas to generate a project summary...</em>
                 </div>
@@ -560,6 +750,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="last-update" id="lastUpdate" style="display: none;">
+                Last update: --
             </div>
             <div class="sidebar-actions">
                 <button class="btn btn-secondary" onclick="resetCanvas()">🔄 Reset</button>
@@ -593,8 +786,221 @@
                 value: [],
                 features: []
             },
-            nodePositions: {}
+            nodePositions: {},
+            // Live mode state
+            liveMode: false,
+            interviewPhase: null,
+            interviewComplete: false,
+            lastUpdateTime: null
         };
+
+        // ============ LIVE POLLING ============
+        let pollInterval = null;
+        let lastStateHash = '';
+        let consecutiveFailures = 0;
+        const MAX_FAILURES = 5;
+
+        function startLivePolling() {
+            // Check if we're running on localhost (served by Python)
+            if (window.location.protocol === 'http:' && window.location.hostname === 'localhost') {
+                console.log('🔴 Starting live polling...');
+                pollInterval = setInterval(pollState, 2000);
+                pollState(); // Initial poll
+            } else {
+                // File:// or other - manual mode
+                setStatus('manual', 'Manual Mode');
+            }
+        }
+
+        async function pollState() {
+            setStatus('polling', 'Polling...');
+            
+            try {
+                const response = await fetch('/state.json?t=' + Date.now(), {
+                    cache: 'no-store'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('State file not found');
+                }
+                
+                const newState = await response.json();
+                const newHash = JSON.stringify(newState);
+                
+                if (newHash !== lastStateHash) {
+                    console.log('📥 State updated!');
+                    applyLiveState(newState);
+                    lastStateHash = newHash;
+                }
+                
+                consecutiveFailures = 0;
+                setStatus('connected', 'Live');
+                
+            } catch (error) {
+                consecutiveFailures++;
+                console.log('⚠️ Poll failed:', consecutiveFailures, error.message);
+                
+                if (consecutiveFailures >= MAX_FAILURES) {
+                    // Stop polling, switch to manual mode
+                    stopLivePolling();
+                    setStatus('manual', 'Manual Mode');
+                    console.log('🔵 Switched to manual mode after failures');
+                } else {
+                    setStatus('offline', 'Connecting...');
+                }
+            }
+        }
+
+        function stopLivePolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        function setStatus(statusClass, text) {
+            const statusEl = document.getElementById('liveStatus');
+            const statusText = document.getElementById('statusText');
+            
+            statusEl.className = 'live-status ' + statusClass;
+            statusText.textContent = text;
+        }
+
+        function applyLiveState(newState) {
+            state.liveMode = true;
+            
+            // Apply values with animation
+            const fieldsToUpdate = [
+                { key: 'projectName', id: 'project-name', nodeId: 'node-project' },
+                { key: 'problem', id: 'problem', nodeId: 'node-problem' },
+                { key: 'solution', id: 'solution', nodeId: 'node-solution' },
+                { key: 'users', id: 'users', nodeId: 'node-users' },
+                { key: 'value', id: 'value', nodeId: 'node-value' },
+                { key: 'features', id: 'features', nodeId: 'node-features' }
+            ];
+            
+            fieldsToUpdate.forEach(field => {
+                const newValue = newState[field.key] || '';
+                const oldValue = state[field.key] || '';
+                
+                if (newValue !== oldValue) {
+                    state[field.key] = newValue;
+                    const textarea = document.getElementById(field.id);
+                    if (textarea) {
+                        textarea.value = newValue;
+                        // Trigger update animation on node
+                        const node = document.getElementById(field.nodeId);
+                        if (node) {
+                            node.classList.add('updated');
+                            setTimeout(() => node.classList.remove('updated'), 500);
+                        }
+                    }
+                }
+            });
+            
+            // Apply notes
+            if (newState.notes) {
+                Object.keys(newState.notes).forEach(key => {
+                    const newValue = newState.notes[key] || '';
+                    if (state.notes[key] !== newValue) {
+                        state.notes[key] = newValue;
+                        const textarea = document.getElementById('note-' + key);
+                        if (textarea) textarea.value = newValue;
+                    }
+                });
+            }
+            
+            // Apply tags
+            if (newState.tags) {
+                Object.keys(newState.tags).forEach(category => {
+                    state.tags[category] = newState.tags[category] || [];
+                    // Update tag UI
+                    const node = document.getElementById('node-' + (category === 'projectName' ? 'project' : category));
+                    if (node) {
+                        const tags = node.querySelectorAll('.tag');
+                        tags.forEach(tag => {
+                            const isActive = state.tags[category].includes(tag.textContent);
+                            tag.classList.toggle('active', isActive);
+                        });
+                    }
+                });
+            }
+            
+            // Update interview phase
+            if (newState.interviewPhase) {
+                updateInterviewPhase(newState.interviewPhase);
+            }
+            
+            // Update complete status
+            if (newState.interviewComplete) {
+                state.interviewComplete = true;
+                enableManualEditing();
+            }
+            
+            // Show last update time
+            state.lastUpdateTime = new Date();
+            const lastUpdateEl = document.getElementById('lastUpdate');
+            lastUpdateEl.style.display = 'block';
+            lastUpdateEl.textContent = 'Last update: ' + state.lastUpdateTime.toLocaleTimeString();
+            
+            // Show interview progress
+            document.getElementById('interviewProgress').style.display = 'block';
+            
+            // Disable presets during live mode
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.disabled = !state.interviewComplete;
+            });
+            
+            updateAll();
+        }
+
+        function updateInterviewPhase(phase) {
+            state.interviewPhase = phase;
+            
+            // Update phase badge
+            const phaseEl = document.getElementById('interviewPhase');
+            phaseEl.style.display = 'inline-block';
+            phaseEl.textContent = phase;
+            
+            // Update progress indicators
+            const phases = ['vision', 'users', 'features', 'constraints', 'business', 'risks'];
+            const phaseMap = {
+                'Phase 1: Vision': 0,
+                'Phase 2: Users': 1,
+                'Phase 3: Features': 2,
+                'Phase 4: Constraints': 3,
+                'Phase 5: Business': 4,
+                'Phase 6: Risks': 5,
+                'Validation': 6,
+                'Complete': 7
+            };
+            
+            const currentPhaseIndex = phaseMap[phase] ?? 0;
+            
+            phases.forEach((p, i) => {
+                const el = document.getElementById('phase-' + p);
+                if (!el) return;
+                
+                el.classList.remove('active', 'completed');
+                if (i < currentPhaseIndex) {
+                    el.classList.add('completed');
+                    el.querySelector('.phase-icon').textContent = '✓';
+                } else if (i === currentPhaseIndex) {
+                    el.classList.add('active');
+                    el.querySelector('.phase-icon').textContent = (i + 1).toString();
+                } else {
+                    el.querySelector('.phase-icon').textContent = (i + 1).toString();
+                }
+            });
+        }
+
+        function enableManualEditing() {
+            // Re-enable editing after interview complete
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.disabled = false;
+            });
+            setStatus('manual', 'Edit Mode');
+        }
 
         // ============ PRESETS ============
         const presets = {
@@ -645,6 +1051,7 @@
             initDragAndDrop();
             drawConnections();
             updateAll();
+            startLivePolling();
             
             window.addEventListener('resize', drawConnections);
         }

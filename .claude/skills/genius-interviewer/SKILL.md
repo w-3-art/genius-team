@@ -7,6 +7,7 @@ allowed-tools:
   - Write(*)
   - Glob(*)
   - WebSearch(*)
+  - Bash(*)
 hooks:
   Stop:
     - type: command
@@ -30,9 +31,127 @@ hooks:
 
 ---
 
-# Genius Interviewer v9.0 — The Discovery Master
+# Genius Interviewer v10.0 — Live Discovery
 
-**Understanding your vision before we build.**
+**Understanding your vision as you speak. Watch your project take shape in real-time.**
+
+## 🔴 LIVE PLAYGROUND MODE
+
+### Step 1: Start the Live Server
+
+**AT THE VERY BEGINNING of the interview, run:**
+
+```bash
+# Create output directory
+mkdir -p .genius/outputs
+
+# Copy the canvas template
+cp playgrounds/templates/project-canvas.html .genius/outputs/DISCOVERY.html
+
+# Initialize empty state
+cat > .genius/outputs/state.json << 'EOF'
+{
+  "projectName": "",
+  "problem": "",
+  "solution": "",
+  "users": "",
+  "value": "",
+  "features": "",
+  "notes": {
+    "problem": "",
+    "solution": "",
+    "users": "",
+    "value": "",
+    "features": ""
+  },
+  "tags": {
+    "problem": [],
+    "solution": [],
+    "users": [],
+    "value": [],
+    "features": []
+  },
+  "interviewPhase": "Phase 1: Vision",
+  "interviewComplete": false
+}
+EOF
+
+# Start Python HTTP server in background (port 8888)
+cd .genius/outputs && python3 -m http.server 8888 &
+echo $! > .genius/outputs/server.pid
+
+# Wait for server to start
+sleep 1
+
+# Open in browser
+open http://localhost:8888/DISCOVERY.html
+```
+
+**Tell the user:** "🎯 I've opened the Project Canvas in your browser. Watch it update live as we talk!"
+
+### Step 2: Update State After EVERY Answer
+
+After the user answers a question, update `.genius/outputs/state.json`:
+
+```bash
+# Example: After getting project name
+cat > .genius/outputs/state.json << 'EOF'
+{
+  "projectName": "TaskFlow",
+  "problem": "",
+  "solution": "",
+  "users": "",
+  "value": "",
+  "features": "",
+  "notes": {
+    "problem": "",
+    "solution": "",
+    "users": "",
+    "value": "",
+    "features": ""
+  },
+  "tags": {
+    "problem": [],
+    "solution": [],
+    "users": [],
+    "value": [],
+    "features": []
+  },
+  "interviewPhase": "Phase 1: Vision",
+  "interviewComplete": false
+}
+EOF
+```
+
+### Step 3: Update Phase as You Progress
+
+Change `interviewPhase` as you move through sections:
+- `"Phase 1: Vision"` — Vision & Problem questions
+- `"Phase 2: Users"` — Target Users questions
+- `"Phase 3: Features"` — Core Features questions
+- `"Phase 4: Constraints"` — Constraints questions
+- `"Phase 5: Business"` — Business Model questions
+- `"Phase 6: Risks"` — Risks & Validation
+- `"Validation"` — Final summary check
+- `"Complete"` — Interview done
+
+### Step 4: Cleanup at End
+
+```bash
+# Mark interview complete
+cat > .genius/outputs/state.json << 'EOF'
+{
+  ... (full state with all data),
+  "interviewPhase": "Complete",
+  "interviewComplete": true
+}
+EOF
+
+# Kill the server after 5 minutes (user can close tab)
+(sleep 300 && kill $(cat .genius/outputs/server.pid) 2>/dev/null) &
+```
+
+---
 
 ## Core Principle: ONE QUESTION AT A TIME
 
@@ -91,33 +210,47 @@ Append to `.genius/memory/decisions.json`:
 - What problem does it solve?
 - Why does this matter to you?
 
+**Update state.json with:** `projectName`, `problem` (partial)
+
 ### Phase 2: The Users (2-3 questions)
 - Who is this for?
 - What's their current solution?
 - How will they find you?
+
+**Update state.json with:** `users`
 
 ### Phase 3: Core Features (3-4 questions)
 - What's the ONE thing it must do?
 - What happens when a user first arrives?
 - Walk me through the main user journey.
 
+**Update state.json with:** `features`, `solution`
+
 ### Phase 4: Constraints (2-3 questions)
 - Timeline expectations?
 - Budget for services?
 - Any technical requirements?
+
+**Update state.json notes:** `notes.solution` (technical), `notes.features` (priorities)
 
 ### Phase 5: Business Model (2-3 questions)
 - How will this make money?
 - Pricing thoughts?
 - What does success look like?
 
+**Update state.json with:** `value`, `notes.value`
+
 ### Phase 6: Risk Discovery (2-3 questions)
 - What could make this project fail?
 - Any dependencies on external parties?
 - Decisions still pending?
 
+**Update state.json notes:** `notes.problem` (risks)
+
 ### Phase 7: Validation
 Summarize understanding and confirm.
+
+**Set:** `interviewPhase: "Validation"`, then `"Complete"` after confirmation
 
 ---
 
@@ -136,115 +269,48 @@ Generate `.claude/discovery/DISCOVERY.xml` with full structured output including
 
 ---
 
-## Playground Integration
+## Playground State Schema
 
-### State Collection During Interview
-
-While conducting the interview, maintain an internal state object with all discoveries:
-
-```javascript
-// Mental model - collect this data throughout the interview
-interviewState = {
-    projectName: "",      // Layer 2-5 answers
-    problem: "",          // Layer 1 - core pain
-    solution: "",         // How we solve it
-    users: "",            // Target personas
-    value: "",            // Unique value proposition
-    features: "",         // Key features (bullet list)
-    notes: {
-        problem: "",      // Deep problem insights
-        solution: "",     // Technical approach notes
-        users: "",        // User research findings
-        value: "",        // Competitive analysis
-        features: ""      // Priority/roadmap notes
-    },
-    tags: {
-        problem: [],      // e.g., ["Urgent", "Expensive"]
-        solution: [],     // e.g., ["AI-powered", "Automated"]
-        users: [],        // e.g., ["B2B", "Enterprise"]
-        value: [],        // e.g., ["Faster", "Better UX"]
-        features: []      // e.g., ["MVP", "V2"]
-    }
+```json
+{
+  "projectName": "string",
+  "problem": "string - the core problem being solved",
+  "solution": "string - how we solve it",
+  "users": "string - target personas",
+  "value": "string - unique value proposition",
+  "features": "string - bullet list of key features",
+  "notes": {
+    "problem": "string - deep problem insights, risks",
+    "solution": "string - technical approach notes",
+    "users": "string - user research findings",
+    "value": "string - competitive analysis",
+    "features": "string - priority/roadmap notes"
+  },
+  "tags": {
+    "problem": ["Urgent", "Expensive"],
+    "solution": ["AI-powered", "Automated"],
+    "users": ["B2B", "Enterprise"],
+    "value": ["Faster", "Better UX"],
+    "features": ["MVP", "V2"]
+  },
+  "interviewPhase": "Phase 1: Vision",
+  "interviewComplete": false
 }
 ```
 
-### Generate Interactive Canvas
+**Tag suggestions by category:**
+- **problem:** Pain point, Urgent, Expensive, Frequent
+- **solution:** Innovative, Simple, Automated, AI-powered
+- **users:** B2B, B2C, Enterprise, SMB, Developers
+- **value:** Faster, Cheaper, Better UX, All-in-one
+- **features:** MVP, V2, Nice-to-have
 
-After the interview is complete, generate the visual playground:
+---
 
-```bash
-# 1. Ensure output directory exists
-mkdir -p .genius/outputs
+## Dual Output (Compatibility)
 
-# 2. Copy the template
-cp playgrounds/templates/project-canvas.html .genius/outputs/DISCOVERY.html
-
-# 3. Inject the interview data into the HTML
-# Use sed or inline script to populate the state object
-# The template has a `state` object in JavaScript that we populate
-
-# 4. Open the playground for user validation
-open .genius/outputs/DISCOVERY.html
-```
-
-### Data Injection
-
-Inject collected data by replacing the empty state initialization in the HTML:
-
-```javascript
-// Find and replace the state initialization with populated data:
-const state = {
-    projectName: 'YOUR_PROJECT_NAME',
-    problem: 'YOUR_PROBLEM_STATEMENT',
-    solution: 'YOUR_SOLUTION',
-    users: 'YOUR_TARGET_USERS',
-    value: 'YOUR_VALUE_PROP',
-    features: 'YOUR_FEATURES_LIST',
-    notes: {
-        problem: 'DEEP_PROBLEM_NOTES',
-        solution: 'TECHNICAL_NOTES',
-        users: 'USER_RESEARCH',
-        value: 'COMPETITIVE_ANALYSIS',
-        features: 'PRIORITY_NOTES'
-    },
-    tags: {
-        problem: ['tag1', 'tag2'],
-        solution: ['tag1'],
-        users: ['B2B'],
-        value: ['Faster'],
-        features: ['MVP']
-    }
-};
-```
-
-Also populate the textarea values using JavaScript at the end of init():
-```javascript
-// Add after state injection - populate form fields
-document.getElementById('project-name').value = state.projectName;
-document.getElementById('problem').value = state.problem;
-document.getElementById('solution').value = state.solution;
-document.getElementById('users').value = state.users;
-document.getElementById('value').value = state.value;
-document.getElementById('features').value = state.features;
-document.getElementById('note-problem').value = state.notes.problem;
-document.getElementById('note-solution').value = state.notes.solution;
-document.getElementById('note-users').value = state.notes.users;
-document.getElementById('note-value').value = state.notes.value;
-document.getElementById('note-features').value = state.notes.features;
-updateAll();
-```
-
-### User Validation Flow
-
-1. **Open playground**: User sees the visual mind map with all interview data
-2. **Adjust if needed**: User can drag nodes, edit text, toggle tags
-3. **Copy Summary**: User clicks "📋 Copy Summary" to get the structured output
-4. **Proceed**: The copied prompt output becomes input for `genius-product-market-analyst`
-
-### Dual Output (Compatibility)
-
-Always generate BOTH outputs:
-1. `.genius/outputs/DISCOVERY.html` — Interactive playground for visual validation
+Always generate BOTH outputs at the end:
+1. `.genius/outputs/DISCOVERY.html` — Already updated live during interview
 2. `.claude/discovery/DISCOVERY.xml` — Structured XML for agent handoffs
 
 The **prompt output from the playground** (what user copies) is the canonical input for the next phase.
@@ -271,9 +337,12 @@ Provides: DISCOVERY.xml, user context, constraints
 - Jump to solutions before understanding the problem
 - Make assumptions about users
 - Skip risk discovery
+- **Forget to update state.json after EVERY answer**
+- **Forget to start the live server at the beginning**
 
 **DO:**
 - Lead with benefits
 - Use the 5 Whys technique
 - Document faithfully
 - Challenge assumptions respectfully
+- **Update the canvas live so the user sees progress**
