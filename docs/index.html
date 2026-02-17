@@ -250,6 +250,85 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 .glow{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:-1;opacity:.4}
 .glow-1{width:500px;height:500px;background:rgba(124,58,237,.12);top:10%;left:-10%}
 .glow-2{width:400px;height:400px;background:rgba(59,130,246,.1);bottom:20%;right:-5%}
+
+/* WIZARD STYLES */
+.wizard-container{background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:2rem;overflow:hidden}
+.wizard-progress{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:2.5rem;padding:0 1rem}
+.progress-step{display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.5;transition:opacity .3s}
+.progress-step.active,.progress-step.completed{opacity:1}
+.progress-num{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;transition:all .3s}
+.progress-step.active .progress-num{background:var(--grad);border-color:transparent;color:#fff}
+.progress-step.completed .progress-num{background:#22c55e;border-color:transparent;color:#fff}
+.progress-label{font-size:.7rem;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.progress-step.active .progress-label,.progress-step.completed .progress-label{color:var(--text)}
+.progress-line{flex:1;max-width:80px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.progress-fill{width:0;height:100%;background:var(--grad);transition:width .4s ease}
+.progress-step.completed+.progress-line .progress-fill{width:100%}
+
+.wizard-steps{position:relative;min-height:320px}
+.wizard-step{position:absolute;top:0;left:0;right:0;opacity:0;visibility:hidden;transform:translateX(30px);transition:all .4s ease;display:flex;flex-direction:column;align-items:center;text-align:center;padding:1rem}
+.wizard-step.active{opacity:1;visibility:visible;transform:translateX(0);position:relative}
+.wizard-step.exit-left{transform:translateX(-30px)}
+.wizard-step-icon{font-size:3rem;margin-bottom:1rem}
+.wizard-step-title{font-size:1.5rem;font-weight:700;margin-bottom:.5rem}
+.wizard-step-desc{color:var(--text2);font-size:.95rem;margin-bottom:1.5rem;max-width:400px}
+
+.wizard-input-wrap{position:relative;width:100%;max-width:350px;margin-bottom:1.5rem}
+.wizard-input{width:100%;padding:1rem 1.25rem;border-radius:12px;border:2px solid rgba(255,255,255,.15);background:var(--bg2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1.1rem;text-align:center;transition:all .2s}
+.wizard-input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgba(124,58,237,.15)}
+.wizard-input::placeholder{color:var(--text3)}
+.wizard-input.invalid{border-color:#ef4444}
+.wizard-input.valid{border-color:#22c55e}
+.input-validation{position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:1.2rem}
+
+.wizard-options{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.wizard-options.three-cols{gap:.75rem}
+.wizard-option{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:1.25rem 1.5rem;min-width:140px;border-radius:var(--radius);background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);cursor:pointer;transition:all .25s;position:relative}
+.wizard-option:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);transform:translateY(-2px)}
+.wizard-option.selected{background:rgba(124,58,237,.15);border-color:var(--purple);box-shadow:0 0 0 4px rgba(124,58,237,.1)}
+.option-icon{font-size:1.75rem}
+.option-title{font-weight:600;font-size:.95rem}
+.option-desc{color:var(--text3);font-size:.75rem}
+.option-tooltip{display:none;position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);width:260px;padding:.75rem 1rem;background:var(--bg);border:1px solid rgba(255,255,255,.15);border-radius:10px;font-size:.8rem;color:var(--text2);text-align:left;line-height:1.5;z-index:10;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.option-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:rgba(255,255,255,.15)}
+.wizard-option.has-tooltip:hover .option-tooltip{display:block}
+
+.wizard-nav{display:flex;justify-content:space-between;width:100%;max-width:400px;margin-top:auto;padding-top:1rem}
+.wizard-btn{padding:.75rem 1.75rem;border-radius:10px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;transition:all .25s}
+.wizard-btn.primary{background:var(--grad);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.3)}
+.wizard-btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(124,58,237,.4)}
+.wizard-btn.primary.generate{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 4px 20px rgba(34,197,94,.3)}
+.wizard-btn.primary.generate:hover{box-shadow:0 6px 25px rgba(34,197,94,.4)}
+.wizard-btn.secondary{background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.1)}
+.wizard-btn.secondary:hover{background:rgba(255,255,255,.1)}
+.wizard-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+.wizard-result-box{background:var(--bg2);border:1px solid rgba(124,58,237,.3);border-radius:var(--radius);padding:1.25rem;position:relative;width:100%;max-width:600px;margin-bottom:1rem}
+.result-command{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text);line-height:1.6;word-break:break-all;text-align:left;padding-right:3rem}
+.wizard-copy-btn{position:absolute;top:.75rem;right:.75rem;display:flex;align-items:center;gap:.4rem;padding:.5rem .75rem;border-radius:8px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:var(--purple);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.wizard-copy-btn:hover{background:rgba(124,58,237,.25)}
+.wizard-copy-btn.copied{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:#22c55e}
+.wizard-then-run{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:var(--radius);padding:1rem 1.5rem;width:100%;max-width:600px;text-align:left}
+.wizard-then-run strong{color:#22c55e}
+.wizard-then-run code{background:rgba(0,0,0,.3);padding:.2rem .5rem;border-radius:4px;font-size:.9rem}
+.wizard-then-run .dual-note{margin-top:.5rem;font-size:.85rem;color:var(--text2)}
+
+@media(max-width:600px){
+  .wizard-container{padding:1.25rem}
+  .wizard-progress{gap:.25rem;padding:0}
+  .progress-label{display:none}
+  .progress-num{width:28px;height:28px;font-size:.75rem}
+  .progress-line{max-width:40px}
+  .wizard-step-title{font-size:1.25rem}
+  .wizard-options{flex-direction:column}
+  .wizard-option{flex-direction:row;min-width:unset;width:100%;max-width:280px;padding:1rem;text-align:left}
+  .option-icon{font-size:1.5rem}
+  .wizard-options.three-cols .wizard-option{flex-direction:column;text-align:center}
+  .wizard-nav{flex-direction:column-reverse;gap:.75rem}
+  .wizard-btn{width:100%}
+  .result-command{font-size:.75rem;padding-right:0;padding-top:2.5rem}
+  .wizard-copy-btn{top:.5rem;right:.5rem}
+}
 </style>
 </head>
 <body>
@@ -903,6 +982,177 @@ function escapeHtml(text) {
 document.querySelectorAll('.nav-links a').forEach(a => {
   a.addEventListener('click', () => document.querySelector('.nav-links').classList.remove('open'));
 });
+
+// ==================== WIZARD ====================
+const wizardState = {
+  step: 1,
+  projectName: 'my-awesome-app',
+  environment: 'cli',
+  engine: 'claude'
+};
+
+function validateProjectName(input) {
+  const value = input.value.trim();
+  const validation = document.getElementById('nameValidation');
+  const nextBtn = document.getElementById('step1Next');
+  
+  // Valid: lowercase, numbers, dashes, no spaces, no consecutive dashes
+  const isValid = /^[a-z][a-z0-9-]*[a-z0-9]$|^[a-z]$/.test(value) && !value.includes('--');
+  const isEmpty = value.length === 0;
+  
+  if (isEmpty) {
+    input.classList.remove('valid', 'invalid');
+    validation.textContent = '';
+    wizardState.projectName = 'my-awesome-app';
+    nextBtn.disabled = false;
+  } else if (isValid) {
+    input.classList.remove('invalid');
+    input.classList.add('valid');
+    validation.textContent = '✓';
+    wizardState.projectName = value;
+    nextBtn.disabled = false;
+  } else {
+    input.classList.remove('valid');
+    input.classList.add('invalid');
+    validation.textContent = '✗';
+    nextBtn.disabled = true;
+  }
+}
+
+function selectOption(btn, type) {
+  const parent = btn.closest('.wizard-options');
+  parent.querySelectorAll('.wizard-option').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  wizardState[type] = btn.dataset.value;
+}
+
+function updateProgress() {
+  document.querySelectorAll('.progress-step').forEach((step, i) => {
+    const stepNum = i + 1;
+    step.classList.remove('active', 'completed');
+    if (stepNum === wizardState.step) {
+      step.classList.add('active');
+    } else if (stepNum < wizardState.step) {
+      step.classList.add('completed');
+    }
+  });
+  
+  // Update progress lines
+  document.getElementById('progressFill1').style.width = wizardState.step > 1 ? '100%' : '0';
+  document.getElementById('progressFill2').style.width = wizardState.step > 2 ? '100%' : '0';
+}
+
+function wizardNext() {
+  if (wizardState.step >= 3) return;
+  
+  const currentStep = document.getElementById(`wizardStep${wizardState.step}`);
+  currentStep.classList.add('exit-left');
+  
+  setTimeout(() => {
+    currentStep.classList.remove('active', 'exit-left');
+    wizardState.step++;
+    updateProgress();
+    const nextStep = document.getElementById(`wizardStep${wizardState.step}`);
+    nextStep.classList.add('active');
+  }, 200);
+}
+
+function wizardBack() {
+  if (wizardState.step <= 1) return;
+  
+  const currentStep = document.getElementById(`wizardStep${wizardState.step}`);
+  currentStep.classList.remove('active');
+  
+  wizardState.step--;
+  updateProgress();
+  
+  const prevStep = document.getElementById(`wizardStep${wizardState.step}`);
+  prevStep.classList.add('active');
+}
+
+function wizardGenerate() {
+  const currentStep = document.getElementById('wizardStep3');
+  currentStep.classList.add('exit-left');
+  
+  setTimeout(() => {
+    currentStep.classList.remove('active', 'exit-left');
+    
+    // Generate command
+    const baseCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) ${wizardState.projectName}`;
+    let flags = [];
+    
+    if (wizardState.engine !== 'claude') {
+      flags.push(`--engine=${wizardState.engine}`);
+    }
+    if (wizardState.environment !== 'cli') {
+      flags.push(`--mode=${wizardState.environment}`);
+    }
+    
+    const fullCmd = flags.length > 0 ? `${baseCmd} ${flags.join(' ')}` : baseCmd;
+    document.getElementById('resultCommand').textContent = fullCmd;
+    
+    // Generate "then run" instruction
+    let thenRunHtml = '';
+    if (wizardState.engine === 'claude') {
+      thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>`;
+    } else if (wizardState.engine === 'codex') {
+      thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && codex</code>`;
+    } else {
+      thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>
+        <div class="dual-note">Claude builds, Codex challenges — they iterate until both agree.</div>`;
+    }
+    document.getElementById('thenRun').innerHTML = thenRunHtml;
+    
+    // Update progress to show completed
+    wizardState.step = 4;
+    document.querySelectorAll('.progress-step').forEach(s => s.classList.add('completed'));
+    document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '100%');
+    
+    const resultStep = document.getElementById('wizardResult');
+    resultStep.classList.add('active');
+  }, 200);
+}
+
+function copyWizardCommand() {
+  const cmd = document.getElementById('resultCommand').textContent;
+  navigator.clipboard.writeText(cmd).then(() => {
+    const btn = document.querySelector('.wizard-copy-btn');
+    btn.classList.add('copied');
+    btn.querySelector('.copy-text').textContent = 'Copied!';
+    btn.querySelector('.copy-icon').textContent = '✓';
+    
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.querySelector('.copy-text').textContent = 'Copy';
+      btn.querySelector('.copy-icon').textContent = '📋';
+    }, 2500);
+  });
+}
+
+function wizardReset() {
+  // Reset state
+  wizardState.step = 1;
+  wizardState.projectName = 'my-awesome-app';
+  wizardState.environment = 'cli';
+  wizardState.engine = 'claude';
+  
+  // Reset UI
+  document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active', 'exit-left'));
+  document.getElementById('wizardStep1').classList.add('active');
+  document.getElementById('wizardProjectName').value = '';
+  document.getElementById('wizardProjectName').classList.remove('valid', 'invalid');
+  document.getElementById('nameValidation').textContent = '';
+  document.getElementById('step1Next').disabled = false;
+  
+  // Reset options
+  document.querySelectorAll('.wizard-option').forEach(o => o.classList.remove('selected'));
+  document.querySelector('[data-value="cli"]').classList.add('selected');
+  document.querySelector('[data-value="claude"]').classList.add('selected');
+  
+  // Reset progress
+  document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '0');
+  updateProgress();
+}
 </script>
 </body>
 </html>
