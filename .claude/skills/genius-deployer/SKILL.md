@@ -7,15 +7,54 @@ description: Deployment and operations skill that handles staging and production
 
 **This skill MUST generate:**
 - Log: `DEPLOY-LOG.md`
-- HTML Playground: `.genius/outputs/DEPLOY-CHECKLIST.html`
+- Unified State: `.genius/outputs/state.json` (with `phases.deploy` populated)
 
 **Before transitioning to next skill:**
 1. Verify DEPLOY-LOG.md exists
-2. Verify HTML playground exists
-3. Update state.json checkpoint
-4. Announce transition
+2. Verify state.json has deploy phase data
+3. Update phase status
+4. Announce completion
 
 **If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
+## Unified Dashboard Integration
+
+**DO NOT launch separate HTML files.** Update the unified state instead.
+
+### On Phase Start
+Update `.genius/outputs/state.json`:
+```json
+{
+  "currentPhase": "deploy",
+  "phases": {
+    "deploy": {
+      "status": "in-progress",
+      "data": {
+        "checklist": {
+          "preDeploy": [],
+          "deploy": [],
+          "postDeploy": [],
+          "rollback": []
+        },
+        "projectInfo": {
+          "version": "",
+          "environment": "",
+          "deployDate": ""
+        },
+        "goStatus": "no-go"
+      }
+    }
+  }
+}
+```
+
+### On Phase Complete
+Update state.json with:
+- `phases.deploy.status` = `"complete"`
+- `phases.deploy.data.goStatus` = `"deployed"`
+- All phases complete = project shipped! 🚀
 
 ---
 
@@ -88,37 +127,70 @@ Provides: Deployment logs, error messages, environment context
 
 ---
 
-## Playground Integration
+## Playground Integration (Unified Dashboard)
 
-### Deploy Checklist Playground
-Before any deployment, generate an interactive checklist for human validation.
+### Deploy Checklist in Dashboard
+Before any deployment, update state.json with checklist items for human validation.
 
-**Template:** `playgrounds/templates/deploy-checklist.html`
-**Output:** `.genius/outputs/DEPLOY-CHECKLIST.html`
-
-### Deployment Flow with Checklist
+### Deployment Flow with Unified Dashboard
 
 ```
-1. GENERATE → Create project-specific checklist
-2. PRESENT  → Open checklist in Canvas for user
-3. VALIDATE → User checks items interactively
-4. CONFIRM  → Wait for GO status
-5. DEPLOY   → Execute deployment
-6. UPDATE   → Record status in memory
+1. UPDATE STATE → Write checklist to phases.deploy.data
+2. USER VIEWS   → Dashboard shows deploy phase automatically
+3. VALIDATE     → User checks items in dashboard
+4. CONFIRM      → Wait for GO status in state.json
+5. DEPLOY       → Execute deployment
+6. UPDATE       → Record final status in state.json
 ```
 
-### Generating the Checklist
+### Updating state.json with Checklist
 
-Copy the template and customize:
-```bash
-cp playgrounds/templates/deploy-checklist.html .genius/outputs/DEPLOY-CHECKLIST.html
+Write to `phases.deploy.data`:
+
+```json
+{
+  "currentPhase": "deploy",
+  "phases": {
+    "deploy": {
+      "status": "in-progress",
+      "data": {
+        "projectInfo": {
+          "projectName": "my-awesome-app",
+          "version": "v2.1.0",
+          "environment": "production",
+          "deployDate": "2024-02-17T18:00:00Z"
+        },
+        "checklist": {
+          "preDeploy": [
+            { "item": "Environment variables configured", "status": "done", "critical": true },
+            { "item": "Database backup completed", "status": "done", "critical": true }
+          ],
+          "deploy": [
+            { "item": "Team notified", "status": "done", "critical": false },
+            { "item": "Deployment executed", "status": "in-progress", "critical": true }
+          ],
+          "postDeploy": [
+            { "item": "Error rates checked", "status": "pending", "critical": true },
+            { "item": "Smoke tests passed", "status": "pending", "critical": true }
+          ],
+          "rollback": [
+            { "item": "Previous version tagged", "status": "done", "critical": false }
+          ]
+        },
+        "goStatus": "wait",
+        "rollbackPlan": "..."
+      }
+    }
+  }
+}
 ```
 
-Pre-fill project info in the HTML:
-- `projectName`: Project being deployed
-- `versionTag`: Version/commit/tag being deployed
-- `targetEnv`: Target environment (staging/production)
-- `deployDate`: Scheduled deployment time
+### DO NOT Create Separate HTML Files
+
+The unified dashboard reads from state.json. No need to:
+- ❌ Copy templates
+- ❌ Create DEPLOY-CHECKLIST.html
+- ❌ Open separate URLs
 
 ### Presets
 

@@ -7,15 +7,47 @@ description: Comprehensive QA skill with dual testing strategy using Playwright 
 
 **This skill MUST generate:**
 - Report: `QA-REPORT.md`
-- HTML Playground: `.genius/outputs/QA-REPORT.html`
+- Unified State: `.genius/outputs/state.json` (with `phases.qa` populated)
 
 **Before transitioning to next skill:**
 1. Verify QA-REPORT.md exists
-2. Verify HTML playground exists
-3. Update state.json checkpoint
+2. Verify state.json has qa phase data
+3. Update `currentPhase` to next phase
 4. Announce transition
 
 **If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
+## Unified Dashboard Integration
+
+**DO NOT launch separate HTML files.** Update the unified state instead.
+
+### On Phase Start
+Update `.genius/outputs/state.json`:
+```json
+{
+  "currentPhase": "qa",
+  "phases": {
+    "qa": {
+      "status": "in-progress",
+      "data": {
+        "modules": [],
+        "testRuns": [],
+        "coverage": 0,
+        "passRate": 0,
+        "bugs": []
+      }
+    }
+  }
+}
+```
+
+### On Phase Complete
+Update state.json with:
+- `phases.qa.status` = `"complete"` (if all tests pass)
+- `phases.qa.data` = full QA metrics
+- `currentPhase` = `"deploy"`
 
 ---
 
@@ -97,62 +129,72 @@ Provides: QA approval status, test results summary
 
 ---
 
-## Playground Integration
+## Playground Integration (Unified Dashboard)
 
 ### Visual Dashboard: Test Coverage Map
 
-After running tests, generate a visual QA report using the Test Coverage Map playground.
+After running tests, update state.json with QA metrics. The unified dashboard displays:
+- 📍 **Heatmap** — Modules colored by coverage (green ≥80%, yellow 50-79%, red <50%)
+- 🐛 **Bug Tracker** — Issues sorted by severity (critical/high/medium/low)
+- 📊 **Global Stats** — Coverage %, tests passed/failed, open bugs count
+- 📅 **Timeline** — Recent test run history with trends
 
 ### Flow
 
 1. **Collect Metrics** — After test execution, gather coverage data from all modules
-2. **Generate Report** — Create `.genius/outputs/QA-REPORT.html` with embedded data
-3. **User Visualizes:**
-   - 📍 **Heatmap** — Modules colored by coverage (green ≥80%, yellow 50-79%, red <50%)
-   - 🐛 **Bug Tracker** — Issues sorted by severity (critical/high/medium/low)
-   - 📊 **Global Stats** — Coverage %, tests passed/failed, open bugs count
-   - 📅 **Timeline** — Recent test run history with trends
+2. **Update state.json** — Write QA data to `phases.qa.data`
+3. **User views in dashboard** — Dashboard shows QA phase automatically
+4. **Review and fix** — Address issues, re-run tests, update state
 
-### Data Format
+### Data Format in state.json
 
-Inject this data structure into the playground template:
+Write to `phases.qa.data`:
 
-```javascript
-const state = {
-    modules: [
-        {
-            id: "module-id",           // unique identifier
-            name: "Module Name",       // display name
-            icon: "📦",                // emoji icon
-            coverage: 85,              // percentage (0-100)
-            tests: [
-                { name: "Test name", type: "unit|integration|e2e", status: "passed|failed|skipped" }
+```json
+{
+  "currentPhase": "qa",
+  "phases": {
+    "qa": {
+      "status": "in-progress",
+      "data": {
+        "modules": [
+          {
+            "id": "module-id",
+            "name": "Module Name",
+            "icon": "📦",
+            "coverage": 85,
+            "tests": [
+              { "name": "Test name", "type": "unit", "status": "passed" }
             ],
-            bugs: [
-                { id: "BUG-001", title: "Bug description", severity: "critical|high|medium|low", module: "module-id", assignee: "Name" }
+            "bugs": [
+              { "id": "BUG-001", "title": "Bug description", "severity": "high" }
             ]
-        }
-    ],
-    testRuns: [
-        { date: "Feb 15", passed: 38, failed: 4, coverage: 72, status: "success|warning|danger" }
-    ]
-};
+          }
+        ],
+        "testRuns": [
+          { "date": "Feb 15", "passed": 38, "failed": 4, "coverage": 72, "status": "success" }
+        ],
+        "coverage": 72,
+        "passRate": 90,
+        "bugs": []
+      }
+    }
+  }
+}
 ```
 
-### Generation Steps
+### DO NOT Create Separate HTML Files
 
-1. Copy template from `playgrounds/templates/test-coverage-map.html`
-2. Replace the default `state` object with actual test data
-3. Save to `.genius/outputs/QA-REPORT.html`
-4. Include summary in `AUDIT-REPORT.md` with link to visual dashboard
+The unified dashboard reads from state.json. No need to:
+- ❌ Copy templates
+- ❌ Create QA-REPORT.html
+- ❌ Open separate URLs
 
-### Prompt Output
+### QA Report Output
 
-The QA report includes:
+Also generate `QA-REPORT.md` with:
 - Overall statistics (coverage %, pass rate, bug count)
 - Critical issues (low coverage modules, failed tests, high-priority bugs)
 - Latest test run summary
 - Prioritized recommendations
 - Module-by-module breakdown
-
-This report is auto-generated by the playground and can be copied for handoffs.

@@ -19,12 +19,12 @@ hooks:
 
 **This skill MUST generate:**
 - XML: `.claude/discovery/DISCOVERY.xml`
-- HTML Playground: `.genius/outputs/DISCOVERY.html`
+- Unified State: `.genius/outputs/state.json` (with `phases.discovery` populated)
 
 **Before transitioning to next skill:**
 1. Verify XML exists
-2. Verify HTML playground exists
-3. Update state.json checkpoint
+2. Verify state.json has discovery phase complete
+3. Update `currentPhase` to next phase
 4. Announce transition
 
 **If artifacts missing:** DO NOT proceed. Generate them first.
@@ -35,9 +35,9 @@ hooks:
 
 **Understanding your vision as you speak. Watch your project take shape in real-time.**
 
-## 🔴 LIVE PLAYGROUND MODE
+## 🔴 UNIFIED DASHBOARD MODE
 
-### Step 1: Start the Live Server
+### Step 1: Start the Unified Dashboard
 
 **AT THE VERY BEGINNING of the interview, run:**
 
@@ -45,34 +45,49 @@ hooks:
 # Create output directory
 mkdir -p .genius/outputs
 
-# Copy the canvas template
-cp playgrounds/templates/project-canvas.html .genius/outputs/DISCOVERY.html
+# Copy ALL playground templates + unified dashboard
+cp -r playgrounds/templates/* .genius/outputs/
 
-# Initialize empty state
+# Initialize state with unified structure
 cat > .genius/outputs/state.json << 'EOF'
 {
   "projectName": "",
-  "problem": "",
-  "solution": "",
-  "users": "",
-  "value": "",
-  "features": "",
-  "notes": {
-    "problem": "",
-    "solution": "",
-    "users": "",
-    "value": "",
-    "features": ""
-  },
-  "tags": {
-    "problem": [],
-    "solution": [],
-    "users": [],
-    "value": [],
-    "features": []
-  },
-  "interviewPhase": "Phase 1: Vision",
-  "interviewComplete": false
+  "engine": "claude",
+  "currentPhase": "discovery",
+  "phases": {
+    "discovery": {
+      "status": "in-progress",
+      "data": {
+        "problem": "",
+        "solution": "",
+        "users": "",
+        "value": "",
+        "features": "",
+        "notes": {
+          "problem": "",
+          "solution": "",
+          "users": "",
+          "value": "",
+          "features": ""
+        },
+        "tags": {
+          "problem": [],
+          "solution": [],
+          "users": [],
+          "value": [],
+          "features": []
+        },
+        "interviewPhase": "Phase 1: Vision",
+        "interviewComplete": false
+      }
+    },
+    "market": { "status": "pending", "data": {} },
+    "specs": { "status": "pending", "data": {} },
+    "design": { "status": "pending", "data": {} },
+    "dev": { "status": "pending", "data": {} },
+    "qa": { "status": "pending", "data": {} },
+    "deploy": { "status": "pending", "data": {} }
+  }
 }
 EOF
 
@@ -83,49 +98,53 @@ echo $! > .genius/outputs/server.pid
 # Wait for server to start
 sleep 1
 
-# Open in browser
-open http://localhost:8888/DISCOVERY.html
+# Open the UNIFIED dashboard
+open http://localhost:8888/project-dashboard.html
 ```
 
-**Tell the user:** "🎯 I've opened the Project Canvas in your browser. Watch it update live as we talk!"
+**Tell the user:** "🎯 I've opened the Project Dashboard in your browser. Watch your project evolve across all phases as we work together!"
 
 ### Step 2: Update State After EVERY Answer
 
-After the user answers a question, update `.genius/outputs/state.json`:
+After the user answers a question, update `.genius/outputs/state.json` (discovery phase data):
 
 ```bash
-# Example: After getting project name
+# Example: After getting project name - use jq or full rewrite
+# Update projectName and discovery phase data
 cat > .genius/outputs/state.json << 'EOF'
 {
   "projectName": "TaskFlow",
-  "problem": "",
-  "solution": "",
-  "users": "",
-  "value": "",
-  "features": "",
-  "notes": {
-    "problem": "",
-    "solution": "",
-    "users": "",
-    "value": "",
-    "features": ""
-  },
-  "tags": {
-    "problem": [],
-    "solution": [],
-    "users": [],
-    "value": [],
-    "features": []
-  },
-  "interviewPhase": "Phase 1: Vision",
-  "interviewComplete": false
+  "engine": "claude",
+  "currentPhase": "discovery",
+  "phases": {
+    "discovery": {
+      "status": "in-progress",
+      "data": {
+        "problem": "",
+        "solution": "",
+        "users": "",
+        "value": "",
+        "features": "",
+        "notes": { ... },
+        "tags": { ... },
+        "interviewPhase": "Phase 1: Vision",
+        "interviewComplete": false
+      }
+    },
+    "market": { "status": "pending", "data": {} },
+    "specs": { "status": "pending", "data": {} },
+    "design": { "status": "pending", "data": {} },
+    "dev": { "status": "pending", "data": {} },
+    "qa": { "status": "pending", "data": {} },
+    "deploy": { "status": "pending", "data": {} }
+  }
 }
 EOF
 ```
 
-### Step 3: Update Phase as You Progress
+### Step 3: Update Interview Phase as You Progress
 
-Change `interviewPhase` as you move through sections:
+Change `phases.discovery.data.interviewPhase` as you move through sections:
 - `"Phase 1: Vision"` — Vision & Problem questions
 - `"Phase 2: Users"` — Target Users questions
 - `"Phase 3: Features"` — Core Features questions
@@ -135,20 +154,14 @@ Change `interviewPhase` as you move through sections:
 - `"Validation"` — Final summary check
 - `"Complete"` — Interview done
 
-### Step 4: Cleanup at End
+### Step 4: Mark Discovery Complete
 
 ```bash
-# Mark interview complete
-cat > .genius/outputs/state.json << 'EOF'
-{
-  ... (full state with all data),
-  "interviewPhase": "Complete",
-  "interviewComplete": true
-}
-EOF
-
-# Kill the server after 5 minutes (user can close tab)
-(sleep 300 && kill $(cat .genius/outputs/server.pid) 2>/dev/null) &
+# Mark discovery phase complete, ready for market analysis
+# Update state.json with:
+# - phases.discovery.status = "complete"
+# - phases.discovery.data.interviewComplete = true
+# - phases.market.status = "ready" (or keep pending if skipping)
 ```
 
 ---
@@ -269,32 +282,49 @@ Generate `.claude/discovery/DISCOVERY.xml` with full structured output including
 
 ---
 
-## Playground State Schema
+## Unified State Schema
+
+The dashboard reads from `.genius/outputs/state.json` with this structure:
 
 ```json
 {
   "projectName": "string",
-  "problem": "string - the core problem being solved",
-  "solution": "string - how we solve it",
-  "users": "string - target personas",
-  "value": "string - unique value proposition",
-  "features": "string - bullet list of key features",
-  "notes": {
-    "problem": "string - deep problem insights, risks",
-    "solution": "string - technical approach notes",
-    "users": "string - user research findings",
-    "value": "string - competitive analysis",
-    "features": "string - priority/roadmap notes"
-  },
-  "tags": {
-    "problem": ["Urgent", "Expensive"],
-    "solution": ["AI-powered", "Automated"],
-    "users": ["B2B", "Enterprise"],
-    "value": ["Faster", "Better UX"],
-    "features": ["MVP", "V2"]
-  },
-  "interviewPhase": "Phase 1: Vision",
-  "interviewComplete": false
+  "engine": "claude",
+  "currentPhase": "discovery",
+  "phases": {
+    "discovery": {
+      "status": "in-progress | complete | pending",
+      "data": {
+        "problem": "string - the core problem being solved",
+        "solution": "string - how we solve it",
+        "users": "string - target personas",
+        "value": "string - unique value proposition",
+        "features": "string - bullet list of key features",
+        "notes": {
+          "problem": "string - deep problem insights, risks",
+          "solution": "string - technical approach notes",
+          "users": "string - user research findings",
+          "value": "string - competitive analysis",
+          "features": "string - priority/roadmap notes"
+        },
+        "tags": {
+          "problem": ["Urgent", "Expensive"],
+          "solution": ["AI-powered", "Automated"],
+          "users": ["B2B", "Enterprise"],
+          "value": ["Faster", "Better UX"],
+          "features": ["MVP", "V2"]
+        },
+        "interviewPhase": "Phase 1: Vision",
+        "interviewComplete": false
+      }
+    },
+    "market": { "status": "pending", "data": {} },
+    "specs": { "status": "pending", "data": {} },
+    "design": { "status": "pending", "data": {} },
+    "dev": { "status": "pending", "data": {} },
+    "qa": { "status": "pending", "data": {} },
+    "deploy": { "status": "pending", "data": {} }
+  }
 }
 ```
 
@@ -310,10 +340,10 @@ Generate `.claude/discovery/DISCOVERY.xml` with full structured output including
 ## Dual Output (Compatibility)
 
 Always generate BOTH outputs at the end:
-1. `.genius/outputs/DISCOVERY.html` — Already updated live during interview
+1. `.genius/outputs/state.json` — Unified state for the project dashboard
 2. `.claude/discovery/DISCOVERY.xml` — Structured XML for agent handoffs
 
-The **prompt output from the playground** (what user copies) is the canonical input for the next phase.
+The **unified dashboard** shows all phases. User can navigate between them as the project progresses.
 
 ---
 
@@ -338,11 +368,12 @@ Provides: DISCOVERY.xml, user context, constraints
 - Make assumptions about users
 - Skip risk discovery
 - **Forget to update state.json after EVERY answer**
-- **Forget to start the live server at the beginning**
+- **Forget to start the unified dashboard at the beginning**
 
 **DO:**
 - Lead with benefits
 - Use the 5 Whys technique
 - Document faithfully
 - Challenge assumptions respectfully
-- **Update the canvas live so the user sees progress**
+- **Update state.json live so the dashboard shows progress**
+- **Use the unified dashboard (project-dashboard.html), NOT individual HTML files**

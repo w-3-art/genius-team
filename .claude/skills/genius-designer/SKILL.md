@@ -7,15 +7,41 @@ description: Creates complete brand identity and design system with 2-3 visual o
 
 **This skill MUST generate:**
 - Config: `.genius/design-config.json`
-- HTML Playground: `.genius/outputs/DESIGN-SYSTEM.html`
+- Unified State: `.genius/outputs/state.json` (with `phases.design` populated)
 
 **Before transitioning to next skill:**
 1. Verify design-config.json exists
-2. Verify HTML playground exists
-3. Update state.json checkpoint
+2. Verify state.json has design phase complete
+3. Update `currentPhase` to next phase
 4. Announce transition
 
 **If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
+## Unified Dashboard Integration
+
+**DO NOT launch separate HTML files.** Update the unified state instead.
+
+### On Phase Start
+Update `.genius/outputs/state.json`:
+```json
+{
+  "currentPhase": "design",
+  "phases": {
+    "design": {
+      "status": "in-progress",
+      "data": { ... }
+    }
+  }
+}
+```
+
+### On Phase Complete
+Update state.json with:
+- `phases.design.status` = `"complete"`
+- `phases.design.data` = design system tokens and choices
+- `currentPhase` = `"dev"`
 
 ---
 
@@ -59,13 +85,10 @@ Append to `.genius/memory/decisions.json`:
 
 ---
 
-## Playground Integration
-
-### Template Location
-`playgrounds/templates/design-system-builder.html`
+## Playground Integration (Unified Dashboard)
 
 ### How It Works
-The playground provides an interactive UI where users can:
+The unified dashboard shows the design phase where users can:
 - **Colors**: Adjust primary, secondary, accent, and neutral colors with live preview
 - **Typography**: Choose font family, base size, scale ratio, and weights
 - **Spacing**: Set base unit that scales automatically (×1, ×2, ×3, ×4, ×6, ×8, ×12, ×16)
@@ -74,32 +97,41 @@ The playground provides an interactive UI where users can:
 - **Preview**: Toggle light/dark mode to see components in action
 - **Export**: Copy as Prompt spec, CSS Variables, or Tailwind config
 
-### Injecting Custom Presets
-When generating `DESIGN-SYSTEM.html`, inject 2-3 project-specific presets into the `presets` object:
+### Updating state.json with Design Presets
 
-```javascript
-const presets = {
-    // Keep 1-2 generic presets as reference
-    minimal: { /* default minimal preset */ },
-    
-    // ADD PROJECT-SPECIFIC PRESETS (2-3)
-    projectNameOption1: {
-        primary: '#XXXXXX',
-        secondary: '#XXXXXX',
-        accent: '#XXXXXX',
-        neutralLight: '#XXXXXX',
-        neutralDark: '#XXXXXX',
-        fontFamily: 'Font Name',
-        fontSize: 16,
-        scaleRatio: 1.25,
-        spacingBase: 4,
-        borderRadius: 8,
-        shadowIntensity: 0.1,
-        shadowBlur: 16
-    },
-    projectNameOption2: { /* ... */ },
-    projectNameOption3: { /* ... */ }
-};
+Write design options to `phases.design.data.presets`:
+
+```json
+{
+  "currentPhase": "design",
+  "phases": {
+    "design": {
+      "status": "in-progress",
+      "data": {
+        "presets": {
+          "modernMinimal": {
+            "primary": "#XXXXXX",
+            "secondary": "#XXXXXX",
+            "accent": "#XXXXXX",
+            "neutralLight": "#XXXXXX",
+            "neutralDark": "#XXXXXX",
+            "fontFamily": "Font Name",
+            "fontSize": 16,
+            "scaleRatio": 1.25,
+            "spacingBase": 4,
+            "borderRadius": 8,
+            "shadowIntensity": 0.1,
+            "shadowBlur": 16
+          },
+          "boldEnergetic": { ... },
+          "warmOrganic": { ... }
+        },
+        "selectedPreset": null,
+        "customizations": {}
+      }
+    }
+  }
+}
 ```
 
 ### Preset Naming Convention
@@ -109,17 +141,12 @@ Use descriptive names reflecting the design direction:
 - `warmOrganic` — Earth tones, rounded, soft shadows
 - `techProfessional` — Blues, sharp, corporate feel
 
-### Updating the Preset Buttons
-Also update the presets grid HTML to show project-specific options:
+### DO NOT Create Separate HTML Files
 
-```html
-<div class="presets-grid">
-    <button class="preset-btn" onclick="applyPreset('projectOption1')">🎯 [Name 1]</button>
-    <button class="preset-btn" onclick="applyPreset('projectOption2')">🎨 [Name 2]</button>
-    <button class="preset-btn" onclick="applyPreset('projectOption3')">✨ [Name 3]</button>
-    <button class="preset-btn" onclick="applyPreset('minimal')">⚪ Minimal</button>
-</div>
-```
+The unified dashboard reads from state.json. No need to:
+- ❌ Copy templates
+- ❌ Create DESIGN-SYSTEM.html
+- ❌ Open separate URLs
 
 ---
 

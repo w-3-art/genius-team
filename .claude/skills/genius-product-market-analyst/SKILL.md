@@ -7,15 +7,41 @@ description: Market research and business strategy skill that validates product-
 
 **This skill MUST generate:**
 - XML: `.claude/discovery/MARKET-ANALYSIS.xml`
-- HTML Playground: `.genius/outputs/MARKET-ANALYSIS.html`
+- Unified State: `.genius/outputs/state.json` (with `phases.market` populated)
 
 **Before transitioning to next skill:**
 1. Verify XML exists
-2. Verify HTML playground exists
-3. Update state.json checkpoint
+2. Verify state.json has market phase complete
+3. Update `currentPhase` to next phase
 4. Announce transition
 
 **If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
+## Unified Dashboard Integration
+
+**DO NOT launch separate HTML files.** Update the unified state instead.
+
+### On Phase Start
+Update `.genius/outputs/state.json`:
+```json
+{
+  "currentPhase": "market",
+  "phases": {
+    "market": {
+      "status": "in-progress",
+      "data": { ... }
+    }
+  }
+}
+```
+
+### On Phase Complete
+Update state.json with:
+- `phases.market.status` = `"complete"`
+- `phases.market.data` = full market analysis data
+- `currentPhase` = `"specs"` (or next phase)
 
 ---
 
@@ -72,101 +98,94 @@ Structured XML with: executive summary, market size, opportunity assessment, com
 
 ## Playground Integration
 
-### Flow avec Market Simulator
+### Flow avec Unified Dashboard
 
 1. **Analyser le marché** — TAM/SAM/SOM, competitors, pricing (méthode classique)
-2. **Générer le playground** — Copier le template et injecter les données
-3. **Présenter au user** — Ouvrir pour simulation interactive
-4. **Validation** — User ajuste, explore, copie le prompt output
-5. **Continuer** — Le prompt output devient la stratégie marché validée
+2. **Update state.json** — Write market analysis data to `phases.market`
+3. **User views in dashboard** — The unified dashboard shows market phase automatically
+4. **Validation** — User reviews data, provides feedback
+5. **Continuer** — Mark phase complete, move to next
 
-### Génération du Playground
+### Updating State.json
 
-```bash
-# Copier le template
-cp playgrounds/templates/market-simulator.html .genius/outputs/MARKET-ANALYSIS.html
-```
+**DO NOT copy templates or create separate HTML files.** The unified dashboard is already running.
 
-Puis injecter les données en modifiant le bloc `const state = {...}` dans le HTML :
+Update `.genius/outputs/state.json` with market data:
 
-```javascript
-const state = {
-    price: [PRIX_UNITAIRE],           // ex: 49 (€/mois)
-    tam: [TAILLE_MARCHE],             // ex: 500000 (utilisateurs)
-    conversion: [TAUX_CONVERSION],     // ex: 2.5 (%)
-    churn: [CHURN_MENSUEL],           // ex: 5 (%)
-    cac: [COUT_ACQUISITION],          // ex: 25 (€)
-    preset: 'realistic',
-    competitors: [
-        { 
-            name: 'Votre produit', 
-            color: '#58a6ff', 
-            scores: { prix: [SCORE], features: [SCORE], ux: [SCORE], brand: [SCORE], support: [SCORE] }
-        },
-        { 
-            name: '[COMPETITOR_1_NAME]', 
-            color: '#f85149', 
-            scores: { prix: [SCORE], features: [SCORE], ux: [SCORE], brand: [SCORE], support: [SCORE] }
-        },
-        // ... autres competitors
-    ]
-};
-```
-
-### Données à injecter
-
-| Donnée | Type | Description | Exemple |
-|--------|------|-------------|---------|
-| `price` | number | Prix unitaire mensuel (€) | `49` |
-| `tam` | number | Taille marché cible (utilisateurs) | `500000` |
-| `conversion` | number | Taux de conversion estimé (%) | `2.5` |
-| `churn` | number | Churn mensuel estimé (%) | `5` |
-| `cac` | number | Coût d'acquisition client (€) | `25` |
-| `competitors` | array | Liste des concurrents avec scores | voir ci-dessous |
-
-#### Structure Competitor
-
-```javascript
+```json
 {
-    name: "Nom du concurrent",
-    color: "#hexcolor",  // #58a6ff (vous), #f85149 (rouge), #3fb950 (vert), #d29922 (orange)
-    scores: {
-        prix: 7,        // 1-10, compétitivité prix
-        features: 8,    // 1-10, richesse fonctionnelle
-        ux: 8,          // 1-10, qualité UX
-        brand: 5,       // 1-10, notoriété/réputation
-        support: 7      // 1-10, qualité support client
+  "currentPhase": "market",
+  "phases": {
+    "market": {
+      "status": "in-progress",
+      "data": {
+        "price": 49,
+        "tam": 500000,
+        "conversion": 2.5,
+        "churn": 5,
+        "cac": 25,
+        "preset": "realistic",
+        "competitors": [
+          {
+            "name": "Votre produit",
+            "color": "#58a6ff",
+            "scores": { "prix": 7, "features": 8, "ux": 8, "brand": 5, "support": 7 }
+          },
+          {
+            "name": "Competitor 1",
+            "color": "#f85149",
+            "scores": { "prix": 6, "features": 7, "ux": 6, "brand": 8, "support": 5 }
+          }
+        ]
+      }
     }
+  }
 }
 ```
 
-### Projections automatiques
+### Data Schema for Market Phase
 
-Le playground calcule automatiquement :
-- **TAM/SAM/SOM** — SAM = 33% du TAM, SOM = 33% du SAM
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `price` | number | Monthly unit price (€) | `49` |
+| `tam` | number | Total addressable market (users) | `500000` |
+| `conversion` | number | Estimated conversion rate (%) | `2.5` |
+| `churn` | number | Monthly churn rate (%) | `5` |
+| `cac` | number | Customer acquisition cost (€) | `25` |
+| `competitors` | array | Competitor list with scores | see below |
+
+#### Competitor Structure
+
+```json
+{
+  "name": "Competitor Name",
+  "color": "#hexcolor",
+  "scores": {
+    "prix": 7,
+    "features": 8,
+    "ux": 8,
+    "brand": 5,
+    "support": 7
+  }
+}
+```
+
+### Automatic Calculations (done by dashboard)
+
+The unified dashboard calculates:
+- **TAM/SAM/SOM** — SAM = 33% of TAM, SOM = 33% of SAM
 - **LTV** — price × (1 / churn_rate)
 - **LTV/CAC Ratio** — LTV / CAC (🟢 ≥3x, 🟡 2-3x, 🔴 <2x)
-- **Payback** — CAC / price (en mois)
-- **3 scénarios** — Pessimiste (×0.6), Réaliste, Optimiste (×1.5)
+- **Payback** — CAC / price (in months)
+- **3 scenarios** — Pessimistic (×0.6), Realistic, Optimistic (×1.5)
 
-### Exemple de prompt à canvas
+### Workflow
 
-```
-Ouvre le playground market simulator pour [PROJECT_NAME].
-L'utilisateur va pouvoir :
-- Ajuster les paramètres (prix, conversion, churn...)
-- Voir les projections en temps réel
-- Comparer avec les concurrents sur le radar
-- Copier l'analyse stratégique finale
-```
-
-### Workflow utilisateur
-
-1. **Explorer les scénarios** — Cliquer Pessimiste/Réaliste/Optimiste
-2. **Affiner les paramètres** — Ajuster les sliders selon ses hypothèses
-3. **Analyser la compétition** — Voir le radar chart
-4. **Valider la stratégie** — Copier le prompt output
-5. **Continuer avec Genius** — Coller le prompt pour définir la stratégie finale
+1. **Analyze market** — Gather data (TAM, competitors, pricing)
+2. **Update state.json** — Write to `phases.market.data`
+3. **User reviews** — Dashboard shows market analysis view
+4. **Validate** — User confirms or requests changes
+5. **Mark complete** — Set `phases.market.status = "complete"`
 
 ---
 

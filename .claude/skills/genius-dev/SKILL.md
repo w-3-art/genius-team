@@ -30,6 +30,44 @@ hooks:
 
 **Real artists ship. But they ship when it's insanely great.**
 
+---
+
+## Unified Dashboard Integration
+
+**DO NOT launch separate HTML files.** Update the unified state instead.
+
+### On Phase Start
+Update `.genius/outputs/state.json`:
+```json
+{
+  "currentPhase": "dev",
+  "phases": {
+    "dev": {
+      "status": "in-progress",
+      "data": {
+        "currentTask": "...",
+        "completedTasks": [],
+        "progress": 0
+      }
+    }
+  }
+}
+```
+
+### During Development
+Update `phases.dev.data` with progress:
+- Add completed tasks to `completedTasks` array
+- Update `progress` percentage
+- Update `currentTask` description
+
+### On Phase Complete
+Update state.json with:
+- `phases.dev.status` = `"complete"`
+- `phases.dev.data.progress` = `100`
+- `currentPhase` = `"qa"`
+
+---
+
 ## Memory Integration
 
 ### On Implementation Start
