@@ -735,12 +735,12 @@ cd my-awesome-app
     <div class="faq-grid fade-in">
       <div class="faq-item">
         <h4>❓ I get "command not found: claude"</h4>
-        <p>Claude Code CLI isn't installed. Run: <code>curl -fsSL https://claude.ai/install.sh | bash</code> then restart your terminal.</p>
+        <p>Claude Code CLI isn't installed. Run: <code>curl -fsSL https://claude.ai/install.sh | bash</code> then restart your terminal. For Codex: <code>npm install -g @openai/codex</code>.</p>
       </div>
       
       <div class="faq-item">
         <h4>❓ I get "permission denied"</h4>
-        <p>The script needs execute permission. Try: <code>chmod +x scripts/setup.sh</code> or run with <code>bash scripts/setup.sh</code></p>
+        <p>The script needs execute permission. Try: <code>chmod +x scripts/setup.sh</code> or simply run with <code>bash scripts/setup.sh</code></p>
       </div>
       
       <div class="faq-item">
@@ -749,38 +749,38 @@ cd my-awesome-app
       </div>
       
       <div class="faq-item">
-        <h4>❓ How do I open the terminal in my project?</h4>
-        <p>In VS Code: File → Open Folder → select your project → then <code>Ctrl+`</code> (backtick) to open terminal. Or right-click the folder in Finder/Explorer and "Open in Terminal".</p>
-      </div>
-      
-      <div class="faq-item">
         <h4>❓ The command says "my-project" but I want a different name</h4>
-        <p>Replace "my-project" with YOUR project name! Example: <code>...create.sh) booking-app</code>. No spaces, use dashes.</p>
+        <p>Replace "my-project" with YOUR project name! Example: <code>...create.sh) booking-app --engine=claude</code>. No spaces, use dashes.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>❓ Which engine should I choose?</h4>
+        <p><strong>Claude Code</strong> if you already use Claude. <strong>Codex CLI</strong> if you prefer OpenAI. <strong>Dual Mode</strong> if you want both — Claude builds, Codex reviews, they challenge each other for the best result.</p>
       </div>
       
       <div class="faq-item">
-        <h4>❓ Claude seems stuck or keeps repeating</h4>
-        <p>Run <code>/guard-check</code> to see if something went wrong. If needed, <code>/guard-recover</code> gets you back on track.</p>
+        <h4>❓ How does Dual Mode work?</h4>
+        <p>Claude Code acts as Builder (implements features), while Codex CLI acts as Challenger (reviews and critiques). They iterate via shared files in <code>.genius/</code> until both agree the code is solid.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>❓ AI seems stuck or keeps repeating</h4>
+        <p>Run <code>/guard-check</code> to see if something went wrong. If needed, <code>/guard-recover</code> gets you back on track. Works with both Claude and Codex.</p>
       </div>
       
       <div class="faq-item">
         <h4>❓ I closed the terminal and lost my progress</h4>
-        <p>No worries! Just <code>cd</code> back to your project folder, run <code>claude</code>, then <code>/continue</code>. The memory system remembers everything.</p>
+        <p>No worries! Just <code>cd</code> back to your project folder, run <code>claude</code> (or <code>codex</code>), then <code>/continue</code>. The memory system in <code>.genius/</code> remembers everything.</p>
       </div>
       
       <div class="faq-item">
-        <h4>❓ Do I need to pay for Claude?</h4>
-        <p>Yes, Genius Team uses Claude Code which requires a Claude Pro or API subscription. Check <a href="https://claude.ai/pricing" target="_blank">claude.ai/pricing</a>.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h4>❓ Can I use this with GPT/Gemini/other models?</h4>
-        <p>Genius Team is built for Claude Code. Some modes (Omni) can use secondary providers, but the core requires Claude.</p>
+        <h4>❓ Do I need a paid subscription?</h4>
+        <p>Yes — Claude Code requires a Claude Pro or API subscription (<a href="https://claude.ai/pricing" target="_blank">claude.ai/pricing</a>). Codex CLI requires an OpenAI account. Both have free trials.</p>
       </div>
       
       <div class="faq-item">
         <h4>❓ How do I update to a new version?</h4>
-        <p>Run <code>/genius-upgrade</code> inside your project, or use the upgrade command from the terminal.</p>
+        <p>Run <code>/genius-upgrade</code> inside your project. Or from the terminal: <code>bash &lt;(curl -fsSL .../scripts/upgrade.sh)</code></p>
       </div>
     </div>
   </div>
