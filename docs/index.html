@@ -356,7 +356,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v10.0</strong> is here!</span>
+    <span class="banner-text"><strong>Genius Team v11.0</strong> is here!</span>
     <span class="banner-features">12 Interactive Playgrounds • Anti-Drift Guard • Persistent Memory</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
@@ -367,7 +367,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v10.0 — Interactive Playgrounds + Anti-Drift Guard</div>
+      <div class="hero-badge">✨ v11.0 — Multi-Engine: Claude + Codex + Dual Mode</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
       <p>An open-source starter kit of 21+ specialized AI skills for Claude Code that work together to build your project from start to finish.</p>
       <div class="hero-btns">
@@ -660,7 +660,7 @@ cd my-awesome-app
   <div class="container">
     <div class="fade-in">
       <div class="section-label">Upgrading from v9?</div>
-      <div class="section-title">Get v10.0 in one command</div>
+      <div class="section-title">Get v11.0 in one command</div>
     </div>
     
     <div class="fade-in">
@@ -677,7 +677,7 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v10.0:</h4>
+        <h4>What's new in v11.0:</h4>
         <ul>
           <li>🎮 <strong>12 Interactive Playgrounds</strong> — Visual decision-making for each phase</li>
           <li>🛡️ <strong>Anti-Drift Guard</strong> — Keeps Claude on track, prevents going off-rails</li>
@@ -794,7 +794,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v10.0</strong> — Interactive Playgrounds + Anti-Drift Guard</p>
+    <p>Built with 🧠 <strong>Genius Team v11.0</strong> — Multi-Engine: Claude + Codex + Dual Mode</p>
   </div>
 </footer>
 
@@ -867,11 +867,11 @@ function copyCode(btn) {
 function closeBanner() {
   const banner = document.getElementById('updateBanner');
   banner.classList.add('hidden');
-  localStorage.setItem('bannerClosed', 'v10');
+  localStorage.setItem('bannerClosed', 'v11');
 }
 
 // Check if banner was closed
-if (localStorage.getItem('bannerClosed') === 'v10') {
+if (localStorage.getItem('bannerClosed') === 'v11') {
   document.getElementById('updateBanner').classList.add('hidden');
 }
 
