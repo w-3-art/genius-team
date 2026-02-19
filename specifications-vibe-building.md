@@ -59,14 +59,31 @@ Vision  UX/UI   Messaging  Code  Roadmap
 
 ---
 
-## 2. Gestion des Clés IA
+## 2. Gestion des Comptes IA
 
-### 2.1 Mode v1 : BYO Keys (Bring Your Own)
+### 2.1 Mode v1 : BYO Account (Bring Your Own Subscription)
 
-Chaque utilisateur entre ses propres clés API :
-- **Claude Code** → clé Anthropic API
-- **Codex CLI** → clé OpenAI API
-- Les clés sont chiffrées (AES-256) et ne transitent jamais en clair
+Chaque utilisateur **connecte sa souscription** via OAuth — pas d'API key à copier-coller :
+
+| Bouton | Souscription requise | Coût utilisateur |
+|--------|---------------------|-----------------|
+| "Connect Claude" | Claude Pro ($20/mois) ou Max | ~$20/mois flat |
+| "Connect OpenAI" | ChatGPT Plus ($20/mois) ou Teams | ~$20/mois flat |
+
+**Flux OAuth :**
+1. L'utilisateur clique "Connect Claude" sur la plateforme
+2. Redirigé vers claude.ai pour autoriser l'accès
+3. La plateforme reçoit un OAuth token (pas une API key)
+4. Chaque appel IA est effectué via les credentials de l'utilisateur
+5. C'est la souscription de l'utilisateur qui est consommée (pas la nôtre)
+
+**Avantages vs API key :**
+- Coût prévisible ($20/mois vs potentiellement $100-200+ en pay-per-token)
+- Pas de risque de dépassement surprise
+- L'utilisateur contrôle sa propre souscription
+- La plateforme ne stocke jamais de clé API sensible
+
+**Note technique :** Les OAuth tokens sont chiffrés (AES-256) et refreshés automatiquement.
 
 ### 2.2 Programme "Free Credits" (partenariat)
 
