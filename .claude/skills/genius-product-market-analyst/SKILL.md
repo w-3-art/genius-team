@@ -100,7 +100,7 @@ Structured XML with: executive summary, market size, opportunity assessment, com
 
 ### Flow avec Unified Dashboard
 
-1. **Analyser le marché** — TAM/SAM/SOM, competitors, pricing (méthode classique)
+1. **Analyze the market** — TAM/SAM/SOM, competitors, pricing (standard method)
 2. **Update state.json** — Write market analysis data to `phases.market`
 3. **User views in dashboard** — The unified dashboard shows market phase automatically
 4. **Validation** — User reviews data, provides feedback
@@ -127,7 +127,7 @@ Update `.genius/outputs/state.json` with market data:
         "preset": "realistic",
         "competitors": [
           {
-            "name": "Votre produit",
+            "name": "Your product",
             "color": "#58a6ff",
             "scores": { "prix": 7, "features": 8, "ux": 8, "brand": 5, "support": 7 }
           },

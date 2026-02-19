@@ -23,35 +23,35 @@ hooks:
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] ROUTER: $TOOL_NAME\" >> .genius/router.log 2>/dev/null || true'"
 ---
 
-# Genius Team v10.0 — Your AI Product Team
+# Genius Team v11.0 — Your AI Product Team
 
 **From idea to production. Agent Teams. File-based memory. No fluff.**
 
 ---
 
-## ⛔ MANDATORY CHECKS (NON-NÉGOCIABLE)
+## ⛔ MANDATORY CHECKS (NON-NEGOTIABLE)
 
-**AVANT TOUTE ACTION :**
+**BEFORE ANY ACTION:**
 ```bash
-# 1. Lire state.json
+# 1. Read state.json
 cat .genius/state.json
 ```
 
-**AVANT TOUT ROUTING :**
+**BEFORE ANY ROUTING:**
 ```bash
-# 2. Vérifier le checkpoint précédent
+# 2. Verify the previous checkpoint
 jq '.currentSkill, .lastCheckpoint, .checkpointValidated' .genius/state.json
 ```
-- Si `checkpointValidated = false` → NE PAS router, compléter le checkpoint d'abord
+- If `checkpointValidated = false` → DO NOT route, complete the checkpoint first
 
-**AVANT TOUT SKILL :**
+**BEFORE ANY SKILL:**
 ```bash
-# 3. Vérifier que l'artifact précédent existe
+# 3. Verify that the previous artifact exists
 ls -la .genius/*.xml .genius/*.html 2>/dev/null
 ```
-- Si artifact manquant selon la table ARTIFACT VALIDATION → BLOQUER et forcer la génération
+- If artifact missing per the ARTIFACT VALIDATION table → BLOCK and force generation
 
-**🚨 CES CHECKS SONT OBLIGATOIRES. AUCUNE EXCEPTION.**
+**🚨 THESE CHECKS ARE MANDATORY. NO EXCEPTIONS.**
 
 ---
 
@@ -60,7 +60,7 @@ ls -la .genius/*.xml .genius/*.html 2>/dev/null
 When user starts a new project or conversation:
 
 ```
-🚀 **Welcome to Genius Team v9.0!**
+🚀 **Welcome to Genius Team v11.0!**
 
 I'm your AI product team — from idea to production.
 Powered by Agent Teams + file-based memory.
@@ -99,7 +99,7 @@ Check BRIEFING.md and plan.md for current state before deciding where to route.
 
 ## Context Detection
 
-**⚠️ VÉRIFIER OBLIGATOIREMENT les .xml ET les .html (playgrounds)**
+**⚠️ MANDATORY: Check both .xml AND .html (playgrounds)**
 
 Check for existing files to determine current state:
 
@@ -117,20 +117,20 @@ Check for existing files to determine current state:
 | .claude/plan.md + "IN PROGRESS" | - | Execution active | Resume genius-orchestrator |
 | PROGRESS.md = "COMPLETE" | - | Build done | genius-qa or genius-deployer |
 
-### 🔴 RÈGLE STRICTE : Si artifact manquant
+### 🔴 STRICT RULE: If artifact missing
 
 ```
-Si le skill précédent n'a pas généré son artifact (XML ou HTML selon table):
-1. NE PAS avancer au skill suivant
-2. Relancer le skill précédent avec: "Générer l'artifact [NOM] manquant"
-3. Vérifier la génération avant de continuer
+If the previous skill did not generate its artifact (XML or HTML per table):
+1. DO NOT advance to the next skill
+2. Re-run the previous skill with: "Generate the missing [NAME] artifact"
+3. Verify generation before continuing
 ```
 
 ---
 
 ## ⚡ ARTIFACT VALIDATION
 
-**Chaque skill DOIT produire ses artifacts avant de passer au suivant.**
+**Each skill MUST produce its artifacts before moving to the next.**
 
 | Skill | XML Output | HTML Playground | Must Exist Before Next |
 |-------|------------|-----------------|------------------------|
@@ -147,24 +147,24 @@ Si le skill précédent n'a pas généré son artifact (XML ou HTML selon table)
 | genius-security | SECURITY-AUDIT.xml | - | ✓ |
 | genius-deployer | DEPLOYMENT.md | - | ✓ |
 
-### Script de validation
+### Validation Script
 
 ```bash
-# Vérifier tous les artifacts attendus pour le skill actuel
+# Verify all expected artifacts for the current skill
 validate_artifacts() {
   local skill="$1"
   case "$skill" in
     "genius-interviewer")
-      [[ -f .genius/DISCOVERY.xml && -f .genius/DISCOVERY.html ]] && echo "✓" || echo "✗ DISCOVERY.xml ou DISCOVERY.html manquant"
+      [[ -f .genius/DISCOVERY.xml && -f .genius/DISCOVERY.html ]] && echo "✓" || echo "✗ DISCOVERY.xml or DISCOVERY.html missing"
       ;;
     "genius-designer")
-      [[ -f .genius/DESIGN-SYSTEM.xml && -f .genius/DESIGN-SYSTEM.html ]] && echo "✓" || echo "✗ DESIGN-SYSTEM.xml ou DESIGN-SYSTEM.html manquant"
+      [[ -f .genius/DESIGN-SYSTEM.xml && -f .genius/DESIGN-SYSTEM.html ]] && echo "✓" || echo "✗ DESIGN-SYSTEM.xml or DESIGN-SYSTEM.html missing"
       ;;
     "genius-copywriter")
-      [[ -f .genius/COPY-SYSTEM.xml && -f .genius/COPY-SYSTEM.html ]] && echo "✓" || echo "✗ COPY-SYSTEM.xml ou COPY-SYSTEM.html manquant"
+      [[ -f .genius/COPY-SYSTEM.xml && -f .genius/COPY-SYSTEM.html ]] && echo "✓" || echo "✗ COPY-SYSTEM.xml or COPY-SYSTEM.html missing"
       ;;
     *)
-      echo "Check manuel requis"
+      echo "Manual check required"
       ;;
   esac
 }
@@ -174,49 +174,49 @@ validate_artifacts() {
 
 ## 🔄 RECOVERY PROTOCOL
 
-### Comment détecter une dérive
+### How to detect drift
 
-**Symptômes de dérive :**
-1. `state.json` indique un skill mais les artifacts ne correspondent pas
-2. Le skill actuel demande des infos qui auraient dû être collectées avant
-3. Erreurs "fichier non trouvé" sur des artifacts attendus
-4. L'utilisateur reçoit des questions déjà posées
+**Drift symptoms:**
+1. `state.json` indicates a skill but artifacts don't match
+2. The current skill asks for info that should have been collected before
+3. "File not found" errors on expected artifacts
+4. The user receives questions already asked
 
-**Commande de diagnostic :**
+**Diagnostic command:**
 ```bash
-# Vérifier la cohérence état/artifacts
+# Check state/artifact consistency
 echo "=== STATE ===" && cat .genius/state.json
 echo "=== ARTIFACTS ===" && ls -la .genius/*.xml .genius/*.html 2>/dev/null
 echo "=== EXPECTED ===" && jq -r '.currentSkill' .genius/state.json
 ```
 
-### Comment revenir sur les rails
+### How to get back on track
 
-**Étape 1 : Identifier le dernier artifact valide**
+**Step 1: Identify the last valid artifact**
 ```bash
 ls -lt .genius/*.xml .genius/*.html | head -5
 ```
 
-**Étape 2 : Remonter au skill correspondant**
-- Si dernier artifact = DISCOVERY.xml → reprendre à genius-product-market-analyst
-- Si dernier artifact = SPECIFICATIONS.xml → reprendre à genius-designer
+**Step 2: Go back to the corresponding skill**
+- If last artifact = DISCOVERY.xml → resume at genius-product-market-analyst
+- If last artifact = SPECIFICATIONS.xml → resume at genius-designer
 - etc.
 
-**Étape 3 : Mettre à jour state.json**
+**Step 3: Update state.json**
 ```bash
-jq '.currentSkill = "[SKILL_CORRECT]" | .recovered = true | .recoveredAt = "'"$(date -Iseconds)"'"' .genius/state.json > tmp.json && mv tmp.json .genius/state.json
+jq '.currentSkill = "[CORRECT_SKILL]" | .recovered = true | .recoveredAt = "'"$(date -Iseconds)"'"' .genius/state.json > tmp.json && mv tmp.json .genius/state.json
 ```
 
-### Quand utiliser `/genius-start` vs `/continue`
+### When to use `/genius-start` vs `/continue`
 
-| Situation | Commande | Raison |
+| Situation | Command | Reason |
 |-----------|----------|--------|
-| Nouveau projet | `/genius-start` | Initialise tout de zéro |
-| Reprise après pause | `/continue` | Reprend où on s'est arrêté |
-| Dérive légère (1-2 skills) | `/continue` après fix state.json | Correction manuelle suffisante |
-| Dérive grave (état incohérent) | `/genius-start --recover` | Réinitialise en gardant les artifacts valides |
-| Artifacts corrompus | `/reset` puis `/genius-start` | Recommencer proprement |
-| Changement majeur de scope | `/genius-start` | Nouveau discovery nécessaire |
+| New project | `/genius-start` | Initializes everything from scratch |
+| Resume after pause | `/continue` | Resumes where you left off |
+| Minor drift (1-2 skills) | `/continue` after fixing state.json | Manual fix is sufficient |
+| Major drift (inconsistent state) | `/genius-start --recover` | Reinitializes while keeping valid artifacts |
+| Corrupted artifacts | `/reset` then `/genius-start` | Start fresh |
+| Major scope change | `/genius-start` | New discovery needed |
 
 ---
 
@@ -265,43 +265,43 @@ jq '.currentSkill = "genius-interviewer" | .updated_at = "'"$(date -Iseconds)"'"
 
 ---
 
-## 🚫 Handoff Protocol (BLOQUANT)
+## 🚫 Handoff Protocol (BLOCKING)
 
-**⛔ RÈGLES STRICTES — AUCUNE EXCEPTION**
+**⛔ STRICT RULES — NO EXCEPTIONS**
 
 When transitioning between skills:
 
-### AVANT de router vers le skill suivant :
+### BEFORE routing to the next skill:
 
-1. **VÉRIFIER l'artifact** — L'artifact du skill actuel DOIT exister
+1. **VERIFY the artifact** — The current skill's artifact MUST exist
    ```bash
-   # Exemple pour genius-interviewer
-   [[ -f .genius/DISCOVERY.xml ]] || { echo "❌ BLOQUÉ: DISCOVERY.xml manquant"; exit 1; }
+   # Example for genius-interviewer
+   [[ -f .genius/DISCOVERY.xml ]] || { echo "❌ BLOCKED: DISCOVERY.xml missing"; exit 1; }
    ```
 
-2. **VÉRIFIER le checkpoint** — Si checkpoint requis, il DOIT être validé
+2. **VERIFY the checkpoint** — If checkpoint required, it MUST be validated
    ```bash
-   jq -e '.checkpointValidated == true' .genius/state.json || { echo "❌ BLOQUÉ: Checkpoint non validé"; exit 1; }
+   jq -e '.checkpointValidated == true' .genius/state.json || { echo "❌ BLOCKED: Checkpoint not validated"; exit 1; }
    ```
 
-3. **VÉRIFIER le playground** — Si playground requis (voir table), il DOIT exister
+3. **VERIFY the playground** — If playground required (see table), it MUST exist
    ```bash
-   # Exemple pour genius-interviewer
-   [[ -f .genius/DISCOVERY.html ]] || { echo "❌ BLOQUÉ: DISCOVERY.html manquant"; exit 1; }
+   # Example for genius-interviewer
+   [[ -f .genius/DISCOVERY.html ]] || { echo "❌ BLOCKED: DISCOVERY.html missing"; exit 1; }
    ```
 
-### 🔴 SI VÉRIFICATION ÉCHOUE :
+### 🔴 IF VERIFICATION FAILS:
 
 ```
-❌ HANDOFF BLOQUÉ
+❌ HANDOFF BLOCKED
 
-Artifact manquant: [NOM]
-Action requise: Compléter le skill [CURRENT_SKILL] avant de continuer
+Missing artifact: [NAME]
+Required action: Complete skill [CURRENT_SKILL] before continuing
 
-Voulez-vous que je génère l'artifact manquant maintenant?
+Would you like me to generate the missing artifact now?
 ```
 
-### SI VÉRIFICATION OK :
+### IF VERIFICATION OK:
 
 1. Update state: `.genius/state.json`
 2. Pass relevant files/context to next skill
@@ -323,7 +323,7 @@ Detect and route memory-related phrases:
 | Command | Action |
 |---------|--------|
 | `/genius-start` | Initialize environment, load memory |
-| `/genius-start --recover` | Réinitialise en gardant les artifacts valides |
+| `/genius-start --recover` | Reinitialize while keeping valid artifacts |
 | `/status` | Show current project status |
 | `/continue` | Resume execution from last point |
 | `/reset` | Start over (with confirmation) |

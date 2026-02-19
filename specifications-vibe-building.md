@@ -1,24 +1,24 @@
 # Genius Team Platform — Vibe Building Specifications
 **Version:** 1.0 — Draft
 **Date:** 2026-02-18
-**Auteur:** Ben Bellity + Echo (AI)
+**Author:** Ben Bellity + Echo (AI)
 
 ---
 
 ## Vision
 
-> **"Vibe Building : de l'idée au lancement, en équipe, orchestré par l'AI."**
+> **"Vibe Building: from idea to launch, as a team, orchestrated by AI."**
 
-**Vibe Coding** = un dev + une AI pour coder vite.
-**Vibe Building** = une équipe complète + des AIs spécialisées pour construire un produit de A à Z — de l'idéation au déploiement.
+**Vibe Coding** = one dev + one AI to code fast.
+**Vibe Building** = a full team + specialized AIs to build a product from A to Z — from ideation to deployment.
 
-Genius Team est aujourd'hui le meilleur outil de Vibe Building pour une personne seule. La plateforme est l'extension naturelle pour les équipes — sans exclure les non-techniciens, en les incluant dans leur langage métier.
+Genius Team is today the best Vibe Building tool for a solo person. The platform is the natural extension for teams — without excluding non-technical members, by including them in their business language.
 
 ---
 
-## Concept Clé : Le Cerveau Partagé
+## Key Concept: The Shared Brain
 
-Chaque membre de l'équipe a son AI pair. Toutes les AIs partagent le même contexte de projet (`shared state`). Le CEO parle vision. Le marketer parle audience. Le dev parle code. L'AI orchestre et traduit.
+Each team member has their AI pair. All AIs share the same project context (`shared state`). The CEO speaks vision. The marketer speaks audience. The dev speaks code. The AI orchestrates and translates.
 
 ```
 SHARED PROJECT BRAIN (state.json)
@@ -32,311 +32,311 @@ Vision  UX/UI   Messaging  Code  Roadmap
 
 ---
 
-## 1. Onboarding & Gestion d'Équipe
+## 1. Onboarding & Team Management
 
-### 1.1 Création de compte
+### 1.1 Account Creation
 - Email/password + OAuth (Google, GitHub)
-- Profil : nom, rôle (`founder`, `designer`, `marketer`, `dev`, `pm`, `qa`)
-- Le rôle conditionne l'interface, les agents IA assignés, et les permissions
+- Profile: name, role (`founder`, `designer`, `marketer`, `dev`, `pm`, `qa`)
+- The role determines the interface, assigned AI agents, and permissions
 
-### 1.2 Création d'équipe & projet
-1. Le fondateur crée une équipe + un projet sur genius.w3art.io
-2. Invitation des membres par email (lien tokenisé, expire en 72h)
-3. Chaque membre choisit son rôle à l'inscription
-4. Setup des clés IA (voir section 2)
+### 1.2 Team & Project Creation
+1. The founder creates a team + a project on genius.w3art.io
+2. Member invitation by email (tokenized link, expires in 72h)
+3. Each member chooses their role at signup
+4. AI key setup (see section 2)
 
-### 1.3 Gestion des permissions
+### 1.3 Permission Management
 
 | Permission | Owner | Admin | Member |
 |------------|-------|-------|--------|
-| Inviter des membres | ✅ | ✅ | ❌ |
-| Modifier les settings | ✅ | ✅ | ❌ |
-| Déployer | ✅ | ✅ | ❌ |
-| Contribuer aux phases | ✅ | ✅ | ✅ |
-| Voter | ✅ | ✅ | ✅ |
-| Voir le terminal | ✅ | ✅ | ✅ (read-only) |
-| Contrôler le terminal | ✅ | ✅ | ❌ |
+| Invite members | ✅ | ✅ | ❌ |
+| Modify settings | ✅ | ✅ | ❌ |
+| Deploy | ✅ | ✅ | ❌ |
+| Contribute to phases | ✅ | ✅ | ✅ |
+| Vote | ✅ | ✅ | ✅ |
+| View terminal | ✅ | ✅ | ✅ (read-only) |
+| Control terminal | ✅ | ✅ | ❌ |
 
 ---
 
-## 2. Gestion des Comptes IA
+## 2. AI Account Management
 
-### 2.1 Mode v1 : BYO Account (Bring Your Own Subscription)
+### 2.1 v1 Mode: BYO Account (Bring Your Own Subscription)
 
-Chaque utilisateur **connecte sa souscription** via OAuth — pas d'API key à copier-coller :
+Each user **connects their subscription** via OAuth — no API key to copy-paste:
 
-| Bouton | Souscription requise | Coût utilisateur |
+| Button | Required Subscription | User Cost |
 |--------|---------------------|-----------------|
-| "Connect Claude" | Claude Pro ($20/mois) ou Max | ~$20/mois flat |
-| "Connect OpenAI" | ChatGPT Plus ($20/mois) ou Teams | ~$20/mois flat |
+| "Connect Claude" | Claude Pro ($20/month) or Max | ~$20/month flat |
+| "Connect OpenAI" | ChatGPT Plus ($20/month) or Teams | ~$20/month flat |
 
-**Flux OAuth :**
-1. L'utilisateur clique "Connect Claude" sur la plateforme
-2. Redirigé vers claude.ai pour autoriser l'accès
-3. La plateforme reçoit un OAuth token (pas une API key)
-4. Chaque appel IA est effectué via les credentials de l'utilisateur
-5. C'est la souscription de l'utilisateur qui est consommée (pas la nôtre)
+**OAuth Flow:**
+1. The user clicks "Connect Claude" on the platform
+2. Redirected to claude.ai to authorize access
+3. The platform receives an OAuth token (not an API key)
+4. Each AI call is made via the user's credentials
+5. The user's subscription is consumed (not ours)
 
-**Avantages vs API key :**
-- Coût prévisible ($20/mois vs potentiellement $100-200+ en pay-per-token)
-- Pas de risque de dépassement surprise
-- L'utilisateur contrôle sa propre souscription
-- La plateforme ne stocke jamais de clé API sensible
+**Advantages vs API key:**
+- Predictable cost ($20/month vs potentially $100-200+ in pay-per-token)
+- No risk of surprise overages
+- The user controls their own subscription
+- The platform never stores sensitive API keys
 
-**Note technique :** Les OAuth tokens sont chiffrés (AES-256) et refreshés automatiquement.
+**Technical note:** OAuth tokens are encrypted (AES-256) and refreshed automatically.
 
-### 2.2 Programme "Free Credits" (partenariat)
+### 2.2 "Free Credits" Program (partnership)
 
-Au lieu de revendre des tokens (risque légal), la plateforme :
-- Se positionne comme **canal d'acquisition partenaire** d'Anthropic et OpenAI
-- Négocie des **crédits offerts** pour les nouvelles équipes (ex: $50 de crédits Claude à l'inscription)
-- Génère des revenus via l'onboarding premium et les services (voir section 8)
+Instead of reselling tokens (legal risk), the platform:
+- Positions itself as a **partner acquisition channel** for Anthropic and OpenAI
+- Negotiates **free credits** for new teams (e.g., $50 of Claude credits at signup)
+- Generates revenue via premium onboarding and services (see section 8)
 
-### 2.3 Choix du moteur par phase
+### 2.3 Engine Choice by Phase
 
 ```
-Phase Discovery   → Claude ou Codex (configurable)
-Phase Market      → Claude ou Codex
-Phase Dev         → Claude Code OU Codex CLI OU Dual Mode
-Phase Review      → Dual Mode recommandé (Claude build, Codex challenge)
+Discovery Phase   → Claude or Codex (configurable)
+Market Phase      → Claude or Codex
+Dev Phase         → Claude Code OR Codex CLI OR Dual Mode
+Review Phase      → Dual Mode recommended (Claude build, Codex challenge)
 ```
 
 ---
 
-## 3. Interface Chat — genius-bot (Telegram)
+## 3. Chat Interface — genius-bot (Telegram)
 
-### 3.1 Création assistée du chat d'équipe
+### 3.1 Assisted Team Chat Creation
 
-1. Fondateur clique "Créer le chat équipe" sur la plateforme
-2. La plateforme crée un groupe Telegram privé automatiquement
-3. Tous les membres invités sont ajoutés
-4. @genius-bot est ajouté et se présente en tant qu'orchestrateur
+1. Founder clicks "Create team chat" on the platform
+2. The platform automatically creates a private Telegram group
+3. All invited members are added
+4. @genius-bot is added and introduces itself as the orchestrator
 
-### 3.2 Architecture des bots
+### 3.2 Bot Architecture
 
 ```
-@genius-bot (orchestrateur)
-  ├── @genius-interviewer-bot   → Phase Discovery (questions, reformulations)
-  ├── @genius-market-bot        → Phase Market (analyse, insights)
-  ├── @genius-design-bot        → Phase Design (UX guidance, system design)
-  ├── @genius-dev-bot           → Phase Dev (code snippets, architecture)
-  ├── @genius-qa-bot            → Phase QA (test scenarios, critères)
+@genius-bot (orchestrator)
+  ├── @genius-interviewer-bot   → Discovery Phase (questions, reformulations)
+  ├── @genius-market-bot        → Market Phase (analysis, insights)
+  ├── @genius-design-bot        → Design Phase (UX guidance, system design)
+  ├── @genius-dev-bot           → Dev Phase (code snippets, architecture)
+  ├── @genius-qa-bot            → QA Phase (test scenarios, criteria)
   └── @genius-vote-bot          → Votes & consensus
 ```
 
-**Comportement :**
-- @genius-bot anime et oriente la discussion selon la phase active
-- Chaque bot est invoqué automatiquement quand sa phase commence
-- Les bots lisent le `shared state` pour contextualiser leurs réponses
-- Support voice notes → transcription auto → réponse IA
+**Behavior:**
+- @genius-bot facilitates and guides the discussion according to the active phase
+- Each bot is invoked automatically when its phase begins
+- Bots read the `shared state` to contextualize their responses
+- Voice notes support → auto transcription → AI response
 
-### 3.3 Interactions typiques
+### 3.3 Typical Interactions
 
 ```
-👤 Marie (Designer): "Je veux un design épuré, inspiré d'Apple"
-🤖 @genius-design-bot: "Parfait. Pour un style Apple-like, voici 
-   les principes clés pour votre projet TaskFlow : [...]
-   Je mets à jour le Design System dans le dashboard."
+👤 Marie (Designer): "I want a clean design, inspired by Apple"
+🤖 @genius-design-bot: "Perfect. For an Apple-like style, here are
+   the key principles for your TaskFlow project: [...]
+   I'm updating the Design System in the dashboard."
 
-👤 Thomas (CEO): "On devrait plutôt cibler les PME"
-🤖 @genius-market-bot: "Thomas, j'analyse... 83% des utilisateurs 
-   actuels en découverte correspondent au profil PME.
-   Je soumets une révision de l'ICP à l'équipe. /vote lancé."
+👤 Thomas (CEO): "We should target SMBs instead"
+🤖 @genius-market-bot: "Thomas, analyzing... 83% of current
+   discovery users match the SMB profile.
+   I'm submitting an ICP revision to the team. /vote launched."
 ```
 
 ---
 
-## 4. Système de Consensus & Votes
+## 4. Consensus & Voting System
 
-### 4.1 Paramètre Consensus
+### 4.1 Consensus Parameter
 
-Configurable par projet :
+Configurable per project:
 ```
 consensus_mode: "human" | "bot"
 ```
 
-- **human** : Le Lead désigné tranche. Le bot présente les arguments de chaque camp de façon synthétique.
-- **bot** : L'AI tranche sur la base des specs, des meilleures pratiques, et du contexte projet.
+- **human**: The designated Lead decides. The bot presents each side's arguments in a synthesized way.
+- **bot**: The AI decides based on specs, best practices, and project context.
 
-### 4.2 Mécanisme de vote
+### 4.2 Voting Mechanism
 
-Déclenché par `@genius-vote-bot` ou par n'importe quel membre :
+Triggered by `@genius-vote-bot` or by any member:
 
 ```
-/vote "Stack frontend : Next.js ou Nuxt.js ?"
-→ Options : Next.js · Nuxt.js · M'en remettre à l'AI
-→ Timer : 2h (configurable)
-→ Quorum : 50%+1 (configurable)
-→ Si timer expiré sans quorum → consensus_mode prend le relai
+/vote "Frontend stack: Next.js or Nuxt.js?"
+→ Options: Next.js · Nuxt.js · Let the AI decide
+→ Timer: 2h (configurable)
+→ Quorum: 50%+1 (configurable)
+→ If timer expires without quorum → consensus_mode takes over
 ```
 
-**Types de votes :**
-- Choix technique (stack, architecture, tooling)
-- Priorité feature (que build-on en premier ?)
-- Validation de phase (passage à l'étape suivante)
-- Décision business (pricing, pivot, cible)
+**Vote types:**
+- Technical choice (stack, architecture, tooling)
+- Feature priority (what do we build first?)
+- Phase validation (moving to the next step)
+- Business decision (pricing, pivot, target)
 
-**Résultat :** Automatiquement logué dans `shared/decisions.json` avec rationale et historique des votes.
+**Result:** Automatically logged in `shared/decisions.json` with rationale and vote history.
 
 ---
 
-## 5. Dashboard Web
+## 5. Web Dashboard
 
-### 5.1 Vue d'ensemble
+### 5.1 Overview
 
-Interface web accessible par tous les membres depuis n'importe quel navigateur. Aucune installation requise. Mis à jour en temps réel via WebSocket.
+Web interface accessible by all members from any browser. No installation required. Updated in real-time via WebSocket.
 
-### 5.2 Onglets — Phases Genius Team
+### 5.2 Tabs — Genius Team Phases
 
 ```
 [🎯 Discovery] [📊 Market] [📋 Specs] [🎨 Design] [💻 Dev] [🧪 QA] [🚀 Deploy]
 ```
 
-Chaque onglet affiche le **playground complet** de la phase (pas un résumé) :
-- Indicateur live : "Qui travaille dessus maintenant" (avatars)
-- Historique des contributions par membre
-- Bouton "Demander révision" → notif dans le chat Telegram
-- Statut : Pending · In Progress · In Review · Completed
+Each tab displays the **complete playground** for the phase (not a summary):
+- Live indicator: "Who's working on this now" (avatars)
+- Contribution history by member
+- "Request review" button → notification in the Telegram chat
+- Status: Pending · In Progress · In Review · Completed
 
-### 5.3 Vues additionnelles
+### 5.3 Additional Views
 
 **🗺️ Team Map**
-- Qui fait quoi en ce moment
-- Disponibilité de chaque membre
-- Tâches assignées vs en attente
+- Who's doing what right now
+- Each member's availability
+- Assigned vs pending tasks
 
 **📊 Project Progress**
-- % completion par phase
-- Timeline estimée vs réelle
-- Velocity de l'équipe
+- % completion per phase
+- Estimated vs actual timeline
+- Team velocity
 
 **💬 Decisions Log**
-- Toutes les décisions prises (manuelles + AI)
-- Contexte, date, décideur
-- Possibilité de revenir en arrière (revert decision)
+- All decisions made (manual + AI)
+- Context, date, decision-maker
+- Ability to revert (revert decision)
 
-**🗳️ Votes actifs**
-- Votes en cours avec countdown
-- Résultats des votes passés
+**🗳️ Active Votes**
+- Ongoing votes with countdown
+- Past vote results
 
 ---
 
-## 6. Web CLI — Terminal Intégré
+## 6. Web CLI — Integrated Terminal
 
-### 6.1 Philosophie
+### 6.1 Philosophy
 
-Le terminal n'est pas caché aux non-techniciens — il est **visible en mode spectateur**. Voir l'AI coder en temps réel crée le "WOW moment" qui engage les membres non-techniques.
+The terminal is not hidden from non-technical members — it is **visible in spectator mode**. Seeing the AI code in real-time creates the "WOW moment" that engages non-technical members.
 
 ```
-Non-tech member → Voit le terminal live (read-only)
-                → Voit l'AI générer du code
-                → "Take Control" button disponible
-                → WOW moment + sentiment d'ownership
+Non-tech member → Sees the terminal live (read-only)
+                → Sees the AI generate code
+                → "Take Control" button available
+                → WOW moment + sense of ownership
 ```
 
-### 6.2 Stack technique
+### 6.2 Technical Stack
 
 ```
 Frontend : xterm.js (terminal emulator)
-Backend  : node-pty (pseudo-terminal côté serveur)
-Protocole: WebSocket (bidirectionnel)
-Container: Sandbox isolé par projet (Docker ou VM légère)
+Backend  : node-pty (server-side pseudo-terminal)
+Protocol : WebSocket (bidirectional)
+Container: Isolated sandbox per project (Docker or lightweight VM)
 ```
 
-### 6.3 Fonctionnement
+### 6.3 How It Works
 
-- Terminal complet dans le browser
-- Claude Code ou Codex CLI pré-installés dans le container
-- Le repo du projet est pré-cloné
-- Accès en écriture : `dev` et `lead` uniquement
-- Accès en lecture (live view) : tous les membres
-- Push/pull git intégré avec feedback visuel
+- Full terminal in the browser
+- Claude Code or Codex CLI pre-installed in the container
+- The project repo is pre-cloned
+- Write access: `dev` and `lead` only
+- Read access (live view): all members
+- Integrated git push/pull with visual feedback
 
-### 6.4 Visible dans
+### 6.4 Visible In
 
-- Onglet **Dev** du dashboard (principal)
-- Panel rétractable sur tous les autres onglets pour les devs
+- **Dev** tab of the dashboard (main)
+- Collapsible panel on all other tabs for devs
 
 ---
 
-## 7. Déploiement & Setup Externe
+## 7. Deployment & External Setup
 
-### 7.1 Mode Guidé (Guide-Me)
+### 7.1 Guided Mode (Guide-Me)
 
-La plateforme guide l'équipe pas-à-pas pour configurer les services externes :
-
-```
-Étape 1 : GitHub → Créer repo + push code initial
-Étape 2 : Vercel → Connecter repo + premier déploiement frontend
-Étape 3 : Railway → Provisionner backend + base de données
-Étape 4 : Stripe → Configurer les paiements (si applicable)
-Étape 5 : Resend/Loops → Email transactionnel
-```
-
-Chaque étape : instructions illustrées + validation automatique quand c'est fait.
-
-### 7.2 Mode Autopilot (Clé-en-Main)
-
-La plateforme agit via OAuth sur les services externes :
+The platform guides the team step-by-step to configure external services:
 
 ```
-OAuth GitHub → Créer repo, configurer branch protection, add collaborators
-OAuth Vercel → Créer projet, setup domaine custom, env variables
-OAuth Railway → Provision DB, déployer backend, setup secrets
+Step 1: GitHub → Create repo + push initial code
+Step 2: Vercel → Connect repo + first frontend deployment
+Step 3: Railway → Provision backend + database
+Step 4: Stripe → Configure payments (if applicable)
+Step 5: Resend/Loops → Transactional email
 ```
 
-L'utilisateur autorise une seule fois chaque service. La plateforme gère le reste.
+Each step: illustrated instructions + automatic validation when done.
 
-**Résultat :** L'équipe reçoit les URLs de prod + les credentials dans un dashboard sécurisé.
+### 7.2 Autopilot Mode (Turnkey)
+
+The platform acts via OAuth on external services:
+
+```
+OAuth GitHub → Create repo, configure branch protection, add collaborators
+OAuth Vercel → Create project, setup custom domain, env variables
+OAuth Railway → Provision DB, deploy backend, setup secrets
+```
+
+The user authorizes each service once. The platform handles the rest.
+
+**Result:** The team receives production URLs + credentials in a secure dashboard.
 
 ---
 
-## 8. Modèle de Revenus (v1)
+## 8. Revenue Model (v1)
 
-| Source | Description | Montant estimé |
+| Source | Description | Estimated Amount |
 |--------|-------------|----------------|
-| 💰 **Abonnement plateforme** | Freemium → Team → Pro | 0 / 49€ / 99€/mois |
-| 🤝 **Onboarding premium** | Setup complet accompagné par l'équipe | 299-999€ one-shot |
-| 🎓 **Vibe Building bootcamp** | Formation équipe (4h, async ou live) | 199€/participant |
-| 🔌 **Setup Autopilot** | Configuration clé-en-main tous services | 199-499€ one-shot |
-| 🤝 **Partenariat Anthropic/OpenAI** | Crédits offerts aux nouveaux users via deal partenaire | TBD |
+| 💰 **Platform subscription** | Freemium → Team → Pro | 0 / $49 / $99/month |
+| 🤝 **Premium onboarding** | Complete setup guided by the team | $299-999 one-shot |
+| 🎓 **Vibe Building bootcamp** | Team training (4h, async or live) | $199/participant |
+| 🔌 **Autopilot Setup** | Turnkey configuration for all services | $199-499 one-shot |
+| 🤝 **Anthropic/OpenAI partnership** | Free credits for new users via partner deal | TBD |
 
 ### Plans
 
-| Plan | Prix | Limites |
+| Plan | Price | Limits |
 |------|------|---------|
-| **Free** | 0€ | 1 projet · 3 membres · BYO keys |
-| **Team** | 49€/mois | 5 projets · 10 membres · BYO keys |
-| **Pro** | 99€/mois | Projets illimités · Membres illimités · Autopilot deploy |
-| **Enterprise** | Sur devis | White-label · SLA · Support dédié |
+| **Free** | $0 | 1 project · 3 members · BYO keys |
+| **Team** | $49/month | 5 projects · 10 members · BYO keys |
+| **Pro** | $99/month | Unlimited projects · Unlimited members · Autopilot deploy |
+| **Enterprise** | Custom quote | White-label · SLA · Dedicated support |
 
 ---
 
-## 9. Stack Technique
+## 9. Technical Stack
 
 ```
 Frontend    : Next.js 15 (App Router) + Tailwind
 Backend     : Node.js + Fastify (API) + WebSocket
 Database    : Supabase (PostgreSQL + Auth + Realtime + Storage)
 Auth        : Supabase Auth (email + OAuth Google/GitHub)
-Telegram    : Grammy.js (bots multi-instances)
+Telegram    : Grammy.js (multi-instance bots)
 Web CLI     : xterm.js + node-pty + WebSocket
-AI Layer    : Anthropic SDK + OpenAI SDK (routing selon config user)
+AI Layer    : Anthropic SDK + OpenAI SDK (routing per user config)
 Real-time   : Supabase Realtime (dashboard) + Socket.io (terminal)
-Containers  : Docker (sandbox Web CLI par projet)
+Containers  : Docker (Web CLI sandbox per project)
 Deploy      : Vercel (frontend) + Railway (backend + bots + containers)
-Paiements   : Stripe (abonnements + one-shots)
+Payments    : Stripe (subscriptions + one-shots)
 Email       : Resend (invitations, notifications)
 ```
 
 ---
 
-## 10. Modèle de Données
+## 10. Data Model
 
 ```
 User
   ├── id, email, name, role
-  └── api_keys (chiffrées)
+  └── api_keys (encrypted)
 
 Team
   ├── id, name, owner_id
@@ -377,17 +377,17 @@ Message
 
 ---
 
-## 11. Ce qu'on a déjà (réutilisable)
+## 11. What We Already Have (Reusable)
 
-| Asset | Réutilisé comment |
+| Asset | How It's Reused |
 |-------|-------------------|
-| `project-dashboard.html` | Base du Dashboard Web (portée en React) |
-| 12 playgrounds HTML | Onglets du dashboard |
-| `state.json` schema | Modèle de données Project/Phase |
-| 25 skills Genius Team | Logique des bots Telegram |
-| xterm.js (Jarvis) | Web CLI intégré |
-| `genius-dual-engine` skill | Mode Dual pour la phase Dev |
-| Scripts `create.sh` / `setup.sh` | Onboarding Autopilot |
+| `project-dashboard.html` | Web Dashboard base (ported to React) |
+| 12 playground HTMLs | Dashboard tabs |
+| `state.json` schema | Project/Phase data model |
+| 25 Genius Team skills | Telegram bot logic |
+| xterm.js (Jarvis) | Integrated Web CLI |
+| `genius-dual-engine` skill | Dual Mode for Dev phase |
+| Scripts `create.sh` / `setup.sh` | Autopilot Onboarding |
 
 ---
 
@@ -395,30 +395,30 @@ Message
 
 ### v1 — "Founder + Dev" (MVP)
 - [ ] Auth + teams + invitations
-- [ ] Shared state en temps réel
-- [ ] Dashboard avec 7 onglets (phases)
-- [ ] Telegram bot (genius-bot orchestrateur)
+- [ ] Real-time shared state
+- [ ] Dashboard with 7 tabs (phases)
+- [ ] Telegram bot (genius-bot orchestrator)
 - [ ] BYO API keys
-- [ ] Web CLI (read-only spectateur + contrôle dev)
+- [ ] Web CLI (read-only spectator + dev control)
 
 ### v2 — "Full Team"
-- [ ] Bots spécialisés par phase
-- [ ] Système de votes
-- [ ] Mode Dual intégré dans le dashboard
-- [ ] Deploy guidé (Guide-Me)
+- [ ] Specialized bots per phase
+- [ ] Voting system
+- [ ] Dual Mode integrated in dashboard
+- [ ] Guided deploy (Guide-Me)
 
 ### v3 — "Scale"
-- [ ] Deploy Autopilot
-- [ ] Programme partenariat Anthropic/OpenAI
-- [ ] Onboarding premium en libre-service
+- [ ] Autopilot Deploy
+- [ ] Anthropic/OpenAI partnership program
+- [ ] Self-service premium onboarding
 - [ ] Analytics & reporting
 
 ---
 
-## Méta-note
+## Meta-note
 
-La plateforme est elle-même buildée en **Vibe Building** — en utilisant Genius Team pour se construire. C'est le meilleur demo possible et le meilleur argument marketing : **"On a buildé cette plateforme avec notre propre outil."**
+The platform is itself built using **Vibe Building** — using Genius Team to build itself. It's the best possible demo and the best marketing argument: **"We built this platform with our own tool."**
 
 ---
 
-*Document vivant — à mettre à jour au fil des décisions d'équipe.*
+*Living document — to be updated as team decisions are made.*

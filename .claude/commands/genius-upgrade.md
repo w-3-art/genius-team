@@ -28,18 +28,18 @@ Upgrade your Genius Team installation to the latest version.
 ### If upgrade available:
 
 ```
-🆕 Nouvelle version disponible!
+🆕 New version available!
 
-Version actuelle: v9.0.0
-Dernière version: v10.0.0
+Current version: v10.0.0
+Latest version: v11.0.0
 
-Nouveautés v10.0:
-- 🎮 12 playgrounds interactifs (Design, Market, Architecture...)
-- 🛡️ Système anti-dérive (GENIUS_GUARD.md)
-- 🧠 Mémoire persistante active (capture/rollup/recover)
-- 📋 Nouvelles commandes: /guard-*, /memory-*
+What's new in v11.0:
+- 🎮 12 interactive playgrounds (Design, Market, Architecture...)
+- 🛡️ Anti-drift system (GENIUS_GUARD.md)
+- 🧠 Active persistent memory (capture/rollup/recover)
+- 📋 New commands: /guard-*, /memory-*
 
-Souhaites-tu procéder à l'upgrade? (oui/non)
+Would you like to proceed with the upgrade? (yes/no)
 ```
 
 ### On user approval:
@@ -51,7 +51,7 @@ Display results and suggest: "Run /genius-start to initialize"
 ### If already latest:
 
 ```
-✅ Genius Team est à jour (v10.0.0)
+✅ Genius Team is up to date (v11.0.0)
 ```
 
 ## Safety
