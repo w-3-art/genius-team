@@ -54,7 +54,7 @@ export default async function handler(req) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || 'claude-3-haiku-20240307',
+        model: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5',
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
         messages: messages,
@@ -75,7 +75,7 @@ export default async function handler(req) {
 
     return new Response(JSON.stringify({ 
       message: assistantMessage,
-      model: 'claude-3-haiku'
+      model: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5'
     }), {
       status: 200,
       headers: { 
