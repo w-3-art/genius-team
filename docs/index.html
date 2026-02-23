@@ -177,6 +177,42 @@ section{padding:6rem 2rem}
 .faq-item code{background:rgba(124,58,237,.15);color:#a78bfa;padding:.15rem .4rem;border-radius:4px;font-size:.8rem}
 .faq-item a{color:var(--purple);text-decoration:underline;text-underline-offset:2px}
 
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-card{background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-lg);padding:2.5rem;max-width:580px;width:100%;max-height:80vh;overflow-y:auto;position:relative;transform:translateY(20px);transition:transform .25s}
+.modal-overlay.open .modal-card{transform:translateY(0)}
+.modal-close{position:absolute;top:1.25rem;right:1.25rem;background:rgba(255,255,255,.08);border:none;color:var(--text2);font-size:1.2rem;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:rgba(255,255,255,.15);color:var(--text)}
+.modal-icon{font-size:2.5rem;margin-bottom:1rem}
+.modal-title{font-size:1.4rem;font-weight:700;margin-bottom:1rem}
+.modal-body{color:var(--text2);font-size:.92rem;line-height:1.7}
+.modal-body p{margin-bottom:.75rem}
+.modal-body ul{list-style:none;margin:.75rem 0}
+.modal-body li{padding:.3rem 0 .3rem 1.2rem;position:relative}
+.modal-body li::before{content:'→';position:absolute;left:0;color:var(--purple)}
+.modal-body code{background:rgba(124,58,237,.15);color:#a78bfa;padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.modal-body .tag{display:inline-block;padding:.2rem .6rem;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);border-radius:100px;font-size:.75rem;color:#a78bfa;margin:.25rem .2rem 0 0}
+.feature{cursor:pointer;transition:all .3s}
+.feature:hover{border-color:rgba(124,58,237,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,58,237,.1)}
+.skill-item{cursor:pointer}
+
+/* PLAYGROUND SECTION */
+.pg-carousel{display:flex;gap:1rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent;scroll-snap-type:x mandatory}
+.pg-carousel::-webkit-scrollbar{height:4px}
+.pg-carousel::-webkit-scrollbar-track{background:transparent}
+.pg-carousel::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:4px}
+.pg-card{flex:0 0 220px;scroll-snap-align:start;background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:1.5rem;transition:all .3s}
+.pg-card:hover{border-color:rgba(124,58,237,.3);transform:translateY(-3px);box-shadow:0 8px 20px rgba(124,58,237,.1)}
+.pg-card-icon{font-size:2rem;margin-bottom:.75rem}
+.pg-card-title{font-size:.9rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
+.pg-card-desc{font-size:.8rem;color:var(--text2);line-height:1.5}
+.pg-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2.5rem}
+.pg-feature{display:flex;align-items:flex-start;gap:.75rem;padding:1rem;background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.1);border-radius:var(--radius)}
+.pg-feature-icon{font-size:1.3rem;flex-shrink:0}
+.pg-feature-text strong{display:block;font-size:.85rem;font-weight:600;margin-bottom:.2rem}
+.pg-feature-text span{font-size:.8rem;color:var(--text2)}
+
 /* CHAT WIDGET */
 .chat-widget{position:fixed;bottom:24px;right:24px;z-index:1000}
 .chat-toggle{display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--grad);border:none;border-radius:100px;color:#fff;font-weight:600;font-size:.9rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);transition:all .3s}
@@ -344,6 +380,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       <a href="#what">About</a>
       <a href="#modes">Modes</a>
       <a href="#features">Features</a>
+      <a href="#playgrounds">Playgrounds</a>
       <a href="#quickstart">Quick Start</a>
       <a href="#upgrade">Upgrade</a>
       <a href="#faq">FAQ</a>
@@ -467,15 +504,15 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       <div class="section-sub">Everything you need to go from zero to production, with no external dependencies.</div>
     </div>
     <div class="features-grid fade-in">
-      <div class="feature">
+      <div class="feature" onclick="openModal('feature-agent-teams')">
         <h3>🤖 Agent Teams</h3>
         <p>Built on Claude Code's experimental agent teams. The Lead orchestrates while teammates execute in parallel with git worktree isolation.</p>
       </div>
-      <div class="feature">
+      <div class="feature" onclick="openModal('feature-playgrounds')">
         <h3>🎮 Interactive Playgrounds</h3>
         <p>12 visual decision-making playgrounds for each phase. See options, make choices, understand trade-offs — all in a guided interface.</p>
       </div>
-      <div class="feature">
+      <div class="feature" onclick="openModal('feature-guard')">
         <h3>🛡️ Anti-Drift Guard</h3>
         <p>Keeps Claude on track and prevents going off-rails. Auto-detects when the AI drifts from the plan and brings it back.</p>
         <ul>
@@ -483,7 +520,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
           <li>/guard-recover — Get back on track</li>
         </ul>
       </div>
-      <div class="feature">
+      <div class="feature" onclick="openModal('feature-memory')">
         <h3>🧠 Persistent Memory</h3>
         <p>Nothing is ever forgotten between sessions. Memory lives in <code>.genius/memory/</code> with auto-generated BRIEFING.md loaded at every session.</p>
         <ul>
@@ -493,13 +530,104 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
           <li>errors.json — Resolved solutions</li>
         </ul>
       </div>
-      <div class="feature">
+      <div class="feature" onclick="openModal('feature-qa')">
         <h3>🔄 Mandatory QA Loop</h3>
         <p>Every task goes through: Dev → QA-micro → Fix → Re-QA → ✅. Nothing ships without passing quality assurance.</p>
       </div>
-      <div class="feature">
+      <div class="feature" onclick="openModal('feature-tokens')">
         <h3>💰 Save-Token Mode</h3>
         <p>Toggle <code>/save-tokens</code> to use Sonnet for high-volume roles while keeping Opus for lead and architect. Cut costs without cutting quality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAYGROUNDS SHOWCASE -->
+<section id="playgrounds" style="background:var(--bg2)">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Interactive Playgrounds</div>
+      <div class="section-title">Visual decision interfaces, for every phase</div>
+      <div class="section-sub">Each playground turns a complex decision into a visual, guided experience. No more guessing — see the options, understand the trade-offs, make the call.</div>
+    </div>
+    <div class="pg-carousel fade-in">
+      <div class="pg-card">
+        <div class="pg-card-icon">🗺️</div>
+        <div class="pg-card-title">Project Canvas</div>
+        <div class="pg-card-desc">Define vision, scope, and success metrics before building anything.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">📊</div>
+        <div class="pg-card-title">Market Simulator</div>
+        <div class="pg-card-desc">Model your market size, positioning, and competitive landscape visually.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">🏗️</div>
+        <div class="pg-card-title">Architecture Explorer</div>
+        <div class="pg-card-desc">Compare architectural patterns side-by-side with trade-off analysis.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">⚙️</div>
+        <div class="pg-card-title">Stack Configurator</div>
+        <div class="pg-card-desc">Pick your tech stack with compatibility checks and recommendations.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">🎨</div>
+        <div class="pg-card-title">Design System Builder</div>
+        <div class="pg-card-desc">Define your design tokens, component library, and visual language.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">📣</div>
+        <div class="pg-card-title">GTM Simulator</div>
+        <div class="pg-card-desc">Simulate go-to-market strategies and identify the best launch approach.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">✍️</div>
+        <div class="pg-card-title">Copy A/B Tester</div>
+        <div class="pg-card-desc">Compare messaging variants and select the most compelling copy.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">📈</div>
+        <div class="pg-card-title">Progress Dashboard</div>
+        <div class="pg-card-desc">Real-time view of project status, milestones, and velocity.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">⚠️</div>
+        <div class="pg-card-title">Risk Matrix</div>
+        <div class="pg-card-desc">Identify, score, and mitigate project risks before they become blockers.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">🛤️</div>
+        <div class="pg-card-title">User Journey Builder</div>
+        <div class="pg-card-desc">Map user flows and touchpoints to design the ideal experience.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">✅</div>
+        <div class="pg-card-title">Deploy Checklist</div>
+        <div class="pg-card-desc">Step-by-step pre-launch checklist with automated status tracking.</div>
+      </div>
+      <div class="pg-card">
+        <div class="pg-card-icon">🧪</div>
+        <div class="pg-card-title">Test Coverage Map</div>
+        <div class="pg-card-desc">Visualize test coverage across your codebase and spot gaps.</div>
+      </div>
+    </div>
+    <div class="pg-features fade-in">
+      <div class="pg-feature">
+        <div class="pg-feature-icon">🖱️</div>
+        <div class="pg-feature-text"><strong>Fully interactive</strong><span>Click, compare, decide — no static docs</span></div>
+      </div>
+      <div class="pg-feature">
+        <div class="pg-feature-icon">🔗</div>
+        <div class="pg-feature-text"><strong>Context-aware</strong><span>Each playground loads your project's current state</span></div>
+      </div>
+      <div class="pg-feature">
+        <div class="pg-feature-icon">💾</div>
+        <div class="pg-feature-text"><strong>Decisions saved</strong><span>Choices are persisted in memory for the AI to reference</span></div>
+      </div>
+      <div class="pg-feature">
+        <div class="pg-feature-icon">📡</div>
+        <div class="pg-feature-text"><strong>Served locally</strong><span>Runs in your browser, no external dependencies</span></div>
       </div>
     </div>
   </div>
@@ -726,28 +854,28 @@ cd my-awesome-app
       <div class="section-sub">Each skill is a domain expert. Together, they're your AI product team.</div>
     </div>
     <div class="skills-grid fade-in">
-      <div class="skill-item"><span class="skill-icon">🧠</span><span class="skill-name">genius-team</span></div>
-      <div class="skill-item"><span class="skill-icon">🎤</span><span class="skill-name">genius-interviewer</span></div>
-      <div class="skill-item"><span class="skill-icon">📊</span><span class="skill-name">genius-product-market-analyst</span></div>
-      <div class="skill-item"><span class="skill-icon">📋</span><span class="skill-name">genius-specs</span></div>
-      <div class="skill-item"><span class="skill-icon">🎨</span><span class="skill-name">genius-designer</span></div>
-      <div class="skill-item"><span class="skill-icon">📣</span><span class="skill-name">genius-marketer</span></div>
-      <div class="skill-item"><span class="skill-icon">✍️</span><span class="skill-name">genius-copywriter</span></div>
-      <div class="skill-item"><span class="skill-icon">🔗</span><span class="skill-name">genius-integration-guide</span></div>
-      <div class="skill-item"><span class="skill-icon">🏗️</span><span class="skill-name">genius-architect</span></div>
-      <div class="skill-item"><span class="skill-icon">🎯</span><span class="skill-name">genius-orchestrator</span></div>
-      <div class="skill-item"><span class="skill-icon">⚡</span><span class="skill-name">genius-dev</span></div>
-      <div class="skill-item"><span class="skill-icon">✅</span><span class="skill-name">genius-qa</span></div>
-      <div class="skill-item"><span class="skill-icon">🔍</span><span class="skill-name">genius-qa-micro</span></div>
-      <div class="skill-item"><span class="skill-icon">🐛</span><span class="skill-name">genius-debugger</span></div>
-      <div class="skill-item"><span class="skill-icon">👀</span><span class="skill-name">genius-reviewer</span></div>
-      <div class="skill-item"><span class="skill-icon">🔒</span><span class="skill-name">genius-security</span></div>
-      <div class="skill-item"><span class="skill-icon">🚀</span><span class="skill-name">genius-deployer</span></div>
-      <div class="skill-item"><span class="skill-icon">💾</span><span class="skill-name">genius-memory</span></div>
-      <div class="skill-item"><span class="skill-icon">👋</span><span class="skill-name">genius-onboarding</span></div>
-      <div class="skill-item"><span class="skill-icon">🧪</span><span class="skill-name">genius-test-assistant</span></div>
-      <div class="skill-item"><span class="skill-icon">⚙️</span><span class="skill-name">genius-team-optimizer</span></div>
-      <div class="skill-item"><span class="skill-icon">🔄</span><span class="skill-name">genius-updater</span></div>
+      <div class="skill-item" onclick="openModal('skill-team')"><span class="skill-icon">🧠</span><span class="skill-name">genius-team</span></div>
+      <div class="skill-item" onclick="openModal('skill-interviewer')"><span class="skill-icon">🎤</span><span class="skill-name">genius-interviewer</span></div>
+      <div class="skill-item" onclick="openModal('skill-pma')"><span class="skill-icon">📊</span><span class="skill-name">genius-product-market-analyst</span></div>
+      <div class="skill-item" onclick="openModal('skill-specs')"><span class="skill-icon">📋</span><span class="skill-name">genius-specs</span></div>
+      <div class="skill-item" onclick="openModal('skill-designer')"><span class="skill-icon">🎨</span><span class="skill-name">genius-designer</span></div>
+      <div class="skill-item" onclick="openModal('skill-marketer')"><span class="skill-icon">📣</span><span class="skill-name">genius-marketer</span></div>
+      <div class="skill-item" onclick="openModal('skill-copywriter')"><span class="skill-icon">✍️</span><span class="skill-name">genius-copywriter</span></div>
+      <div class="skill-item" onclick="openModal('skill-integration')"><span class="skill-icon">🔗</span><span class="skill-name">genius-integration-guide</span></div>
+      <div class="skill-item" onclick="openModal('skill-architect')"><span class="skill-icon">🏗️</span><span class="skill-name">genius-architect</span></div>
+      <div class="skill-item" onclick="openModal('skill-orchestrator')"><span class="skill-icon">🎯</span><span class="skill-name">genius-orchestrator</span></div>
+      <div class="skill-item" onclick="openModal('skill-dev')"><span class="skill-icon">⚡</span><span class="skill-name">genius-dev</span></div>
+      <div class="skill-item" onclick="openModal('skill-qa')"><span class="skill-icon">✅</span><span class="skill-name">genius-qa</span></div>
+      <div class="skill-item" onclick="openModal('skill-qa-micro')"><span class="skill-icon">🔍</span><span class="skill-name">genius-qa-micro</span></div>
+      <div class="skill-item" onclick="openModal('skill-debugger')"><span class="skill-icon">🐛</span><span class="skill-name">genius-debugger</span></div>
+      <div class="skill-item" onclick="openModal('skill-reviewer')"><span class="skill-icon">👀</span><span class="skill-name">genius-reviewer</span></div>
+      <div class="skill-item" onclick="openModal('skill-security')"><span class="skill-icon">🔒</span><span class="skill-name">genius-security</span></div>
+      <div class="skill-item" onclick="openModal('skill-deployer')"><span class="skill-icon">🚀</span><span class="skill-name">genius-deployer</span></div>
+      <div class="skill-item" onclick="openModal('skill-memory')"><span class="skill-icon">💾</span><span class="skill-name">genius-memory</span></div>
+      <div class="skill-item" onclick="openModal('skill-onboarding')"><span class="skill-icon">👋</span><span class="skill-name">genius-onboarding</span></div>
+      <div class="skill-item" onclick="openModal('skill-test-assistant')"><span class="skill-icon">🧪</span><span class="skill-name">genius-test-assistant</span></div>
+      <div class="skill-item" onclick="openModal('skill-optimizer')"><span class="skill-icon">⚙️</span><span class="skill-name">genius-team-optimizer</span></div>
+      <div class="skill-item" onclick="openModal('skill-updater')"><span class="skill-icon">🔄</span><span class="skill-name">genius-updater</span></div>
     </div>
   </div>
 </section>
@@ -825,6 +953,16 @@ cd my-awesome-app
     <p>Built with 🧠 <strong>Genius Team v11.0</strong> — Multi-Engine: Claude + Codex + Dual Mode</p>
   </div>
 </footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon" id="modalIcon"></div>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <!-- CHAT WIDGET -->
 <div class="chat-widget" id="chatWidget">
@@ -1209,6 +1347,131 @@ function copyWizardCommand() {
     }, 2500);
   });
 }
+
+// ==================== MODAL ====================
+const modalData = {
+  // FEATURES
+  'feature-agent-teams': {
+    icon: '🤖', title: 'Agent Teams',
+    body: `<p>Genius Team uses Claude Code's experimental <strong>Agent Teams</strong> feature — a multi-agent architecture where a Lead Claude orchestrates specialized worker agents running in parallel.</p>
+    <p><strong>How it works:</strong></p>
+    <ul>
+      <li>The Lead agent holds the project context and delegates tasks to specialists</li>
+      <li>Each worker agent operates in its own <code>git worktree</code> (isolated branch)</li>
+      <li>Workers execute in parallel — architecture, dev, QA all running simultaneously</li>
+      <li>Conflicts are resolved by the Lead before merging back to main</li>
+    </ul>
+    <p><strong>Why it matters:</strong> Instead of one AI doing everything sequentially, your team of AIs works in parallel — like a real engineering team. 3x-5x faster on complex projects.</p>
+    <span class="tag">CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</span><span class="tag">git worktree</span><span class="tag">parallel execution</span>`
+  },
+  'feature-playgrounds': {
+    icon: '🎮', title: 'Interactive Playgrounds',
+    body: `<p>12 HTML interfaces that turn complex decisions into guided, visual experiences. Every major project phase has its own playground.</p>
+    <p><strong>What makes them different:</strong></p>
+    <ul>
+      <li>Run locally in your browser — no external services</li>
+      <li>Load your current project state automatically from <code>.genius/</code></li>
+      <li>Decisions you make are saved back to memory for the AI to reference</li>
+      <li>Designed for <em>humans and AI</em> to use together</li>
+    </ul>
+    <p><strong>Available playgrounds:</strong> Project Canvas, Market Simulator, Architecture Explorer, Stack Configurator, Design System Builder, GTM Simulator, Copy A/B Tester, Progress Dashboard, Risk Matrix, User Journey Builder, Deploy Checklist, Test Coverage Map.</p>
+    <span class="tag">12 playgrounds</span><span class="tag">local HTML</span><span class="tag">state-aware</span>`
+  },
+  'feature-guard': {
+    icon: '🛡️', title: 'Anti-Drift Guard',
+    body: `<p>The most common failure mode with AI coding: the AI starts implementing the right thing, then slowly drifts off-plan. Genius Team's guard system prevents this.</p>
+    <p><strong>How it works:</strong></p>
+    <ul>
+      <li><code>GENIUS_GUARD.md</code> defines the project boundaries and non-negotiables</li>
+      <li>Pre/post hooks validate every action against the guard rules</li>
+      <li>Auto-detection when responses start drifting from the established plan</li>
+      <li><code>/guard-check</code> — See current compliance status at any time</li>
+      <li><code>/guard-recover</code> — Force realignment to the original plan</li>
+    </ul>
+    <p>Think of it as guardrails on a mountain road — invisible when everything's fine, life-saving when you need them.</p>
+    <span class="tag">GENIUS_GUARD.md</span><span class="tag">auto-detection</span><span class="tag">hooks</span>`
+  },
+  'feature-memory': {
+    icon: '🧠', title: 'Persistent Memory',
+    body: `<p>AI sessions are stateless by default. Genius Team solves this with a file-based memory system that persists everything between sessions.</p>
+    <p><strong>Memory lives in <code>.genius/memory/</code>:</strong></p>
+    <ul>
+      <li><code>decisions.json</code> — Every architectural decision with rationale</li>
+      <li><code>patterns.json</code> — Code conventions and patterns adopted for this project</li>
+      <li><code>progress.json</code> — Task tracking, milestones, velocity</li>
+      <li><code>errors.json</code> — Bugs encountered and their solutions (never solve the same bug twice)</li>
+      <li><code>BRIEFING.md</code> — Auto-generated summary loaded at the start of every session</li>
+    </ul>
+    <p>Commands: <code>/memory-capture</code>, <code>/memory-rollup</code>, <code>/memory-recover</code></p>
+    <span class="tag">file-based</span><span class="tag">no database</span><span class="tag">session-persistent</span>`
+  },
+  'feature-qa': {
+    icon: '🔄', title: 'Mandatory QA Loop',
+    body: `<p>Every single task in Genius Team goes through a mandatory quality loop before being considered done. Nothing ships without it.</p>
+    <p><strong>The loop:</strong></p>
+    <ul>
+      <li>Dev implements the feature</li>
+      <li>genius-qa-micro runs a fast first-pass check</li>
+      <li>If issues found → back to Dev for fixes</li>
+      <li>genius-qa runs full QA validation</li>
+      <li>Only then: ✅ task marked complete</li>
+    </ul>
+    <p>This catches bugs early, when they're cheap to fix, instead of discovering them in production. The loop is enforced at the orchestration level — agents literally cannot skip it.</p>
+    <span class="tag">dev→qa-micro→fix→re-qa</span><span class="tag">enforced</span><span class="tag">zero-skip</span>`
+  },
+  'feature-tokens': {
+    icon: '💰', title: 'Save-Token Mode',
+    body: `<p>Running a full genius-team session with Opus for all agents can be expensive. Save-Token Mode intelligently routes roles to cheaper models without sacrificing quality where it matters.</p>
+    <p><strong>How routing works:</strong></p>
+    <ul>
+      <li><strong>Keeps Opus:</strong> Lead, Architect — need deep reasoning</li>
+      <li><strong>Switches to Sonnet:</strong> Dev, QA, Security, Deployer — high-volume, execution-focused</li>
+      <li><strong>Uses Haiku:</strong> Memory, logging, formatting — pure throughput</li>
+    </ul>
+    <p>Toggle with <code>/save-tokens</code>. Typical savings: 40-60% on a full project run.</p>
+    <span class="tag">/save-tokens</span><span class="tag">Opus → Sonnet routing</span><span class="tag">40-60% savings</span>`
+  },
+  // SKILLS
+  'skill-team': { icon: '🧠', title: 'genius-team', body: `<p>The <strong>Lead Orchestrator</strong>. This is the entry point and brain of every Genius Team session. It understands your project context, decides which specialist to activate next, and ensures coherent progression through the build pipeline.</p><ul><li>Routes requests to the right specialist automatically</li><li>Maintains the global project context across all agents</li><li>Prevents context fragmentation between specializations</li></ul>` },
+  'skill-interviewer': { icon: '🎤', title: 'genius-interviewer', body: `<p>Conducts structured <strong>product discovery interviews</strong> to surface what actually needs to be built before writing a single line of code.</p><ul><li>Extracts user needs, pain points, and goals through guided questions</li><li>Produces a structured Discovery Report</li><li>Identifies assumptions that need validation</li><li>Feeds directly into the specs pipeline</li></ul>` },
+  'skill-pma': { icon: '📊', title: 'genius-product-market-analyst', body: `<p>Analyzes the <strong>market landscape</strong> to ensure you're building something with real demand and a differentiated position.</p><ul><li>Competitive analysis and positioning map</li><li>TAM/SAM/SOM sizing</li><li>Identifies underserved segments and whitespace opportunities</li><li>Outputs a Market Report used by the Specs and Marketing agents</li></ul>` },
+  'skill-specs': { icon: '📋', title: 'genius-specs', body: `<p>Transforms discovery and research into <strong>precise, actionable technical specifications</strong> that the dev agents can actually implement.</p><ul><li>User stories with acceptance criteria</li><li>Functional and non-functional requirements</li><li>API contracts and data models</li><li>Dependencies and constraints clearly stated</li></ul>` },
+  'skill-designer': { icon: '🎨', title: 'genius-designer', body: `<p>Makes <strong>UI/UX decisions</strong> with real constraints in mind — not just aesthetic choices but functional design that works.</p><ul><li>Component hierarchy and layout decisions</li><li>Design system choices (colors, typography, spacing)</li><li>Interaction patterns and state management</li><li>Works with the Design System Builder playground</li></ul>` },
+  'skill-marketer': { icon: '📣', title: 'genius-marketer', body: `<p>Develops your <strong>go-to-market strategy</strong> and marketing framework to ensure your product reaches the right audience.</p><ul><li>Positioning and messaging strategy</li><li>Channel selection and launch plan</li><li>Growth hypotheses and acquisition funnels</li><li>Works with the GTM Simulator playground</li></ul>` },
+  'skill-copywriter': { icon: '✍️', title: 'genius-copywriter', body: `<p>Creates <strong>compelling copy</strong> for all touchpoints — from landing pages to in-app messaging.</p><ul><li>Landing page copy with conversion in mind</li><li>Onboarding sequences and empty states</li><li>Email templates and notifications</li><li>Works with the Copy A/B Tester playground</li></ul>` },
+  'skill-integration': { icon: '🔗', title: 'genius-integration-guide', body: `<p>Maps out all <strong>third-party integrations</strong> before implementation, preventing surprises mid-build.</p><ul><li>API authentication flows and rate limits</li><li>Webhook setup and event handling</li><li>SDK selection and wrapper design</li><li>Integration test strategies</li></ul>` },
+  'skill-architect': { icon: '🏗️', title: 'genius-architect', body: `<p>Designs the <strong>system architecture</strong> with scalability, maintainability, and performance as first-class concerns.</p><ul><li>Database schema and data modeling</li><li>Service boundaries and API structure</li><li>Caching strategies and performance patterns</li><li>Works with the Architecture Explorer playground</li></ul>` },
+  'skill-orchestrator': { icon: '🎯', title: 'genius-orchestrator', body: `<p>Coordinates <strong>complex multi-step workflows</strong> that require sequencing across multiple agents with dependencies.</p><ul><li>Manages task queues and agent dependencies</li><li>Handles parallel execution coordination</li><li>Resolves conflicts between agent outputs</li><li>Escalates blockers to the Lead</li></ul>` },
+  'skill-dev': { icon: '⚡', title: 'genius-dev', body: `<p>The <strong>core implementation engine</strong>. Writes production-quality code following your project's established patterns.</p><ul><li>Implements features from specs</li><li>Follows the code patterns in <code>patterns.json</code></li><li>Integrates with existing codebase without breaking things</li><li>Always feeds output to QA before marking done</li></ul>` },
+  'skill-qa': { icon: '✅', title: 'genius-qa', body: `<p>Full <strong>quality assurance cycle</strong> — not just a quick check, but comprehensive validation against requirements.</p><ul><li>Functional testing against acceptance criteria</li><li>Edge case and regression identification</li><li>Performance baseline checks</li><li>Produces a QA Report with pass/fail details</li></ul>` },
+  'skill-qa-micro': { icon: '🔍', title: 'genius-qa-micro', body: `<p>A <strong>fast, lightweight QA pass</strong> designed to catch obvious issues immediately after implementation, before the full QA cycle.</p><ul><li>Syntax and logic sanity checks</li><li>Basic functionality validation</li><li>Catches 80% of bugs in 20% of the time</li><li>Runs after every Dev task automatically</li></ul>` },
+  'skill-debugger': { icon: '🐛', title: 'genius-debugger', body: `<p>Systematic <strong>bug diagnosis</strong> that goes beyond "try this" — it traces, isolates, and explains root causes.</p><ul><li>Error trace analysis and reproduction</li><li>Root cause identification (not just symptoms)</li><li>Fix proposal with explanation</li><li>Updates <code>errors.json</code> memory so the bug is never repeated</li></ul>` },
+  'skill-reviewer': { icon: '👀', title: 'genius-reviewer', body: `<p><strong>Code review</strong> focused on long-term maintainability, not just "does it work today?"</p><ul><li>Code quality, readability, and structure</li><li>Security anti-patterns and data exposure risks</li><li>Performance bottleneck identification</li><li>Alignment with project patterns and conventions</li></ul>` },
+  'skill-security': { icon: '🔒', title: 'genius-security', body: `<p>Dedicated <strong>security audit</strong> before any deployment. Not an afterthought — a full pass.</p><ul><li>OWASP Top 10 checks</li><li>Authentication and authorization flows</li><li>Data exposure and injection vulnerabilities</li><li>Dependency vulnerability scan</li></ul>` },
+  'skill-deployer': { icon: '🚀', title: 'genius-deployer', body: `<p>Handles the full <strong>deployment pipeline</strong> — from environment config to going live.</p><ul><li>CI/CD setup and configuration</li><li>Environment variables and secrets management</li><li>Cloud provider setup (Vercel, Railway, etc.)</li><li>Works with the Deploy Checklist playground</li></ul>` },
+  'skill-memory': { icon: '💾', title: 'genius-memory', body: `<p>Manages the <strong>project memory system</strong> — captures, rolls up, and recovers the AI's project knowledge.</p><ul><li><code>/memory-capture</code> — Save current session insights</li><li><code>/memory-rollup</code> — Compress and summarize memory files</li><li><code>/memory-recover</code> — Restore memory from last checkpoint</li><li>Auto-generates BRIEFING.md at session start</li></ul>` },
+  'skill-onboarding': { icon: '👋', title: 'genius-onboarding', body: `<p>Helps <strong>new contributors</strong> (human or AI) quickly understand the project without reading everything.</p><ul><li>Produces an onboarding guide from project memory</li><li>Explains architecture decisions and why they were made</li><li>Lists current conventions and patterns</li><li>Runs automatically on first session of a new day</li></ul>` },
+  'skill-test-assistant': { icon: '🧪', title: 'genius-test-assistant', body: `<p>Writes and maintains <strong>test suites</strong> across all testing levels.</p><ul><li>Unit tests for isolated functions</li><li>Integration tests for connected services</li><li>E2E test scenarios for user flows</li><li>Works with the Test Coverage Map playground</li></ul>` },
+  'skill-optimizer': { icon: '⚙️', title: 'genius-team-optimizer', body: `<p>Analyzes your team's performance and <strong>suggests process improvements</strong> based on patterns in the project memory.</p><ul><li>Identifies recurring bottlenecks and blockers</li><li>Suggests agent configuration tweaks</li><li>Analyzes token usage and recommends savings</li><li>Runs automatically after major milestones</li></ul>` },
+  'skill-updater': { icon: '🔄', title: 'genius-updater', body: `<p>The <strong>self-update mechanism</strong> — keeps Genius Team current without disrupting your project.</p><ul><li>Checks for new Genius Team versions</li><li>Applies updates to <code>.claude/skills/</code> non-destructively</li><li>Preserves your project-specific customizations</li><li>Command: <code>/genius-upgrade</code></li></ul>` }
+};
+
+function openModal(id) {
+  const data = modalData[id];
+  if (!data) return;
+  document.getElementById('modalIcon').textContent = data.icon;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalBody').innerHTML = data.body;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 function wizardReset() {
   // Reset state
