@@ -202,8 +202,12 @@ section{padding:6rem 2rem}
 .pg-carousel::-webkit-scrollbar{height:4px}
 .pg-carousel::-webkit-scrollbar-track{background:transparent}
 .pg-carousel::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:4px}
-.pg-card{flex:0 0 220px;scroll-snap-align:start;background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:1.5rem;transition:all .3s}
+.pg-card{flex:0 0 220px;scroll-snap-align:start;background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:1.5rem;transition:all .3s;position:relative}
 .pg-card:hover{border-color:rgba(124,58,237,.3);transform:translateY(-3px);box-shadow:0 8px 20px rgba(124,58,237,.1)}
+.pg-preview-popup{position:absolute;inset:0;border-radius:var(--radius-lg);overflow:hidden;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10}
+.pg-card:hover .pg-preview-popup{opacity:1}
+.pg-preview-popup img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.pg-preview-label{position:absolute;bottom:0;left:0;right:0;padding:.5rem .75rem;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff;font-size:.75rem;font-weight:600}
 .pg-card-icon{font-size:2rem;margin-bottom:.75rem}
 .pg-card-title{font-size:.9rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
 .pg-card-desc{font-size:.8rem;color:var(--text2);line-height:1.5}
@@ -552,61 +556,73 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     </div>
     <div class="pg-carousel fade-in">
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/project-canvas.png" alt="Project Canvas preview"><div class="pg-preview-label">Project Canvas</div></div>
         <div class="pg-card-icon">🗺️</div>
         <div class="pg-card-title">Project Canvas</div>
         <div class="pg-card-desc">Define vision, scope, and success metrics before building anything.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/market-simulator.png" alt="Market Simulator preview"><div class="pg-preview-label">Market Simulator</div></div>
         <div class="pg-card-icon">📊</div>
         <div class="pg-card-title">Market Simulator</div>
         <div class="pg-card-desc">Model your market size, positioning, and competitive landscape visually.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/architecture-explorer.png" alt="Architecture Explorer preview"><div class="pg-preview-label">Architecture Explorer</div></div>
         <div class="pg-card-icon">🏗️</div>
         <div class="pg-card-title">Architecture Explorer</div>
         <div class="pg-card-desc">Compare architectural patterns side-by-side with trade-off analysis.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/stack-configurator.png" alt="Stack Configurator preview"><div class="pg-preview-label">Stack Configurator</div></div>
         <div class="pg-card-icon">⚙️</div>
         <div class="pg-card-title">Stack Configurator</div>
         <div class="pg-card-desc">Pick your tech stack with compatibility checks and recommendations.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/design-system-builder.png" alt="Design System Builder preview"><div class="pg-preview-label">Design System Builder</div></div>
         <div class="pg-card-icon">🎨</div>
         <div class="pg-card-title">Design System Builder</div>
         <div class="pg-card-desc">Define your design tokens, component library, and visual language.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/gtm-simulator.png" alt="GTM Simulator preview"><div class="pg-preview-label">GTM Simulator</div></div>
         <div class="pg-card-icon">📣</div>
         <div class="pg-card-title">GTM Simulator</div>
         <div class="pg-card-desc">Simulate go-to-market strategies and identify the best launch approach.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/copy-ab-tester.png" alt="Copy A/B Tester preview"><div class="pg-preview-label">Copy A/B Tester</div></div>
         <div class="pg-card-icon">✍️</div>
         <div class="pg-card-title">Copy A/B Tester</div>
         <div class="pg-card-desc">Compare messaging variants and select the most compelling copy.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/progress-dashboard.png" alt="Progress Dashboard preview"><div class="pg-preview-label">Progress Dashboard</div></div>
         <div class="pg-card-icon">📈</div>
         <div class="pg-card-title">Progress Dashboard</div>
         <div class="pg-card-desc">Real-time view of project status, milestones, and velocity.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/risk-matrix.png" alt="Risk Matrix preview"><div class="pg-preview-label">Risk Matrix</div></div>
         <div class="pg-card-icon">⚠️</div>
         <div class="pg-card-title">Risk Matrix</div>
         <div class="pg-card-desc">Identify, score, and mitigate project risks before they become blockers.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/user-journey-builder.png" alt="User Journey Builder preview"><div class="pg-preview-label">User Journey Builder</div></div>
         <div class="pg-card-icon">🛤️</div>
         <div class="pg-card-title">User Journey Builder</div>
         <div class="pg-card-desc">Map user flows and touchpoints to design the ideal experience.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/deploy-checklist.png" alt="Deploy Checklist preview"><div class="pg-preview-label">Deploy Checklist</div></div>
         <div class="pg-card-icon">✅</div>
         <div class="pg-card-title">Deploy Checklist</div>
         <div class="pg-card-desc">Step-by-step pre-launch checklist with automated status tracking.</div>
       </div>
       <div class="pg-card">
+        <div class="pg-preview-popup"><img src="/screenshots/test-coverage-map.png" alt="Test Coverage Map preview"><div class="pg-preview-label">Test Coverage Map</div></div>
         <div class="pg-card-icon">🧪</div>
         <div class="pg-card-title">Test Coverage Map</div>
         <div class="pg-card-desc">Visualize test coverage across your codebase and spot gaps.</div>
