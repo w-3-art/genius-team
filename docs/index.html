@@ -253,7 +253,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 
 /* WIZARD STYLES */
 .wizard-container{background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:2rem;overflow:hidden}
-.wizard-progress{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:2.5rem;padding:0 1rem}
+.wizard-progress{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:2.5rem;padding:0 1rem;transition:opacity .3s}
 .progress-step{display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.5;transition:opacity .3s}
 .progress-step.active,.progress-step.completed{opacity:1}
 .progress-num{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;transition:all .3s}
@@ -546,8 +546,31 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       
       <!-- Wizard steps -->
       <div class="wizard-steps">
-        <!-- Step 1: Project Name -->
-        <div class="wizard-step active" id="wizardStep1">
+        <!-- Step 0: Project Type -->
+        <div class="wizard-step active" id="wizardStep0">
+          <div class="wizard-step-icon">🚀</div>
+          <h3 class="wizard-step-title">New or existing project?</h3>
+          <p class="wizard-step-desc">Starting from scratch or adding Genius Team to an existing codebase?</p>
+          <div class="wizard-options">
+            <button class="wizard-option selected" data-value="new" onclick="selectOption(this, 'projectType')">
+              <span class="option-icon">✨</span>
+              <span class="option-title">New project</span>
+              <span class="option-desc">Start from scratch</span>
+            </button>
+            <button class="wizard-option" data-value="existing" onclick="selectOption(this, 'projectType')">
+              <span class="option-icon">📁</span>
+              <span class="option-title">Existing project</span>
+              <span class="option-desc">Add to my codebase</span>
+            </button>
+          </div>
+          <div class="wizard-nav">
+            <div></div>
+            <button class="wizard-btn primary" onclick="wizardNext()">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 1: Project Name (new projects only) -->
+        <div class="wizard-step" id="wizardStep1">
           <div class="wizard-step-icon">🎯</div>
           <h3 class="wizard-step-title">What's your project name?</h3>
           <p class="wizard-step-desc">Use lowercase letters, numbers, and dashes. No spaces.</p>
@@ -618,6 +641,11 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
           <div class="wizard-step-icon">📋</div>
           <h3 class="wizard-step-title">Your Setup Command</h3>
           <p class="wizard-step-desc">Copy and run this in your terminal.</p>
+          <div id="resultNote" style="display:none;width:100%;max-width:520px;margin-bottom:.75rem;padding:.75rem 1rem;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:.85rem;color:var(--text2);text-align:left">
+            <strong>①</strong> First, navigate to your project:<br>
+            <code style="display:inline-block;margin-top:.3rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.9rem">cd your-project</code>
+            <br><br><strong>②</strong> Then run the installer below:
+          </div>
           <div class="wizard-result-box">
             <div class="result-command" id="resultCommand"></div>
             <button class="wizard-copy-btn" onclick="copyWizardCommand()">
@@ -985,7 +1013,8 @@ document.querySelectorAll('.nav-links a').forEach(a => {
 
 // ==================== WIZARD ====================
 const wizardState = {
-  step: 1,
+  step: 0,
+  projectType: 'new',
   projectName: 'my-awesome-app',
   environment: 'cli',
   engine: 'claude'
@@ -1027,19 +1056,35 @@ function selectOption(btn, type) {
 }
 
 function updateProgress() {
+  const progressBar = document.querySelector('.wizard-progress');
+  
+  // Hide progress bar on step 0 (project type selection)
+  if (wizardState.step === 0) {
+    progressBar.style.opacity = '0';
+    progressBar.style.pointerEvents = 'none';
+    return;
+  }
+  progressBar.style.opacity = '1';
+  progressBar.style.pointerEvents = '';
+
+  // For existing projects, step 1 is skipped — treat it as completed
+  const effectiveStep = (wizardState.projectType === 'existing' && wizardState.step >= 2)
+    ? wizardState.step + 1  // shift visual progress forward since step 1 is skipped
+    : wizardState.step;
+
   document.querySelectorAll('.progress-step').forEach((step, i) => {
     const stepNum = i + 1;
     step.classList.remove('active', 'completed');
-    if (stepNum === wizardState.step) {
+    if (stepNum === effectiveStep) {
       step.classList.add('active');
-    } else if (stepNum < wizardState.step) {
+    } else if (stepNum < effectiveStep) {
       step.classList.add('completed');
     }
   });
   
   // Update progress lines
-  document.getElementById('progressFill1').style.width = wizardState.step > 1 ? '100%' : '0';
-  document.getElementById('progressFill2').style.width = wizardState.step > 2 ? '100%' : '0';
+  document.getElementById('progressFill1').style.width = effectiveStep > 1 ? '100%' : '0';
+  document.getElementById('progressFill2').style.width = effectiveStep > 2 ? '100%' : '0';
 }
 
 function wizardNext() {
@@ -1050,7 +1095,14 @@ function wizardNext() {
   
   setTimeout(() => {
     currentStep.classList.remove('active', 'exit-left');
-    wizardState.step++;
+    
+    // Step 0 → skip step 1 for existing projects
+    if (wizardState.step === 0) {
+      wizardState.step = wizardState.projectType === 'existing' ? 2 : 1;
+    } else {
+      wizardState.step++;
+    }
+    
     updateProgress();
     const nextStep = document.getElementById(`wizardStep${wizardState.step}`);
     nextStep.classList.add('active');
@@ -1058,14 +1110,19 @@ function wizardNext() {
 }
 
 function wizardBack() {
-  if (wizardState.step <= 1) return;
+  if (wizardState.step <= 0) return;
   
   const currentStep = document.getElementById(`wizardStep${wizardState.step}`);
   currentStep.classList.remove('active');
   
-  wizardState.step--;
-  updateProgress();
+  // From step 2: go to step 0 for existing projects (step 1 is skipped)
+  if (wizardState.step === 2 && wizardState.projectType === 'existing') {
+    wizardState.step = 0;
+  } else {
+    wizardState.step--;
+  }
   
+  updateProgress();
   const prevStep = document.getElementById(`wizardStep${wizardState.step}`);
   prevStep.classList.add('active');
 }
@@ -1078,29 +1135,53 @@ function wizardGenerate() {
     currentStep.classList.remove('active', 'exit-left');
     
     // Generate command
-    const baseCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) ${wizardState.projectName}`;
     let flags = [];
-    
-    if (wizardState.engine !== 'claude') {
-      flags.push(`--engine=${wizardState.engine}`);
-    }
-    if (wizardState.environment !== 'cli') {
-      flags.push(`--mode=${wizardState.environment}`);
-    }
-    
-    const fullCmd = flags.length > 0 ? `${baseCmd} ${flags.join(' ')}` : baseCmd;
-    document.getElementById('resultCommand').textContent = fullCmd;
-    
-    // Generate "then run" instruction
-    let thenRunHtml = '';
-    if (wizardState.engine === 'claude') {
-      thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>`;
-    } else if (wizardState.engine === 'codex') {
-      thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && codex</code>`;
+    if (wizardState.engine !== 'claude') flags.push(`--engine=${wizardState.engine}`);
+    if (wizardState.environment !== 'cli') flags.push(`--mode=${wizardState.environment}`);
+    const flagStr = flags.length > 0 ? ` ${flags.join(' ')}` : '';
+
+    let fullCmd, thenRunHtml;
+
+    if (wizardState.projectType === 'existing') {
+      // Existing project: use add.sh, run from inside the project
+      fullCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)${flagStr}`;
+      
+      // "Then run" for existing (no cd needed)
+      if (wizardState.engine === 'codex') {
+        thenRunHtml = `<strong>Then run:</strong> <code>codex</code>`;
+      } else if (wizardState.engine === 'dual') {
+        thenRunHtml = `<strong>Then run:</strong> <code>claude</code>
+          <div class="dual-note">Claude builds, Codex challenges — they iterate until both agree.</div>`;
+      } else {
+        thenRunHtml = `<strong>Then run:</strong> <code>claude</code>, then <code>/genius-start</code>`;
+      }
+
+      // Prepend a "cd first" note in the result box
+      document.getElementById('resultCommand').dataset.note = `# First, navigate to your project:\ncd your-project\n\n# Then run:`;
     } else {
-      thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>
-        <div class="dual-note">Claude builds, Codex challenges — they iterate until both agree.</div>`;
+      // New project: use create.sh
+      fullCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) ${wizardState.projectName}${flagStr}`;
+      document.getElementById('resultCommand').dataset.note = '';
+
+      if (wizardState.engine === 'claude') {
+        thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>`;
+      } else if (wizardState.engine === 'codex') {
+        thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && codex</code>`;
+      } else {
+        thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>
+          <div class="dual-note">Claude builds, Codex challenges — they iterate until both agree.</div>`;
+      }
     }
+
+    // Show cd-note for existing projects
+    const noteEl = document.getElementById('resultNote');
+    if (wizardState.projectType === 'existing') {
+      noteEl.style.display = 'block';
+    } else {
+      noteEl.style.display = 'none';
+    }
+    
+    document.getElementById('resultCommand').textContent = fullCmd;
     document.getElementById('thenRun').innerHTML = thenRunHtml;
     
     // Update progress to show completed
@@ -1131,21 +1212,24 @@ function copyWizardCommand() {
 
 function wizardReset() {
   // Reset state
-  wizardState.step = 1;
+  wizardState.step = 0;
+  wizardState.projectType = 'new';
   wizardState.projectName = 'my-awesome-app';
   wizardState.environment = 'cli';
   wizardState.engine = 'claude';
   
   // Reset UI
   document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active', 'exit-left'));
-  document.getElementById('wizardStep1').classList.add('active');
+  document.getElementById('wizardStep0').classList.add('active');
   document.getElementById('wizardProjectName').value = '';
   document.getElementById('wizardProjectName').classList.remove('valid', 'invalid');
   document.getElementById('nameValidation').textContent = '';
   document.getElementById('step1Next').disabled = false;
+  document.getElementById('resultNote').style.display = 'none';
   
   // Reset options
   document.querySelectorAll('.wizard-option').forEach(o => o.classList.remove('selected'));
+  document.querySelector('[data-value="new"]').classList.add('selected');
   document.querySelector('[data-value="cli"]').classList.add('selected');
   document.querySelector('[data-value="claude"]').classList.add('selected');
   
