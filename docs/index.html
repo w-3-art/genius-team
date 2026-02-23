@@ -204,10 +204,15 @@ section{padding:6rem 2rem}
 .pg-carousel::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:4px}
 .pg-card{flex:0 0 220px;scroll-snap-align:start;background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:1.5rem;transition:all .3s;position:relative}
 .pg-card:hover{border-color:rgba(124,58,237,.3);transform:translateY(-3px);box-shadow:0 8px 20px rgba(124,58,237,.1)}
-.pg-preview-popup{position:absolute;inset:0;border-radius:var(--radius-lg);overflow:hidden;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10}
-.pg-card:hover .pg-preview-popup{opacity:1}
-.pg-preview-popup img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.pg-preview-label{position:absolute;bottom:0;left:0;right:0;padding:.5rem .75rem;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff;font-size:.75rem;font-weight:600}
+/* pg-preview is injected by JS into body, not inside carousel */
+#pg-float-preview{position:fixed;z-index:9999;pointer-events:none;opacity:0;transform:scale(.85) translateY(8px);transition:opacity .2s,transform .2s;transform-origin:bottom center;width:380px;background:var(--bg2);border:1px solid rgba(255,255,255,.15);border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.85)}
+#pg-float-preview.visible{opacity:1;transform:scale(1) translateY(0)}
+#pg-float-preview img{width:100%;display:block}
+#pg-float-preview-footer{padding:.6rem .9rem;background:rgba(124,58,237,.12);border-top:1px solid rgba(255,255,255,.06)}
+#pg-float-preview-title{font-size:.85rem;font-weight:700;color:var(--text)}
+#pg-float-preview-desc{font-size:.75rem;color:var(--text2);margin-top:.15rem}
+.pg-card{cursor:default;transition:transform .2s,box-shadow .2s,border-color .2s}
+.pg-card:hover{transform:scale(1.06) translateY(-4px);box-shadow:0 12px 30px rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);z-index:2}
 .pg-card-icon{font-size:2rem;margin-bottom:.75rem}
 .pg-card-title{font-size:.9rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
 .pg-card-desc{font-size:.8rem;color:var(--text2);line-height:1.5}
@@ -555,74 +560,62 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       <div class="section-sub">Each playground turns a complex decision into a visual, guided experience. No more guessing — see the options, understand the trade-offs, make the call.</div>
     </div>
     <div class="pg-carousel fade-in">
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/project-canvas.png" alt="Project Canvas preview"><div class="pg-preview-label">Project Canvas</div></div>
+      <div class="pg-card" data-preview="/screenshots/project-canvas.png" data-desc="Define vision, scope, and success metrics before building anything.">
         <div class="pg-card-icon">🗺️</div>
         <div class="pg-card-title">Project Canvas</div>
         <div class="pg-card-desc">Define vision, scope, and success metrics before building anything.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/market-simulator.png" alt="Market Simulator preview"><div class="pg-preview-label">Market Simulator</div></div>
+      <div class="pg-card" data-preview="/screenshots/market-simulator.png" data-desc="Model your market size, positioning, and competitive landscape visually.">
         <div class="pg-card-icon">📊</div>
         <div class="pg-card-title">Market Simulator</div>
         <div class="pg-card-desc">Model your market size, positioning, and competitive landscape visually.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/architecture-explorer.png" alt="Architecture Explorer preview"><div class="pg-preview-label">Architecture Explorer</div></div>
+      <div class="pg-card" data-preview="/screenshots/architecture-explorer.png" data-desc="Compare architectural patterns side-by-side with trade-off analysis.">
         <div class="pg-card-icon">🏗️</div>
         <div class="pg-card-title">Architecture Explorer</div>
         <div class="pg-card-desc">Compare architectural patterns side-by-side with trade-off analysis.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/stack-configurator.png" alt="Stack Configurator preview"><div class="pg-preview-label">Stack Configurator</div></div>
+      <div class="pg-card" data-preview="/screenshots/stack-configurator.png" data-desc="Pick your tech stack with compatibility checks and recommendations.">
         <div class="pg-card-icon">⚙️</div>
         <div class="pg-card-title">Stack Configurator</div>
         <div class="pg-card-desc">Pick your tech stack with compatibility checks and recommendations.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/design-system-builder.png" alt="Design System Builder preview"><div class="pg-preview-label">Design System Builder</div></div>
+      <div class="pg-card" data-preview="/screenshots/design-system-builder.png" data-desc="Define your design tokens, component library, and visual language.">
         <div class="pg-card-icon">🎨</div>
         <div class="pg-card-title">Design System Builder</div>
         <div class="pg-card-desc">Define your design tokens, component library, and visual language.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/gtm-simulator.png" alt="GTM Simulator preview"><div class="pg-preview-label">GTM Simulator</div></div>
+      <div class="pg-card" data-preview="/screenshots/gtm-simulator.png" data-desc="Simulate go-to-market strategies and identify the best launch approach.">
         <div class="pg-card-icon">📣</div>
         <div class="pg-card-title">GTM Simulator</div>
         <div class="pg-card-desc">Simulate go-to-market strategies and identify the best launch approach.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/copy-ab-tester.png" alt="Copy A/B Tester preview"><div class="pg-preview-label">Copy A/B Tester</div></div>
+      <div class="pg-card" data-preview="/screenshots/copy-ab-tester.png" data-desc="Compare messaging variants and select the most compelling copy.">
         <div class="pg-card-icon">✍️</div>
         <div class="pg-card-title">Copy A/B Tester</div>
         <div class="pg-card-desc">Compare messaging variants and select the most compelling copy.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/progress-dashboard.png" alt="Progress Dashboard preview"><div class="pg-preview-label">Progress Dashboard</div></div>
+      <div class="pg-card" data-preview="/screenshots/progress-dashboard.png" data-desc="Real-time view of project status, milestones, and velocity.">
         <div class="pg-card-icon">📈</div>
         <div class="pg-card-title">Progress Dashboard</div>
         <div class="pg-card-desc">Real-time view of project status, milestones, and velocity.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/risk-matrix.png" alt="Risk Matrix preview"><div class="pg-preview-label">Risk Matrix</div></div>
+      <div class="pg-card" data-preview="/screenshots/risk-matrix.png" data-desc="Identify, score, and mitigate project risks before they become blockers.">
         <div class="pg-card-icon">⚠️</div>
         <div class="pg-card-title">Risk Matrix</div>
         <div class="pg-card-desc">Identify, score, and mitigate project risks before they become blockers.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/user-journey-builder.png" alt="User Journey Builder preview"><div class="pg-preview-label">User Journey Builder</div></div>
+      <div class="pg-card" data-preview="/screenshots/user-journey-builder.png" data-desc="Map user flows and touchpoints to design the ideal experience.">
         <div class="pg-card-icon">🛤️</div>
         <div class="pg-card-title">User Journey Builder</div>
         <div class="pg-card-desc">Map user flows and touchpoints to design the ideal experience.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/deploy-checklist.png" alt="Deploy Checklist preview"><div class="pg-preview-label">Deploy Checklist</div></div>
+      <div class="pg-card" data-preview="/screenshots/deploy-checklist.png" data-desc="Step-by-step pre-launch checklist with automated status tracking.">
         <div class="pg-card-icon">✅</div>
         <div class="pg-card-title">Deploy Checklist</div>
         <div class="pg-card-desc">Step-by-step pre-launch checklist with automated status tracking.</div>
       </div>
-      <div class="pg-card">
-        <div class="pg-preview-popup"><img src="/screenshots/test-coverage-map.png" alt="Test Coverage Map preview"><div class="pg-preview-label">Test Coverage Map</div></div>
+      <div class="pg-card" data-preview="/screenshots/test-coverage-map.png" data-desc="Visualize test coverage across your codebase and spot gaps.">
         <div class="pg-card-icon">🧪</div>
         <div class="pg-card-title">Test Coverage Map</div>
         <div class="pg-card-desc">Visualize test coverage across your codebase and spot gaps.</div>
@@ -1363,6 +1356,52 @@ function copyWizardCommand() {
     }, 2500);
   });
 }
+
+// ==================== PLAYGROUND HOVER PREVIEW ====================
+(function() {
+  const panel = document.createElement('div');
+  panel.id = 'pg-float-preview';
+  panel.innerHTML = `<img id="pg-float-img" src="" alt=""><div id="pg-float-preview-footer"><div id="pg-float-preview-title"></div><div id="pg-float-preview-desc"></div></div>`;
+  document.body.appendChild(panel);
+
+  const img = panel.querySelector('#pg-float-img');
+  const titleEl = panel.querySelector('#pg-float-preview-title');
+  const descEl = panel.querySelector('#pg-float-preview-desc');
+  let hideTimer;
+
+  function showPreview(card) {
+    clearTimeout(hideTimer);
+    img.src = card.dataset.preview;
+    titleEl.textContent = card.querySelector('.pg-card-title').textContent;
+    descEl.textContent = card.dataset.desc;
+
+    const rect = card.getBoundingClientRect();
+    const panelW = 380;
+    // Center the panel horizontally on the card, clamped to viewport
+    let left = rect.left + rect.width / 2 - panelW / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - panelW - 8));
+    // Panel bottom aligns with card top (grows upward)
+    const bottom = window.innerHeight - rect.top + 8;
+
+    panel.style.left = left + 'px';
+    panel.style.bottom = bottom + 'px';
+    panel.style.top = 'auto';
+
+    requestAnimationFrame(() => panel.classList.add('visible'));
+  }
+
+  function hidePreview() {
+    hideTimer = setTimeout(() => panel.classList.remove('visible'), 80);
+  }
+
+  document.querySelectorAll('.pg-card').forEach(card => {
+    card.addEventListener('mouseenter', () => showPreview(card));
+    card.addEventListener('mouseleave', hidePreview);
+  });
+
+  panel.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+  panel.addEventListener('mouseleave', hidePreview);
+})();
 
 // ==================== MODAL ====================
 const modalData = {
