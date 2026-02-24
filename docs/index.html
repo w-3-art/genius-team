@@ -80,6 +80,21 @@ section{padding:6rem 2rem}
 .pipeline-step:hover{background:rgba(124,58,237,.15);color:var(--text);transform:translateY(-2px)}
 .pipeline-arrow{color:var(--text3);font-size:.7rem}
 
+/* NEW FEATURE BADGE */
+.new-feature{border-color:rgba(124,58,237,.25)!important;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.03))!important;position:relative}
+.new-badge{position:absolute;top:.75rem;right:.75rem;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-size:.6rem;font-weight:800;padding:.2rem .5rem;border-radius:100px;letter-spacing:.05em}
+
+/* SPAWN FLOW */
+.spawn-flow{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:.5rem 0;margin-top:3rem}
+.spawn-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:1.5rem 1.25rem;background:var(--bg2);border:1px solid rgba(124,58,237,.15);border-radius:var(--radius-lg);min-width:150px;max-width:180px;position:relative;transition:all .3s}
+.spawn-step:hover{border-color:rgba(124,58,237,.35);transform:translateY(-3px);box-shadow:0 8px 30px rgba(124,58,237,.15)}
+.spawn-icon{font-size:1.8rem;margin-bottom:.6rem}
+.spawn-label{font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.spawn-desc{font-size:.72rem;color:var(--text3);line-height:1.4}
+.spawn-arrow{font-size:1.2rem;color:rgba(124,58,237,.5);padding:0 .4rem;align-self:center;margin-top:0}
+.spawn-checkpoint{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-size:.55rem;font-weight:800;letter-spacing:.08em;padding:.2rem .55rem;border-radius:100px;white-space:nowrap}
+@media(max-width:768px){.spawn-flow{gap:1rem}.spawn-arrow{transform:rotate(90deg)}.spawn-step{min-width:140px}}
+
 /* CARDS GRID */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
 .card{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:2rem;transition:all .35s;position:relative;overflow:hidden}
@@ -387,6 +402,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
     <div class="nav-links">
       <a href="#what">About</a>
+      <a href="#how-it-works">How it works</a>
       <a href="#modes">Modes</a>
       <a href="#features">Features</a>
       <a href="#playgrounds">Playgrounds</a>
@@ -402,8 +418,8 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v11.0</strong> is here!</span>
-    <span class="banner-features">12 Interactive Playgrounds • Anti-Drift Guard • Persistent Memory</span>
+    <span class="banner-text"><strong>Genius Team v12.0</strong> is here!</span>
+    <span class="banner-features">Agent Spawning • Interview-First Flow • Phase Checkpoints • Retrospective Engine</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
   </div>
@@ -413,9 +429,9 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v11.0 — Multi-Engine: Claude + Codex + Dual Mode</div>
+      <div class="hero-badge">✨ v12.0 — Multi-Agent Orchestration: Spawn, Coordinate, Ship</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
-      <p>An open-source starter kit of 21+ specialized AI skills for Claude Code that work together to build your project from start to finish.</p>
+      <p>An open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
       <div class="hero-btns">
         <a href="#quickstart" class="btn btn-primary">Get Started</a>
         <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn btn-secondary">⭐ View on GitHub</a>
@@ -426,9 +442,12 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       <div class="terminal-body">
         <div><span class="prompt">$</span> <span class="cmd">bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app</span></div>
         <div style="color:#22c55e">✓ Cloned genius-team → my-app</div>
-        <div style="color:#22c55e">✓ Configured CLI mode</div>
-        <div style="color:#a78bfa">🧠 Say what you want to build...</div>
-        <div><span class="prompt">→</span> <span class="cmd">I want to build a booking system for a hair salon</span></div>
+        <div style="color:#22c55e">✓ Configured orchestrated mode</div>
+        <div style="color:#06b6d4">🎤 Spawning genius-interviewer...</div>
+        <div style="color:#a78bfa">— Who is this product for, and what problem does it solve?</div>
+        <div><span class="prompt">→</span> <span class="cmd">Busy salon owners who lose bookings to missed calls</span></div>
+        <div style="color:#22c55e">✓ Brief validated — checkpoint approved</div>
+        <div style="color:#06b6d4">📊 Spawning market-analyst + specs agents...</div>
       </div>
     </div>
   </div>
@@ -439,29 +458,89 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
   <div class="container">
     <div class="fade-in">
       <div class="section-label">What is Genius Team?</div>
-      <div class="section-title">A complete AI product pipeline</div>
-      <div class="section-sub">Genius Team orchestrates 21+ specialized AI agents that collaborate to take your idea through every stage of product development — autonomously.</div>
+      <div class="section-title">An agent orchestration framework</div>
+      <div class="section-sub">Genius Team is not a task runner — it's a framework that spawns specialized agents for each phase of your project, keeps memory across sessions, and gates every key decision behind a human checkpoint.</div>
     </div>
     <div class="pipeline fade-in">
-      <span class="pipeline-step">🔍 Discovery</span><span class="pipeline-arrow">→</span>
+      <span class="pipeline-step" style="border-color:rgba(6,182,212,.3);color:#06b6d4">🎤 Interview</span><span class="pipeline-arrow">→</span>
+      <span class="pipeline-step" style="border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.12);font-weight:700">⛔ Checkpoint</span><span class="pipeline-arrow">→</span>
       <span class="pipeline-step">📊 Market</span><span class="pipeline-arrow">→</span>
       <span class="pipeline-step">📋 Specs</span><span class="pipeline-arrow">→</span>
       <span class="pipeline-step">🎨 Design</span><span class="pipeline-arrow">→</span>
-      <span class="pipeline-step">📣 Marketing</span><span class="pipeline-arrow">→</span>
+      <span class="pipeline-step" style="border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.12);font-weight:700">⛔ Checkpoint</span><span class="pipeline-arrow">→</span>
       <span class="pipeline-step">🏗️ Architecture</span><span class="pipeline-arrow">→</span>
-      <span class="pipeline-step">⚡ Development</span><span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">⚡ Build</span><span class="pipeline-arrow">→</span>
       <span class="pipeline-step">✅ QA</span><span class="pipeline-arrow">→</span>
-      <span class="pipeline-step">🔒 Security</span><span class="pipeline-arrow">→</span>
-      <span class="pipeline-step">🚀 Deploy</span>
+      <span class="pipeline-step" style="border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.12);font-weight:700">⛔ Checkpoint</span><span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">🚀 Deploy</span><span class="pipeline-arrow">→</span>
+      <span class="pipeline-step" style="border-color:rgba(6,182,212,.3);color:#06b6d4">🔁 Retro</span>
     </div>
     <div class="features-grid fade-in" style="margin-top:3rem">
       <div class="feature">
-        <h3>🤖 Phase 1: Ideation</h3>
-        <p>Conversational and collaborative. The AI interviews you, validates your idea, and produces specs, design, and architecture — with your approval at every checkpoint.</p>
+        <h3>🎤 Phase 1: Interview</h3>
+        <p>Every project starts with <strong>genius-interviewer</strong>. It asks the right questions before any work begins — no assumptions, no drift. Output: a validated brief, approved by you.</p>
       </div>
       <div class="feature">
-        <h3>⚡ Phase 2: Execution</h3>
-        <p>Fully autonomous. Agent Teams execute tasks in parallel with git worktree isolation, mandatory QA loops, and real-time progress tracking.</p>
+        <h3>📋 Phase 2: Ideation</h3>
+        <p>Specialized agents spawn for market analysis, specs, design, and architecture. Each phase ends with a <strong>human checkpoint</strong> — you approve before the next phase launches.</p>
+      </div>
+      <div class="feature">
+        <h3>⚡ Phase 3: Execution</h3>
+        <p>Agent Teams execute in parallel with git worktree isolation and mandatory QA loops. A <strong>Retrospective Engine</strong> runs after each phase — feeding learnings back into memory.</p>
+      </div>
+      <div class="feature">
+        <h3>🧠 Cross-Project Memory</h3>
+        <p>Every decision, every lesson, every trade-off is stored. New projects inherit wisdom from past ones. The more you build, the smarter your agents become.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENT SPAWNING FLOW -->
+<section id="how-it-works" style="background:var(--bg1)">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">How It Works</div>
+      <div class="section-title">Agents spawn. Phases gate. You decide.</div>
+      <div class="section-sub">v12 introduces a structured lifecycle: every project goes through an interview, receives a dedicated agent per phase, and can only advance when you approve the checkpoint.</div>
+    </div>
+    <div class="spawn-flow fade-in">
+      <div class="spawn-step">
+        <div class="spawn-icon">🎤</div>
+        <div class="spawn-label">Interview</div>
+        <div class="spawn-desc">genius-interviewer asks targeted questions — goals, constraints, audience, stack preferences.</div>
+      </div>
+      <div class="spawn-arrow">→</div>
+      <div class="spawn-step">
+        <div class="spawn-icon">✅</div>
+        <div class="spawn-label">Brief approved</div>
+        <div class="spawn-desc">You validate the output. Only then does the next agent spawn.</div>
+        <div class="spawn-checkpoint">CHECKPOINT</div>
+      </div>
+      <div class="spawn-arrow">→</div>
+      <div class="spawn-step">
+        <div class="spawn-icon">📊</div>
+        <div class="spawn-label">Market + Specs</div>
+        <div class="spawn-desc">genius-market-analyst + genius-specs run in parallel, each with isolated context and memory.</div>
+      </div>
+      <div class="spawn-arrow">→</div>
+      <div class="spawn-step">
+        <div class="spawn-icon">✅</div>
+        <div class="spawn-label">Specs approved</div>
+        <div class="spawn-desc">Review the deliverables. Approve or request revisions. No code is written yet.</div>
+        <div class="spawn-checkpoint">CHECKPOINT</div>
+      </div>
+      <div class="spawn-arrow">→</div>
+      <div class="spawn-step">
+        <div class="spawn-icon">🏗️ ⚡ 🔒</div>
+        <div class="spawn-label">Build</div>
+        <div class="spawn-desc">Architect + Dev + Security agents execute in parallel. QA loops run automatically.</div>
+      </div>
+      <div class="spawn-arrow">→</div>
+      <div class="spawn-step">
+        <div class="spawn-icon">🔁</div>
+        <div class="spawn-label">Retrospective</div>
+        <div class="spawn-desc">After each phase: what worked, what didn't, what to carry forward. Written to cross-project memory.</div>
       </div>
     </div>
   </div>
@@ -500,6 +579,12 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <h3>Dual Mode</h3>
         <p>Builder + Challenger adversarial workflow. One model builds, another challenges. Higher code quality.</p>
       </div>
+      <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.04))">
+        <span class="badge" style="background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(6,182,212,.15));color:#a78bfa">✨ v12 New</span>
+        <span class="card-icon">🤖</span>
+        <h3>Orchestrated Mode</h3>
+        <p>The orchestrator spawns dedicated agents per phase. Interview → Checkpoint → Specs → Checkpoint → Build. Human in the loop at every gate.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -510,7 +595,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     <div class="fade-in">
       <div class="section-label">Features</div>
       <div class="section-title">Built for serious projects</div>
-      <div class="section-sub">Everything you need to go from zero to production, with no external dependencies.</div>
+      <div class="section-sub">Everything you need to go from zero to production. v12 adds agent spawning, phase checkpoints, retrospectives, and cross-project memory on top of what you already know.</div>
     </div>
     <div class="features-grid fade-in">
       <div class="feature" onclick="openModal('feature-agent-teams')">
@@ -546,6 +631,26 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
       <div class="feature" onclick="openModal('feature-tokens')">
         <h3>💰 Save-Token Mode</h3>
         <p>Toggle <code>/save-tokens</code> to use Sonnet for high-volume roles while keeping Opus for lead and architect. Cut costs without cutting quality.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-spawning')">
+        <div class="new-badge">✨ v12</div>
+        <h3>🤖 Agent Spawning</h3>
+        <p>Every skill is now a spawnable sub-agent with its own context, memory, and lifecycle. The orchestrator coordinates — agents execute in isolation. No context pollution.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-checkpoints')">
+        <div class="new-badge">✨ v12</div>
+        <h3>⛔ Phase Checkpoints</h3>
+        <p>Between every major phase, the flow pauses and waits for your explicit approval. Review deliverables, request changes, or green-light the next agent spawn. You stay in control.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-retro')">
+        <div class="new-badge">✨ v12</div>
+        <h3>🔁 Retrospective Engine</h3>
+        <p>After every phase, a structured retrospective runs automatically: what worked, what failed, what to carry forward. Written to <code>.genius/memory/retros/</code> and surfaced in future sessions.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-xproject')">
+        <div class="new-badge">✨ v12</div>
+        <h3>🧠 Cross-Project Memory</h3>
+        <p>Decisions, patterns, and lessons accumulate across all your projects — not just within one session. Your agents get smarter every time you build something new.</p>
       </div>
     </div>
   </div>
@@ -824,8 +929,8 @@ cd my-awesome-app
 <section id="upgrade" class="upgrade-section">
   <div class="container">
     <div class="fade-in">
-      <div class="section-label">Upgrading from v9?</div>
-      <div class="section-title">Get v11.0 in one command</div>
+      <div class="section-label">Upgrading from v11?</div>
+      <div class="section-title">Get v12.0 in one command</div>
     </div>
     
     <div class="fade-in">
@@ -842,13 +947,15 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v11.0:</h4>
+        <h4>What's new in v12.0:</h4>
         <ul>
-          <li>🎮 <strong>12 Interactive Playgrounds</strong> — Visual decision-making for each phase</li>
-          <li>🛡️ <strong>Anti-Drift Guard</strong> — Keeps Claude on track, prevents going off-rails</li>
-          <li>🧠 <strong>Persistent Memory</strong> — Nothing is ever forgotten between sessions</li>
-          <li>🔄 <strong>/genius-upgrade</strong> — One command updates for future versions</li>
+          <li>🤖 <strong>Agent Spawning</strong> — Each skill is now a dedicated sub-agent with its own context and memory</li>
+          <li>🎤 <strong>Interview-First Flow</strong> — Every project starts with genius-interviewer before any work begins</li>
+          <li>⛔ <strong>Phase Checkpoints</strong> — Human approval gates between every major phase transition</li>
+          <li>🔁 <strong>Retrospective Engine</strong> — Built-in phase retrospectives feed learnings back into memory</li>
+          <li>🧠 <strong>Cross-Project Memory</strong> — Decisions and lessons persist across projects, not just sessions</li>
         </ul>
+        <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Already on v11? Includes all: Playgrounds, Anti-Drift Guard, /genius-upgrade</p>
       </div>
     </div>
   </div>
@@ -860,7 +967,7 @@ cd my-awesome-app
     <div class="fade-in">
       <div class="section-label">Skills</div>
       <div class="section-title">21+ specialized agents</div>
-      <div class="section-sub">Each skill is a domain expert. Together, they're your AI product team.</div>
+      <div class="section-sub">Each skill is a spawneable sub-agent — a domain expert with its own context, memory, and lifecycle. Together, they're your AI product team.</div>
     </div>
     <div class="skills-grid fade-in">
       <div class="skill-item" onclick="openModal('skill-team')"><span class="skill-icon">🧠</span><span class="skill-name">genius-team</span></div>
@@ -959,7 +1066,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v11.0</strong> — Multi-Engine: Claude + Codex + Dual Mode</p>
+    <p>Built with 🧠 <strong>Genius Team v12.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
   </div>
 </footer>
 
@@ -1042,11 +1149,11 @@ function copyCode(btn) {
 function closeBanner() {
   const banner = document.getElementById('updateBanner');
   banner.classList.add('hidden');
-  localStorage.setItem('bannerClosed', 'v11');
+  localStorage.setItem('bannerClosed', 'v12');
 }
 
 // Check if banner was closed
-if (localStorage.getItem('bannerClosed') === 'v11') {
+if (localStorage.getItem('bannerClosed') === 'v12') {
   document.getElementById('updateBanner').classList.add('hidden');
 }
 
@@ -1485,6 +1592,59 @@ const modalData = {
     </ul>
     <p>Toggle with <code>/save-tokens</code>. Typical savings: 40-60% on a full project run.</p>
     <span class="tag">/save-tokens</span><span class="tag">Opus → Sonnet routing</span><span class="tag">40-60% savings</span>`
+  },
+  // V12 FEATURES
+  'feature-spawning': {
+    icon: '🤖', title: 'Agent Spawning',
+    body: `<p><strong>Every skill is now a standalone spawnable agent.</strong> In previous versions, skills were loaded as context into a single session. In v12, each skill runs in its own isolated sub-agent with its own context window, memory scope, and lifecycle.</p>
+    <p><strong>Why it matters:</strong></p>
+    <ul>
+      <li>No context pollution between phases — each agent starts fresh with only what it needs</li>
+      <li>Agents can run in parallel — market analysis + specs + design concurrently</li>
+      <li>Failures are isolated — one agent failing doesn't take down the whole session</li>
+      <li>Each agent writes its outputs to shared memory, readable by other agents</li>
+    </ul>
+    <p>The orchestrator (genius-orchestrator) manages the spawning queue, tracks active agents, and aggregates their outputs into a coherent project state.</p>
+    <span class="tag">Sub-agents</span><span class="tag">Parallel execution</span><span class="tag">Context isolation</span>`
+  },
+  'feature-checkpoints': {
+    icon: '⛔', title: 'Phase Checkpoints',
+    body: `<p><strong>Human approval gates between every major phase.</strong> No more watching agents run for 20 minutes in a direction you didn't want. Checkpoints stop the flow and wait for your explicit go-ahead.</p>
+    <p><strong>When checkpoints fire:</strong></p>
+    <ul>
+      <li>After genius-interviewer — review the brief before specs start</li>
+      <li>After market analysis + specs — review deliverables before design/architecture</li>
+      <li>After architecture — approve the tech decisions before any code is written</li>
+      <li>After QA — confirm the build before deployment agents run</li>
+    </ul>
+    <p>At each checkpoint, you can approve, request revisions, or redirect entirely. The agent loop only resumes when you explicitly continue.</p>
+    <span class="tag">Human-in-the-loop</span><span class="tag">Approval gates</span><span class="tag">/checkpoint-approve</span>`
+  },
+  'feature-retro': {
+    icon: '🔁', title: 'Retrospective Engine',
+    body: `<p><strong>Structured retrospectives run automatically after each phase.</strong> Not just a log — a structured analysis of what worked, what didn't, and what patterns to carry forward.</p>
+    <p><strong>What gets captured:</strong></p>
+    <ul>
+      <li>Decisions that proved correct vs. ones that had to be revised</li>
+      <li>Unexpected blockers and how they were resolved</li>
+      <li>Performance metrics: time per phase, re-work rate, checkpoint pass/fail</li>
+      <li>Recommendations for the next phase or next project</li>
+    </ul>
+    <p>Retros are written to <code>.genius/memory/retros/YYYY-MM-DD-phase.md</code> and surfaced automatically at the start of the next session or project.</p>
+    <span class="tag">Post-phase analysis</span><span class="tag">.genius/memory/retros/</span><span class="tag">Auto-surfaced</span>`
+  },
+  'feature-xproject': {
+    icon: '🧠', title: 'Cross-Project Memory',
+    body: `<p><strong>Wisdom accumulates across projects, not just sessions.</strong> Every tech stack decision, every resolved bug pattern, every marketing insight — stored and made available to future projects.</p>
+    <p><strong>What's shared:</strong></p>
+    <ul>
+      <li>Tech stack preferences and performance notes</li>
+      <li>Patterns that worked (and ones that failed) in similar projects</li>
+      <li>Vendor/library evaluations from past builds</li>
+      <li>Copy and positioning frameworks that converted well</li>
+    </ul>
+    <p>Stored in <code>~/.genius/global-memory/</code> (separate from per-project memory). Agents query it at spawn time to prime themselves with relevant context.</p>
+    <span class="tag">~/.genius/global-memory/</span><span class="tag">Cross-project</span><span class="tag">Gets smarter over time</span>`
   },
   // SKILLS
   'skill-team': { icon: '🧠', title: 'genius-team', body: `<p>The <strong>Lead Orchestrator</strong>. This is the entry point and brain of every Genius Team session. It understands your project context, decides which specialist to activate next, and ensures coherent progression through the build pipeline.</p><ul><li>Routes requests to the right specialist automatically</li><li>Maintains the global project context across all agents</li><li>Prevents context fragmentation between specializations</li></ul>` },
