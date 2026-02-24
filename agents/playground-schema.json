@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "Genius Team Global Playground Schema",
+  "description": "Schema for the global playground aggregating all agent sub-playgrounds",
+  "version": "2.0.0",
+
+  "type": "object",
+  "required": ["project", "status", "agents", "subPlaygrounds"],
+
+  "properties": {
+
+    "project": {
+      "type": "object",
+      "description": "Project metadata",
+      "properties": {
+        "name": { "type": "string" },
+        "elevatorPitch": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastUpdatedAt": { "type": "string", "format": "date-time" },
+        "deploymentUrl": { "type": ["string", "null"] },
+        "repositoryUrl": { "type": ["string", "null"] }
+      }
+    },
+
+    "status": {
+      "type": "object",
+      "description": "Current build status",
+      "properties": {
+        "phase": {
+          "type": "string",
+          "enum": ["fresh", "briefed", "specs_ready", "building", "pre_deploy", "complete"]
+        },
+        "progressPercent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "currentAgent": { "type": ["string", "null"] },
+        "featuresTotal": { "type": "integer" },
+        "featuresCompleted": { "type": "integer" },
+        "estimatedDaysRemaining": { "type": ["number", "null"] }
+      }
+    },
+
+    "agents": {
+      "type": "array",
+      "description": "Timeline of all agent executions",
+      "items": {
+        "type": "object",
+        "required": ["agentId", "displayName", "status", "startedAt"],
+        "properties": {
+          "agentId": { "type": "string" },
+          "displayName": { "type": "string" },
+          "emoji": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "running", "completed", "failed", "skipped"]
+          },
+          "startedAt": { "type": ["string", "null"], "format": "date-time" },
+          "completedAt": { "type": ["string", "null"], "format": "date-time" },
+          "durationSeconds": { "type": ["number", "null"] },
+          "primaryOutput": { "type": ["string", "null"] },
+          "summary": { "type": ["string", "null"] },
+          "playgroundId": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "subPlaygrounds": {
+      "type": "array",
+      "description": "One playground card per completed agent",
+      "items": {
+        "type": "object",
+        "required": ["id", "agentId", "title", "type"],
+        "properties": {
+          "id": { "type": "string" },
+          "agentId": { "type": "string" },
+          "title": { "type": "string" },
+          "emoji": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["conversation", "document", "code", "diagram", "board", "url"]
+          },
+          "summary": { "type": "string" },
+          "keyOutputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "previewUrl": { "type": ["string", "null"] },
+          "content": {
+            "type": "object",
+            "description": "Type-specific content — varies by playground type",
+            "additionalProperties": true
+          },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "featureBoard": {
+      "type": "object",
+      "description": "Kanban board for v1 features",
+      "properties": {
+        "todo": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feature" }
+        },
+        "inProgress": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feature" }
+        },
+        "done": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feature" }
+        }
+      }
+    }
+
+  },
+
+  "definitions": {
+    "feature": {
+      "type": "object",
+      "required": ["id", "title", "complexity"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "userStory": { "type": "string" },
+        "complexity": {
+          "type": "string",
+          "enum": ["XS", "S", "M", "L", "XL"]
+        },
+        "estimatedDays": { "type": "number" },
+        "assignedAgent": { "type": ["string", "null"] },
+        "branchName": { "type": ["string", "null"] },
+        "prUrl": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
