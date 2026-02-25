@@ -1,4 +1,4 @@
-# Genius Team v10.0
+# Genius Team v13.0
 
 [![Version](https://img.shields.io/badge/version-10.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -277,4 +277,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v10.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
+**Built with** 🧠 **Genius Team v13.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
