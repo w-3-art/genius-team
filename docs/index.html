@@ -428,7 +428,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
     <span class="banner-text"><strong>Genius Team v13.0</strong> is here!</span>
-    <span class="banner-features">Agent Spawning • Interview-First Flow • Phase Checkpoints • Retrospective Engine</span>
+    <span class="banner-features">Master Dashboard • OpenClaw Native • Agent Spawning • Mobile Playgrounds</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
   </div>
@@ -1434,14 +1434,6 @@ function wizardBack() {
   updateProgress();
   const prevStep = document.getElementById(`wizardStep${wizardState.step}`);
   prevStep.classList.add('active');
-}
-
-function wizardBackFromResult() {
-  const resultStep = document.getElementById('wizardResult');
-  resultStep.classList.remove('active');
-  wizardState.step = 4;
-  updateProgress();
-  document.getElementById('wizardStep4').classList.add('active');
 }
 
 function wizardGenerateOpenClaw() {
