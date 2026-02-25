@@ -427,7 +427,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v12.0</strong> is here!</span>
+    <span class="banner-text"><strong>Genius Team v13.0</strong> is here!</span>
     <span class="banner-features">Agent Spawning • Interview-First Flow • Phase Checkpoints • Retrospective Engine</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
@@ -438,7 +438,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v12.0 — Multi-Agent Orchestration: Spawn, Coordinate, Ship</div>
+      <div class="hero-badge">✨ v13.0 — Multi-Agent Orchestration: Spawn, Coordinate, Ship</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
       <p>An open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
       <div class="hero-btns">
@@ -520,7 +520,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     <div class="fade-in">
       <div class="section-label">How It Works</div>
       <div class="section-title">Agents spawn. Phases gate. You decide.</div>
-      <div class="section-sub">v12 introduces a structured lifecycle: every project goes through an interview, receives a dedicated agent per phase, and can only advance when you approve the checkpoint.</div>
+      <div class="section-sub">v13 introduces a structured lifecycle: every project goes through an interview, receives a dedicated agent per phase, and can only advance when you approve the checkpoint.</div>
     </div>
     <div class="spawn-flow fade-in">
       <div class="spawn-step">
@@ -598,7 +598,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <p>Builder + Challenger adversarial workflow. One model builds, another challenges. Higher code quality.</p>
       </div>
       <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.04))">
-        <span class="badge" style="background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(6,182,212,.15));color:#a78bfa">✨ v12 New</span>
+        <span class="badge" style="background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(6,182,212,.15));color:#a78bfa">✨ v13 New</span>
         <span class="card-icon">🤖</span>
         <h3>Orchestrated Mode</h3>
         <p>The orchestrator spawns dedicated agents per phase. Interview → Checkpoint → Specs → Checkpoint → Build. Human in the loop at every gate.</p>
@@ -613,7 +613,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     <div class="fade-in">
       <div class="section-label">Features</div>
       <div class="section-title">Built for serious projects</div>
-      <div class="section-sub">Everything you need to go from zero to production. v12 adds agent spawning, phase checkpoints, retrospectives, and cross-project memory on top of what you already know.</div>
+      <div class="section-sub">Everything you need to go from zero to production. v13 adds agent spawning, phase checkpoints, retrospectives, and cross-project memory on top of what you already know.</div>
     </div>
     <div class="features-grid fade-in">
       <div class="feature" onclick="openModal('feature-agent-teams')">
@@ -651,22 +651,22 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <p>Toggle <code>/save-tokens</code> to use Sonnet for high-volume roles while keeping Opus for lead and architect. Cut costs without cutting quality.</p>
       </div>
       <div class="feature new-feature" onclick="openModal('feature-spawning')">
-        <div class="new-badge">✨ v12</div>
+        <div class="new-badge">✨ v13</div>
         <h3>🤖 Agent Spawning</h3>
         <p>Every skill is now a spawnable sub-agent with its own context, memory, and lifecycle. The orchestrator coordinates — agents execute in isolation. No context pollution.</p>
       </div>
       <div class="feature new-feature" onclick="openModal('feature-checkpoints')">
-        <div class="new-badge">✨ v12</div>
+        <div class="new-badge">✨ v13</div>
         <h3>⛔ Phase Checkpoints</h3>
         <p>Between every major phase, the flow pauses and waits for your explicit approval. Review deliverables, request changes, or green-light the next agent spawn. You stay in control.</p>
       </div>
       <div class="feature new-feature" onclick="openModal('feature-retro')">
-        <div class="new-badge">✨ v12</div>
+        <div class="new-badge">✨ v13</div>
         <h3>🔁 Retrospective Engine</h3>
         <p>After every phase, a structured retrospective runs automatically: what worked, what failed, what to carry forward. Written to <code>.genius/memory/retros/</code> and surfaced in future sessions.</p>
       </div>
       <div class="feature new-feature" onclick="openModal('feature-xproject')">
-        <div class="new-badge">✨ v12</div>
+        <div class="new-badge">✨ v13</div>
         <h3>🧠 Cross-Project Memory</h3>
         <p>Decisions, patterns, and lessons accumulate across all your projects — not just within one session. Your agents get smarter every time you build something new.</p>
       </div>
@@ -786,9 +786,9 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     
     <!-- WIZARD CONTAINER -->
     <div class="wizard-container fade-in">
-      <!-- Progress bar -->
-      <div class="wizard-progress">
-        <div class="progress-step active" data-step="1">
+      <!-- Progress bar (only visible in standalone mode) -->
+      <div class="wizard-progress" id="wizardProgress" style="opacity:0;pointer-events:none">
+        <div class="progress-step" data-step="1">
           <span class="progress-num">1</span>
           <span class="progress-label">Project</span>
         </div>
@@ -802,17 +802,35 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
           <span class="progress-num">3</span>
           <span class="progress-label">Engine</span>
         </div>
-        <div class="progress-line"><div class="progress-fill" id="progressFill3"></div></div>
-        <div class="progress-step" data-step="4">
-          <span class="progress-num">4</span>
-          <span class="progress-label">Mode</span>
-        </div>
       </div>
       
       <!-- Wizard steps -->
       <div class="wizard-steps">
-        <!-- Step 0: Project Type -->
+        <!-- Step 0: OpenClaw or Standalone? -->
         <div class="wizard-step active" id="wizardStep0">
+          <div class="wizard-step-icon">🎛️</div>
+          <h3 class="wizard-step-title">How will you use Genius Team?</h3>
+          <p class="wizard-step-desc">OpenClaw handles everything automatically. Standalone lets you run skills directly with your coding agent.</p>
+          <div class="wizard-options">
+            <button class="wizard-option" data-value="openclaw" onclick="selectOption(this, 'mode')" style="border-color:rgba(124,58,237,.3)">
+              <span class="option-icon">🌀</span>
+              <span class="option-title">OpenClaw</span>
+              <span class="option-desc">Orchestrated — Echo manages agents, memory &amp; PRs</span>
+            </button>
+            <button class="wizard-option selected" data-value="standalone" onclick="selectOption(this, 'mode')">
+              <span class="option-icon">🎯</span>
+              <span class="option-title">Standalone</span>
+              <span class="option-desc">Direct — you control the flow</span>
+            </button>
+          </div>
+          <div class="wizard-nav">
+            <div></div>
+            <button class="wizard-btn primary" onclick="wizardNext()">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 1: New or existing? (standalone only) -->
+        <div class="wizard-step" id="wizardStep1">
           <div class="wizard-step-icon">🚀</div>
           <h3 class="wizard-step-title">New or existing project?</h3>
           <p class="wizard-step-desc">Starting from scratch or adding Genius Team to an existing codebase?</p>
@@ -829,13 +847,13 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
             </button>
           </div>
           <div class="wizard-nav">
-            <div></div>
+            <button class="wizard-btn secondary" onclick="wizardBack()">← Back</button>
             <button class="wizard-btn primary" onclick="wizardNext()">Next →</button>
           </div>
         </div>
 
-        <!-- Step 1: Project Name (new projects only) -->
-        <div class="wizard-step" id="wizardStep1">
+        <!-- Step 2: Project Name (new projects only) -->
+        <div class="wizard-step" id="wizardStep2">
           <div class="wizard-step-icon">🎯</div>
           <h3 class="wizard-step-title">What's your project name?</h3>
           <p class="wizard-step-desc">Use lowercase letters, numbers, and dashes. No spaces.</p>
@@ -844,13 +862,13 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
             <span class="input-validation" id="nameValidation"></span>
           </div>
           <div class="wizard-nav">
-            <div></div>
+            <button class="wizard-btn secondary" onclick="wizardBack()">← Back</button>
             <button class="wizard-btn primary" onclick="wizardNext()" id="step1Next">Next →</button>
           </div>
         </div>
         
-        <!-- Step 2: Environment -->
-        <div class="wizard-step" id="wizardStep2">
+        <!-- Step 3: Environment -->
+        <div class="wizard-step" id="wizardStep3">
           <div class="wizard-step-icon">💻</div>
           <h3 class="wizard-step-title">Where will you code?</h3>
           <p class="wizard-step-desc">Choose your preferred development environment.</p>
@@ -872,8 +890,8 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
           </div>
         </div>
         
-        <!-- Step 3: AI Engine -->
-        <div class="wizard-step" id="wizardStep3">
+        <!-- Step 4: AI Engine -->
+        <div class="wizard-step" id="wizardStep4">
           <div class="wizard-step-icon">🤖</div>
           <h3 class="wizard-step-title">Which AI engine?</h3>
           <p class="wizard-step-desc">Select your AI assistant for building the project.</p>
@@ -892,30 +910,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
               <span class="option-icon">⚔️</span>
               <span class="option-title">Dual Mode</span>
               <span class="option-desc">Both (adversarial)</span>
-              <span class="option-tooltip">Claude Code builds your project while Codex CLI reviews and challenges. They iterate until both agree the code is solid.</span>
-            </button>
-          </div>
-          <div class="wizard-nav">
-            <button class="wizard-btn secondary" onclick="wizardBack()">← Back</button>
-            <button class="wizard-btn primary" onclick="wizardNext()">Next →</button>
-          </div>
-        </div>
-
-        <!-- Step 4: Orchestration Mode -->
-        <div class="wizard-step" id="wizardStep4">
-          <div class="wizard-step-icon">🎛️</div>
-          <h3 class="wizard-step-title">How should agents be coordinated?</h3>
-          <p class="wizard-step-desc">Standalone runs skills directly with your coding agent. OpenClaw mode lets your AI assistant orchestrate the full lifecycle — spawning agents, tracking PRs, notifying you when ready.</p>
-          <div class="wizard-options">
-            <button class="wizard-option selected" data-value="standalone" onclick="selectOption(this, 'orchestration')">
-              <span class="option-icon">🎯</span>
-              <span class="option-title">Standalone</span>
-              <span class="option-desc">Direct — you control the flow</span>
-            </button>
-            <button class="wizard-option" data-value="openclaw" onclick="selectOption(this, 'orchestration')" style="border-color:rgba(124,58,237,.3)">
-              <span class="option-icon">🌀</span>
-              <span class="option-title">OpenClaw orchestrated</span>
-              <span class="option-desc">Echo manages agents, memory &amp; PRs</span>
+              <span class="option-tooltip">Claude builds, Codex challenges — they iterate until both agree the code is solid.</span>
             </button>
           </div>
           <div class="wizard-nav">
@@ -975,8 +970,8 @@ cd my-awesome-app
 <section id="upgrade" class="upgrade-section">
   <div class="container">
     <div class="fade-in">
-      <div class="section-label">Upgrading from v11?</div>
-      <div class="section-title">Get v12.0 in one command</div>
+      <div class="section-label">Upgrading from v12?</div>
+      <div class="section-title">Get v13.0 in one command</div>
     </div>
     
     <div class="fade-in">
@@ -993,15 +988,18 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v12.0:</h4>
+        <h4>What's new in v13.0:</h4>
         <ul>
           <li>🤖 <strong>Agent Spawning</strong> — Each skill is now a dedicated sub-agent with its own context and memory</li>
           <li>🎤 <strong>Interview-First Flow</strong> — Every project starts with genius-interviewer before any work begins</li>
           <li>⛔ <strong>Phase Checkpoints</strong> — Human approval gates between every major phase transition</li>
           <li>🔁 <strong>Retrospective Engine</strong> — Built-in phase retrospectives feed learnings back into memory</li>
           <li>🧠 <strong>Cross-Project Memory</strong> — Decisions and lessons persist across projects, not just sessions</li>
+          <li>🗂️ <strong>Master Playground Dashboard</strong> — Multi-project selector, global stats, one entry point for all 12 playgrounds</li>
+          <li>📱 <strong>Mobile-Responsive Playgrounds</strong> — All 13 playgrounds now work on phone and tablet</li>
+          <li>🌀 <strong>OpenClaw native</strong> — One command install, zero questions: <code>openclaw skill install genius-team</code></li>
         </ul>
-        <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Already on v11? Includes all: Playgrounds, Anti-Drift Guard, /genius-upgrade</p>
+        <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Already on v12? Run <code>/genius-upgrade</code> inside Claude Code.</p>
       </div>
     </div>
   </div>
@@ -1112,7 +1110,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v12.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
+    <p>Built with 🧠 <strong>Genius Team v13.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
   </div>
 </footer>
 
@@ -1195,11 +1193,11 @@ function copyCode(btn) {
 function closeBanner() {
   const banner = document.getElementById('updateBanner');
   banner.classList.add('hidden');
-  localStorage.setItem('bannerClosed', 'v12');
+  localStorage.setItem('bannerClosed', 'v13');
 }
 
 // Check if banner was closed
-if (localStorage.getItem('bannerClosed') === 'v12') {
+if (localStorage.getItem('bannerClosed') === 'v13') {
   document.getElementById('updateBanner').classList.add('hidden');
 }
 
@@ -1314,11 +1312,11 @@ document.querySelectorAll('.nav-links a').forEach(a => {
 // ==================== WIZARD ====================
 const wizardState = {
   step: 0,
-  projectType: 'new',
+  mode: 'standalone',      // 'openclaw' | 'standalone'
+  projectType: 'new',      // standalone only
   projectName: 'my-awesome-app',
   environment: 'cli',
-  engine: 'claude',
-  orchestration: 'standalone'
+  engine: 'claude'
 };
 
 function validateProjectName(input) {
@@ -1357,10 +1355,10 @@ function selectOption(btn, type) {
 }
 
 function updateProgress() {
-  const progressBar = document.querySelector('.wizard-progress');
+  const progressBar = document.getElementById('wizardProgress');
   
-  // Hide progress bar on step 0 (project type selection)
-  if (wizardState.step === 0) {
+  // Hide for step 0 (mode selection) or OpenClaw mode
+  if (wizardState.step === 0 || wizardState.mode === 'openclaw') {
     progressBar.style.opacity = '0';
     progressBar.style.pointerEvents = 'none';
     return;
@@ -1368,40 +1366,45 @@ function updateProgress() {
   progressBar.style.opacity = '1';
   progressBar.style.pointerEvents = '';
 
-  // For existing projects, step 1 is skipped — treat it as completed
-  const effectiveStep = (wizardState.projectType === 'existing' && wizardState.step >= 2)
-    ? wizardState.step + 1  // shift visual progress forward since step 1 is skipped
-    : wizardState.step;
-  // Cap at 4 (steps 1-4 visible)
+  // Map wizard steps → visual progress steps (3 steps: Project, Env, Engine)
+  // wizardStep 1 or 2 → progress 1 (Project)
+  // wizardStep 3       → progress 2 (Environment)
+  // wizardStep 4       → progress 3 (Engine)
+  let visualStep;
+  if (wizardState.step <= 2) visualStep = 1;
+  else if (wizardState.step === 3) visualStep = 2;
+  else visualStep = 3;
 
   document.querySelectorAll('.progress-step').forEach((step, i) => {
     const stepNum = i + 1;
     step.classList.remove('active', 'completed');
-    if (stepNum === effectiveStep) {
-      step.classList.add('active');
-    } else if (stepNum < effectiveStep) {
-      step.classList.add('completed');
-    }
+    if (stepNum === visualStep) step.classList.add('active');
+    else if (stepNum < visualStep) step.classList.add('completed');
   });
   
-  // Update progress lines
-  document.getElementById('progressFill1').style.width = effectiveStep > 1 ? '100%' : '0';
-  document.getElementById('progressFill2').style.width = effectiveStep > 2 ? '100%' : '0';
-  document.getElementById('progressFill3').style.width = effectiveStep > 3 ? '100%' : '0';
+  document.getElementById('progressFill1').style.width = visualStep > 1 ? '100%' : '0';
+  document.getElementById('progressFill2').style.width = visualStep > 2 ? '100%' : '0';
 }
 
 function wizardNext() {
-  if (wizardState.step >= 4) return;
-  
   const currentStep = document.getElementById(`wizardStep${wizardState.step}`);
   currentStep.classList.add('exit-left');
   
   setTimeout(() => {
     currentStep.classList.remove('active', 'exit-left');
     
-    // Step 0 → skip step 1 for existing projects
     if (wizardState.step === 0) {
-      wizardState.step = wizardState.projectType === 'existing' ? 2 : 1;
+      if (wizardState.mode === 'openclaw') {
+        // OpenClaw: skip all steps, generate immediately
+        wizardGenerateOpenClaw();
+        return;
+      } else {
+        // Standalone: go to step 1 (new/existing)
+        wizardState.step = 1;
+      }
+    } else if (wizardState.step === 1) {
+      // From new/existing: skip step 2 (name) for existing projects
+      wizardState.step = wizardState.projectType === 'existing' ? 3 : 2;
     } else {
       wizardState.step++;
     }
@@ -1418,8 +1421,11 @@ function wizardBack() {
   const currentStep = document.getElementById(`wizardStep${wizardState.step}`);
   currentStep.classList.remove('active');
   
-  // From step 2: go to step 0 for existing projects (step 1 is skipped)
-  if (wizardState.step === 2 && wizardState.projectType === 'existing') {
+  if (wizardState.step === 3 && wizardState.projectType === 'existing') {
+    // From env: existing skipped step 2, go back to step 1
+    wizardState.step = 1;
+  } else if (wizardState.step === 1) {
+    // From new/existing: go back to mode selection
     wizardState.step = 0;
   } else {
     wizardState.step--;
@@ -1438,6 +1444,25 @@ function wizardBackFromResult() {
   document.getElementById('wizardStep4').classList.add('active');
 }
 
+function wizardGenerateOpenClaw() {
+  // OpenClaw path: no questions needed, generate immediately
+  const noteEl = document.getElementById('resultNote');
+  noteEl.innerHTML = `<strong>🌀 OpenClaw mode</strong><br><br>
+    After install, open any project folder and tell Echo (your OpenClaw agent):<br>
+    <code style="display:inline-block;margin-top:.4rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.88rem">"Start genius-team for my project"</code>
+    <br><br><span style="color:var(--text3);font-size:.82rem">Echo will run the interview, spawn specialized agents, manage memory, track PRs, and notify you when ready. Your coding engine is configured inside OpenClaw — no extra setup needed.</span>`;
+  noteEl.style.display = 'block';
+  document.getElementById('resultCommand').textContent = 'openclaw skill install genius-team';
+  document.getElementById('thenRun').innerHTML = `<strong>Make sure OpenClaw is running</strong> — Echo orchestrates everything from there.`;
+  
+  wizardState.step = 5;
+  document.querySelectorAll('.progress-step').forEach(s => s.classList.add('completed'));
+  document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '100%');
+  
+  const resultStep = document.getElementById('wizardResult');
+  resultStep.classList.add('active');
+}
+
 function wizardGenerate() {
   const currentStep = document.getElementById('wizardStep4');
   currentStep.classList.add('exit-left');
@@ -1445,7 +1470,7 @@ function wizardGenerate() {
   setTimeout(() => {
     currentStep.classList.remove('active', 'exit-left');
     
-    // Generate command
+    // Generate command (standalone mode only — OpenClaw is handled by wizardGenerateOpenClaw)
     let flags = [];
     if (wizardState.engine !== 'claude') flags.push(`--engine=${wizardState.engine}`);
     if (wizardState.environment !== 'cli') flags.push(`--mode=${wizardState.environment}`);
@@ -1454,16 +1479,7 @@ function wizardGenerate() {
     let fullCmd, thenRunHtml;
     const noteEl = document.getElementById('resultNote');
 
-    if (wizardState.orchestration === 'openclaw') {
-      // OpenClaw orchestrated mode
-      fullCmd = `openclaw skill install genius-team`;
-      noteEl.innerHTML = `<strong>🌀 OpenClaw orchestrated mode</strong><br><br>
-        After install, open your project folder in your terminal and tell Echo:<br>
-        <code style="display:inline-block;margin-top:.4rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.88rem">"${wizardState.projectType === 'new' ? `Start genius-team for ${wizardState.projectName}` : 'Add genius-team to this project'}"</code>
-        <br><br><span style="color:var(--text3);font-size:.82rem">Echo will spawn specialized agents, manage memory, monitor PRs, and notify you on Discord when ready. Your coding engine (${wizardState.engine === 'claude' ? 'Claude Code' : wizardState.engine === 'codex' ? 'Codex' : 'Claude + Codex'}) will run under the hood.</span>`;
-      noteEl.style.display = 'block';
-      thenRunHtml = `<strong>Make sure OpenClaw is running</strong> — Echo orchestrates everything from there.`;
-    } else if (wizardState.projectType === 'existing') {
+    if (wizardState.projectType === 'existing') {
       // Existing project: use add.sh, run from inside the project
       fullCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)${flagStr}`;
       noteEl.innerHTML = `<strong>①</strong> First, navigate to your project:<br>
@@ -1497,8 +1513,9 @@ function wizardGenerate() {
     document.getElementById('resultCommand').textContent = fullCmd;
     document.getElementById('thenRun').innerHTML = thenRunHtml;
     
-    // Update progress to show completed
+    // Update progress to show completed (standalone)
     wizardState.step = 5;
+    document.getElementById('wizardProgress').style.opacity = '1';
     document.querySelectorAll('.progress-step').forEach(s => s.classList.add('completed'));
     document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '100%');
     
@@ -1750,11 +1767,11 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 function wizardReset() {
   // Reset state
   wizardState.step = 0;
+  wizardState.mode = 'standalone';
   wizardState.projectType = 'new';
   wizardState.projectName = 'my-awesome-app';
   wizardState.environment = 'cli';
   wizardState.engine = 'claude';
-  wizardState.orchestration = 'standalone';
   
   // Reset UI
   document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active', 'exit-left'));
@@ -1767,10 +1784,10 @@ function wizardReset() {
   
   // Reset options
   document.querySelectorAll('.wizard-option').forEach(o => o.classList.remove('selected'));
+  document.querySelector('[data-value="standalone"]').classList.add('selected');
   document.querySelector('[data-value="new"]').classList.add('selected');
   document.querySelector('[data-value="cli"]').classList.add('selected');
   document.querySelector('[data-value="claude"]').classList.add('selected');
-  document.querySelector('[data-value="standalone"]').classList.add('selected');
   
   // Reset progress
   document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '0');
