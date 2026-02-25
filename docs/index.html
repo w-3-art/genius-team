@@ -80,6 +80,15 @@ section{padding:6rem 2rem}
 .pipeline-step:hover{background:rgba(124,58,237,.15);color:var(--text);transform:translateY(-2px)}
 .pipeline-arrow{color:var(--text3);font-size:.7rem}
 
+/* GENIUS-CLAW BADGE */
+.genius-claw-badge{margin-top:1.5rem;display:flex;justify-content:center}
+.gclaw-pill{display:inline-flex;align-items:center;gap:.6rem;padding:.5rem 1rem .5rem .75rem;border-radius:100px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.08));border:1px solid rgba(124,58,237,.25);font-size:.82rem}
+.gclaw-icon{font-size:1rem}
+.gclaw-text{color:var(--text2)}
+.gclaw-text strong{color:var(--text)}
+.gclaw-link{margin-left:.25rem;color:var(--cyan);font-weight:600;text-decoration:none;white-space:nowrap;transition:color .2s}
+.gclaw-link:hover{color:var(--purple)}
+
 /* NEW FEATURE BADGE */
 .new-feature{border-color:rgba(124,58,237,.25)!important;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.03))!important;position:relative}
 .new-badge{position:absolute;top:.75rem;right:.75rem;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-size:.6rem;font-weight:800;padding:.2rem .5rem;border-radius:100px;letter-spacing:.05em}
@@ -436,6 +445,15 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <a href="#quickstart" class="btn btn-primary">Get Started</a>
         <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn btn-secondary">⭐ View on GitHub</a>
       </div>
+      <div class="genius-claw-badge">
+        <span class="gclaw-pill">
+          <span class="gclaw-icon">🌀</span>
+          <span class="gclaw-text">
+            <strong>Genius-Claw</strong> — now available as an OpenClaw skill
+          </span>
+          <a href="#quickstart" class="gclaw-link" onclick="document.querySelector('[data-value=\'openclaw\']')?.scrollIntoView()">Install →</a>
+        </span>
+      </div>
     </div>
     <div class="hero-terminal fade-in">
       <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
@@ -777,12 +795,17 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <div class="progress-line"><div class="progress-fill" id="progressFill1"></div></div>
         <div class="progress-step" data-step="2">
           <span class="progress-num">2</span>
-          <span class="progress-label">Environment</span>
+          <span class="progress-label">Env</span>
         </div>
         <div class="progress-line"><div class="progress-fill" id="progressFill2"></div></div>
         <div class="progress-step" data-step="3">
           <span class="progress-num">3</span>
-          <span class="progress-label">AI Engine</span>
+          <span class="progress-label">Engine</span>
+        </div>
+        <div class="progress-line"><div class="progress-fill" id="progressFill3"></div></div>
+        <div class="progress-step" data-step="4">
+          <span class="progress-num">4</span>
+          <span class="progress-label">Mode</span>
         </div>
       </div>
       
@@ -870,6 +893,29 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
               <span class="option-title">Dual Mode</span>
               <span class="option-desc">Both (adversarial)</span>
               <span class="option-tooltip">Claude Code builds your project while Codex CLI reviews and challenges. They iterate until both agree the code is solid.</span>
+            </button>
+          </div>
+          <div class="wizard-nav">
+            <button class="wizard-btn secondary" onclick="wizardBack()">← Back</button>
+            <button class="wizard-btn primary" onclick="wizardNext()">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Orchestration Mode -->
+        <div class="wizard-step" id="wizardStep4">
+          <div class="wizard-step-icon">🎛️</div>
+          <h3 class="wizard-step-title">How should agents be coordinated?</h3>
+          <p class="wizard-step-desc">Standalone runs skills directly with your coding agent. OpenClaw mode lets your AI assistant orchestrate the full lifecycle — spawning agents, tracking PRs, notifying you when ready.</p>
+          <div class="wizard-options">
+            <button class="wizard-option selected" data-value="standalone" onclick="selectOption(this, 'orchestration')">
+              <span class="option-icon">🎯</span>
+              <span class="option-title">Standalone</span>
+              <span class="option-desc">Direct — you control the flow</span>
+            </button>
+            <button class="wizard-option" data-value="openclaw" onclick="selectOption(this, 'orchestration')" style="border-color:rgba(124,58,237,.3)">
+              <span class="option-icon">🌀</span>
+              <span class="option-title">OpenClaw orchestrated</span>
+              <span class="option-desc">Echo manages agents, memory &amp; PRs</span>
             </button>
           </div>
           <div class="wizard-nav">
@@ -1271,7 +1317,8 @@ const wizardState = {
   projectType: 'new',
   projectName: 'my-awesome-app',
   environment: 'cli',
-  engine: 'claude'
+  engine: 'claude',
+  orchestration: 'standalone'
 };
 
 function validateProjectName(input) {
@@ -1325,6 +1372,7 @@ function updateProgress() {
   const effectiveStep = (wizardState.projectType === 'existing' && wizardState.step >= 2)
     ? wizardState.step + 1  // shift visual progress forward since step 1 is skipped
     : wizardState.step;
+  // Cap at 4 (steps 1-4 visible)
 
   document.querySelectorAll('.progress-step').forEach((step, i) => {
     const stepNum = i + 1;
@@ -1339,10 +1387,11 @@ function updateProgress() {
   // Update progress lines
   document.getElementById('progressFill1').style.width = effectiveStep > 1 ? '100%' : '0';
   document.getElementById('progressFill2').style.width = effectiveStep > 2 ? '100%' : '0';
+  document.getElementById('progressFill3').style.width = effectiveStep > 3 ? '100%' : '0';
 }
 
 function wizardNext() {
-  if (wizardState.step >= 3) return;
+  if (wizardState.step >= 4) return;
   
   const currentStep = document.getElementById(`wizardStep${wizardState.step}`);
   currentStep.classList.add('exit-left');
@@ -1381,8 +1430,16 @@ function wizardBack() {
   prevStep.classList.add('active');
 }
 
+function wizardBackFromResult() {
+  const resultStep = document.getElementById('wizardResult');
+  resultStep.classList.remove('active');
+  wizardState.step = 4;
+  updateProgress();
+  document.getElementById('wizardStep4').classList.add('active');
+}
+
 function wizardGenerate() {
-  const currentStep = document.getElementById('wizardStep3');
+  const currentStep = document.getElementById('wizardStep4');
   currentStep.classList.add('exit-left');
   
   setTimeout(() => {
@@ -1395,12 +1452,25 @@ function wizardGenerate() {
     const flagStr = flags.length > 0 ? ` ${flags.join(' ')}` : '';
 
     let fullCmd, thenRunHtml;
+    const noteEl = document.getElementById('resultNote');
 
-    if (wizardState.projectType === 'existing') {
+    if (wizardState.orchestration === 'openclaw') {
+      // OpenClaw orchestrated mode
+      fullCmd = `openclaw skill install genius-team`;
+      noteEl.innerHTML = `<strong>🌀 OpenClaw orchestrated mode</strong><br><br>
+        After install, open your project folder in your terminal and tell Echo:<br>
+        <code style="display:inline-block;margin-top:.4rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.88rem">"${wizardState.projectType === 'new' ? `Start genius-team for ${wizardState.projectName}` : 'Add genius-team to this project'}"</code>
+        <br><br><span style="color:var(--text3);font-size:.82rem">Echo will spawn specialized agents, manage memory, monitor PRs, and notify you on Discord when ready. Your coding engine (${wizardState.engine === 'claude' ? 'Claude Code' : wizardState.engine === 'codex' ? 'Codex' : 'Claude + Codex'}) will run under the hood.</span>`;
+      noteEl.style.display = 'block';
+      thenRunHtml = `<strong>Make sure OpenClaw is running</strong> — Echo orchestrates everything from there.`;
+    } else if (wizardState.projectType === 'existing') {
       // Existing project: use add.sh, run from inside the project
       fullCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)${flagStr}`;
+      noteEl.innerHTML = `<strong>①</strong> First, navigate to your project:<br>
+        <code style="display:inline-block;margin-top:.3rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.9rem">cd your-project</code>
+        <br><br><strong>②</strong> Then run the installer below:`;
+      noteEl.style.display = 'block';
       
-      // "Then run" for existing (no cd needed)
       if (wizardState.engine === 'codex') {
         thenRunHtml = `<strong>Then run:</strong> <code>codex</code>`;
       } else if (wizardState.engine === 'dual') {
@@ -1409,13 +1479,10 @@ function wizardGenerate() {
       } else {
         thenRunHtml = `<strong>Then run:</strong> <code>claude</code>, then <code>/genius-start</code>`;
       }
-
-      // Prepend a "cd first" note in the result box
-      document.getElementById('resultCommand').dataset.note = `# First, navigate to your project:\ncd your-project\n\n# Then run:`;
     } else {
       // New project: use create.sh
       fullCmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) ${wizardState.projectName}${flagStr}`;
-      document.getElementById('resultCommand').dataset.note = '';
+      noteEl.style.display = 'none';
 
       if (wizardState.engine === 'claude') {
         thenRunHtml = `<strong>Then run:</strong> <code>cd ${wizardState.projectName} && claude</code>`;
@@ -1426,20 +1493,12 @@ function wizardGenerate() {
           <div class="dual-note">Claude builds, Codex challenges — they iterate until both agree.</div>`;
       }
     }
-
-    // Show cd-note for existing projects
-    const noteEl = document.getElementById('resultNote');
-    if (wizardState.projectType === 'existing') {
-      noteEl.style.display = 'block';
-    } else {
-      noteEl.style.display = 'none';
-    }
     
     document.getElementById('resultCommand').textContent = fullCmd;
     document.getElementById('thenRun').innerHTML = thenRunHtml;
     
     // Update progress to show completed
-    wizardState.step = 4;
+    wizardState.step = 5;
     document.querySelectorAll('.progress-step').forEach(s => s.classList.add('completed'));
     document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '100%');
     
@@ -1695,6 +1754,7 @@ function wizardReset() {
   wizardState.projectName = 'my-awesome-app';
   wizardState.environment = 'cli';
   wizardState.engine = 'claude';
+  wizardState.orchestration = 'standalone';
   
   // Reset UI
   document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active', 'exit-left'));
@@ -1710,6 +1770,7 @@ function wizardReset() {
   document.querySelector('[data-value="new"]').classList.add('selected');
   document.querySelector('[data-value="cli"]').classList.add('selected');
   document.querySelector('[data-value="claude"]').classList.add('selected');
+  document.querySelector('[data-value="standalone"]').classList.add('selected');
   
   // Reset progress
   document.querySelectorAll('.progress-fill').forEach(f => f.style.width = '0');
