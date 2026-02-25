@@ -168,7 +168,7 @@ Playground types:
 | genius-interviewer | `agents/genius-interviewer.yaml` | ✅ v2.0 | new → briefed |
 | genius-specs | `agents/genius-specs.yaml` | ✅ v2.0 | briefed → specced |
 | genius-architect | `agents/genius-architect.yaml` | ✅ v2.0 | specced → architected |
-| genius-dev | — | 🔵 Planned | architected → built |
+| genius-dev | `agents/genius-dev.yaml` | ✅ v2.0 | architected → built |
 | genius-qa | `agents/genius-qa.yaml` | ✅ v2.0 | built → validated |
 | genius-security | — | 🔵 Planned | validated → secured |
 | genius-deploy | `agents/genius-deploy.yaml` | ✅ v2.0 | validated → deployed |
@@ -196,4 +196,4 @@ genius-team-mcp (npm package)
 
 ---
 
-*Last updated: 2026-02-25 05h00 by Echo (nightly build) — 5/8 agents specced*
+*Last updated: 2026-02-25 05h30 by Echo (nightly build) — 6/8 agents specced*
