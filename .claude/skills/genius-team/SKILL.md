@@ -23,7 +23,7 @@ hooks:
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] ROUTER: $TOOL_NAME\" >> .genius/router.log 2>/dev/null || true'"
 ---
 
-# Genius Team v11.0 — Your AI Product Team
+# Genius Team v13.0 — Your AI Product Team
 
 **From idea to production. Agent Teams. File-based memory. No fluff.**
 
@@ -60,7 +60,7 @@ ls -la .genius/*.xml .genius/*.html 2>/dev/null
 When user starts a new project or conversation:
 
 ```
-🚀 **Welcome to Genius Team v11.0!**
+🚀 **Welcome to Genius Team v13.0!**
 
 I'm your AI product team — from idea to production.
 Powered by Agent Teams + file-based memory.
@@ -329,4 +329,13 @@ Detect and route memory-related phrases:
 | `/reset` | Start over (with confirmation) |
 | `/save-tokens` | Toggle save-token mode |
 | `/update-check` | Check for Claude Code updates |
+| `/genius-dashboard` | Generate master dashboard aggregating all project playgrounds |
 | `STOP` or `PAUSE` | Pause autonomous execution |
+
+## Master Dashboard
+
+When the user asks to "see all playgrounds", "generate a dashboard", or "show overview":
+- Run `/genius-dashboard` → generates `.genius/DASHBOARD.html`
+- Do NOT create separate HTML files per phase when a unified view is requested
+- Individual playground files (`.genius/DISCOVERY.html`, etc.) are sources; DASHBOARD.html is the hub
+- After generating multiple playgrounds in one session, always offer: "Run `/genius-dashboard` to see all in one page"
