@@ -152,9 +152,13 @@ This validated output becomes the basis for MARKETING-STRATEGY.xml.
 
 ## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
 
-After generating any `.genius/*.html` playground file, regenerate the master dashboard.
-Follow `.claude/commands/genius-dashboard.md` instructions to update `.genius/DASHBOARD.html`.
-Tell the user: "Dashboard updated — open `.genius/DASHBOARD.html` to see all phases in one view."
+After generating any `.genius/*.html` playground file:
+1. Follow `.claude/commands/genius-dashboard.md` instructions to regenerate `.genius/DASHBOARD.html`
+2. Open it immediately:
+   ```bash
+   open .genius/DASHBOARD.html 2>/dev/null || echo "📂 Open: $(pwd)/.genius/DASHBOARD.html"
+   ```
+   (On macOS/Linux this opens in the default browser. If it fails, the full path is printed as a clickable link.)
 
 ## Handoffs
 

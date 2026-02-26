@@ -111,6 +111,11 @@ Playgrounds included:
    [list each tab with icon + name]
 ```
 
+Then open it:
+```bash
+open .genius/DASHBOARD.html 2>/dev/null || echo "📂 Open: $(pwd)/.genius/DASHBOARD.html"
+```
+
 ## Notes
 
 - Re-running `/genius-dashboard` always refreshes the file with latest playgrounds
