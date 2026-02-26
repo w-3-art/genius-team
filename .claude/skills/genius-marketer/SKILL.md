@@ -150,6 +150,12 @@ This validated output becomes the basis for MARKETING-STRATEGY.xml.
 
 ---
 
+## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
+
+After generating any `.genius/*.html` playground file, regenerate the master dashboard.
+Follow `.claude/commands/genius-dashboard.md` instructions to update `.genius/DASHBOARD.html`.
+Tell the user: "Dashboard updated — open `.genius/DASHBOARD.html` to see all phases in one view."
+
 ## Handoffs
 
 ### From: genius-designer

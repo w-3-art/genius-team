@@ -37,7 +37,8 @@ hooks:
 1. Verify .claude/plan.md exists
 2. Verify HTML playground exists
 3. Update state.json checkpoint
-4. Announce transition
+4. **Regenerate master dashboard** — follow `.claude/commands/genius-dashboard.md` to update `.genius/DASHBOARD.html`
+5. Announce transition
 
 **If artifacts missing:** DO NOT proceed. Generate them first.
 
