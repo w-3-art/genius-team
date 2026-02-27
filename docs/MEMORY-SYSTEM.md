@@ -174,7 +174,7 @@ Every skill follows the same pattern:
 3. **On errors**: Append to `.genius/memory/errors.json`
 4. **On patterns**: Append to `.genius/memory/patterns.json`
 
-No skill uses `mind_recall()`, `mind_log()`, `mind_search()`, or `mind_remind()`. Those are v8 patterns that have been fully replaced.
+No skill uses deprecated memory functions from v8. Those patterns have been fully replaced by the file-based system described above.
 
 ## Manual Operations
 

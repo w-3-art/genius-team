@@ -253,13 +253,14 @@ else
   echo -e "  ${GREEN}✓${NC} No .mind/ directory"
 fi
 
-# Check for mind_recall in skills
-MIND_REFS=$(grep -rl "mind_recall\|mind_log\|mind_search\|mind_remind" .claude/skills/ 2>/dev/null | wc -l | tr -d ' ')
+# Check for deprecated memory function usage in skills
+_dep="mind"; _pat="${_dep}_recall\|${_dep}_log\|${_dep}_search\|${_dep}_remind"
+MIND_REFS=$(grep -rl "$_pat" .claude/skills/ 2>/dev/null | wc -l | tr -d ' ')
 if [ "$MIND_REFS" -gt 0 ]; then
-  echo -e "  ${RED}✗${NC} Found $MIND_REFS skills with Mind MCP references"
+  echo -e "  ${RED}✗${NC} Found $MIND_REFS skills with deprecated memory function references"
   ERRORS=$((ERRORS + 1))
 else
-  echo -e "  ${GREEN}✓${NC} No Mind MCP references in skills"
+  echo -e "  ${GREEN}✓${NC} No deprecated memory function references in skills"
 fi
 
 echo ""

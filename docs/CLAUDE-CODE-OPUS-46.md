@@ -104,8 +104,8 @@ Toggle with `/save-tokens`:
 
 | v8.0 | v9.0 |
 |------|------|
-| Mind MCP (external) | File-based memory (.genius/memory/) |
-| Spawner MCP (external) | Removed — not needed |
+| External MCP memory (v8) | File-based memory (.genius/memory/) |
+| External MCP spawner (v8) | Removed — Agent Teams built-in |
 | Simple subagents | Agent Teams with Lead + Teammates |
 | Optional QA | Mandatory QA loop after every task |
 | Sonnet default + Opus option | Opus default + save-token Sonnet option |

@@ -39,7 +39,7 @@ Toggle `/save-tokens` to use Sonnet for high-volume roles (dev, qa-micro, debugg
 At session start, detects Claude Code version changes and proposes repo updates.
 
 ### ✂️ Zero Dependencies
-No Vibeship, no Mind MCP, no Spawner. Pure Claude Code + file system.
+No external MCPs, no legacy dependencies. Pure Claude Code + file system.
 
 ## Quick Start
 

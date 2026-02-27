@@ -67,12 +67,12 @@ echo $CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 jq '.env' .claude/settings.json
 ```
 
-### 7. Mind MCP References Still Present
+### 7. Deprecated Memory Functions Still Present
 
 ```bash
-# These should return nothing in v9
-grep -rl "mind_recall\|mind_log\|mind_search\|mind_remind" .claude/skills/
-# If any results, those skills need updating
+# These should return nothing — run verify.sh to check
+bash scripts/verify.sh
+# If any skills reference deprecated functions, they need updating to use file-based memory
 ```
 
 ### 8. jq Not Found
