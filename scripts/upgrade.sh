@@ -17,7 +17,7 @@ NC='\033[0m'
 
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
-TARGET_VERSION="13.0.0"
+TARGET_VERSION="14.0.0"
 
 # Flags
 FORCE=false
@@ -60,7 +60,7 @@ show_usage() {
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
-# Version Detection (supports v9 through v13)
+# Version Detection (supports v9 through v14)
 #═══════════════════════════════════════════════════════════════════════════════
 
 detect_version() {
@@ -133,7 +133,7 @@ check_prerequisites() {
 
 create_backup() {
   local ts; ts=$(date +%Y%m%d-%H%M%S)
-  local backup_dir=".genius/backups/pre-v13-upgrade-$ts"
+  local backup_dir=".genius/backups/pre-v14-upgrade-$ts"
 
   if [ "$DRY_RUN" = true ]; then
     log_info "[DRY-RUN] Would create backup at: $backup_dir"
@@ -187,10 +187,10 @@ download_file() {
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
-# Main Upgrade: downloads all v13 files
+# Main Upgrade: downloads all v14 files
 #═══════════════════════════════════════════════════════════════════════════════
 
-upgrade_to_v13() {
+upgrade_to_v14() {
   # ── Core ──────────────────────────────────────────────────────────────────
   log_info "Core files..."
   download_file "CLAUDE.md"       "CLAUDE.md"
@@ -312,12 +312,12 @@ upgrade_to_v13() {
   if [ "$DRY_RUN" = false ]; then
     if [ -f ".genius/state.json" ]; then
       cp .genius/state.json .genius/state.json.bak
-      sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "13.0.0"/' .genius/state.json
+      sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "14.0.0"/' .genius/state.json
       rm -f .genius/state.json.tmp
     else
       cat > .genius/state.json << 'STATEJSON'
 {
-  "version": "13.0.0",
+  "version": "14.0.0",
   "phase": "NOT_STARTED",
   "currentSkill": null,
   "skillHistory": [],
@@ -367,7 +367,7 @@ print_summary() {
   echo "  • 🔧 Genius Server — node scripts/genius-server.js --tunnel"
   echo ""
   echo -e "${YELLOW}Next steps:${NC}"
-  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v13 features"
+  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v14 features"
   echo "  2. Open the dashboard: ${BOLD}node scripts/genius-server.js --open${NC}"
   echo "  3. See ${BOLD}CHANGELOG.md${NC} for full details"
   echo ""
@@ -432,7 +432,7 @@ main() {
 
   # ── Step 4: Download ───────────────────────────────────────────────────────
   log_step 4 5 "Downloading v14.0 files..."
-  upgrade_to_v13
+  upgrade_to_v14
   log_success "$FILES_DOWNLOADED files downloaded"
 
   # ── Step 5: Verify ─────────────────────────────────────────────────────────
