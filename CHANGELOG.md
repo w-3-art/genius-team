@@ -1,5 +1,57 @@
 # Changelog
 
+## [14.0.0] - 2026-02-27
+
+### Added
+- 📊 **Proactive Dashboard UX** — Dashboard link shown after every skill, in `/genius-start`, `/status`, and at every checkpoint
+- 🧠 **Native Auto Memory integration** — `@.genius/memory/BRIEFING.md` import in CLAUDE.md auto-loads project context without SessionStart hook
+- 📁 **`.claude/rules/genius-memory.md`** — New modular rule file explaining the full memory hierarchy (Auto Memory vs `.genius/memory/`)
+- 📝 **`CLAUDE.local.md` template** — Personal project preferences, auto-gitignored (sandbox URLs, local ports, personal API keys)
+- 🌀 **Genius-Claw — Auto Memory aware** — §4 resume checks Auto Memory; §5 post-session always announces dashboard update; §5b full native memory table
+- 🔧 **`/genius-start` Step 4b** — Bootstraps Claude Code Auto Memory with project facts on first run
+- 🗂️ **`.claude/rules/` support** — Foundation for path-scoped modular rules (topic-specific, path-aware via YAML frontmatter)
+
+### Changed
+- All CLAUDE.md files (root + 4 modes): added `🧠 Memory` section with @import and Auto Memory guidance
+- `genius-team` SKILL.md: PROACTIVE RULE — always mention Dashboard after skill completion
+- `genius-orchestrator` SKILL.md: Dashboard link in Completion Protocol
+- `/genius-dashboard` command: PROACTIVE RULE header (auto-suggest after every skill)
+
+---
+
+## [13.0.0] - 2026-02-26
+
+### Added
+- 🗂️ **Master Playground Dashboard** — `/genius-dashboard` command, `.genius/DASHBOARD.html` hub aggregating all playgrounds
+- 📱 **Mobile-responsive playgrounds** — All 12 playgrounds work on phone and tablet
+- 🌀 **Genius-Claw plugin** — OpenClaw native install: `openclaw plugins install https://genius.w3art.io/genius-claw.zip`
+  - Cross-project memory (`memory/genius-claw.md`)
+  - Project registry (`memory/genius-claw-projects.json`)
+  - Global dashboard with Canvas presentation
+  - Daily brief + stale alert + auto-update crons
+- 🧙 **OpenClaw-first wizard** on genius.w3art.io
+- 🔁 **Post-output dashboard hooks** — HTML-generating skills auto-open dashboard
+
+### Changed
+- CLAUDE.md wizard refactored to OpenClaw-first flow
+- Banner and hero text updated to v13
+
+---
+
+## [12.0.0] - 2026-02-20
+
+### Added
+- 🤖 **8 full agent specifications** with YAML manifests
+  - `genius-interviewer`, `genius-specs`, `genius-architect`, `genius-qa`
+  - `genius-deploy`, `genius-dev`, `genius-security` + full orchestration registry
+- 🎤 **Interview-First Flow** — Every project starts with `genius-interviewer` before any work begins
+- ⛔ **Phase Checkpoints** — Human approval gates between major phase transitions
+- 🔁 **Retrospective Engine** — Phase retrospectives feed learnings back into memory
+- 🧠 **Cross-Project Memory** — Decisions and lessons persist across projects, not just sessions
+- 🤝 **Agent coordination protocol** — shared artifacts, git worktree isolation, handoff contracts
+
+---
+
 ## [11.0.0] - 2026-02-17
 
 ### Added

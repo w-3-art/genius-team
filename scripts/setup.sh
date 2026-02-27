@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v11.0 — Setup Script
+# Genius Team v14.0 — Setup Script
 # No external MCPs required. Pure Claude Code + Agent Teams.
 # Supports multiple AI engines: Claude Code, Codex CLI, or both.
 set -e
@@ -50,7 +50,7 @@ if [[ ! "$ENGINE" =~ ^(claude|codex|dual)$ ]]; then
 fi
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║  🧠 Genius Team v11.0 — Setup                              ║"
+echo "║  🧠 Genius Team v14.0 — Setup                              ║"
 echo "║  Mode: ${MODE} | Engine: ${ENGINE}                                   ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
@@ -205,7 +205,7 @@ if [[ "$ENGINE" == "codex" || "$ENGINE" == "dual" ]]; then
   else
     # Create minimal AGENTS.md
     cat > AGENTS.md << 'AGENTSEOF'
-# Genius Team v11.0 — Codex Mode
+# Genius Team v14.0 — Codex Mode
 
 > Your AI product team. From idea to production.
 
@@ -372,7 +372,7 @@ if [ ! -f ".genius/state.json" ]; then
   NOW=$(date -Iseconds 2>/dev/null || date '+%Y-%m-%dT%H:%M:%S')
   cat > .genius/state.json << EOF
 {
-  "version": "11.0.0",
+  "version": "14.0.0",
   "phase": "NOT_STARTED",
   "currentSkill": null,
   "skillHistory": [],
@@ -505,7 +505,7 @@ if [ $ERRORS -eq 0 ]; then
   echo "║  ✅ Setup Complete! (${MODE} mode, ${ENGINE} engine)           ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
-  echo "Genius Team v11.0 is ready."
+  echo "Genius Team v14.0 is ready."
   echo "  Mode:   ${MODE}"
   echo "  Engine: ${ENGINE}"
   echo ""

@@ -19,7 +19,7 @@ description: Creates all written content including landing pages, emails, CTAs, 
 
 ---
 
-# Genius Copywriter v9.0 — Words That Convert
+# Genius Copywriter v14.0 — Words That Convert
 
 **Every word either sells or it doesn't.**
 

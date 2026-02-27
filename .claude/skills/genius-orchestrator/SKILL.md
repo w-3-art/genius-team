@@ -47,7 +47,7 @@ hooks:
 
 ---
 
-# Genius Orchestrator v9.0 — Agent Teams Execution Engine
+# Genius Orchestrator v14.0 — Agent Teams Execution Engine
 
 **Build while you sleep. Agent Teams. Mandatory QA. No pauses.**
 

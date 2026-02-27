@@ -19,7 +19,7 @@ description: Guides user step-by-step through external service setup based on pr
 
 ---
 
-# Genius Integration Guide v9.0 — Service Setup Wizard
+# Genius Integration Guide v14.0 — Service Setup Wizard
 
 **Making external service integration painless.**
 

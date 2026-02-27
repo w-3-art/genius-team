@@ -1,4 +1,4 @@
-# Genius Team v13.0 — CLI Mode
+# Genius Team v14.0 — CLI Mode
 
 > ⚠️ **MANDATORY**: Read `GENIUS_GUARD.md` before ANY action.
 > This project uses Genius Team. You MUST use the skills, not work standalone.
@@ -91,7 +91,7 @@ The Lead reads `plan.md` + `BRIEFING.md` + `state.json` to reconstruct state.
 
 ## Agent Teams Protocol
 
-Genius Team v13.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via delegate mode (Shift+Tab) with natural language prompts

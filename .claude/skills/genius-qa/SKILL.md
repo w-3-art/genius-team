@@ -51,7 +51,7 @@ Update state.json with:
 
 ---
 
-# Genius QA v9.0 — The Quality Guardian
+# Genius QA v14.0 — The Quality Guardian
 
 **Quality is not an act, it is a habit.**
 

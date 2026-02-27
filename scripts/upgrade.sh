@@ -1,7 +1,7 @@
 #!/bin/bash
 #═══════════════════════════════════════════════════════════════════════════════
 # Genius Team Universal Upgrade Script
-# Upgrades from any previous version to v13.0
+# Upgrades from any previous version to v14.0
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -35,7 +35,7 @@ FILES_SKIPPED=0
 print_banner() {
   echo ""
   echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v13.0${NC}                           ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v14.0${NC}                           ${CYAN}║${NC}"
   echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
 }
@@ -56,7 +56,7 @@ show_usage() {
   echo "  --verbose   Show detailed file download output"
   echo "  --help      Show this help"
   echo ""
-  echo "Upgrades your Genius Team project to v13.0 from any previous version."
+  echo "Upgrades your Genius Team project to v14.0 from any previous version."
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
@@ -73,6 +73,7 @@ detect_version() {
 
   # Method 2: CLAUDE.md markers
   if [ -f "CLAUDE.md" ]; then
+    if grep -qE "v14|14\." CLAUDE.md 2>/dev/null; then echo "14.0.0"; return 0; fi
     if grep -qE "v1[23]|13\.|12\." CLAUDE.md 2>/dev/null; then echo "13.0.0"; return 0; fi
     if grep -qE "v11|11\." CLAUDE.md 2>/dev/null; then echo "11.0.0"; return 0; fi
     if grep -qE "v10|10\." CLAUDE.md 2>/dev/null; then echo "10.0.0"; return 0; fi
@@ -81,7 +82,7 @@ detect_version() {
 
   # Method 3: File structure heuristics
   if [ -f "GENIUS_GUARD.md" ] && [ -d "playgrounds/templates" ]; then
-    if [ -f "scripts/genius-server.js" ]; then echo "13.0.0"; return 0; fi
+    if [ -f "scripts/genius-server.js" ]; then echo "14.0.0"; return 0; fi
     if [ -f "scripts/add.sh" ]; then echo "11.0.0"; return 0; fi
     echo "10.0.0"; return 0
   fi
@@ -347,14 +348,14 @@ print_summary() {
   local from=$1 backup=$2
   echo ""
   echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v13.0${NC}                      ${GREEN}║${NC}"
+  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v14.0${NC}                      ${GREEN}║${NC}"
   echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files downloaded:${NC} $FILES_DOWNLOADED"
   echo -e "  ${BOLD}Files skipped:${NC}    $FILES_SKIPPED (already present, not overwritten)"
   echo -e "  ${BOLD}Backup:${NC}           $backup"
   echo ""
-  echo -e "${CYAN}New in v13.0:${NC}"
+  echo -e "${CYAN}New in v14.0:${NC}"
   echo "  • 🤖 Agent Spawning — each skill runs as an isolated sub-agent"
   echo "  • 🎤 Interview-First — genius-interviewer runs before any work starts"
   echo "  • ⛔ Phase Checkpoints — human approval gates at every phase transition"
@@ -376,7 +377,7 @@ print_dry_run_summary() {
   local from=$1
   echo ""
   echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v13.0${NC}                             ${YELLOW}║${NC}"
+  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v14.0${NC}                             ${YELLOW}║${NC}"
   echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files that would be downloaded:${NC} $FILES_DOWNLOADED"
@@ -430,7 +431,7 @@ main() {
   [ "$DRY_RUN" = false ] && log_success "Backup: $BACKUP_DIR"
 
   # ── Step 4: Download ───────────────────────────────────────────────────────
-  log_step 4 5 "Downloading v13.0 files..."
+  log_step 4 5 "Downloading v14.0 files..."
   upgrade_to_v13
   log_success "$FILES_DOWNLOADED files downloaded"
 

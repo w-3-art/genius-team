@@ -20,7 +20,7 @@ hooks:
       once: true
 ---
 
-# Genius Dual Engine v9.0 — Builder + Challenger
+# Genius Dual Engine v14.0 — Builder + Challenger
 
 **Two minds are better than one. Especially when one is trying to break your code.**
 

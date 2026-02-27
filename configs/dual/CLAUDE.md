@@ -1,4 +1,4 @@
-# Genius Team v9.0 — Dual Mode
+# Genius Team v14.0 — Dual Mode
 
 > Your AI product team. Builder + Challenger adversarial workflow.
 
@@ -92,7 +92,7 @@ Mark tasks with 🔄 in `plan.md` to trigger dual review:
 
 ## Agent Teams Protocol
 
-Genius Team v9.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Builder** is the primary implementation agent (Claude Opus)

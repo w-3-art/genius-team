@@ -81,7 +81,7 @@ Generate a single HTML file with this structure:
 <header>
   <div>
     <h1>🧠 [PROJECT_NAME] — Genius Team Dashboard</h1>
-    <span>[PLAYGROUND_COUNT] playgrounds · v13.0</span>
+    <span>[PLAYGROUND_COUNT] playgrounds · v14.0</span>
   </div>
 </header>
 <div class="tabs" id="tabs">[TAB_HTML]</div>

@@ -3,7 +3,7 @@ name: genius-team-optimizer
 description: Self-improving skill that analyzes Claude Code releases and updates Genius Team skills to leverage new features. Monitors changelogs, proposes updates, and applies improvements with user approval. Use for "optimize skills", "update genius team", "check for improvements".
 ---
 
-# Genius Team Optimizer v9.0 — Self-Evolution Engine
+# Genius Team Optimizer v14.0 — Self-Evolution Engine
 
 **The skill that makes all other skills better.**
 

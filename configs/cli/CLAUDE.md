@@ -1,4 +1,4 @@
-# Genius Team v9.0 — CLI Mode
+# Genius Team v14.0 — CLI Mode
 
 > Your AI product team. From idea to production. Powered by Agent Teams.
 
@@ -63,7 +63,7 @@ On resume, the Lead reads `plan.md` + `BRIEFING.md` to reconstruct state. Run `/
 
 ## Agent Teams Protocol
 
-Genius Team v9.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via delegate mode (Shift+Tab) with natural language prompts

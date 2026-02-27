@@ -27,7 +27,7 @@ hooks:
       once: true
 ---
 
-# Genius Debugger v9.0 — Error Terminator
+# Genius Debugger v14.0 — Error Terminator
 
 **Every bug has a story. I find it and end it.**
 

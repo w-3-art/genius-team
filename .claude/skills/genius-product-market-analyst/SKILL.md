@@ -45,7 +45,7 @@ Update state.json with:
 
 ---
 
-# Genius Product Market Analyst v9.0 — Strategic Intelligence
+# Genius Product Market Analyst v14.0 — Strategic Intelligence
 
 **Turn ideas into validated opportunities.**
 

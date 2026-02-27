@@ -58,7 +58,7 @@ Update state.json with:
 
 ---
 
-# Genius Deployer v9.0 — Ship It Safely
+# Genius Deployer v14.0 — Ship It Safely
 
 **Ships code to production with zero downtime. Never deploy on Friday at 5pm.**
 

@@ -16,7 +16,7 @@ allowed-tools:
   - Bash(curl *)
 ---
 
-# Genius Updater v11.0 — Self-Update Protocol
+# Genius Updater v14.0 — Self-Update Protocol
 
 **Keep your repo in sync with Claude Code AND Genius Team evolution.**
 
@@ -95,7 +95,7 @@ fi
 
 Claude Code: v1.0.50 ✅ (up to date)
 
-Genius Team: v10.0.0 → v11.0.0 available! 🆕
+Genius Team: v13.0.0 → v14.0.0 available! 🆕
 What's new:
 - 12 interactive playgrounds
 - Anti-drift system
@@ -109,7 +109,7 @@ If both are up-to-date:
 🔄 Update Check
 
 Claude Code: v1.0.50 ✅ (up to date)
-Genius Team: v11.0.0 ✅ (up to date)
+Genius Team: v14.0.0 ✅ (up to date)
 
 Everything is up to date! 🎉
 ```

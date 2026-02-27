@@ -1,4 +1,4 @@
-# Genius Team v9.0 — IDE Mode
+# Genius Team v14.0 — IDE Mode
 
 > Your AI product team. From idea to production. Powered by Agent Teams.
 
@@ -68,7 +68,7 @@ The `.cursorrules` file tells Cursor about Genius Team conventions, the memory s
 
 ## Agent Teams Protocol
 
-Genius Team v9.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via Task() with natural language prompts
