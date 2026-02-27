@@ -3,7 +3,7 @@ name: genius-test-assistant
 description: Real-time testing companion that monitors server logs and browser activity during manual testing sessions. Correlates errors, identifies root causes, and generates fix prompts. Use for "help me test", "testing session", "watch while I test", "monitor testing".
 ---
 
-# Genius Test Assistant v9.0 — Live Testing Companion
+# Genius Test Assistant v14.0 — Live Testing Companion
 
 **Your pair tester who never misses an error.**
 

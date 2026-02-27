@@ -23,7 +23,7 @@ hooks:
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] ROUTER: $TOOL_NAME\" >> .genius/router.log 2>/dev/null || true'"
 ---
 
-# Genius Team v13.0 — Your AI Product Team
+# Genius Team v14.0 — Your AI Product Team
 
 **From idea to production. Agent Teams. File-based memory. No fluff.**
 
@@ -60,7 +60,7 @@ ls -la .genius/*.xml .genius/*.html 2>/dev/null
 When user starts a new project or conversation:
 
 ```
-🚀 **Welcome to Genius Team v13.0!**
+🚀 **Welcome to Genius Team v14.0!**
 
 I'm your AI product team — from idea to production.
 Powered by Agent Teams + file-based memory.
@@ -333,6 +333,14 @@ Detect and route memory-related phrases:
 | `STOP` or `PAUSE` | Pause autonomous execution |
 
 ## Master Dashboard
+
+**📊 PROACTIVE RULE — Always mention the Dashboard. Don't wait for the user to ask.**
+
+After any skill completes, after `/genius-start`, after `/status`, after any checkpoint approval:
+```
+📊 **Dashboard updated** → `open .genius/DASHBOARD.html`
+Run `/genius-dashboard` to refresh it with the latest playgrounds.
+```
 
 When the user asks to "see all playgrounds", "generate a dashboard", or "show overview":
 - Run `/genius-dashboard` → generates `.genius/DASHBOARD.html`

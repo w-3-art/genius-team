@@ -1,4 +1,4 @@
-# Genius Team v9.0 — CLI Mode
+# Genius Team v14.0 — CLI Mode
 
 > Your AI product team. From idea to production. Powered by Agent Teams.
 
@@ -13,6 +13,22 @@
 
 **Returning?** Just say what you want to do — your BRIEFING.md has the context.
 
+**📊 Dashboard:** `open .genius/DASHBOARD.html` — your real-time project hub.
+Run `/genius-dashboard` to generate or refresh it. **Always show this link to the user after completing any skill.**
+
+---
+
+## 🧠 Memory
+
+> Two layers, complementary. See `.claude/rules/genius-memory.md` for full details.
+
+**Auto-loaded at session start (native Claude Code imports):**
+- This CLAUDE.md + @.genius/memory/BRIEFING.md (project context)
+- Auto Memory `~/.claude/projects/<project>/memory/MEMORY.md` (personal learnings)
+
+**During sessions:** Say "remember that..." to save to Auto Memory. Use `.genius/memory/` for team-shared decisions.
+**Personal preferences:** `CLAUDE.local.md` (auto-gitignored — safe for local URLs, ports, personal API keys).
+
 ---
 
 ## CLI Mode Features
@@ -20,7 +36,7 @@
 - **Full hook system**: SessionStart, PreCompact, Stop, PostToolUse
 - **PostToolUse logging**: Every file write/edit is tracked in `.genius/activity.log`
 - **Agent Teams via Shift+Tab**: Spawn teammates directly from terminal
-- **Memory auto-loaded** at every session start via SessionStart hook
+- **Memory:** Native `@.genius/memory/BRIEFING.md` import + Auto Memory + SessionStart hook (triple coverage)
 
 ### Agent Teams in CLI
 
@@ -47,7 +63,7 @@ On resume, the Lead reads `plan.md` + `BRIEFING.md` to reconstruct state. Run `/
 
 ## Agent Teams Protocol
 
-Genius Team v9.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via delegate mode (Shift+Tab) with natural language prompts
@@ -161,7 +177,8 @@ Then: genius-qa (full audit) → genius-security → genius-deployer
 | Command | What It Does |
 |---------|-------------|
 | `/genius-start` | Initialize environment, load memory, show status |
-| `/status` | Show current progress |
+| `/genius-dashboard` | **Generate/refresh your Dashboard** → `open .genius/DASHBOARD.html` |
+| `/status` | Show current progress + Dashboard link |
 | `/continue` | Resume from last point |
 | `/reset` | Start over (with backup) |
 | `/hydrate-tasks` | Reload tasks from plan.md |

@@ -45,7 +45,7 @@ Update state.json with:
 
 ---
 
-# Genius Specs v9.0 — Requirements Architect
+# Genius Specs v14.0 — Requirements Architect
 
 **Transforming discoveries into crystal-clear specifications.**
 

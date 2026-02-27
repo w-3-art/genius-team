@@ -26,7 +26,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev v9.0 — The Craftsman
+# Genius Dev v14.0 — The Craftsman
 
 **Real artists ship. But they ship when it's insanely great.**
 

@@ -4,6 +4,14 @@ description: Generate or refresh the master dashboard aggregating all project pl
 
 # /genius-dashboard
 
+> **🔁 PROACTIVE RULE**: After EVERY skill completion, automatically suggest the Dashboard to the user:
+> ```
+> 📊 **Your Dashboard is updated!**
+> → `open .genius/DASHBOARD.html`
+> Run `/genius-dashboard` anytime to refresh it.
+> ```
+> Do NOT wait for the user to ask. Always show this after any skill finishes.
+
 Generate (or refresh) a single-page master dashboard that shows ALL project playgrounds as tabs.
 
 ## What it does
@@ -73,7 +81,7 @@ Generate a single HTML file with this structure:
 <header>
   <div>
     <h1>🧠 [PROJECT_NAME] — Genius Team Dashboard</h1>
-    <span>[PLAYGROUND_COUNT] playgrounds · v13.0</span>
+    <span>[PLAYGROUND_COUNT] playgrounds · v14.0</span>
   </div>
 </header>
 <div class="tabs" id="tabs">[TAB_HTML]</div>

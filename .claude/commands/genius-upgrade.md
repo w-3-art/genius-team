@@ -34,17 +34,15 @@ bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scr
 ```
 🆕 New version available!
 
-Current version: v11.0.0
-Latest version: v13.0.0
+Current version: v13.0.0
+Latest version: v14.0.0
 
-What's new in v13.0:
-- 🤖 Agent Spawning — each skill runs as an isolated sub-agent
-- 🎤 Interview-First — genius-interviewer runs before any work starts
-- ⛔ Phase Checkpoints — human approval gates at every phase transition
-- 🔁 Retrospective Engine — post-phase learnings written to memory
-- 🗂️ Master Playground Dashboard — genius-dashboard.html
-- 📱 Mobile-Responsive Playgrounds — all 13 templates updated
-- 🌀 OpenClaw native install support
+What's new in v14.0:
+- 📊 Proactive Dashboard — shown after every skill, /status, and /genius-start
+- 🧠 Native Auto Memory — @.genius/memory/BRIEFING.md auto-loaded at session start
+- 📁 .claude/rules/genius-memory.md — memory hierarchy guide
+- 📝 CLAUDE.local.md template — gitignored personal prefs (local URLs, ports)
+- 🌀 Genius-Claw — Auto Memory aware, proactive dashboard in all flows
 
 Proceed with upgrade? (yes/no)
 ```
@@ -58,7 +56,7 @@ Suggest: "Run `/genius-start` to reinitialize with v13 features."
 ### If already latest:
 
 ```
-✅ Genius Team is up to date (v13.0.0)
+✅ Genius Team is up to date (v14.0.0)
 ```
 
 ## Safety

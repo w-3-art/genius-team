@@ -19,7 +19,7 @@ description: Go-to-market strategy skill that defines audience segments, positio
 
 ---
 
-# Genius Marketer v9.0 — Growth Strategist
+# Genius Marketer v14.0 — Growth Strategist
 
 **From zero to traction with data-driven marketing.**
 

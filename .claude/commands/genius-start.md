@@ -1,5 +1,5 @@
 ---
-description: Initialize Genius Team v9.0 environment, load memory, and hydrate tasks
+description: Initialize Genius Team v14.0 environment, load memory, and hydrate tasks
 ---
 
 # /genius-start
@@ -59,6 +59,26 @@ bash scripts/memory-briefing.sh 2>/dev/null
 cat .genius/memory/BRIEFING.md 2>/dev/null
 ```
 
+> 💡 **BRIEFING.md is auto-loaded via `@.genius/memory/BRIEFING.md` import in CLAUDE.md** — no manual load needed in most cases. This step regenerates it from the JSON memory files to keep it fresh.
+
+### Step 4b: Auto Memory Check
+
+Claude Code's native **Auto Memory** (`~/.claude/projects/<project>/memory/MEMORY.md`) is loaded automatically.
+
+On first run, tell Claude to bootstrap Auto Memory with key project facts:
+```
+If .genius/state.json exists and Auto Memory MEMORY.md is empty or doesn't mention this project:
+→ Write a concise summary (5-10 lines) to Auto Memory:
+  - Project name and stack
+  - Current phase
+  - Key conventions (package manager, test command, etc.)
+  - Important paths
+
+Example: "remember: this project uses pnpm, runs on port 3001, tests with `pnpm test`"
+```
+
+On subsequent runs, Auto Memory is already populated — no action needed.
+
 ### Step 5: Check for Version Updates
 
 ```bash
@@ -74,7 +94,7 @@ fi
 
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  🧠 Genius Team v9.0 — Environment Ready                   ║
+║  🧠 Genius Team v14.0 — Environment Ready                   ║
 ║  Mode: {MODE}                                               ║
 ╚════════════════════════════════════════════════════════════╝
 
@@ -93,6 +113,10 @@ Ready! What would you like to do?
   ▶️  "continue"                  → Resume where we left off
   🔧 "/reset"                     → Start over
   💰 "/save-tokens"               → Toggle save-token mode
+
+📊 **View your Dashboard:**
+  open .genius/DASHBOARD.html
+  (run /genius-dashboard anytime to refresh it)
 ```
 
 If in **IDE mode**, also show:

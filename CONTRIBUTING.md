@@ -26,7 +26,7 @@ Thank you for your interest in contributing to Genius Team!
 When creating or modifying skills:
 
 1. Follow the SKILL.md format with YAML frontmatter
-2. Include Memory Integration section (file-based, NOT Mind MCP)
+2. Include Memory Integration section (file-based, no deprecated memory systems)
    - Session start: Read `@.genius/memory/BRIEFING.md`
    - Decisions: Append to `.genius/memory/decisions.json`
    - Errors: Append to `.genius/memory/errors.json`
@@ -41,13 +41,13 @@ When creating or modifying skills:
 - Keep skills focused (single responsibility)
 - Document all handoffs between skills
 - Use the hydration pattern for task persistence
-- No references to Mind MCP, Spawner, or Vibeship
+- No use of deprecated memory functions or external MCP dependencies
 
 ### Memory System
 
 All memory operations use file-based JSON:
 - **DO**: Append to `.genius/memory/decisions.json`
-- **DON'T**: Use `mind_recall()`, `mind_log()`, `mind_search()`, `mind_remind()`
+- **DON'T**: Use deprecated memory functions from previous versions — use only file-based memory as described above
 
 ### Testing Changes
 
@@ -58,8 +58,8 @@ for f in .genius/memory/*.json .genius/config.json .genius/state.json .claude/se
   jq . "$f" > /dev/null 2>&1 && echo "OK: $f" || echo "BROKEN: $f"
 done
 
-# Check for Mind MCP references
-grep -rl "mind_recall\|mind_log\|mind_search\|mind_remind" .claude/skills/ && echo "FAIL: Mind MCP references found" || echo "OK: No Mind MCP references"
+# Check for deprecated memory function usage
+bash scripts/verify.sh
 
 # Run full verification
 bash scripts/verify.sh

@@ -47,7 +47,7 @@ hooks:
 
 ---
 
-# Genius Orchestrator v9.0 — Agent Teams Execution Engine
+# Genius Orchestrator v14.0 — Agent Teams Execution Engine
 
 **Build while you sleep. Agent Teams. Mandatory QA. No pauses.**
 
@@ -442,6 +442,10 @@ Next steps:
 1. Run full QA: "run full QA"
 2. Security audit: "security audit"
 3. Deploy: "deploy to staging"
+
+📊 **Dashboard:**
+   open .genius/DASHBOARD.html
+   (run /genius-dashboard to refresh with all completed playgrounds)
 
 ================================================
 ```

@@ -19,7 +19,7 @@ hooks:
       once: true
 ---
 
-# Genius QA Micro v9.0 — Rapid Validation
+# Genius QA Micro v14.0 — Rapid Validation
 
 **Lightning-fast quality checks in 30 seconds or less. MANDATORY after every task.**
 

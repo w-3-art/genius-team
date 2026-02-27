@@ -19,7 +19,7 @@ description: Technical architecture and task planning skill. Creates project str
 
 ---
 
-# Genius Architect v9.0 — The Master Blueprint
+# Genius Architect v14.0 — The Master Blueprint
 
 **Breaking down the vision into executable tasks for Agent Teams.**
 

@@ -19,7 +19,7 @@ description: Security audit skill that performs OWASP Top 10 checks, dependency 
 
 ---
 
-# Genius Security v9.0 — The Guardian
+# Genius Security v14.0 — The Guardian
 
 **Security is not a feature, it's a requirement.**
 

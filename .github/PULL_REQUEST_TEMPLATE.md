@@ -10,7 +10,7 @@ Brief description of the changes.
 
 ## Checklist
 - [ ] I have tested these changes locally
-- [ ] No references to Mind MCP (`mind_recall`, `mind_log`) remain
+- [ ] No deprecated memory functions used — file-based memory only
 - [ ] All skills include a valid `SKILL.md`
 - [ ] Skills frontmatter is valid (if applicable)
 - [ ] Documentation has been updated (if applicable)

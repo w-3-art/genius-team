@@ -427,7 +427,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v13.0</strong> is here!</span>
+    <span class="banner-text"><strong>Genius Team v14.0</strong> is here!</span>
     <span class="banner-features">Master Dashboard • OpenClaw Native • Agent Spawning • Mobile Playgrounds</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
@@ -438,7 +438,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v13.0 — Multi-Agent Orchestration: Spawn, Coordinate, Ship</div>
+      <div class="hero-badge">✨ v14.0 — Multi-Agent Orchestration: Spawn, Coordinate, Ship</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
       <p>An open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
       <div class="hero-btns">
@@ -971,7 +971,7 @@ cd my-awesome-app
   <div class="container">
     <div class="fade-in">
       <div class="section-label">Upgrading from v12?</div>
-      <div class="section-title">Get v13.0 in one command</div>
+      <div class="section-title">Get v14.0 in one command</div>
     </div>
     
     <div class="fade-in">
@@ -988,7 +988,7 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v13.0:</h4>
+        <h4>What's new in v14.0:</h4>
         <ul>
           <li>🤖 <strong>Agent Spawning</strong> — Each skill is now a dedicated sub-agent with its own context and memory</li>
           <li>🎤 <strong>Interview-First Flow</strong> — Every project starts with genius-interviewer before any work begins</li>
@@ -997,7 +997,7 @@ cd my-awesome-app
           <li>🧠 <strong>Cross-Project Memory</strong> — Decisions and lessons persist across projects, not just sessions</li>
           <li>🗂️ <strong>Master Playground Dashboard</strong> — Multi-project selector, global stats, one entry point for all 12 playgrounds</li>
           <li>📱 <strong>Mobile-Responsive Playgrounds</strong> — All 13 playgrounds now work on phone and tablet</li>
-          <li>🌀 <strong>OpenClaw native</strong> — One command install, zero questions: <code>openclaw skill install genius-team</code></li>
+          <li>🌀 <strong>Genius-Claw</strong> — OpenClaw native: <code>openclaw plugins install https://genius.w3art.io/genius-claw.zip</code> — cross-project memory, global dashboard, auto-updates</li>
         </ul>
         <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Already on v12? Run <code>/genius-upgrade</code> inside Claude Code.</p>
       </div>
@@ -1110,7 +1110,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v13.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
+    <p>Built with 🧠 <strong>Genius Team v14.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
   </div>
 </footer>
 
@@ -1439,12 +1439,12 @@ function wizardBack() {
 function wizardGenerateOpenClaw() {
   // OpenClaw path: no questions needed, generate immediately
   const noteEl = document.getElementById('resultNote');
-  noteEl.innerHTML = `<strong>🌀 OpenClaw mode</strong><br><br>
-    After install, open any project folder and tell Echo (your OpenClaw agent):<br>
-    <code style="display:inline-block;margin-top:.4rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.88rem">"Start genius-team for my project"</code>
-    <br><br><span style="color:var(--text3);font-size:.82rem">Echo will run the interview, spawn specialized agents, manage memory, track PRs, and notify you when ready. Your coding engine is configured inside OpenClaw — no extra setup needed.</span>`;
+  noteEl.innerHTML = `<strong>🌀 Genius-Claw — OpenClaw native</strong><br><br>
+    After install, tell your OpenClaw agent:<br>
+    <code style="display:inline-block;margin-top:.4rem;padding:.2rem .5rem;background:var(--bg2);border-radius:6px;font-size:.88rem">"Start genius-team on my project"</code>
+    <br><br><span style="color:var(--text3);font-size:.82rem">Your agent maintains a cross-project vibe coding profile, auto-updates Genius Team across all your repos, and gives you a global dashboard to track every active project. No setup, no repetition — it gets smarter with every project.</span>`;
   noteEl.style.display = 'block';
-  document.getElementById('resultCommand').textContent = 'openclaw skill install genius-team';
+  document.getElementById('resultCommand').textContent = 'openclaw plugins install https://genius.w3art.io/genius-claw.zip';
   document.getElementById('thenRun').innerHTML = `<strong>Make sure OpenClaw is running</strong> — Echo orchestrates everything from there.`;
   
   wizardState.step = 5;

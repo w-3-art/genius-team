@@ -3,7 +3,7 @@ name: genius-onboarding
 description: First-time user experience and setup wizard for Genius Team. Use when a new user starts their first project, says "hello", "get started", or when no user profile exists in .claude/user-profile.json.
 ---
 
-# Genius Onboarding v9.0 — Welcome Experience
+# Genius Onboarding v14.0 — Welcome Experience
 
 **Making every first interaction memorable and productive.**
 
@@ -49,7 +49,7 @@ Activate when:
     "stack": { "frontend": "...", "backend": "...", "styling": "...", "deployment": "..." }
   },
   "onboarded_at": "ISO-date",
-  "genius_team_version": "9.0.0"
+  "genius_team_version": "14.0.0"
 }
 ```
 

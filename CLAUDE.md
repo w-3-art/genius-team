@@ -1,4 +1,4 @@
-# Genius Team v13.0 — CLI Mode
+# Genius Team v14.0 — CLI Mode
 
 > ⚠️ **MANDATORY**: Read `GENIUS_GUARD.md` before ANY action.
 > This project uses Genius Team. You MUST use the skills, not work standalone.
@@ -15,6 +15,26 @@
 **First time?** Run `/genius-start` to initialize your environment.
 
 **Returning?** Just say what you want to do — your BRIEFING.md has the context.
+
+**📊 Dashboard:** `open .genius/DASHBOARD.html` — your real-time project hub.
+Run `/genius-dashboard` to generate or refresh it. **Always show this link to the user after completing any skill.**
+
+---
+
+## 🧠 Memory
+
+> Genius Team uses two complementary memory layers. See `.claude/rules/genius-memory.md` for full details.
+
+**Auto-loaded at session start:**
+- This CLAUDE.md (project instructions)
+- @.genius/memory/BRIEFING.md (project context — auto-generated summary)
+- Your Auto Memory `~/.claude/projects/<project>/memory/MEMORY.md` (personal learnings)
+
+**Save to Auto Memory during sessions** (use `/memory` or say "remember that..."):
+- Patterns, debugging insights, architecture discoveries → Auto Memory (personal)
+- Decisions, sprint progress → `.genius/memory/decisions.json` (team-shared)
+
+**Personal local preferences** → `CLAUDE.local.md` (auto-gitignored, safe for local URLs/ports)
 
 ---
 
@@ -71,7 +91,7 @@ The Lead reads `plan.md` + `BRIEFING.md` + `state.json` to reconstruct state.
 
 ## Agent Teams Protocol
 
-Genius Team v13.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via delegate mode (Shift+Tab) with natural language prompts
@@ -189,7 +209,8 @@ Then: genius-qa (full audit) → genius-security → genius-deployer
 | Command | What It Does |
 |---------|-------------|
 | `/genius-start` | Initialize environment, load memory, show status |
-| `/status` | Show current progress |
+| `/genius-dashboard` | **Generate/refresh your Dashboard** → `open .genius/DASHBOARD.html` |
+| `/status` | Show current progress + Dashboard link |
 | `/continue` | Resume from last point |
 | `/reset` | Start over (with backup) |
 | `/hydrate-tasks` | Reload tasks from plan.md |

@@ -1,6 +1,6 @@
-# Genius Team v13.0
+# Genius Team v14.0
 
-[![Version](https://img.shields.io/badge/version-10.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-14.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Opus%204-purple.svg)](https://docs.anthropic.com/claude-code)
 
@@ -39,7 +39,7 @@ Toggle `/save-tokens` to use Sonnet for high-volume roles (dev, qa-micro, debugg
 At session start, detects Claude Code version changes and proposes repo updates.
 
 ### ✂️ Zero Dependencies
-No Vibeship, no Mind MCP, no Spawner. Pure Claude Code + file system.
+No external MCPs, no legacy dependencies. Pure Claude Code + file system.
 
 ## Quick Start
 
@@ -277,4 +277,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v13.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
+**Built with** 🧠 **Genius Team v14.0** — Agent Teams + File-Based Memory + Interactive Playgrounds

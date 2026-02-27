@@ -1,4 +1,4 @@
-# Genius Team v9.0 — Omni Mode
+# Genius Team v14.0 — Omni Mode
 
 > Your AI product team. From idea to production. Multi-provider orchestration.
 
@@ -14,6 +14,20 @@
 **Check providers:** Run `/omni-status` to see which providers are available.
 
 **Returning?** Just say what you want to do — your BRIEFING.md has the context.
+
+**📊 Dashboard:** `open .genius/DASHBOARD.html` — your real-time project hub.
+Run `/genius-dashboard` to generate or refresh it. **Always show this link to the user after completing any skill.**
+
+---
+
+## 🧠 Memory
+
+**Auto-loaded at session start:**
+- This CLAUDE.md + @.genius/memory/BRIEFING.md (project context)
+- Auto Memory `~/.claude/projects/<project>/memory/MEMORY.md` (personal learnings)
+
+**During sessions:** Say "remember that..." to save to Auto Memory. Use `.genius/memory/` for team-shared decisions.
+**Personal preferences:** `CLAUDE.local.md` (auto-gitignored). See `.claude/rules/genius-memory.md` for full details.
 
 ---
 
@@ -62,7 +76,7 @@ gemini login    # Gemini Advanced
 
 ## Agent Teams Protocol
 
-Genius Team v9.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via Shift+Tab or Task() with natural language prompts
@@ -161,8 +175,9 @@ Then: genius-qa → genius-security → genius-deployer
 | Command | What It Does |
 |---------|-------------|
 | `/genius-start` | Initialize environment, load memory, show status |
+| `/genius-dashboard` | **Generate/refresh your Dashboard** → `open .genius/DASHBOARD.html` |
 | `/omni-status` | Show provider statuses and routing table |
-| `/status` | Show current progress |
+| `/status` | Show current progress + Dashboard link |
 | `/continue` | Resume from last point |
 | `/reset` | Start over (with backup) |
 | `/hydrate-tasks` | Reload tasks from plan.md |
