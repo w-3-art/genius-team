@@ -13,6 +13,9 @@
 
 **Returning?** Just say what you want to do — your BRIEFING.md has the context.
 
+**📊 Dashboard:** `open .genius/DASHBOARD.html` — your real-time project hub.
+Run `/genius-dashboard` to generate or refresh it. **Always show this link to the user after completing any skill.**
+
 ---
 
 ## IDE Mode Features
@@ -168,7 +171,8 @@ Then: genius-qa (full audit) → genius-security → genius-deployer
 | Command | What It Does |
 |---------|-------------|
 | `/genius-start` | Initialize environment, load memory, show status |
-| `/status` | Show current progress |
+| `/genius-dashboard` | **Generate/refresh your Dashboard** → `open .genius/DASHBOARD.html` |
+| `/status` | Show current progress + Dashboard link |
 | `/continue` | Resume from last point |
 | `/reset` | Start over (with backup) |
 | `/hydrate-tasks` | Reload tasks from plan.md |

@@ -93,6 +93,10 @@ Ready! What would you like to do?
   ▶️  "continue"                  → Resume where we left off
   🔧 "/reset"                     → Start over
   💰 "/save-tokens"               → Toggle save-token mode
+
+📊 **View your Dashboard:**
+  open .genius/DASHBOARD.html
+  (run /genius-dashboard anytime to refresh it)
 ```
 
 If in **IDE mode**, also show:

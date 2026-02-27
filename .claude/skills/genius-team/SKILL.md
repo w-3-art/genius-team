@@ -334,6 +334,14 @@ Detect and route memory-related phrases:
 
 ## Master Dashboard
 
+**📊 PROACTIVE RULE — Always mention the Dashboard. Don't wait for the user to ask.**
+
+After any skill completes, after `/genius-start`, after `/status`, after any checkpoint approval:
+```
+📊 **Dashboard updated** → `open .genius/DASHBOARD.html`
+Run `/genius-dashboard` to refresh it with the latest playgrounds.
+```
+
 When the user asks to "see all playgrounds", "generate a dashboard", or "show overview":
 - Run `/genius-dashboard` → generates `.genius/DASHBOARD.html`
 - Do NOT create separate HTML files per phase when a unified view is requested

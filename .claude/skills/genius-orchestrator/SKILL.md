@@ -443,6 +443,10 @@ Next steps:
 2. Security audit: "security audit"
 3. Deploy: "deploy to staging"
 
+📊 **Dashboard:**
+   open .genius/DASHBOARD.html
+   (run /genius-dashboard to refresh with all completed playgrounds)
+
 ================================================
 ```
 

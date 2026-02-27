@@ -49,4 +49,9 @@ ls -la DISCOVERY.xml MARKET-ANALYSIS.xml SPECIFICATIONS.xml DESIGN-SYSTEM.html A
 **Save-Token Mode:** {on/off}
 
 **Next Action:** {context-aware suggestion}
+
+---
+
+📊 **Your Dashboard** → `open .genius/DASHBOARD.html`
+   Run `/genius-dashboard` to refresh it with the latest playgrounds.
 ```
