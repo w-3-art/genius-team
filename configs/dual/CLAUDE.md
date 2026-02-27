@@ -20,6 +20,17 @@ Run `/genius-dashboard` to generate or refresh it. **Always show this link to th
 
 ---
 
+## 🧠 Memory
+
+**Auto-loaded at session start:**
+- This CLAUDE.md + @.genius/memory/BRIEFING.md (project context)
+- Auto Memory `~/.claude/projects/<project>/memory/MEMORY.md` (personal learnings)
+
+**During sessions:** Say "remember that..." to save to Auto Memory. Use `.genius/memory/` for team-shared decisions.
+**Personal preferences:** `CLAUDE.local.md` (auto-gitignored). See `.claude/rules/genius-memory.md` for full details.
+
+---
+
 ## Dual Mode Features
 
 - **Builder + Challenger**: Two models work in complementary roles — one builds, one challenges

@@ -18,13 +18,24 @@ Run `/genius-dashboard` to generate or refresh it. **Always show this link to th
 
 ---
 
+## 🧠 Memory
+
+**Auto-loaded at session start:**
+- This CLAUDE.md + @.genius/memory/BRIEFING.md (project context)
+- Auto Memory `~/.claude/projects/<project>/memory/MEMORY.md` (personal learnings)
+
+**During sessions:** Say "remember that..." to save to Auto Memory. Use `.genius/memory/` for team-shared decisions.
+**Personal preferences:** `CLAUDE.local.md` (auto-gitignored). See `.claude/rules/genius-memory.md` for full details.
+
+---
+
 ## IDE Mode Features
 
 - **VS Code Tasks**: Memory operations available from Command Palette (`Cmd+Shift+P`)
 - **Cursor Rules**: `.cursorrules` provides IDE-specific context
 - **No PostToolUse hooks**: IDE environments don't support PostToolUse reliably
 - **Agent Teams via Task()**: Spawn teammates from the Claude Code panel
-- **Memory auto-loaded** at every session start via SessionStart hook
+- **Memory:** Native `@.genius/memory/BRIEFING.md` import + Auto Memory + SessionStart hook
 
 ### VS Code Tasks
 

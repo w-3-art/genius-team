@@ -21,6 +21,23 @@ Run `/genius-dashboard` to generate or refresh it. **Always show this link to th
 
 ---
 
+## 🧠 Memory
+
+> Genius Team uses two complementary memory layers. See `.claude/rules/genius-memory.md` for full details.
+
+**Auto-loaded at session start:**
+- This CLAUDE.md (project instructions)
+- @.genius/memory/BRIEFING.md (project context — auto-generated summary)
+- Your Auto Memory `~/.claude/projects/<project>/memory/MEMORY.md` (personal learnings)
+
+**Save to Auto Memory during sessions** (use `/memory` or say "remember that..."):
+- Patterns, debugging insights, architecture discoveries → Auto Memory (personal)
+- Decisions, sprint progress → `.genius/memory/decisions.json` (team-shared)
+
+**Personal local preferences** → `CLAUDE.local.md` (auto-gitignored, safe for local URLs/ports)
+
+---
+
 ## 🚨 ANTI-DRIFT RULES
 
 These rules are **NON-NEGOTIABLE**. Violating them breaks the entire workflow.
