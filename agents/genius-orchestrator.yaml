@@ -3,7 +3,7 @@
 
 agent:
   id: genius-orchestrator
-  version: "2.0.0"
+  version: "2.1.0"
   display_name: "Genius Orchestrator"
   emoji: "🎯"
   tagline: "I coordinate the team. You talk to me; I talk to the agents."
@@ -158,3 +158,31 @@ memory:
   does_not_touch:
     - src/**
     - Any code files (delegates to genius-dev)
+
+# ── Codex Thread Forking (v2.1) ──────────────────────────────────────────────
+# Codex 0.107.0+ supports native thread forking — each agent can be a branch
+# from the main orchestrator thread. This is the native implementation of the
+# ARCHITECTURE-V2.md multi-agent pattern.
+#
+# Pattern (dual engine mode, --engine=codex or --engine=dual):
+#   1. User starts conversation with orchestrator
+#   2. Orchestrator forks a thread per phase (interviewer, specs, architect, dev, qa)
+#   3. Each forked thread runs independently with isolated context
+#   4. Results flow back to orchestrator via .genius/state.json
+#   5. User never leaves the orchestrator thread
+#
+# Activation:
+#   - Codex ≥ 0.107.0 (stable) required
+#   - Available in dual engine mode (--engine=codex or --engine=dual)
+#   - Claude Code engine uses Agent Teams (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
+#
+# State.json additions for thread forking:
+#   thread_id: string          # Codex thread ID for the current session
+#   forked_threads: {}         # Map of agent_id → thread_id for active forks
+#   parallel_tasks: []         # Tasks currently running in parallel threads
+codex_thread_forking:
+  enabled: true
+  requires_codex_version: "0.107.0"
+  engine_modes: ["codex", "dual"]
+  fork_per_phase: true
+  state_sync_file: ".genius/state.json"

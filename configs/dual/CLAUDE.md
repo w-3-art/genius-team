@@ -1,4 +1,4 @@
-# Genius Team v14.0 — Dual Mode
+# Genius Team v15.0 — Dual Mode
 
 > Your AI product team. Builder + Challenger adversarial workflow.
 
@@ -52,6 +52,14 @@ Challenger (Codex/Kimi/Gemini/Claude) → reviews independently
     REJECT → escalate to user
 ```
 
+#### Codex Thread Forking (≥ 0.107.0)
+
+In dual engine mode, Codex 0.107.0+ supports native thread forking:
+- Fork a thread per genius agent phase (interviewer, specs, architect, dev, qa)
+- Each forked thread runs with isolated context
+- Results sync back via `.genius/state.json`
+- `genius-orchestrator` manages thread IDs in `state.forked_threads`
+
 ### Challenger Profiles
 
 | Profile | Threshold | Best For |
@@ -90,9 +98,21 @@ Mark tasks with 🔄 in `plan.md` to trigger dual review:
 
 ---
 
+### Git Worktrees + Shared Configs
+
+Claude Code ≥ 1.0.0 supports project configs shared across git worktrees. In dual engine mode:
+
+- Your `CLAUDE.md` and `.claude/skills/` are automatically shared between all worktrees
+- Codex uses `.agents/` which symlinks to `.claude/skills/` (setup by `add.sh --engine=dual`)
+- Each worktree can have its own `.genius/state.json` for isolated project state
+- To create a feature worktree: `git worktree add ../my-feature-branch -b my-feature-branch`
+- Both Claude Code and Codex will pick up the shared configs automatically
+
+---
+
 ## Agent Teams Protocol
 
-Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v15.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Builder** is the primary implementation agent (Claude Opus)

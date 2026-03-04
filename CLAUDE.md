@@ -1,4 +1,4 @@
-# Genius Team v14.0 — CLI Mode
+# Genius Team v15.0 — CLI Mode
 
 > ⚠️ **MANDATORY**: Read `GENIUS_GUARD.md` before ANY action.
 > This project uses Genius Team. You MUST use the skills, not work standalone.
@@ -59,6 +59,31 @@ These rules are **NON-NEGOTIABLE**. Violating them breaks the entire workflow.
 - **Agent Teams via Shift+Tab**: Spawn teammates directly from terminal
 - **Memory auto-loaded** at every session start via SessionStart hook
 
+### HTTP Webhook Notifications (Optional)
+
+Set `GENIUS_WEBHOOK_URL` in your environment to receive POST JSON notifications on skill events:
+
+```bash
+export GENIUS_WEBHOOK_URL="https://your-server.com/genius-hook"
+```
+
+Events sent:
+- `file_modified` — on every Write/Edit (includes skill, phase, filename)
+- `session_stop` — when session ends (includes final skill and phase)
+
+Payload format:
+```json
+{
+  "event": "file_modified",
+  "skill": "genius-dev",
+  "phase": "in-progress",
+  "file": "src/components/Dashboard.tsx",
+  "timestamp": "2026-03-04T15:00:00+01:00"
+}
+```
+
+If `GENIUS_WEBHOOK_URL` is not set, hooks are silently skipped.
+
 ### Agent Teams in CLI
 
 In CLI mode, Agent Teams are accessed via **Shift+Tab** (delegate mode):
@@ -91,7 +116,7 @@ The Lead reads `plan.md` + `BRIEFING.md` + `state.json` to reconstruct state.
 
 ## Agent Teams Protocol
 
-Genius Team v14.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v15.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via delegate mode (Shift+Tab) with natural language prompts

@@ -36,10 +36,19 @@ inputs:
     - build_log: string        # Build output from genius-dev
     - test_suite: string       # Existing test files
     - deployment_url: string   # If already deployed — test live
+    - pdf_spec: string        # Path or URL to PDF specification document (OpenClaw: pdf tool; CLI: text extraction)
 
 # ── QA Protocol ──────────────────────────────────────────────────────────────
 protocol:
   phases:
+    - name: "PDF Spec Extraction (if applicable)"
+      steps:
+        - "If pdf_spec is provided: extract text content from PDF"
+        - "OpenClaw native: use pdf tool (Anthropic/Google models = native; others = text extraction)"
+        - "CLI fallback: run `pdftotext {pdf_spec} -` or `cat {pdf_spec}` for text PDFs"
+        - "Merge extracted requirements into the spec coverage check"
+        - "Note any PDF sections with unclear requirements for clarification"
+
     - name: "Spec Coverage Check"
       steps:
         - "Read specs.md — extract every user-facing feature"
