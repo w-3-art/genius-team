@@ -1,6 +1,6 @@
-# Genius Team v14.0
+# Genius Team v15.0
 
-[![Version](https://img.shields.io/badge/version-14.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-15.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Opus%204-purple.svg)](https://docs.anthropic.com/claude-code)
 
@@ -20,6 +20,12 @@ Genius Team is a collection of 21+ specialized AI skills for Claude Code that wo
 - **Quality Assurance** → Testing everything
 - **Security** → Auditing vulnerabilities
 - **Deployment** → Going live
+
+## What's New in v15.0
+
+- 🔗 **HTTP Hooks** — Webhook notifications on skill events (`GENIUS_WEBHOOK_URL`)
+- 📄 **PDF Specs** — genius-qa accepts PDF specification documents
+- 🔀 **Codex Thread Forking** — Native sub-agent pattern with Codex ≥ 0.107.0
 
 ## What's New in v9.0
 
@@ -261,8 +267,9 @@ _Coming soon — contributions welcome!_
 
 ## Requirements
 
-- **Claude Code** (latest version recommended)
+- **Claude Code** ≥ 1.0.0 (latest version recommended)
 - **Claude Opus 4** (default model for all roles)
+- **Codex CLI** ≥ 0.107.0 (for Dual mode and thread forking)
 - **jq** (for memory system JSON processing)
 - **Git** (for version control and worktrees)
 - Node.js 18+ (for most project types)
@@ -277,4 +284,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v14.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
+**Built with** 🧠 **Genius Team v15.0** — Agent Teams + File-Based Memory + Interactive Playgrounds

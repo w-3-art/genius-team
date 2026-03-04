@@ -1,5 +1,21 @@
 # Changelog
 
+## [15.0.0] - 2026-03-04
+
+### Added
+- 🔗 **HTTP Hooks support** — `GENIUS_WEBHOOK_URL` env var enables POST JSON notifications on skill completion and session stop (PostToolUse + Stop events in all 4 mode configs)
+- 🔀 **Codex thread forking in genius-orchestrator** — v2.1 orchestrator documents native Codex 0.107.0 thread forking pattern for parallel agent execution (dual engine mode)
+- 📄 **PDF specs support in genius-qa** — genius-qa accepts PDF specification documents as input (OpenClaw native + text extraction fallback)
+- 🌐 **Git worktrees + shared configs** — dual engine mode now documents config sharing between Claude Code and Codex worktrees
+- 📊 **Codex 0.107.0 stable** — updated tooling references; thread forking, realtime voice, custom multimodal tools
+
+### Changed  
+- `genius-orchestrator.yaml` — v2.1: added `thread_forking` section documenting Codex native sub-agent pattern
+- `genius-qa.yaml` — added PDF input as optional source alongside specs.md
+- All 4 mode `settings.json` — added optional `http` hook type for webhook notifications
+
+---
+
 ## [14.0.0] - 2026-02-27
 
 ### Added
