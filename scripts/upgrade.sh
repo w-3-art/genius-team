@@ -19,6 +19,16 @@ NC='\033[0m'
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
 TARGET_VERSION="15.0.0"
 
+# ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────
+# This runs even when the local upgrade.sh targets an old version
+_REMOTE_VER=$(curl -sfL --max-time 5 "https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION" 2>/dev/null || echo "")
+if [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$TARGET_VERSION" ]; then
+  echo -e "⚠️  This upgrade script targets v$TARGET_VERSION but latest Genius Team is v$_REMOTE_VER."
+  echo -e "   Fetching the latest upgrade script from GitHub..."
+  echo ""
+  exec bash <(curl -fsSL "https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh") "$@"
+fi
+
 # Flags
 FORCE=false
 DRY_RUN=false
