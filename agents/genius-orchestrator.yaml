@@ -186,3 +186,5 @@ codex_thread_forking:
   engine_modes: ["codex", "dual"]
   fork_per_phase: true
   state_sync_file: ".genius/state.json"
+  default_model: "gpt-5.4"  # GPT-5.4 available in Codex CLI since 2026-03-05
+  context_window: "1M tokens"  # enables full codebase ingestion

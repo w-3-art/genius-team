@@ -131,7 +131,7 @@ Apply the {DUAL_CHALLENGER_PROFILE} profile. Write verdict to .genius/dual-verdi
 If the configured challenger model CLI is available (codex, kimi, gemini), use it:
 ```bash
 # Example with Codex CLI
-codex --approval-mode full-auto "Review the code changes in .genius/dual-review-request.md. Write your verdict to .genius/dual-verdict.md following the format in .claude/skills/genius-dual-engine/SKILL.md"
+codex --approval-mode full-auto "Review the code changes in .genius/dual-review-request.md. Write your verdict to .genius/dual-verdict.md following the format in ${CLAUDE_SKILL_DIR}/genius-dual-engine/SKILL.md"
 ```
 
 If no external CLI is available, fall back to spawning a Claude Code Task with the genius-challenger agent prompt.

@@ -427,7 +427,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v15.0</strong> is here!</span>
+    <span class="banner-text"><strong>Genius Team v16.0</strong> is here!</span>
     <span class="banner-features">Master Dashboard • OpenClaw Native • Agent Spawning • Mobile Playgrounds</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
@@ -438,7 +438,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v15.0 — HTTP Hooks, Codex Thread Forking, PDF Specs</div>
+      <div class="hero-badge">✨ v16.0 — Portable Skills, GPT-5.4 in Codex, Cloudflare MCP</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
       <p>An open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
       <div class="hero-btns">
@@ -902,9 +902,9 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
               <span class="option-desc">Anthropic's coding agent</span>
             </button>
             <button class="wizard-option" data-value="codex" onclick="selectOption(this, 'engine')">
-              <span class="option-icon">🔮</span>
-              <span class="option-title">Codex CLI</span>
-              <span class="option-desc">OpenAI's coding agent</span>
+              <span class="option-icon">🤖</span>
+              <span class="option-title">Codex (OpenAI)</span>
+              <span class="option-desc">GPT-5.4 — reasoning + 1M context</span>
             </button>
             <button class="wizard-option has-tooltip" data-value="dual" onclick="selectOption(this, 'engine')">
               <span class="option-icon">⚔️</span>
@@ -971,7 +971,7 @@ cd my-awesome-app
   <div class="container">
     <div class="fade-in">
       <div class="section-label">Upgrading from v12?</div>
-      <div class="section-title">Get v15.0 in one command</div>
+      <div class="section-title">Get v16.0 in one command</div>
     </div>
     
     <div class="fade-in">
@@ -988,16 +988,13 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v15.0:</h4>
+        <h4>What's new in v16.0:</h4>
         <ul>
-          <li>🤖 <strong>Agent Spawning</strong> — Each skill is now a dedicated sub-agent with its own context and memory</li>
-          <li>🎤 <strong>Interview-First Flow</strong> — Every project starts with genius-interviewer before any work begins</li>
-          <li>⛔ <strong>Phase Checkpoints</strong> — Human approval gates between every major phase transition</li>
-          <li>🔁 <strong>Retrospective Engine</strong> — Built-in phase retrospectives feed learnings back into memory</li>
-          <li>🧠 <strong>Cross-Project Memory</strong> — Decisions and lessons persist across projects, not just sessions</li>
-          <li>🗂️ <strong>Master Playground Dashboard</strong> — Multi-project selector, global stats, one entry point for all 12 playgrounds</li>
-          <li>📱 <strong>Mobile-Responsive Playgrounds</strong> — All 13 playgrounds now work on phone and tablet</li>
-          <li>🌀 <strong>Genius-Claw</strong> — OpenClaw native: <code>openclaw plugins install https://genius.w3art.io/genius-claw.zip</code> — cross-project memory, global dashboard, auto-updates</li>
+          <li>📁 <strong>${CLAUDE_SKILL_DIR} portable paths</strong> — skills work anywhere, no hardcoded paths</li>
+          <li>🤖 <strong>GPT-5.4 in Codex engine</strong> — 1M context, reasoning, computer use via <code>--engine=codex</code></li>
+          <li>🌩️ <strong>Cloudflare Code Mode MCP</strong> — genius-dev uses MCP APIs in ~1K tokens (vs millions)</li>
+          <li>🔔 <strong>InstructionsLoaded hook</strong> — startup validation confirms Guard + Memory loaded</li>
+          <li>🔗 <strong>Git conflict prevention</strong> — <code>includeGitInstructions: false</code> in all configs</li>
         </ul>
         <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Already on v12? Run <code>/genius-upgrade</code> inside Claude Code.</p>
       </div>
@@ -1110,7 +1107,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v15.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
+    <p>Built with 🧠 <strong>Genius Team v16.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
   </div>
 </footer>
 

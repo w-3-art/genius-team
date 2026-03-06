@@ -102,8 +102,8 @@ Mark tasks with 🔄 in `plan.md` to trigger dual review:
 
 Claude Code ≥ 1.0.0 supports project configs shared across git worktrees. In dual engine mode:
 
-- Your `CLAUDE.md` and `.claude/skills/` are automatically shared between all worktrees
-- Codex uses `.agents/` which symlinks to `.claude/skills/` (setup by `add.sh --engine=dual`)
+- Your `CLAUDE.md` and `${CLAUDE_SKILL_DIR}/` are automatically shared between all worktrees
+- Codex uses `.agents/` which symlinks to `${CLAUDE_SKILL_DIR}/` (setup by `add.sh --engine=dual`)
 - Each worktree can have its own `.genius/state.json` for isolated project state
 - To create a feature worktree: `git worktree add ../my-feature-branch -b my-feature-branch`
 - Both Claude Code and Codex will pick up the shared configs automatically

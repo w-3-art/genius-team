@@ -178,3 +178,23 @@ Provides: Implemented files for quick verification
 
 ### To genius-debugger (on error)
 Provides: Error message, stack trace, what was attempted
+
+---
+
+## Cloudflare Code Mode MCP (Optional)
+
+If `GENIUS_MCP_CODE_MODE=true` is set and a Cloudflare Code Mode MCP server is configured, you can use this pattern for API integrations:
+
+### Instead of searching through hundreds of MCP tool definitions:
+
+1. `get_docs("stripe create payment intent")` → get only what you need
+2. `run_code("...")` → test in a sandboxed Workers environment
+3. Write the final implementation based on the tested code
+
+### Why this matters:
+- Fixed ~1K token cost (vs 500K+ for full API schemas)
+- Safe execution in isolated sandbox
+- Progressive discovery — only load docs you actually need
+
+**Enable:** Add `cloudflare-code-mode` to your `mcpServers` in `.claude/settings.json`
+**Guide:** See `docs/cloudflare-mcp-guide.md` for setup instructions

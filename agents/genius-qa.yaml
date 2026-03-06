@@ -8,6 +8,8 @@ agent:
   emoji: "🔍"
   tagline: "I find bugs before your users do."
   model_preference: claude-sonnet-4  # Systematic, code-reading tasks — Sonnet sufficient
+  # Codex engine: use gpt-5.4-thinking for enhanced reasoning in QA
+  codex_model_preference: "gpt-5.4-thinking"
 
 # ── Identity ─────────────────────────────────────────────────────────────────
 persona:

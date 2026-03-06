@@ -156,7 +156,7 @@ elif [[ "$ENGINE" == "dual" ]]; then
   echo -e "  1. ${CYAN}cd ${PROJECT_NAME}${NC}"
   echo -e "  2. For Claude: Run ${CYAN}claude${NC} → ${CYAN}/genius-start${NC}"
   echo -e "  3. For Codex:  Run ${CYAN}codex${NC} (reads AGENTS.md)"
-  echo -e "  4. Both engines share skills in .claude/skills/"
+  echo -e "  4. Both engines share skills in \${CLAUDE_SKILL_DIR}/"
   echo -e "  5. Tell it what you want to build! 🚀"
 else
   # Claude engine - mode-specific guidance

@@ -1,4 +1,5 @@
 {
+  "includeGitInstructions": false,
   "permissions": {
     "allow": [
       "Bash(npm *)",
@@ -95,7 +96,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"session_stop\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi'"
+            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"session_stop\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"agent\\\":\\\"$TOOL_NAME\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi'"
           }
         ]
       }
@@ -115,7 +116,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); FILE=\"${TOOL_INPUT:-unknown}\"; curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"file_modified\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"file\\\":\\\"$FILE\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi'"
+            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); FILE=\"${TOOL_INPUT:-unknown}\"; curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"file_modified\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"file\\\":\\\"$FILE\\\",\\\"agent\\\":\\\"$TOOL_NAME\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi'"
+          }
+        ]
+      }
+    ],
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v16 loaded | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }
