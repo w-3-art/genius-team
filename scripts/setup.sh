@@ -538,7 +538,7 @@ if [ $ERRORS -eq 0 ]; then
     echo -e "  ${GREEN}✓${NC} AGENTS.md as primary instructions"
   elif [[ "$ENGINE" == "dual" ]]; then
     echo -e "  ${GREEN}✓${NC} Dual engine: Claude Code + Codex CLI"
-    echo -e "  ${GREEN}✓${NC} Shared skills (.claude/skills/ ← .agents/skills/)"
+    echo -e "  ${GREEN}✓${NC} Shared skills (\${CLAUDE_SKILL_DIR}/ ← .agents/skills/)"
     echo -e "  ${GREEN}✓${NC} Both CLAUDE.md and AGENTS.md installed"
   fi
   echo ""
@@ -573,7 +573,7 @@ if [ $ERRORS -eq 0 ]; then
   elif [[ "$ENGINE" == "dual" ]]; then
     echo -e "  1. For Claude Code: Run ${YELLOW}claude${NC} → ${YELLOW}/genius-start${NC}"
     echo -e "  2. For Codex CLI:   Run ${YELLOW}codex${NC} (reads AGENTS.md)"
-    echo -e "  3. Both engines share skills in .claude/skills/"
+    echo -e "  3. Both engines share skills in \${CLAUDE_SKILL_DIR}/"
     echo -e "  4. State is coordinated via .genius/dual-engine-state.json"
   fi
 else

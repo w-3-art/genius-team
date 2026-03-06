@@ -1,7 +1,7 @@
 #!/bin/bash
 #═══════════════════════════════════════════════════════════════════════════════
 # Genius Team Universal Upgrade Script
-# Upgrades from any previous version to v15.0
+# Upgrades from any previous version to v16.0
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -17,7 +17,7 @@ NC='\033[0m'
 
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
-TARGET_VERSION="15.0.0"
+TARGET_VERSION="16.0.0"
 
 # ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────
 # This runs even when the local upgrade.sh targets an old version
@@ -45,7 +45,7 @@ FILES_SKIPPED=0
 print_banner() {
   echo ""
   echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v15.0${NC}                           ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v16.0${NC}                           ${CYAN}║${NC}"
   echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
 }
@@ -66,7 +66,7 @@ show_usage() {
   echo "  --verbose   Show detailed file download output"
   echo "  --help      Show this help"
   echo ""
-  echo "Upgrades your Genius Team project to v15.0 from any previous version."
+  echo "Upgrades your Genius Team project to v16.0 from any previous version."
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
@@ -83,6 +83,8 @@ detect_version() {
 
   # Method 2: CLAUDE.md markers
   if [ -f "CLAUDE.md" ]; then
+    if grep -qE "v16|16\." CLAUDE.md 2>/dev/null; then echo "16.0.0"; return 0; fi
+    if grep -qE "v15|15\." CLAUDE.md 2>/dev/null; then echo "15.0.0"; return 0; fi
     if grep -qE "v14|14\." CLAUDE.md 2>/dev/null; then echo "14.0.0"; return 0; fi
     if grep -qE "v1[23]|13\.|12\." CLAUDE.md 2>/dev/null; then echo "13.0.0"; return 0; fi
     if grep -qE "v11|11\." CLAUDE.md 2>/dev/null; then echo "11.0.0"; return 0; fi
@@ -143,7 +145,7 @@ check_prerequisites() {
 
 create_backup() {
   local ts; ts=$(date +%Y%m%d-%H%M%S)
-  local backup_dir=".genius/backups/pre-v15-upgrade-$ts"
+  local backup_dir=".genius/backups/pre-v16-upgrade-$ts"
 
   if [ "$DRY_RUN" = true ]; then
     log_info "[DRY-RUN] Would create backup at: $backup_dir"
@@ -199,6 +201,15 @@ download_file() {
 #═══════════════════════════════════════════════════════════════════════════════
 # Main Upgrade: downloads all v15 files
 #═══════════════════════════════════════════════════════════════════════════════
+
+upgrade_to_v16() {
+  upgrade_to_v15
+  # Update state.json version to 16.0.0
+  if [ "$DRY_RUN" = false ] && [ -f ".genius/state.json" ]; then
+    sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "16.0.0"/' .genius/state.json
+    rm -f .genius/state.json.tmp
+  fi
+}
 
 upgrade_to_v15() {
   # ── Core ──────────────────────────────────────────────────────────────────
@@ -266,7 +277,7 @@ upgrade_to_v15() {
     "genius-memory"
   )
   for skill in "${skills[@]}"; do
-    download_file ".claude/skills/$skill/SKILL.md" ".claude/skills/$skill/SKILL.md"
+    download_file "${CLAUDE_SKILL_DIR}/$skill/SKILL.md" "${CLAUDE_SKILL_DIR}/$skill/SKILL.md"
   done
 
   # ── Scripts ───────────────────────────────────────────────────────────────
@@ -322,12 +333,12 @@ upgrade_to_v15() {
   if [ "$DRY_RUN" = false ]; then
     if [ -f ".genius/state.json" ]; then
       cp .genius/state.json .genius/state.json.bak
-      sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "15.0.0"/' .genius/state.json
+      sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "16.0.0"/' .genius/state.json
       rm -f .genius/state.json.tmp
     else
       cat > .genius/state.json << 'STATEJSON'
 {
-  "version": "15.0.0",
+  "version": "16.0.0",
   "phase": "NOT_STARTED",
   "currentSkill": null,
   "skillHistory": [],
@@ -358,26 +369,23 @@ print_summary() {
   local from=$1 backup=$2
   echo ""
   echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v15.0${NC}                      ${GREEN}║${NC}"
+  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v16.0${NC}                      ${GREEN}║${NC}"
   echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files downloaded:${NC} $FILES_DOWNLOADED"
   echo -e "  ${BOLD}Files skipped:${NC}    $FILES_SKIPPED (already present, not overwritten)"
   echo -e "  ${BOLD}Backup:${NC}           $backup"
   echo ""
-  echo -e "${CYAN}New in v15.0:${NC}"
-  echo "  • 🤖 Agent Spawning — each skill runs as an isolated sub-agent"
-  echo "  • 🎤 Interview-First — genius-interviewer runs before any work starts"
-  echo "  • ⛔ Phase Checkpoints — human approval gates at every phase transition"
-  echo "  • 🔁 Retrospective Engine — post-phase learnings written to memory"
-  echo "  • 🧠 Cross-Project Memory — decisions persist across projects"
-  echo "  • 🗂️ Master Playground Dashboard — genius-dashboard.html"
-  echo "  • 📱 Mobile-Responsive Playgrounds — all 13 templates updated"
-  echo "  • 🌀 OpenClaw native install — openclaw plugins install genius-team"
-  echo "  • 🔧 Genius Server — node scripts/genius-server.js --tunnel"
+  echo -e "${CYAN}New in v16.0:${NC}"
+  echo "  • 📁 \${CLAUDE_SKILL_DIR} portable paths — install anywhere"
+  echo "  • 🤖 GPT-5.4 in Codex — 1M context, reasoning, computer use"
+  echo "  • 🔗 includeGitInstructions: false — no git instruction conflicts"
+  echo "  • 🔔 InstructionsLoaded hook — startup validation for Guard + Memory"
+  echo "  • 🌩️ Cloudflare Code Mode MCP — 2 tools, fixed token cost"
+  echo "  • 📊 HTTP Hooks enriched — agent field for sub-agent identification"
   echo ""
   echo -e "${YELLOW}Next steps:${NC}"
-  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v15 features"
+  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v16 features"
   echo "  2. Open the dashboard: ${BOLD}node scripts/genius-server.js --open${NC}"
   echo "  3. See ${BOLD}CHANGELOG.md${NC} for full details"
   echo ""
@@ -387,7 +395,7 @@ print_dry_run_summary() {
   local from=$1
   echo ""
   echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v15.0${NC}                             ${YELLOW}║${NC}"
+  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v16.0${NC}                             ${YELLOW}║${NC}"
   echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files that would be downloaded:${NC} $FILES_DOWNLOADED"
@@ -441,8 +449,8 @@ main() {
   [ "$DRY_RUN" = false ] && log_success "Backup: $BACKUP_DIR"
 
   # ── Step 4: Download ───────────────────────────────────────────────────────
-  log_step 4 5 "Downloading v15.0 files..."
-  upgrade_to_v15
+  log_step 4 5 "Downloading v16.0 files..."
+  upgrade_to_v16
   log_success "$FILES_DOWNLOADED files downloaded"
 
   # ── Step 5: Verify ─────────────────────────────────────────────────────────

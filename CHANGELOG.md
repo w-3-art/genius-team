@@ -1,5 +1,23 @@
 # Changelog
 
+## [16.0.0] - 2026-03-06
+
+### Added
+- 📁 **`${CLAUDE_SKILL_DIR}` portable paths** — all skill references now use Claude Code's `${CLAUDE_SKILL_DIR}` variable; Genius Team installs anywhere without path issues
+- 🤖 **GPT-5.4 in Codex engine** — `--engine=codex` users now get GPT-5.4 (1M context, reasoning, computer use) automatically; documented in orchestrator and QA agents
+- 🔗 **`includeGitInstructions: false`** — all 4 mode configs now prevent git instruction conflicts in pre-configured repos
+- 🔔 **`InstructionsLoaded` hook** — startup validation confirms GENIUS_GUARD.md and memory are loaded correctly
+- 🌩️ **Cloudflare Code Mode MCP** — genius-dev can now use MCP servers with Cloudflare Code Mode pattern (2 tools, fixed token cost, API in ~1K tokens)
+- 📊 **HTTP Hooks enriched** — webhook payloads now include `agent` field for sub-agent identification
+
+### Changed
+- All 4 mode `settings.json` — `includeGitInstructions: false`, enriched HTTP hooks, new `InstructionsLoaded` hook
+- `TOOLS.md` — Codex updated to GPT-5.4 default model, 1M context documented
+- `agents/genius-orchestrator.yaml` — GPT-5.4 noted as Codex default model
+- `agents/genius-qa.yaml` — `gpt-5.4-thinking` recommended for Codex engine QA
+
+---
+
 ## [15.0.0] - 2026-03-04
 
 ### Added

@@ -44,12 +44,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scr
 🆕 New version available!
 
 Current version: v11.0.0
-Latest version: v15.0.0
+Latest version: v16.0.0
 
-What's new in v15.0:
-- 🔗 HTTP Hooks — GENIUS_WEBHOOK_URL for webhook notifications
-- 🔀 Codex Thread Forking — native sub-agents with Codex ≥ 0.107.0
-- 📄 PDF Specs — genius-qa accepts PDF specification documents
+What's new in v16.0:
+- 📁 ${CLAUDE_SKILL_DIR} portable paths — install Genius Team anywhere without path issues
+- 🤖 GPT-5.4 in Codex — --engine=codex users get GPT-5.4 (1M context, reasoning, computer use)
+- 🔗 includeGitInstructions: false — all 4 mode configs prevent git instruction conflicts
+- 🔔 InstructionsLoaded hook — startup validation confirms Guard + Memory loaded
+- 🌩️ Cloudflare Code Mode MCP — genius-dev supports MCP servers with Cloudflare Code Mode
 
 Proceed with upgrade? (yes/no)
 ```
@@ -58,12 +60,12 @@ Proceed with upgrade? (yes/no)
 
 Run the curl command above (NOT the local script) and display results.
 
-After completion: "Run `/genius-start` to reinitialize with v15 features."
+After completion: "Run `/genius-start` to reinitialize with v16 features."
 
 ### If already at latest:
 
 ```
-✅ Genius Team is up to date (v15.0.0)
+✅ Genius Team is up to date (v16.0.0)
 ```
 
 ### If local script gives wrong result:
@@ -72,6 +74,6 @@ If `bash scripts/upgrade.sh` says "already up to date" at a version below the la
 
 ## Safety
 
-- The upgrade script auto-creates a backup at `.genius/backups/pre-v15-upgrade-<timestamp>/`
+- The upgrade script auto-creates a backup at `.genius/backups/pre-v16-upgrade-<timestamp>/`
 - Never auto-upgrade without user confirmation
 - Use `--dry-run` to preview without changes

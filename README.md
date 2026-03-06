@@ -1,6 +1,6 @@
-# Genius Team v15.0
+# Genius Team v16.0
 
-[![Version](https://img.shields.io/badge/version-15.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-16.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Opus%204-purple.svg)](https://docs.anthropic.com/claude-code)
 
@@ -21,11 +21,16 @@ Genius Team is a collection of 21+ specialized AI skills for Claude Code that wo
 - **Security** → Auditing vulnerabilities
 - **Deployment** → Going live
 
-## What's New in v15.0
+## What's New in v16.0
 
-- 🔗 **HTTP Hooks** — Webhook notifications on skill events (`GENIUS_WEBHOOK_URL`)
-- 📄 **PDF Specs** — genius-qa accepts PDF specification documents
-- 🔀 **Codex Thread Forking** — Native sub-agent pattern with Codex ≥ 0.107.0
+- 📁 **`${CLAUDE_SKILL_DIR}` portable paths** — skills work anywhere, no hardcoded paths
+- 🤖 **GPT-5.4 in Codex** — `--engine=codex` now runs GPT-5.4 (1M context, reasoning, computer use)
+- 🌩️ **Cloudflare Code Mode MCP** — genius-dev can use any API in ~1K tokens (vs millions)
+- 🔔 **`InstructionsLoaded` hook** — startup confirms GENIUS_GUARD.md + memory loaded
+- 🔗 **Git conflict prevention** — `includeGitInstructions: false` in all 4 configs
+- 📊 **HTTP Hooks enriched** — webhook payloads now include `agent` field
+
+*Previous releases: see [CHANGELOG.md](./CHANGELOG.md)*
 
 ## What's New in v9.0
 
@@ -284,4 +289,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v15.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
+**Built with** 🧠 **Genius Team v16.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
