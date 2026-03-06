@@ -2,190 +2,149 @@
 
 [![Version](https://img.shields.io/badge/version-16.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-Opus%204-purple.svg)](https://docs.anthropic.com/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-1.0%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
-> Your AI product team. From idea to production. Powered by Agent Teams.
+> Your AI product team. From idea to production.
 
 ## What is Genius Team?
 
-Genius Team is a collection of 21+ specialized AI skills for Claude Code that work together to build your project from start to finish:
+Genius Team is an open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
 
-- **Discovery** → Understanding what you want to build
-- **Market Analysis** → Validating your idea
-- **Specifications** → Defining requirements
-- **Design** → Creating your visual identity
-- **Marketing** → Planning your launch
-- **Architecture** → Technical planning
-- **Development** → Building the code (with Agent Teams)
-- **Quality Assurance** → Testing everything
-- **Security** → Auditing vulnerabilities
-- **Deployment** → Going live
+```
+genius-interviewer → genius-specs → genius-architect → genius-dev → genius-qa → genius-deploy
+        ↓                 ↓                ↓               ↓            ↓            ↓
+    Brief ✅         Specs ✅         Arch ✅          Code ✅       QA ✅       Live 🚀
+```
+
+Every phase ends with a human checkpoint. You approve. Only then does the next agent spawn.
 
 ## What's New in v16.0
 
 - 📁 **`${CLAUDE_SKILL_DIR}` portable paths** — skills work anywhere, no hardcoded paths
 - 🤖 **GPT-5.4 in Codex** — `--engine=codex` now runs GPT-5.4 (1M context, reasoning, computer use)
-- 🌩️ **Cloudflare Code Mode MCP** — genius-dev can use any API in ~1K tokens (vs millions)
+- 🌩️ **Cloudflare Code Mode MCP** — genius-dev uses any API in ~1K tokens (vs millions)
 - 🔔 **`InstructionsLoaded` hook** — startup confirms GENIUS_GUARD.md + memory loaded
-- 🔗 **Git conflict prevention** — `includeGitInstructions: false` in all 4 configs
+- 🔗 **Git conflict prevention** — `includeGitInstructions: false` in all configs
 - 📊 **HTTP Hooks enriched** — webhook payloads now include `agent` field
 
-*Previous releases: see [CHANGELOG.md](./CHANGELOG.md)*
+*Full release history: [CHANGELOG.md](./CHANGELOG.md)*
 
-## What's New in v9.0
-
-### 🤖 Agent Teams
-Built on `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`. The Lead orchestrates while teammates execute in parallel with git worktree isolation.
-
-### 🧠 File-Based Memory
-No external MCPs required. Memory lives in `.genius/memory/` with auto-generated BRIEFING.md (~150 lines) loaded at every session start.
-
-### 🔄 Mandatory QA Loop
-Every task goes through: Dev → QA-micro → Fix → Re-QA → ✅. Nothing ships without passing QA.
-
-### 💰 Save-Token Mode
-Toggle `/save-tokens` to use Sonnet for high-volume roles (dev, qa-micro, debugger, reviewer) while keeping Opus for lead and architect.
-
-### 🔄 Self-Update
-At session start, detects Claude Code version changes and proposes repo updates.
-
-### ✂️ Zero Dependencies
-No external MCPs, no legacy dependencies. Pure Claude Code + file system.
+---
 
 ## Quick Start
 
-### One-Line Install
+### Option A — OpenClaw (recommended)
+
+If you use [OpenClaw](https://openclaw.ai), install Genius-Claw — the native plugin:
 
 ```bash
-# Default (CLI mode)
+openclaw plugins install https://genius.w3art.io/genius-claw.zip
+```
+
+Genius-Claw gives you cross-project memory, a global dashboard, and auto-updates via your OpenClaw setup.
+
+### Option B — Standalone (Claude Code / Codex CLI)
+
+**New project:**
+```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project
-
-# Choose your mode
-bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode ide
-bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode omni
-bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project --mode dual
 ```
 
-This will clone, configure, and guide you through setup.
-
-### Manual Setup
-
+**Add to existing project:**
 ```bash
-git clone https://github.com/w-3-art/genius-team.git my-project
-cd my-project
-
-# CLI Mode (Claude Code terminal) — default
-./scripts/setup.sh --mode cli
-
-# IDE Mode (VS Code / Cursor)
-./scripts/setup.sh --mode ide
-
-# Omni Mode (multi-provider orchestration)
-./scripts/setup.sh --mode omni
-
-# Dual Mode (builder + challenger adversarial workflow)
-./scripts/setup.sh --mode dual
+cd my-existing-project
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)
 ```
 
-## 🔄 Upgrading from v9
+**Options:**
+```bash
+# Choose your environment
+--env cli         # Terminal / Claude Code CLI (default)
+--env ide         # VS Code / Cursor
 
-If you already have a Genius Team v9 project, upgrade to v10 with:
+# Choose your AI engine
+--engine=claude   # Claude Code only (default)
+--engine=codex    # Codex CLI (OpenAI / GPT-5.4)
+--engine=dual     # Both engines (builder + challenger)
+```
+
+**Examples:**
+```bash
+# Terminal + Claude (default)
+bash <(curl -fsSL .../create.sh) my-app
+
+# VS Code + Codex (GPT-5.4)
+bash <(curl -fsSL .../create.sh) my-app --env ide --engine=codex
+
+# Terminal + Dual engine
+bash <(curl -fsSL .../create.sh) my-app --engine=dual
+```
+
+After install, open your project in Claude Code or Codex and run `/genius-start`.
+
+### Upgrade from any previous version
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)
 ```
 
-This will:
-- Create a backup of your current installation
-- Download all v10 files
-- Preserve your `.genius/memory/` data
-- Update your project to v10.0
+The script auto-detects your version (v9 through v15) and upgrades to v16. Your `.genius/memory/` data is preserved.
 
-### What's new in v10.0
+---
 
-- 🎮 **12 Interactive Playgrounds** — Visual decision-making tools for each skill
-- 🛡️ **Anti-Drift Guard System** — Prevents Claude from going off-rails
-- 🧠 **Persistent Memory** — Active capture, rollup, and recovery
-- 🔄 **Self-Update System** — `/genius-upgrade` command for future updates
+## How It Works
 
-After upgrading, run `/genius-start` to initialize the new features.
+### 1. Interview
+Run `/genius-start`. genius-interviewer asks the right questions before any work begins — no assumptions, no drift. Output: a validated brief you approve.
 
-### 2. Start a Project
+### 2. Ideation (Agents in parallel)
+genius-specs, genius-product-market-analyst, genius-designer, and genius-marketer run with isolated contexts. Each produces a deliverable. You approve at the checkpoint before any code is written.
 
-Open Claude Code in your project folder and run:
+### 3. Build (Agent Teams)
+genius-architect plans the stack. genius-dev implements with Agent Teams (parallel execution, git worktree isolation). Mandatory QA loop after every task: Dev → QA-micro → Fix → Re-QA → ✅.
 
-```
-/genius-start
-```
+### 4. Ship
+genius-security audits. genius-deployer ships. A Retrospective Engine runs after each phase — learnings feed into cross-project memory.
 
-Then say what you want to build:
+---
 
-```
-I want to build a booking system for a hair salon
-```
-
-### 3. Let Genius Team Guide You
-
-The AI will:
-1. **Interview you** to understand your needs
-2. **Analyze the market** to validate your idea
-3. **Write specifications** (you approve them)
-4. **Design your brand** (you choose an option)
-5. **Plan the architecture** (you approve it)
-6. **Build everything** autonomously with Agent Teams
-7. **Test and audit** the code (mandatory QA loop)
-8. **Deploy** to production
-
-## Operating Modes
-
-### CLI Mode (Default)
-Terminal-focused. Full hook system (SessionStart, PreCompact, Stop, PostToolUse). Agent Teams via Shift+Tab.
-
-### IDE Mode
-VS Code / Cursor focused. Installs VS Code tasks and Cursor rules. No PostToolUse hooks (IDE compatibility). Agent Teams via Task().
-
-### Omni Mode
-Multi-provider routing. Claude Code leads, secondary providers (Codex, Kimi, Gemini) handle specialized tasks. Automatic fallback if providers unavailable.
-
-### Dual Mode
-Builder + Challenger adversarial workflow. One model builds, another challenges. Build-Review cycles, Discussion mode, and Audit mode. Mark tasks with 🔄 for dual review.
-
-## Features
-
-### 21+ Specialized Skills
+## 21+ Specialized Skills
 
 | Skill | Purpose |
 |-------|---------|
-| genius-team | Intelligent router |
+| genius-team | Intelligent router — entry point |
 | genius-interviewer | Requirements discovery |
 | genius-product-market-analyst | Market validation |
 | genius-specs | Formal specifications |
 | genius-designer | Brand & design system |
 | genius-marketer | Go-to-market strategy |
 | genius-copywriter | Marketing copy |
-| genius-integration-guide | Service setup |
+| genius-integration-guide | Service setup guides |
 | genius-architect | Technical planning |
-| genius-orchestrator | Autonomous execution (Agent Teams) |
-| genius-dev | Code implementation |
+| genius-orchestrator | Autonomous execution coordinator |
+| genius-dev | Code implementation (Agent Teams) |
 | genius-qa | Full quality audit |
-| genius-qa-micro | Quick validation |
+| genius-qa-micro | Quick per-task validation |
 | genius-debugger | Error fixing |
 | genius-reviewer | Code review |
-| genius-security | Security audit |
+| genius-security | OWASP security audit |
 | genius-deployer | Deployment |
 | genius-memory | Knowledge management |
 | genius-onboarding | First-time setup |
 | genius-test-assistant | Manual testing |
 | genius-team-optimizer | Self-improvement |
-| genius-updater | Claude Code version tracking |
+| genius-updater | Version tracking & updates |
+| genius-dual-engine | Builder + Challenger workflow |
 
-### Memory System
+---
 
-All memory is file-based, no external services needed:
+## Memory System
+
+Everything is file-based — no external services, no MCPs required.
 
 ```
 .genius/memory/
-├── BRIEFING.md          # Auto-generated project summary (~150 lines)
+├── BRIEFING.md          # Auto-generated summary, loaded at every session start
 ├── decisions.json       # Key decisions with rationale
 ├── patterns.json        # Code patterns and conventions
 ├── progress.json        # Task progress (7-day window)
@@ -193,91 +152,72 @@ All memory is file-based, no external services needed:
 └── session-logs/        # Session logs (30-day retention)
 ```
 
-### Two-Phase Workflow
+Memory persists across sessions and across projects. The more you build, the smarter your agents become.
 
-**Phase 1: IDEATION** (Conversational)
-- Skills ask questions
-- You approve at checkpoints
-- Documents are generated
-
-**Phase 2: EXECUTION** (Autonomous)
-- Agent Teams execute in parallel
-- Mandatory QA loop after every task
-- Progress tracked in plan.md and PROGRESS.md
+---
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/genius-start` | Initialize environment and show status |
-| `/status` | Show current progress |
-| `/continue` | Resume from where you left off |
+| `/genius-start` | Initialize environment, load memory, begin interview |
+| `/genius-dashboard` | Open the master visual dashboard |
+| `/genius-upgrade` | Upgrade to latest version |
+| `/status` | Show current phase and progress |
+| `/continue` | Resume from last checkpoint |
 | `/reset` | Start over (with backup) |
-| `/hydrate-tasks` | Reload tasks from plan.md |
-| `/save-tokens` | Toggle save-token mode |
-| `/update-check` | Check for Claude Code updates |
-| `/omni-status` | Show provider statuses (Omni mode) |
-| `/dual-status` | Show dual engine state (Dual mode) |
-| `/dual-challenge` | Trigger Challenger review (Dual mode) |
+| `/save-tokens` | Toggle save-token mode (Sonnet for dev, Opus for lead) |
+| `/guard-check` | Verify GENIUS_GUARD.md compliance |
+| `/guard-recover` | Recover from drift |
+| `/memory-status` | Show memory summary |
+| `/update-check` | Check for Claude Code + Genius Team updates |
+
+---
 
 ## Project Structure
 
 ```
 your-project/
 ├── CLAUDE.md                    # Project instructions (mode-specific)
-├── configs/
-│   ├── cli/                     # CLI mode configs + CLAUDE.md
-│   ├── ide/                     # IDE mode configs + CLAUDE.md
-│   ├── omni/                    # Omni mode configs + CLAUDE.md
-│   └── dual/                    # Dual mode configs + CLAUDE.md
+├── AGENTS.md                    # Codex CLI instructions (engine=codex/dual)
 ├── .claude/
-│   ├── settings.json            # Permissions, hooks & env
-│   ├── commands/                # Slash commands
-│   ├── agents/                  # Subagent definitions
-│   ├── skills/                  # 21+ Genius Team skills
+│   ├── settings.json            # Permissions, hooks & env vars
+│   ├── commands/                # Slash commands (/genius-start, etc.)
+│   ├── skills/                  # 21+ Genius Team skill files
 │   └── plan.md                  # Task list (single source of truth)
 ├── .genius/
-│   ├── config.json              # Team configuration
-│   ├── state.json               # Project state tracking
-│   ├── claude-code-version.txt  # Version tracking for updater
+│   ├── state.json               # Current project phase & checkpoint
+│   ├── DASHBOARD.html           # Visual master dashboard
 │   └── memory/                  # File-based memory system
-│       ├── BRIEFING.md          # Auto-generated summary
+│       ├── BRIEFING.md
 │       ├── decisions.json
 │       ├── patterns.json
 │       ├── progress.json
 │       ├── errors.json
 │       └── session-logs/
+├── agents/                      # Agent YAML specs (orchestration)
 ├── scripts/
-│   ├── setup.sh                 # One-time setup
-│   ├── verify.sh                # Verify installation
-│   ├── memory-briefing.sh       # Generate BRIEFING.md
-│   └── memory-extract.sh        # Extract memories from sessions
-├── docs/
-│   ├── GETTING-STARTED.md
-│   ├── SKILLS.md
-│   ├── AGENT-TEAMS.md
-│   ├── MEMORY-SYSTEM.md
-│   └── CLAUDE-CODE-OPUS-46.md
-├── DISCOVERY.xml                # Interview findings (generated)
-├── SPECIFICATIONS.xml           # Requirements (generated)
-├── DESIGN-SYSTEM.html           # Design options (generated)
-├── ARCHITECTURE.md              # Technical design (generated)
-└── PROGRESS.md                  # Execution progress (generated)
+│   ├── create.sh                # One-liner new project setup
+│   ├── add.sh                   # Add Genius to existing project
+│   ├── setup.sh                 # Configure modes & engines
+│   ├── upgrade.sh               # Upgrade to latest version
+│   └── verify.sh                # Verify installation health
+└── docs/                        # Documentation & guides
 ```
 
-## Screenshots / Demo
-
-<!-- TODO: Add screenshots or GIF demo of Genius Team in action -->
-_Coming soon — contributions welcome!_
+---
 
 ## Requirements
 
-- **Claude Code** ≥ 1.0.0 (latest version recommended)
-- **Claude Opus 4** (default model for all roles)
-- **Codex CLI** ≥ 0.107.0 (for Dual mode and thread forking)
-- **jq** (for memory system JSON processing)
-- **Git** (for version control and worktrees)
-- Node.js 18+ (for most project types)
+| Tool | Minimum | Notes |
+|------|---------|-------|
+| Claude Code | ≥ 1.0.0 | Required for Claude engine |
+| Codex CLI | ≥ 0.107.0 | Required for `--engine=codex` or `--engine=dual` |
+| jq | any | Required for memory system JSON processing |
+| Git | any | Required for version control and worktrees |
+| Node.js | ≥ 18 | Recommended for most project types |
+
+---
 
 ## Contributing
 
@@ -289,4 +229,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v16.0** — Agent Teams + File-Based Memory + Interactive Playgrounds
+**Built with** 🧠 **Genius Team v16.0** — Agent Orchestration · File-Based Memory · Interactive Playgrounds

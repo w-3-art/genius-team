@@ -149,3 +149,17 @@
 - Agent Teams support
 - File-based memory system
 - 4 operating modes (CLI, IDE, Omni, Dual)
+
+---
+
+## [8.0.0] and earlier — Pre-open-source
+
+Versions v1.0 through v8.x were internal/private iterations developed before the open-source release.
+
+Key milestones:
+- **v1.0–v4.x** — Initial concept: skill files + basic memory for personal use
+- **v5.0–v6.x** — Multi-skill router, first QA loop, save-token mode
+- **v7.0** — Vibeship & Mind MCP integrations (later removed in v9)
+- **v8.x** — Last private version before open-source rewrite
+
+**v9.0.0 (2026-02-08)** was a clean-room rewrite for public release — no external MCPs, pure Claude Code + file system.
