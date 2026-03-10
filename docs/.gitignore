@@ -1,1 +1,2 @@
-.vercel
+# Keep .vercel/project.json tracked (needed for CI/CD domain binding)
+.vercel/README.txt
