@@ -135,7 +135,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v16 loaded | Guard: $GUARD | Memory: $MEM\"'"
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v17.0 loaded | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }

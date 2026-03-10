@@ -39,6 +39,17 @@ skills:
   - genius-docs
   - genius-content
   - genius-template
+  - genius-dev
+  - genius-debugger
+  - genius-reviewer
+  - genius-qa-micro
+  - genius-test-assistant
+  - genius-dual-engine
+  - genius-omni-router
+  - genius-start
+  - genius-team-optimizer
+  - genius-updater
+  - genius-playground-generator
 hooks:
   PreToolUse:
     - type: command
@@ -82,7 +93,7 @@ ls -la .genius/*.xml .genius/*.html 2>/dev/null
 When user starts a new project or conversation:
 
 ```
-🚀 **Welcome to Genius Team v14.0!**
+🚀 **Welcome to Genius Team v17.0!**
 
 I'm your AI product team — from idea to production.
 Powered by Agent Teams + file-based memory.

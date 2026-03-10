@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# Genius Team v14.0 — One-Liner Install
+# Genius Team v17.0 — One-Liner Install
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) [project-name] [--mode cli|ide|omni|dual] [--engine claude|codex|dual]
 # ═══════════════════════════════════════════════════════════════
 set -e
@@ -65,7 +65,7 @@ fi
 # ── Banner ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v14.0 — Installer                ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v17.0 — Installer                ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Project: ${CYAN}${PROJECT_NAME}${NC}"
@@ -98,7 +98,7 @@ cd "$PROJECT_NAME"
 rm -rf .git
 git init --quiet
 git add -A &>/dev/null
-git commit -m "🧠 Initial commit — Genius Team v14.0 (${MODE} mode, ${ENGINE} engine)" --quiet &>/dev/null
+git commit -m "🧠 Initial commit — Genius Team v17.0 (${MODE} mode, ${ENGINE} engine)" --quiet &>/dev/null
 ok "Fresh git history initialized"
 
 # ── Run Setup ────────────────────────────────────────────────
@@ -110,7 +110,7 @@ echo ""
 
 # ── Dependency Check & Guide ─────────────────────────────────
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v14.0 — Ready!                   ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v17.0 — Ready!                   ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${DIM}Checking your environment...${NC}"

@@ -1,5 +1,5 @@
 ---
-description: Initialize Genius Team v14.0 environment, load memory, and hydrate tasks
+description: Initialize Genius Team v17.0 environment, load memory, and hydrate tasks
 ---
 
 # /genius-start
@@ -94,7 +94,7 @@ fi
 
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  🧠 Genius Team v14.0 — Environment Ready                   ║
+║  🧠 Genius Team v17.0 — Environment Ready                   ║
 ║  Mode: {MODE}                                               ║
 ╚════════════════════════════════════════════════════════════╝
 
