@@ -190,18 +190,27 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 <script>
 // ─── DATA ──────────────────────────────────────────────────────────────────
 const PLAYGROUNDS = [
-  { slug: 'project-canvas',       icon: '🗺️',  title: 'Project Canvas',        desc: 'Define vision, scope, and success metrics before building anything.' },
-  { slug: 'market-simulator',     icon: '📊',  title: 'Market Simulator',      desc: 'Model your market size, positioning, and competitive landscape.' },
-  { slug: 'architecture-explorer',icon: '🏗️',  title: 'Architecture Explorer', desc: 'Compare architectural patterns with trade-off analysis.' },
-  { slug: 'stack-configurator',   icon: '⚙️',  title: 'Stack Configurator',    desc: 'Pick your tech stack with compatibility checks.' },
-  { slug: 'design-system-builder',icon: '🎨',  title: 'Design System Builder', desc: 'Define your design tokens, component library, and visual language.' },
-  { slug: 'gtm-simulator',        icon: '📣',  title: 'GTM Simulator',         desc: 'Simulate go-to-market strategies and find the best launch approach.' },
-  { slug: 'copy-ab-tester',       icon: '✍️',  title: 'Copy A/B Tester',       desc: 'Compare messaging variants and select the most compelling copy.' },
-  { slug: 'progress-dashboard',   icon: '📈',  title: 'Progress Dashboard',    desc: 'Real-time view of project status, milestones, and velocity.' },
-  { slug: 'risk-matrix',          icon: '⚠️',  title: 'Risk Matrix',           desc: 'Identify, score, and mitigate project risks before they become blockers.' },
-  { slug: 'user-journey-builder', icon: '🛤️',  title: 'User Journey Builder',  desc: 'Map user flows and touchpoints to design the ideal experience.' },
-  { slug: 'deploy-checklist',     icon: '✅',  title: 'Deploy Checklist',      desc: 'Step-by-step pre-launch checklist with automated status tracking.' },
-  { slug: 'test-coverage-map',    icon: '🧪',  title: 'Test Coverage Map',     desc: 'Visualize test coverage across your codebase and spot gaps.' },
+  // ── Classic (Phase-based) ──────────────────────────────────────────────
+  { slug: 'project-canvas',        icon: '🗺️',  title: 'Project Canvas',         desc: 'Define vision, scope, and success metrics before building anything.',  category: 'planning' },
+  { slug: 'market-simulator',      icon: '📊',  title: 'Market Simulator',       desc: 'Model your market size, positioning, and competitive landscape.',       category: 'planning' },
+  { slug: 'architecture-explorer', icon: '🏗️',  title: 'Architecture Explorer',  desc: 'Compare architectural patterns with trade-off analysis.',               category: 'planning' },
+  { slug: 'stack-configurator',    icon: '⚙️',  title: 'Stack Configurator',     desc: 'Pick your tech stack with compatibility checks.',                       category: 'planning' },
+  { slug: 'design-system-builder', icon: '🎨',  title: 'Design System Builder',  desc: 'Define your design tokens, component library, and visual language.',    category: 'design' },
+  { slug: 'gtm-simulator',         icon: '📣',  title: 'GTM Simulator',          desc: 'Simulate go-to-market strategies and find the best launch approach.',   category: 'marketing' },
+  { slug: 'copy-ab-tester',        icon: '✍️',  title: 'Copy A/B Tester',        desc: 'Compare messaging variants and select the most compelling copy.',       category: 'marketing' },
+  { slug: 'progress-dashboard',    icon: '📈',  title: 'Progress Dashboard',     desc: 'Real-time view of project status, milestones, and velocity.',           category: 'execution' },
+  { slug: 'risk-matrix',           icon: '⚠️',  title: 'Risk Matrix',            desc: 'Identify, score, and mitigate project risks before they become blockers.', category: 'planning' },
+  { slug: 'user-journey-builder',  icon: '🛤️',  title: 'User Journey Builder',   desc: 'Map user flows and touchpoints to design the ideal experience.',        category: 'design' },
+  { slug: 'deploy-checklist',      icon: '✅',  title: 'Deploy Checklist',       desc: 'Step-by-step pre-launch checklist with automated status tracking.',     category: 'execution' },
+  { slug: 'test-coverage-map',     icon: '🧪',  title: 'Test Coverage Map',      desc: 'Visualize test coverage across your codebase and spot gaps.',           category: 'quality' },
+  // ── New in v17 ────────────────────────────────────────────────────────
+  { slug: 'seo-dashboard',         icon: '🌐',  title: 'SEO Dashboard',          desc: 'GEO/SEO scores, AI crawler status, llms.txt editor, actionable fixes.', category: 'launch', isNew: true },
+  { slug: 'crypto-analyzer',       icon: '🪙',  title: 'Crypto Analyzer',        desc: 'Token metrics, NFT analytics, liquidity scoring, Dune query builder.',  category: 'launch', isNew: true },
+  { slug: 'analytics-wizard',      icon: '📊',  title: 'Analytics Wizard',       desc: 'Setup GA4/Plausible/PostHog, event taxonomy, funnels, GDPR.',           category: 'launch', isNew: true },
+  { slug: 'performance-monitor',   icon: '⚡',  title: 'Performance Monitor',    desc: 'Lighthouse gauges, Core Web Vitals (LCP/CLS/INP), bundle size.',        category: 'quality', isNew: true },
+  { slug: 'accessibility-checker', icon: '♿',  title: 'Accessibility Checker',  desc: 'WCAG 2.2 AA checklist, color contrast checker, ARIA audit export.',     category: 'quality', isNew: true },
+  { slug: 'experiments-tracker',   icon: '🔬',  title: 'Experiments Tracker',    desc: 'Run log, metric evolution chart, best-found result, experiment export.', category: 'execution', isNew: true },
+  { slug: 'code-review-reporter',  icon: '🔍',  title: 'Code Review Reporter',   desc: 'PR findings: CRITICAL/HIGH/MEDIUM/LOW, agent breakdown, GitHub comment.',category: 'quality', isNew: true },
 ];
 
 const PHASES = ['Interview', 'Ideation', 'Build', 'QA', 'Deployed'];
@@ -213,14 +222,14 @@ const DEMO_PROJECTS = [
     name: 'Salon Booking App',
     createdAt: '2026-02-01',
     phase: 'Build',
-    playgrounds: { 'project-canvas': 100, 'market-simulator': 85, 'architecture-explorer': 70, 'stack-configurator': 100, 'design-system-builder': 55, 'gtm-simulator': 30, 'copy-ab-tester': 0, 'progress-dashboard': 60, 'risk-matrix': 45, 'user-journey-builder': 80, 'deploy-checklist': 0, 'test-coverage-map': 35 }
+    playgrounds: { 'project-canvas': 100, 'market-simulator': 85, 'architecture-explorer': 70, 'stack-configurator': 100, 'design-system-builder': 55, 'gtm-simulator': 30, 'copy-ab-tester': 0, 'progress-dashboard': 60, 'risk-matrix': 45, 'user-journey-builder': 80, 'deploy-checklist': 0, 'test-coverage-map': 35, 'seo-dashboard': 0, 'crypto-analyzer': 0, 'analytics-wizard': 0, 'performance-monitor': 0, 'accessibility-checker': 0, 'experiments-tracker': 0, 'code-review-reporter': 0 }
   },
   {
     slug: 'saas-dashboard',
     name: 'SaaS Analytics Dashboard',
     createdAt: '2026-01-15',
     phase: 'Deployed',
-    playgrounds: { 'project-canvas': 100, 'market-simulator': 100, 'architecture-explorer': 100, 'stack-configurator': 100, 'design-system-builder': 100, 'gtm-simulator': 90, 'copy-ab-tester': 80, 'progress-dashboard': 100, 'risk-matrix': 100, 'user-journey-builder': 100, 'deploy-checklist': 100, 'test-coverage-map': 90 }
+    playgrounds: { 'project-canvas': 100, 'market-simulator': 100, 'architecture-explorer': 100, 'stack-configurator': 100, 'design-system-builder': 100, 'gtm-simulator': 90, 'copy-ab-tester': 80, 'progress-dashboard': 100, 'risk-matrix': 100, 'user-journey-builder': 100, 'deploy-checklist': 100, 'test-coverage-map': 90, 'seo-dashboard': 85, 'crypto-analyzer': 0, 'analytics-wizard': 100, 'performance-monitor': 70, 'accessibility-checker': 60, 'experiments-tracker': 45, 'code-review-reporter': 90 }
   },
   {
     slug: 'new-mvp',
@@ -426,11 +435,12 @@ function renderPgCard(pg, pct) {
   const statusClass = pct === 100 ? 'status-done' : pct > 0 ? 'status-progress' : 'status-empty';
   const btnLabel = pct === 0 ? 'Start' : pct === 100 ? 'Review' : 'Continue';
   return `
-    <div class="pg-card" onclick="navigateTo('${pg.slug}')">
+    <div class="pg-card" onclick="navigateTo('${pg.slug}')" style="${pg.isNew ? 'border-color:rgba(124,58,237,.3)' : ''}">
       <div class="pg-card-header">
         <span class="pg-card-icon">${pg.icon}</span>
         <span class="pg-card-title">${pg.title}</span>
-        <span class="pg-card-status ${statusClass}">${statusLabel}</span>
+        ${pg.isNew ? '<span style="font-size:.55rem;font-weight:800;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;padding:.15rem .45rem;border-radius:100px;margin-left:.5rem">NEW</span>' : ''}
+        <span class="pg-card-status ${statusClass}" style="margin-left:auto">${statusLabel}</span>
       </div>
       <div class="pg-progress-bar">
         <div class="pg-progress-fill" data-target="${pct}" style="width:0%"></div>
