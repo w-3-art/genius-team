@@ -214,11 +214,85 @@ upgrade_to_v16() {
 
 upgrade_to_v17() {
   upgrade_to_v16
-  echo "VERSION" > /dev/null  # Already handled by main flow
-  log_info "Applying v17.0.0 upgrades..."
-  log_info "  → 17 new skills available (genius-dev-frontend, backend, mobile, database, api, seo, crypto, analytics, performance, accessibility, i18n, docs, content, template, code-review, skill-creator, experiments)"
-  log_info "  → genius-dev is now a smart dispatcher to specialized sub-skills"
-  log_info "  → All 38 skills now follow Anthropic's official Skills Guide"
+
+  # ── Core files ──────────────────────────────────────────────────────────
+  log_info "Core files (v17)..."
+  download_file "CLAUDE.md"    "CLAUDE.md"
+  download_file "README.md"    "README.md"
+  download_file "CHANGELOG.md" "CHANGELOG.md"
+  download_file "VERSION"      "VERSION"
+
+  # ── Commands (new in v17) ───────────────────────────────────────────────
+  log_info "New commands (v17)..."
+  local new_commands=(
+    "challenge" "genius-playground" "genius-switch-engine" "genius-dashboard"
+  )
+  for cmd in "${new_commands[@]}"; do
+    download_file ".claude/commands/$cmd.md" ".claude/commands/$cmd.md"
+  done
+
+  # ── All 38 skills (updated + 17 new) ────────────────────────────────────
+  log_info "Skills (38 total — 17 new + 21 updated)..."
+  local all_skills=(
+    "genius-team"
+    "genius-start" "genius-dev" "genius-reviewer" "genius-debugger"
+    "genius-architect" "genius-designer" "genius-qa" "genius-qa-micro"
+    "genius-security" "genius-deployer" "genius-copywriter" "genius-marketer"
+    "genius-product-market-analyst" "genius-interviewer" "genius-specs"
+    "genius-test-assistant" "genius-orchestrator" "genius-dual-engine"
+    "genius-omni-router" "genius-integration-guide" "genius-onboarding"
+    "genius-updater" "genius-team-optimizer" "genius-memory"
+    "genius-code-review"
+    "genius-dev-frontend" "genius-dev-backend" "genius-dev-mobile"
+    "genius-dev-database" "genius-dev-api"
+    "genius-skill-creator" "genius-experiments"
+    "genius-seo" "genius-crypto"
+    "genius-analytics" "genius-performance" "genius-accessibility"
+    "genius-i18n" "genius-docs" "genius-content" "genius-template"
+    "genius-playground-generator"
+  )
+  for skill in "${all_skills[@]}"; do
+    download_file "${CLAUDE_SKILL_DIR}/$skill/SKILL.md" "${CLAUDE_SKILL_DIR}/$skill/SKILL.md"
+  done
+
+  # ── New scripts (v17) ───────────────────────────────────────────────────
+  log_info "New scripts (v17)..."
+  local new_scripts=("switch-engine.sh" "update-dual-bridge.sh" "generate-playground.sh")
+  for s in "${new_scripts[@]}"; do
+    download_file "scripts/$s" "scripts/$s"
+  done
+  [ "$DRY_RUN" = false ] && chmod +x scripts/*.sh 2>/dev/null || true
+
+  # ── New playground templates (v17) ──────────────────────────────────────
+  log_info "New playground templates (v17: +7)..."
+  local new_playgrounds=(
+    "seo-dashboard" "crypto-analyzer" "analytics-wizard"
+    "performance-monitor" "accessibility-checker" "experiments-tracker"
+    "code-review-reporter" "project-dashboard-example"
+  )
+  for pg in "${new_playgrounds[@]}"; do
+    download_file "playgrounds/templates/$pg.html" "playgrounds/templates/$pg.html"
+  done
+
+  # ── Dual-bridge template ────────────────────────────────────────────────
+  log_info "Dual-bridge template..."
+  download_file "templates/dual-bridge.json" "templates/dual-bridge.json"
+
+  # ── Mode configs (settings + CLAUDE.md) ─────────────────────────────────
+  log_info "Mode configs (v17)..."
+  local modes=("cli" "ide" "omni" "dual")
+  for mode in "${modes[@]}"; do
+    download_file "configs/$mode/settings.json" "configs/$mode/settings.json"
+    download_file "configs/$mode/CLAUDE.md"     "configs/$mode/CLAUDE.md"
+  done
+
+  # ── Update state.json version ────────────────────────────────────────────
+  if [ "$DRY_RUN" = false ] && [ -f ".genius/state.json" ]; then
+    sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "17.0.0"/' .genius/state.json
+    rm -f .genius/state.json.tmp
+  fi
+
+  log_ok "v17.0.0 upgrade complete — 38 skills, 7 new playgrounds, /challenge, engine-switch"
 }
 
 upgrade_to_v15() {
