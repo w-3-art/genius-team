@@ -74,6 +74,7 @@ if [[ "$ENGINE" == "claude" || "$ENGINE" == "dual" ]]; then
     CLAUDE_VER=$(claude --version 2>/dev/null | head -1 || echo "unknown")
     echo -e "${GREEN}✓${NC} Claude Code: $CLAUDE_VER"
     # Save version for updater
+    mkdir -p .genius
     echo "$CLAUDE_VER" > .genius/claude-code-version.txt
   else
     echo -e "${RED}✗${NC} Claude Code not found"
