@@ -2,7 +2,7 @@
 
 ## [17.0.0] - 2026-03-10
 
-### Added — 17 Nouveaux Skills (total: 38)
+### Added — 18 Nouveaux Skills (total: 42)
 - 🖥️ **genius-dev-frontend** — React/Vue/Svelte/Tailwind specialist, responsive, a11y-first
 - ⚙️ **genius-dev-backend** — API, auth, middleware, REST/GraphQL specialist
 - 📱 **genius-dev-mobile** — React Native/Expo specialist, native APIs, offline-first
@@ -28,7 +28,7 @@
 - **genius-deployer** suggests genius-seo + genius-analytics + genius-performance post-launch
 - **genius-reviewer** suggests /simplify for complex sections after code review
 - **genius-qa-micro** documents /loop for continuous monitoring (`/loop 2m /genius-qa-micro`)
-- **genius-team router** updated with all 38 skills + new routing table
+- **genius-team router updated with all 42 skills + new routing table
 
 ### Added — Quality & Compliance
 - All 21+ existing skills audited per Anthropic's "Complete Guide to Building Skills for Claude"
@@ -42,7 +42,7 @@
 - ACP provenance check pattern documented for Genius-Claw
 
 ### Changed
-- genius-team router now lists 38 skills (was ~14)
+- genius-team router now lists 42 skills (was ~14)
 - genius-dev: smart dispatcher (was monolithic implementation skill)
 - All 21+ existing skills: updated to v17, trigger phrases added
 - TOOLS.md: added Crypto tools (DexScreener, OpenSea, Dune MCP) + GEO/SEO section

@@ -8,7 +8,7 @@
 
 ## What is Genius Team?
 
-Genius Team is an open-source framework that orchestrates 38 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
+Genius Team is an open-source framework that orchestrates 42 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
 
 ```
 genius-interviewer → genius-specs → genius-architect → genius-dev → genius-qa → genius-deploy
@@ -20,7 +20,7 @@ Every phase ends with a human checkpoint. You approve. Only then does the next a
 
 ## What's New in v17.0
 
-- 🎯 **38 skills total** — genius-dev splits into 5 domain experts; 12 new standalone skills added
+- 🎯 **42 skills total** — genius-dev splits into 5 domain experts; 12 new standalone skills added
 - 🔍 **genius-code-review** — Multi-agent PR review: bugs + security + quality in parallel
 - 🛠️ **genius-skill-creator** — Framework creates new project-specific skills on demand (self-extending)
 - 🔬 **genius-experiments** — Autonomous overnight optimization loop (Karpathy autoresearch pattern)
@@ -28,7 +28,7 @@ Every phase ends with a human checkpoint. You approve. Only then does the next a
 - 🪙 **genius-crypto** — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL
 - 📊 **Post-launch suite** — genius-analytics, genius-performance, genius-accessibility
 - 📝 **Project lifecycle** — genius-docs, genius-content, genius-template (SaaS/e-commerce/mobile/web3)
-- ✅ **Anthropic Skills Guide compliance** — All 38 skills follow official best practices
+- ✅ **Anthropic Skills Guide compliance** — All 42 skills follow official best practices
 
 *Previous releases: see [CHANGELOG.md](./CHANGELOG.md)*
 
@@ -111,7 +111,7 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 
 ---
 
-## 38 Specialized Skills
+## 42 Specialized Skills
 
 | Skill | Purpose |
 |-------|---------|
