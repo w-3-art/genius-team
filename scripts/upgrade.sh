@@ -200,6 +200,17 @@ download_file() {
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
+# Stubs for v10→v14 (these versions didn't change the upgrade infrastructure;
+# jumping straight to v15 downloads everything needed to reach v17)
+#═══════════════════════════════════════════════════════════════════════════════
+
+upgrade_to_v10() { log_info "v10 stub — bootstrapping chain to v15..."; }
+upgrade_to_v11() { upgrade_to_v10; }
+upgrade_to_v12() { upgrade_to_v11; }
+upgrade_to_v13() { upgrade_to_v12; }
+upgrade_to_v14() { upgrade_to_v13; }
+
+#═══════════════════════════════════════════════════════════════════════════════
 # Main Upgrade: downloads all v15 files
 #═══════════════════════════════════════════════════════════════════════════════
 
@@ -296,6 +307,7 @@ upgrade_to_v17() {
 }
 
 upgrade_to_v15() {
+  upgrade_to_v14
   # ── Core ──────────────────────────────────────────────────────────────────
   log_info "Core files..."
   download_file "CLAUDE.md"       "CLAUDE.md"
