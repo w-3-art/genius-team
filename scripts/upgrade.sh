@@ -1,7 +1,7 @@
 #!/bin/bash
 #═══════════════════════════════════════════════════════════════════════════════
 # Genius Team Universal Upgrade Script
-# Upgrades from any previous version to v16.0
+# Upgrades from any previous version to v17.0
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -17,7 +17,7 @@ NC='\033[0m'
 
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
-TARGET_VERSION="16.0.0"
+TARGET_VERSION="17.0.0"
 
 # ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────
 # This runs even when the local upgrade.sh targets an old version
@@ -45,7 +45,7 @@ FILES_SKIPPED=0
 print_banner() {
   echo ""
   echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v16.0${NC}                           ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v17.0${NC}                           ${CYAN}║${NC}"
   echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
 }
@@ -66,7 +66,7 @@ show_usage() {
   echo "  --verbose   Show detailed file download output"
   echo "  --help      Show this help"
   echo ""
-  echo "Upgrades your Genius Team project to v16.0 from any previous version."
+  echo "Upgrades your Genius Team project to v17.0 from any previous version."
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
@@ -83,6 +83,7 @@ detect_version() {
 
   # Method 2: CLAUDE.md markers
   if [ -f "CLAUDE.md" ]; then
+    if grep -qE "v17|17\." CLAUDE.md 2>/dev/null; then echo "17.0.0"; return 0; fi
     if grep -qE "v16|16\." CLAUDE.md 2>/dev/null; then echo "16.0.0"; return 0; fi
     if grep -qE "v15|15\." CLAUDE.md 2>/dev/null; then echo "15.0.0"; return 0; fi
     if grep -qE "v14|14\." CLAUDE.md 2>/dev/null; then echo "14.0.0"; return 0; fi
@@ -145,7 +146,7 @@ check_prerequisites() {
 
 create_backup() {
   local ts; ts=$(date +%Y%m%d-%H%M%S)
-  local backup_dir=".genius/backups/pre-v16-upgrade-$ts"
+  local backup_dir=".genius/backups/pre-v17-upgrade-$ts"
 
   if [ "$DRY_RUN" = true ]; then
     log_info "[DRY-RUN] Would create backup at: $backup_dir"
@@ -209,6 +210,15 @@ upgrade_to_v16() {
     sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "16.0.0"/' .genius/state.json
     rm -f .genius/state.json.tmp
   fi
+}
+
+upgrade_to_v17() {
+  upgrade_to_v16
+  echo "VERSION" > /dev/null  # Already handled by main flow
+  log_info "Applying v17.0.0 upgrades..."
+  log_info "  → 17 new skills available (genius-dev-frontend, backend, mobile, database, api, seo, crypto, analytics, performance, accessibility, i18n, docs, content, template, code-review, skill-creator, experiments)"
+  log_info "  → genius-dev is now a smart dispatcher to specialized sub-skills"
+  log_info "  → All 38 skills now follow Anthropic's official Skills Guide"
 }
 
 upgrade_to_v15() {
@@ -369,23 +379,23 @@ print_summary() {
   local from=$1 backup=$2
   echo ""
   echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v16.0${NC}                      ${GREEN}║${NC}"
+  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v17.0${NC}                      ${GREEN}║${NC}"
   echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files downloaded:${NC} $FILES_DOWNLOADED"
   echo -e "  ${BOLD}Files skipped:${NC}    $FILES_SKIPPED (already present, not overwritten)"
   echo -e "  ${BOLD}Backup:${NC}           $backup"
   echo ""
-  echo -e "${CYAN}New in v16.0:${NC}"
-  echo "  • 📁 \${CLAUDE_SKILL_DIR} portable paths — install anywhere"
-  echo "  • 🤖 GPT-5.4 in Codex — 1M context, reasoning, computer use"
-  echo "  • 🔗 includeGitInstructions: false — no git instruction conflicts"
-  echo "  • 🔔 InstructionsLoaded hook — startup validation for Guard + Memory"
-  echo "  • 🌩️ Cloudflare Code Mode MCP — 2 tools, fixed token cost"
-  echo "  • 📊 HTTP Hooks enriched — agent field for sub-agent identification"
+  echo -e "${CYAN}New in v17.0:${NC}"
+  echo "  • 🎯 38 skills total — genius-dev splits into 5 domain experts + 12 new standalone skills"
+  echo "  • 🔍 genius-code-review — Multi-agent PR review: bugs + security + quality in parallel"
+  echo "  • 🛠️ genius-skill-creator — Framework creates new project-specific skills on demand"
+  echo "  • 🔬 genius-experiments — Autonomous overnight optimization loop (Karpathy pattern)"
+  echo "  • 🌐 genius-seo — GEO-first: optimize for ChatGPT, Perplexity, Claude + traditional search"
+  echo "  • 🪙 genius-crypto — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL"
   echo ""
   echo -e "${YELLOW}Next steps:${NC}"
-  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v16 features"
+  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v17 features"
   echo "  2. Open the dashboard: ${BOLD}node scripts/genius-server.js --open${NC}"
   echo "  3. See ${BOLD}CHANGELOG.md${NC} for full details"
   echo ""
@@ -395,7 +405,7 @@ print_dry_run_summary() {
   local from=$1
   echo ""
   echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v16.0${NC}                             ${YELLOW}║${NC}"
+  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v17.0${NC}                             ${YELLOW}║${NC}"
   echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files that would be downloaded:${NC} $FILES_DOWNLOADED"
@@ -449,8 +459,8 @@ main() {
   [ "$DRY_RUN" = false ] && log_success "Backup: $BACKUP_DIR"
 
   # ── Step 4: Download ───────────────────────────────────────────────────────
-  log_step 4 5 "Downloading v16.0 files..."
-  upgrade_to_v16
+  log_step 4 5 "Downloading v17.0 files..."
+  upgrade_to_v17
   log_success "$FILES_DOWNLOADED files downloaded"
 
   # ── Step 5: Verify ─────────────────────────────────────────────────────────

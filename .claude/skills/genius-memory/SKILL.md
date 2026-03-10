@@ -1,9 +1,13 @@
 ---
 name: genius-memory
-description: Persistent context and knowledge management skill. Maintains project memory across sessions using file-based storage. Tracks decisions, patterns, conventions, and lessons learned. AUTO-TRIGGERS on "remember this", "we decided", "don't forget", "this broke because", "lesson learned".
+description: >-
+  Manages project memory: generates BRIEFING.md, captures decisions, logs sessions. Use when user
+  says "update memory", "save context", "generate briefing", "capture decision", "what do you
+  remember about this project". Do NOT use as a primary entry point — memory updates happen
+  automatically.
 ---
 
-# Genius Memory v14.0 — The Knowledge Keeper
+# Genius Memory v17.0 — The Knowledge Keeper
 
 > **File-based memory system. No external MCPs required.**
 

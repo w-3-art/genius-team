@@ -1,6 +1,9 @@
 ---
 name: genius-integration-guide
-description: Guides user step-by-step through external service setup based on project phase (MVP/Beta/Production). Collects environment variables, validates configurations, creates .env files. Use for "setup integrations", "configure services", "env setup", "environment variables", "connect to", "add API".
+description: >-
+  Service integration guide. Provides setup instructions for third-party services
+  (Stripe, Supabase, SendGrid, etc.). Use when user says "how to integrate X", "setup [service]",
+  "connect to [API]", "third-party setup guide". For coding the integration itself, use genius-dev-api.
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -19,7 +22,7 @@ description: Guides user step-by-step through external service setup based on pr
 
 ---
 
-# Genius Integration Guide v14.0 — Service Setup Wizard
+# Genius Integration Guide v17.0 — Service Setup Wizard
 
 **Making external service integration painless.**
 

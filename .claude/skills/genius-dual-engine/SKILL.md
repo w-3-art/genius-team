@@ -1,6 +1,9 @@
 ---
 name: genius-dual-engine
-description: Dual-model build-review engine. Coordinates a Builder (implements) and Challenger (reviews) in iterative cycles. Use for "dual review", "challenge this", "build-review cycle", "dual audit".
+description: >-
+  Builder + Challenger adversarial workflow. One engine builds, another challenges with a critical review.
+  Use when user says "dual review", "challenge mode", "builder challenger", "adversarial review",
+  or when task is marked with 🔄. Requires --engine=dual or --engine=codex.
 context: fork
 user-invocable: true
 allowed-tools:
@@ -20,7 +23,7 @@ hooks:
       once: true
 ---
 
-# Genius Dual Engine v14.0 — Builder + Challenger
+# Genius Dual Engine v17.0 — Builder + Challenger
 
 **Two minds are better than one. Especially when one is trying to break your code.**
 

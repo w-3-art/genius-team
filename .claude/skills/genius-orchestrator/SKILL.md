@@ -1,6 +1,10 @@
 ---
 name: genius-orchestrator
-description: Autonomous execution engine using Agent Teams. Coordinates teammates to build the entire project. NEVER stops until all tasks complete or user says STOP.
+description: >-
+  Autonomous execution coordinator. Dispatches tasks to specialized dev sub-skills
+  (genius-dev-frontend, genius-dev-backend, etc.) using Agent Teams. Use when plan.md exists
+  with "IN PROGRESS" tasks and user says "execute", "build it", "start coding",
+  "implement the plan". Do NOT use in ideation phase before architecture is approved.
 skills:
   - genius-dev
   - genius-qa-micro
@@ -47,7 +51,7 @@ hooks:
 
 ---
 
-# Genius Orchestrator v14.0 — Agent Teams Execution Engine
+# Genius Orchestrator v17.0 — Agent Teams Execution Engine
 
 **Build while you sleep. Agent Teams. Mandatory QA. No pauses.**
 

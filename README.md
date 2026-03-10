@@ -1,6 +1,6 @@
-# Genius Team v16.0
+# Genius Team v17.0
 
-[![Version](https://img.shields.io/badge/version-16.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-17.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-1.0%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
@@ -8,7 +8,7 @@
 
 ## What is Genius Team?
 
-Genius Team is an open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
+Genius Team is an open-source framework that orchestrates 38 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
 
 ```
 genius-interviewer → genius-specs → genius-architect → genius-dev → genius-qa → genius-deploy
@@ -18,16 +18,19 @@ genius-interviewer → genius-specs → genius-architect → genius-dev → geni
 
 Every phase ends with a human checkpoint. You approve. Only then does the next agent spawn.
 
-## What's New in v16.0
+## What's New in v17.0
 
-- 📁 **`${CLAUDE_SKILL_DIR}` portable paths** — skills work anywhere, no hardcoded paths
-- 🤖 **GPT-5.4 in Codex** — `--engine=codex` now runs GPT-5.4 (1M context, reasoning, computer use)
-- 🌩️ **Cloudflare Code Mode MCP** — genius-dev uses any API in ~1K tokens (vs millions)
-- 🔔 **`InstructionsLoaded` hook** — startup confirms GENIUS_GUARD.md + memory loaded
-- 🔗 **Git conflict prevention** — `includeGitInstructions: false` in all configs
-- 📊 **HTTP Hooks enriched** — webhook payloads now include `agent` field
+- 🎯 **38 skills total** — genius-dev splits into 5 domain experts; 12 new standalone skills added
+- 🔍 **genius-code-review** — Multi-agent PR review: bugs + security + quality in parallel
+- 🛠️ **genius-skill-creator** — Framework creates new project-specific skills on demand (self-extending)
+- 🔬 **genius-experiments** — Autonomous overnight optimization loop (Karpathy autoresearch pattern)
+- 🌐 **genius-seo** — GEO-first: optimize for ChatGPT, Perplexity, Claude + traditional search
+- 🪙 **genius-crypto** — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL
+- 📊 **Post-launch suite** — genius-analytics, genius-performance, genius-accessibility
+- 📝 **Project lifecycle** — genius-docs, genius-content, genius-template (SaaS/e-commerce/mobile/web3)
+- ✅ **Anthropic Skills Guide compliance** — All 38 skills follow official best practices
 
-*Full release history: [CHANGELOG.md](./CHANGELOG.md)*
+*Previous releases: see [CHANGELOG.md](./CHANGELOG.md)*
 
 ---
 
@@ -88,7 +91,7 @@ After install, open your project in Claude Code or Codex and run `/genius-start`
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)
 ```
 
-The script auto-detects your version (v9 through v15) and upgrades to v16. Your `.genius/memory/` data is preserved.
+The script auto-detects your current version and upgrades to v17. Your `.genius/memory/` data is preserved.
 
 ---
 
@@ -108,7 +111,7 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 
 ---
 
-## 21+ Specialized Skills
+## 38 Specialized Skills
 
 | Skill | Purpose |
 |-------|---------|
@@ -122,7 +125,7 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 | genius-integration-guide | Service setup guides |
 | genius-architect | Technical planning |
 | genius-orchestrator | Autonomous execution coordinator |
-| genius-dev | Code implementation (Agent Teams) |
+| genius-dev | Smart dispatcher to specialized sub-skills |
 | genius-qa | Full quality audit |
 | genius-qa-micro | Quick per-task validation |
 | genius-debugger | Error fixing |
@@ -135,6 +138,23 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 | genius-team-optimizer | Self-improvement |
 | genius-updater | Version tracking & updates |
 | genius-dual-engine | Builder + Challenger workflow |
+| genius-dev-frontend | React/Vue/Svelte, Tailwind, responsive UI |
+| genius-dev-backend | API, auth, middleware, REST/GraphQL |
+| genius-dev-mobile | React Native/Expo, native APIs, offline |
+| genius-dev-database | Schema design, migrations, query optimization |
+| genius-dev-api | Third-party integrations, SDK wrappers |
+| genius-code-review | Multi-agent PR review (bugs+security+quality) |
+| genius-skill-creator | Creates project-specific skills on demand |
+| genius-experiments | Autonomous overnight optimization loop |
+| genius-seo | GEO-first SEO + AI search optimization |
+| genius-crypto | Web3 intelligence (DexScreener+OpenSea+Dune) |
+| genius-analytics | GA4/Plausible setup, event tracking, funnels |
+| genius-performance | Lighthouse, Core Web Vitals, bundle optimization |
+| genius-accessibility | WCAG 2.2 AA, ARIA, keyboard nav, screen reader |
+| genius-i18n | Internationalization, translations, RTL |
+| genius-docs | README, API docs, Storybook, ADRs |
+| genius-content | Blog, newsletter, social media, GEO content |
+| genius-template | Project templates (SaaS/e-commerce/mobile/web3) |
 
 ---
 
@@ -229,4 +249,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v16.0** — Agent Orchestration · File-Based Memory · Interactive Playgrounds
+**Built with** 🧠 **Genius Team v17.0** — Agent Orchestration · File-Based Memory · Interactive Playgrounds

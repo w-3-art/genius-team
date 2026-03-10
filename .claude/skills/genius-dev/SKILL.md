@@ -1,6 +1,12 @@
 ---
 name: genius-dev
-description: Code implementation skill. Executes coding tasks, creates files, writes code. Use for "implement", "code", "create component", "build feature", "write code".
+description: >-
+  Smart coding dispatcher. Analyzes the task and routes to the right specialized
+  sub-skill: genius-dev-frontend (UI/CSS/React), genius-dev-backend (API/auth/server),
+  genius-dev-mobile (React Native/Expo), genius-dev-database (schema/migrations/queries),
+  genius-dev-api (third-party integrations). Handles full-stack or unclassified tasks directly.
+  Use when user says "implement", "code", "build feature", "write code", "create component".
+  Do NOT use for QA, design, or architecture tasks.
 context: fork
 agent: genius-dev
 user-invocable: false
@@ -26,9 +32,30 @@ hooks:
       once: true
 ---
 
-# Genius Dev v14.0 — The Craftsman
+# Genius Dev v17.0 — The Craftsman
 
 **Real artists ship. But they ship when it's insanely great.**
+
+## Smart Sub-Skill Dispatch
+
+Before implementing anything, analyze the task and route to the specialized sub-skill:
+
+| Task type | Sub-skill to use |
+|-----------|-----------------|
+| React, Vue, Svelte, CSS, Tailwind, UI components, animations, responsive | **genius-dev-frontend** |
+| Node.js, Express, Fastify, API routes, auth, middleware, REST, GraphQL | **genius-dev-backend** |
+| React Native, Expo, iOS, Android, mobile-specific APIs | **genius-dev-mobile** |
+| SQL, NoSQL, schema design, migrations, Prisma, Drizzle, indexing | **genius-dev-database** |
+| Third-party API integration, SDK wrapper, webhook, OpenAPI client | **genius-dev-api** |
+| Full-stack feature, multi-layer, or unclassified | **Handle directly** (see below) |
+
+**How to dispatch:**
+When you receive a coding task, state your routing decision:
+> "This task involves [frontend/backend/mobile/database/API integration]. I'm routing to genius-dev-[type]."
+
+In Claude Code Agent Teams mode, spawn the sub-skill as a sub-agent.
+In Codex dual mode, use thread forking to the appropriate sub-agent.
+In standalone mode, apply the sub-skill's specific guidelines from its SKILL.md.
 
 ---
 

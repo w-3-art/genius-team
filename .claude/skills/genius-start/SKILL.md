@@ -1,3 +1,12 @@
+---
+name: genius-start
+description: >-
+  Session initialization skill. Loads memory, shows project status, and routes to next appropriate
+  action. Use when user runs /genius-start or says "let's begin this session", "where were we",
+  "resume", "what's the status". Runs at the start of every session.
+user-invocable: true
+---
+
 # /genius-start
 
 Initialize Genius Team environment, load memory, and **hydrate tasks** for longer work loops.
@@ -36,7 +45,7 @@ Run `bash scripts/setup.sh` if needed.
 
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  🧠 Genius Team v14.0 — Environment Ready                   ║
+║  🧠 Genius Team v17.0 — Environment Ready                   ║
 ╚════════════════════════════════════════════════════════════╝
 
 Memory:

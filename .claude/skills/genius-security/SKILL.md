@@ -1,6 +1,10 @@
 ---
 name: genius-security
-description: Security audit skill that performs OWASP Top 10 checks, dependency scanning, configuration review, and vulnerability assessment. Produces prioritized fix recommendations. Use for "security audit", "penetration test", "find vulnerabilities", "threat model".
+description: >-
+  Security audit skill. Scans for OWASP vulnerabilities, auth issues, injection risks,
+  and exposed secrets. Use when user says "security audit", "check for vulnerabilities",
+  "OWASP scan", "is this secure", "security review".
+  Do NOT use for general code review — use genius-reviewer instead.
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -19,7 +23,7 @@ description: Security audit skill that performs OWASP Top 10 checks, dependency 
 
 ---
 
-# Genius Security v14.0 — The Guardian
+# Genius Security v17.0 — The Guardian
 
 **Security is not a feature, it's a requirement.**
 

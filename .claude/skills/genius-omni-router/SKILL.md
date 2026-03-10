@@ -1,6 +1,9 @@
 ---
 name: genius-omni-router
-description: Multi-provider orchestration router. Routes tasks to the best AI provider (Claude Code, Codex CLI, Kimi CLI, Gemini CLI) based on task type, with automatic fallback to Claude Code.
+description: >-
+  Multi-provider routing for Omni mode. Routes tasks to secondary providers (Codex, Kimi, Gemini)
+  based on task type. Use automatically in Omni mode to route specialized tasks to the best
+  available provider. Do NOT invoke manually.
 skills:
   - genius-orchestrator
   - genius-team
@@ -20,7 +23,7 @@ hooks:
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] OMNI-ROUTER: $TOOL_NAME\" >> .genius/omni-router.log 2>/dev/null || true'"
 ---
 
-# Genius Omni Router v14.0 — Multi-Provider Orchestration
+# Genius Omni Router v17.0 — Multi-Provider Orchestration
 
 **Route tasks to the best AI provider. Claude Code leads. Others assist. Graceful fallback always.**
 
