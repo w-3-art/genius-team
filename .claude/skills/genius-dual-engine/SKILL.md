@@ -306,3 +306,24 @@ The `🔄` prefix and `(DUAL: ...)` annotation signal the orchestrator to activa
 4. Iterate until APPROVE or escalation
 5. Check status anytime with `/dual-status`
 6. Force a review with `/dual-challenge`
+
+---
+
+## Switching to/from Dual Mode
+
+To switch an existing project to dual mode:
+```
+/genius-switch-engine dual
+```
+
+To go back to Claude Code only:
+```
+/genius-switch-engine claude
+```
+
+To switch to Codex only:
+```
+/genius-switch-engine codex
+```
+
+This preserves all your project data (.genius/) and only reconfigures the engine files.
