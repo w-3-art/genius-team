@@ -1,9 +1,12 @@
 ---
 name: genius-onboarding
-description: First-time user experience and setup wizard for Genius Team. Use when a new user starts their first project, says "hello", "get started", or when no user profile exists in .claude/user-profile.json.
+description: >-
+  First-time setup wizard for new Genius Team installations. Use when the .genius/ directory
+  doesn't exist, or user says "setup genius", "initialize", "first time setup",
+  "configure genius team". Do NOT use on projects already initialized — use genius-start instead.
 ---
 
-# Genius Onboarding v14.0 — Welcome Experience
+# Genius Onboarding v17.0 — Welcome Experience
 
 **Making every first interaction memorable and productive.**
 

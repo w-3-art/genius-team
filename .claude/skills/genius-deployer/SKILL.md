@@ -1,6 +1,9 @@
 ---
 name: genius-deployer
-description: Deployment and operations skill that handles staging and production deployments, monitors systems, reads logs, diagnoses issues, and manages rollbacks. Works with Vercel, Railway, and other platforms. Use for "deploy", "go live", "push to production", "ship it".
+description: >-
+  Deployment skill. Handles environment setup, CI/CD configuration, and production deployment.
+  Use when user says "deploy", "ship it", "go to production", "setup CI/CD", "configure deployment".
+  After deployment, suggest genius-seo and genius-analytics for post-launch optimization.
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -58,7 +61,7 @@ Update state.json with:
 
 ---
 
-# Genius Deployer v14.0 — Ship It Safely
+# Genius Deployer v17.0 — Ship It Safely
 
 **Ships code to production with zero downtime. Never deploy on Friday at 5pm.**
 
@@ -316,3 +319,10 @@ Agent:
 5. Executes deployment protocol
 6. Records decision in memory
 ```
+
+## Post-Deployment Suggestions
+
+After successful deployment:
+- **genius-seo** — Optimize for AI and traditional search (GEO + SEO audit)
+- **genius-analytics** — Set up event tracking and conversion funnels
+- **genius-performance** — Run Lighthouse audit and optimize Core Web Vitals

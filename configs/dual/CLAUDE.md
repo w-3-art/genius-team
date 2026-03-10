@@ -1,4 +1,4 @@
-# Genius Team v15.0 — Dual Mode
+# Genius Team v17.0 — Dual Mode
 
 > Your AI product team. Builder + Challenger adversarial workflow.
 
@@ -112,7 +112,7 @@ Claude Code ≥ 1.0.0 supports project configs shared across git worktrees. In d
 
 ## Agent Teams Protocol
 
-Genius Team v15.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v17.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Builder** is the primary implementation agent (Claude Opus)

@@ -1,6 +1,9 @@
 ---
 name: genius-dual-engine
-description: Dual-model build-review engine. Coordinates a Builder (implements) and Challenger (reviews) in iterative cycles. Use for "dual review", "challenge this", "build-review cycle", "dual audit".
+description: >-
+  Builder + Challenger adversarial workflow. One engine builds, another challenges with a critical review.
+  Use when user says "dual review", "challenge mode", "builder challenger", "adversarial review",
+  or when task is marked with 🔄. Requires --engine=dual or --engine=codex.
 context: fork
 user-invocable: true
 allowed-tools:
@@ -20,9 +23,53 @@ hooks:
       once: true
 ---
 
-# Genius Dual Engine v14.0 — Builder + Challenger
+# Genius Dual Engine v17.0 — Builder + Challenger
 
 **Two minds are better than one. Especially when one is trying to break your code.**
+
+## True Simultaneous Dual — Bridge Architecture
+
+**Two terminals. One project. Real-time cross-challenges.**
+
+### Setup
+
+1. Open Terminal 1: `claude` (Claude Code)
+2. Open Terminal 2: `codex` (Codex CLI)
+3. Both read/write `.genius/dual-bridge.json` automatically
+
+### The Bridge
+
+`.genius/dual-bridge.json` records each engine's last action:
+- What task was done
+- Which files were modified
+- The actual diff (what changed)
+- Timestamp
+
+Updated automatically by the `Stop` hook after every dev action.
+
+### /challenge — Cross-Engine Review
+
+In either terminal, type `/challenge` to:
+1. Read what the OTHER engine just did (from the bridge)
+2. Get the diff automatically
+3. Run genius-code-review on those changes
+4. Receive: CRITICAL / HIGH / MEDIUM / LOW findings
+
+**No context needed.** The bridge handles it.
+
+### Hook Integration
+
+The `Stop` hook in both engines calls `scripts/update-dual-bridge.sh` automatically:
+
+```bash
+# In Claude Code Stop hook:
+bash scripts/update-dual-bridge.sh claude "$TASK_DESCRIPTION"
+
+# In Codex Stop hook (AGENTS.md):
+bash scripts/update-dual-bridge.sh codex "$TASK_DESCRIPTION"
+```
+
+---
 
 ## Overview
 
@@ -303,3 +350,24 @@ The `🔄` prefix and `(DUAL: ...)` annotation signal the orchestrator to activa
 4. Iterate until APPROVE or escalation
 5. Check status anytime with `/dual-status`
 6. Force a review with `/dual-challenge`
+
+---
+
+## Switching to/from Dual Mode
+
+To switch an existing project to dual mode:
+```
+/genius-switch-engine dual
+```
+
+To go back to Claude Code only:
+```
+/genius-switch-engine claude
+```
+
+To switch to Codex only:
+```
+/genius-switch-engine codex
+```
+
+This preserves all your project data (.genius/) and only reconfigures the engine files.

@@ -1,6 +1,11 @@
 ---
 name: genius-copywriter
-description: Creates all written content including landing pages, emails, CTAs, UI text, and error messages. Use for "write copy", "landing page", "headlines", "email copy", "button text", "CTA", "marketing copy", "UX writing", "tagline".
+description: >-
+  Marketing copy creation skill. Writes landing page copy, emails, CTAs, UI text,
+  error messages, and taglines. Use when user says "write copy", "landing page",
+  "headlines", "email copy", "button text", "CTA", "marketing copy", "UX writing",
+  "tagline", "value proposition". Do NOT use for long-form blog posts or newsletters
+  (genius-content), technical documentation (genius-docs), or i18n translations (genius-i18n).
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -19,7 +24,7 @@ description: Creates all written content including landing pages, emails, CTAs, 
 
 ---
 
-# Genius Copywriter v14.0 — Words That Convert
+# Genius Copywriter v17.0 — Words That Convert
 
 **Every word either sells or it doesn't.**
 

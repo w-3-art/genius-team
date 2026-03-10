@@ -1,6 +1,10 @@
 ---
 name: genius-interviewer
-description: Requirements discovery through natural conversation. Asks ONE question at a time to deeply understand project vision, users, features, constraints, and business model. Use when starting a new project, user says "I want to build", "help me create", "new project", "I have an idea", "let's build", "I need an app", "start from scratch", "new app", "build me", "interview me".
+description: >-
+  Conducts structured discovery interviews to understand what the user wants to build.
+  Use when user says "start a new project", "I want to build X", "interview me", "let's begin",
+  "discover my project". Do NOT use for technical implementation, QA, or after specifications
+  are already written.
 user-invocable: true
 allowed-tools:
   - Read(*)

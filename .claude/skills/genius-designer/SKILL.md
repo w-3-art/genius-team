@@ -1,6 +1,10 @@
 ---
 name: genius-designer
-description: Creates complete brand identity and design system with 2-3 visual options in an interactive HTML playground. Covers colors, typography, components, and brand personality. User explores options interactively then exports their choice. Use for "design system", "branding", "colors", "UI design", "visual design", "look and feel", "style guide".
+description: >-
+  Brand and design system creation. Generates design options (colors, typography, layout)
+  and produces DESIGN-SYSTEM.html. Use when SPECIFICATIONS.xml exists and user says
+  "design the brand", "create design system", "design options", "visual identity", "UI design".
+  Do NOT use for CSS implementation — that's genius-dev-frontend.
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

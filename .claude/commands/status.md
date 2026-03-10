@@ -1,5 +1,5 @@
 ---
-description: Show current Genius Team v14.0 project status and progress
+description: Show current Genius Team v17.0 project status and progress
 ---
 
 # /status
@@ -22,7 +22,7 @@ ls -la DISCOVERY.xml MARKET-ANALYSIS.xml SPECIFICATIONS.xml DESIGN-SYSTEM.html A
 ### Step 3: Display Status
 
 ```
-📊 **Project Status — Genius Team v14.0**
+📊 **Project Status — Genius Team v17.0**
 
 **Phase:** {Ideation / Execution / Complete}
 **Current Step:** {skill name or "Ready to start"}

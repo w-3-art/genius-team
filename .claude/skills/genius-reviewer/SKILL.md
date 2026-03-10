@@ -1,6 +1,10 @@
 ---
 name: genius-reviewer
-description: Code review and quality assessment skill. Reviews code, scores quality, suggests improvements. Read-only — never modifies code. Use for "review", "code review", "check quality", "assess code".
+description: >-
+  Code review skill. Reviews code quality, patterns, readability, and maintainability.
+  For multi-agent PR review (bugs + security + quality in parallel), use genius-code-review instead.
+  Use when user says "review my code", "code review", "check code quality", "is this good code".
+  After review, suggest /simplify for complex sections.
 context: fork
 agent: genius-reviewer
 user-invocable: false
@@ -20,7 +24,7 @@ hooks:
       once: true
 ---
 
-# Genius Reviewer v14.0 — Code Quality Guardian
+# Genius Reviewer v17.0 — Code Quality Guardian
 
 **Your code tells a story. I make sure it's a good one.**
 
@@ -58,7 +62,7 @@ Append to `.genius/memory/patterns.json` if new patterns discovered:
 ```markdown
 # Code Review: [File/Feature Name]
 Date: YYYY-MM-DD
-Reviewer: Genius Reviewer v14.0
+Reviewer: Genius Reviewer v17.0
 
 ## Score: XX/100
 | Dimension | Score | Notes |
@@ -100,3 +104,10 @@ Receives: Files to review, context from implementation
 
 ### To genius-dev
 Provides: Review findings with priorities (read-only suggestions)
+
+## Post-Review Actions
+
+After completing the review:
+1. For complex sections flagged as hard to read → suggest: "Use `/simplify` on [file:lines] to reduce complexity without changing behavior."
+2. For security issues → hand off to genius-security
+3. For PR-level multi-agent review → suggest genius-code-review

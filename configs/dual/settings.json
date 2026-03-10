@@ -99,6 +99,15 @@
             "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"session_stop\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"agent\\\":\\\"$TOOL_NAME\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi'"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [ -f scripts/update-dual-bridge.sh ]; then bash scripts/update-dual-bridge.sh claude \"${GENIUS_CURRENT_TASK:-session}\"; fi 2>/dev/null || true'",
+            "once": true
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -126,7 +135,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v16 loaded | Guard: $GUARD | Memory: $MEM\"'"
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v17.0 loaded | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }
@@ -140,5 +149,13 @@
     "DUAL_CHALLENGER_MODEL": "codex",
     "DUAL_MAX_ROUNDS": "3",
     "DUAL_CHALLENGER_PROFILE": "balanced"
+  },
+  "compaction": {
+    "postCompactionSections": [
+      "## Genius Team",
+      "## Memory",
+      "## Anti-Drift Rules",
+      "## Current Phase"
+    ]
   }
 }

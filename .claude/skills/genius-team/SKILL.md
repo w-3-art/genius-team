@@ -1,6 +1,11 @@
 ---
 name: genius-team
-description: Intelligent router for Genius Team. Detects intent and routes to appropriate skill based on current state. Main entry point for all interactions.
+description: >-
+  Main intelligent router for Genius Team. Analyzes intent and routes to the
+  right specialized skill. Use when user says "start", "begin project", "what
+  should I do next", "I want to build", or asks for status/progress.
+  Do NOT use directly for implementation, design, or QA tasks — those have
+  dedicated skills.
 user-invocable: true
 skills:
   - genius-interviewer
@@ -17,13 +22,41 @@ skills:
   - genius-deployer
   - genius-memory
   - genius-onboarding
+  - genius-dev-frontend
+  - genius-dev-backend
+  - genius-dev-mobile
+  - genius-dev-database
+  - genius-dev-api
+  - genius-code-review
+  - genius-skill-creator
+  - genius-experiments
+  - genius-seo
+  - genius-crypto
+  - genius-analytics
+  - genius-performance
+  - genius-accessibility
+  - genius-i18n
+  - genius-docs
+  - genius-content
+  - genius-template
+  - genius-dev
+  - genius-debugger
+  - genius-reviewer
+  - genius-qa-micro
+  - genius-test-assistant
+  - genius-dual-engine
+  - genius-omni-router
+  - genius-start
+  - genius-team-optimizer
+  - genius-updater
+  - genius-playground-generator
 hooks:
   PreToolUse:
     - type: command
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] ROUTER: $TOOL_NAME\" >> .genius/router.log 2>/dev/null || true'"
 ---
 
-# Genius Team v14.0 — Your AI Product Team
+# Genius Team v17.0 — Your AI Product Team
 
 **From idea to production. Agent Teams. File-based memory. No fluff.**
 
@@ -60,7 +93,7 @@ ls -la .genius/*.xml .genius/*.html 2>/dev/null
 When user starts a new project or conversation:
 
 ```
-🚀 **Welcome to Genius Team v14.0!**
+🚀 **Welcome to Genius Team v17.0!**
 
 I'm your AI product team — from idea to production.
 Powered by Agent Teams + file-based memory.
@@ -347,3 +380,38 @@ When the user asks to "see all playgrounds", "generate a dashboard", or "show ov
 - Do NOT create separate HTML files per phase when a unified view is requested
 - Individual playground files (`.genius/DISCOVERY.html`, etc.) are sources; DASHBOARD.html is the hub
 - After generating multiple playgrounds in one session, always offer: "Run `/genius-dashboard` to see all in one page"
+
+---
+
+## New Skills in v17
+
+| Skill | Triggers |
+|-------|---------|
+| genius-dev-frontend | UI, React, CSS, Tailwind, composants, animations, responsive |
+| genius-dev-backend | API, server, auth, middleware, REST, GraphQL, Node |
+| genius-dev-mobile | React Native, Expo, mobile, iOS, Android, push notifications |
+| genius-dev-database | schema, migration, SQL, NoSQL, indexing, Prisma, Drizzle |
+| genius-dev-api | intégration API tierce, SDK, webhook, OpenAPI |
+| genius-code-review | code review, PR review, audit code, review pull request |
+| genius-skill-creator | créer un skill, nouveau skill projet, workflow récurrent |
+| genius-experiments | expérimenter, optimiser overnight, loop autonome, A/B code |
+| genius-seo | SEO, GEO, citabilité IA, llms.txt, schema markup, audit site |
+| genius-crypto | crypto, DeFi, NFT, token, blockchain, DexScreener, OpenSea, Dune |
+| genius-analytics | analytics, tracking, GA4, Plausible, funnels, événements |
+| genius-performance | performance, Lighthouse, bundle, lazy loading, optimisation |
+| genius-accessibility | accessibilité, WCAG, ARIA, a11y, contraste, screen reader |
+| genius-i18n | internationalisation, i18n, traduction, locale, RTL |
+| genius-docs | documentation, README, API docs, Storybook, ADR |
+| genius-content | contenu, blog, newsletter, social media, copy SEO |
+| genius-template | template projet, boilerplate, starter, projet type |
+
+---
+
+## Dual Mode — Cross-Engine Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/challenge` | Challenge the other engine's last action (reads dual-bridge.json automatically) |
+| `/genius-switch-engine dual` | Enable true dual mode with bridge |
+| `/genius-switch-engine claude` | Switch back to Claude Code only |
+| `/genius-switch-engine codex` | Switch to Codex only |

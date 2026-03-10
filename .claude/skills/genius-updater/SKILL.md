@@ -1,6 +1,9 @@
 ---
 name: genius-updater
-description: Detects Claude Code AND Genius Team version changes. Proposes updates for both. Use for "check for updates", "update check", "upgrade genius team".
+description: >-
+  Detects Claude Code and Genius Team version changes and proposes updates. Use when user says
+  "check for updates", "upgrade genius", "is there a new version", or automatically at session
+  start. Do NOT use manually for code implementation.
 user-invocable: true
 allowed-tools:
   - Read(*)
@@ -16,7 +19,7 @@ allowed-tools:
   - Bash(curl *)
 ---
 
-# Genius Updater v14.0 — Self-Update Protocol
+# Genius Updater v17.0 — Self-Update Protocol
 
 **Keep your repo in sync with Claude Code AND Genius Team evolution.**
 

@@ -49,3 +49,31 @@ npx cloudflare-mcp-server --setup
 
 **Guide complet :** `docs/cloudflare-mcp-guide.md`
 **Source :** https://blog.cloudflare.com/code-mode-mcp/
+
+## Crypto & Web3 Tools
+
+### DexScreener CLI/MCP (genius-crypto)
+- Token scanner across all chains — free, no API key required
+- Scores: volume, liquidity, momentum, flow pressure  
+- Install: `git clone https://github.com/vibeforge1111/dexscreener-cli-mcp-tool.git`
+- MCP server included for AI agent integration
+
+### OpenSea CLI + Skill (genius-crypto)
+- NFT queries, Seaport trades, ERC20 swaps across Ethereum/Base/Arbitrum/Optimism/Polygon
+- TOON output format: ~40% fewer tokens than JSON
+- Install: `npm install -g @opensea/cli`
+- Requires: `OPENSEA_API_KEY` + `OPENSEA_MCP_TOKEN`
+
+### Dune MCP — On-chain Analytics (genius-crypto)
+- SQL access to all indexed blockchain data
+- Tools: searchTables, createDuneQuery, executeQueryById, getExecutionResults, createVisualization
+- Requires: `DUNE_API_KEY`
+- Config: `@duneanalytics/mcp-server` via npx in mcpServers
+
+## GEO / SEO
+
+- **GEO (Generative Engine Optimization)** — AI search optimization for ChatGPT/Perplexity/Claude/Gemini
+- **llms.txt standard** — AI crawler guidance file at `/llms.txt`
+- **Citability scoring** — Content structured for AI citations (clarity, factual density, E-E-A-T)
+- **geo-seo-claude** (zubair-trabzada/geo-seo-claude) — Architecture inspiration for genius-seo
+- Used by: `genius-seo`

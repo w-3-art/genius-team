@@ -427,7 +427,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
     <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v16.0</strong> is here!</span>
+    <span class="banner-text"><strong>Genius Team v17.0</strong> is here!</span>
     <span class="banner-features">Master Dashboard • OpenClaw Native • Agent Spawning • Mobile Playgrounds</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
@@ -438,9 +438,9 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v16.0 — Portable Skills, GPT-5.4 in Codex, Cloudflare MCP</div>
+      <div class="hero-badge">✨ v17.0 — 38 Skills, GEO-SEO, Crypto/Web3, Self-Extending</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
-      <p>An open-source framework that orchestrates 21+ specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
+      <p>An open-source framework that orchestrates 38 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
       <div class="hero-btns">
         <a href="#quickstart" class="btn btn-primary">Get Started</a>
         <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn btn-secondary">⭐ View on GitHub</a>
@@ -970,8 +970,8 @@ cd my-awesome-app
 <section id="upgrade" class="upgrade-section">
   <div class="container">
     <div class="fade-in">
-      <div class="section-label">Upgrading from v12?</div>
-      <div class="section-title">Get v16.0 in one command</div>
+      <div class="section-label">Upgrading from a previous version?</div>
+      <div class="section-title">Get v17.0 in one command</div>
     </div>
     
     <div class="fade-in">
@@ -988,15 +988,20 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v16.0:</h4>
+        <h4>What's new in v17.0:</h4>
         <ul>
-          <li>📁 <strong>${CLAUDE_SKILL_DIR} portable paths</strong> — skills work anywhere, no hardcoded paths</li>
-          <li>🤖 <strong>GPT-5.4 in Codex engine</strong> — 1M context, reasoning, computer use via <code>--engine=codex</code></li>
-          <li>🌩️ <strong>Cloudflare Code Mode MCP</strong> — genius-dev uses MCP APIs in ~1K tokens (vs millions)</li>
-          <li>🔔 <strong>InstructionsLoaded hook</strong> — startup validation confirms Guard + Memory loaded</li>
-          <li>🔗 <strong>Git conflict prevention</strong> — <code>includeGitInstructions: false</code> in all configs</li>
+          <li>🎯 <strong>38 specialized skills</strong> — genius-dev splits into 5 domain experts; 12 new standalone skills</li>
+          <li>🔍 <strong>genius-code-review</strong> — Multi-agent PR review: bugs + security + quality in parallel</li>
+          <li>🛠️ <strong>genius-skill-creator</strong> — Self-extending: the framework creates project-specific skills on demand</li>
+          <li>🔬 <strong>genius-experiments</strong> — Autonomous overnight optimization (Karpathy autoresearch pattern)</li>
+          <li>🌐 <strong>genius-seo</strong> — GEO-first: optimize for ChatGPT, Claude, Perplexity + traditional search + llms.txt</li>
+          <li>🪙 <strong>genius-crypto</strong> — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL</li>
+          <li>⚡ <strong>/challenge</strong> — True dual mode: cross-engine review with zero context needed (dual-bridge auto-sync)</li>
+          <li>🔄 <strong>/genius-switch-engine</strong> — Switch between Claude Code, Codex, or Dual mode anytime</li>
+          <li>🎮 <strong>genius-playground-generator</strong> — Generates custom dashboards from your real project data (not templates)</li>
+          <li>📊 <strong>21 playgrounds</strong> — 7 new: SEO, crypto, analytics, Lighthouse, WCAG, experiments, PR review</li>
         </ul>
-        <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Already on v12? Run <code>/genius-upgrade</code> inside Claude Code.</p>
+        <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Run <code>/genius-upgrade</code> inside Claude Code.</p>
       </div>
     </div>
   </div>
@@ -1007,7 +1012,7 @@ cd my-awesome-app
   <div class="container">
     <div class="fade-in">
       <div class="section-label">Skills</div>
-      <div class="section-title">21+ specialized agents</div>
+      <div class="section-title">38 specialized agents</div>
       <div class="section-sub">Each skill is a spawneable sub-agent — a domain expert with its own context, memory, and lifecycle. Together, they're your AI product team.</div>
     </div>
     <div class="skills-grid fade-in">
@@ -1107,7 +1112,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v16.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
+    <p>Built with 🧠 <strong>Genius Team v17.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
   </div>
 </footer>
 
@@ -1190,11 +1195,11 @@ function copyCode(btn) {
 function closeBanner() {
   const banner = document.getElementById('updateBanner');
   banner.classList.add('hidden');
-  localStorage.setItem('bannerClosed', 'v13');
+  localStorage.setItem('bannerClosed', 'v17');
 }
 
 // Check if banner was closed
-if (localStorage.getItem('bannerClosed') === 'v13') {
+if (localStorage.getItem('bannerClosed') === 'v17') {
   document.getElementById('updateBanner').classList.add('hidden');
 }
 

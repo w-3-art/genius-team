@@ -1,5 +1,54 @@
 # Changelog
 
+## [17.0.0] - 2026-03-10
+
+### Added — 17 Nouveaux Skills (total: 38)
+- 🖥️ **genius-dev-frontend** — React/Vue/Svelte/Tailwind specialist, responsive, a11y-first
+- ⚙️ **genius-dev-backend** — API, auth, middleware, REST/GraphQL specialist
+- 📱 **genius-dev-mobile** — React Native/Expo specialist, native APIs, offline-first
+- 🗄️ **genius-dev-database** — Schema design, migrations, query optimization specialist
+- 🔌 **genius-dev-api** — Third-party API integrations, SDK wrappers, webhooks specialist
+- 🔍 **genius-code-review** — Multi-agent PR review: bugs + security + quality in parallel (inspired by Anthropic's Code Review)
+- 🛠️ **genius-skill-creator** — Meta-skill: creates project-specific skills on demand (self-extending framework)
+- 🔬 **genius-experiments** — Autoresearch-inspired autonomous optimization loop (Karpathy pattern)
+- 🌐 **genius-seo** — GEO-first SEO (AI search: ChatGPT/Perplexity/Claude + traditional), llms.txt, citability scoring
+- 🪙 **genius-crypto** — Web3 intelligence via DexScreener + OpenSea + Dune MCP
+- 📊 **genius-analytics** — GA4/Plausible/PostHog setup, event taxonomy, conversion funnels
+- ⚡ **genius-performance** — Lighthouse audits, Core Web Vitals (LCP/CLS/INP), bundle optimization
+- ♿ **genius-accessibility** — WCAG 2.2 AA audit, ARIA, keyboard nav, screen reader testing
+- 🌍 **genius-i18n** — i18n setup, string extraction, RTL support, locale routing
+- 📝 **genius-docs** — README, API docs, Storybook, ADRs, Divio documentation system
+- 🖊️ **genius-content** — Blog, newsletter, social media threads, GEO-optimized long-form content
+- 📦 **genius-template** — Project template bootstrapper (SaaS, e-commerce, mobile, web3, API, game)
+
+### Added — Flow & Architecture
+- **genius-dev** converted to smart dispatcher → routes to 5 specialized sub-skills by task type
+- **genius-specs** suggests genius-skill-creator when recurring project workflows are detected
+- **genius-architect** recommends specific genius-dev-* sub-skills based on project type
+- **genius-deployer** suggests genius-seo + genius-analytics + genius-performance post-launch
+- **genius-reviewer** suggests /simplify for complex sections after code review
+- **genius-qa-micro** documents /loop for continuous monitoring (`/loop 2m /genius-qa-micro`)
+- **genius-team router** updated with all 38 skills + new routing table
+
+### Added — Quality & Compliance
+- All 21+ existing skills audited per Anthropic's "Complete Guide to Building Skills for Claude"
+- All descriptions now include trigger phrases ("Use when...") + negative triggers ("Do NOT use for...")
+- `genius-start/SKILL.md` was missing frontmatter entirely — added complete YAML block
+- ACP provenance security guide added (`docs/acp-provenance-guide.md`)
+- Genius-Claw v2 roadmap added (`docs/genius-claw-v2-roadmap.md`)
+
+### Added — OpenClaw Integration
+- `postCompactionSections` in all 4 mode configs — re-injects critical CLAUDE.md sections after context compaction
+- ACP provenance check pattern documented for Genius-Claw
+
+### Changed
+- genius-team router now lists 38 skills (was ~14)
+- genius-dev: smart dispatcher (was monolithic implementation skill)
+- All 21+ existing skills: updated to v17, trigger phrases added
+- TOOLS.md: added Crypto tools (DexScreener, OpenSea, Dune MCP) + GEO/SEO section
+
+---
+
 ## [16.0.0] - 2026-03-06
 
 ### Added

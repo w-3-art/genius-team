@@ -1,6 +1,10 @@
 ---
 name: genius-specs
-description: Transforms discovery findings into formal specifications with user stories, use cases, business rules, and acceptance criteria. REQUIRES USER APPROVAL before continuing to design phase. Use for "specs", "specifications", "requirements", "user stories", "acceptance criteria", "write specs".
+description: >-
+  Writes formal product specifications from interview findings. Also suggests genius-skill-creator
+  when recurring project-specific workflows are identified. Use when DISCOVERY.xml exists and user
+  says "write specs", "create specifications", "formalize requirements", "document features".
+  Do NOT use before the interview phase is complete.
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -45,7 +49,7 @@ Update state.json with:
 
 ---
 
-# Genius Specs v14.0 — Requirements Architect
+# Genius Specs v17.0 — Requirements Architect
 
 **Transforming discoveries into crystal-clear specifications.**
 
@@ -207,6 +211,14 @@ When user approves, update state.json:
 - `phases.specs.status` = `"complete"`
 - `phases.specs.data` = final validated stories with priorities
 - `currentPhase` = `"design"`
+
+---
+
+## Suggest genius-skill-creator
+
+After writing specs, scan for recurring project-specific workflows (e.g., "this project will process payments repeatedly", "this app needs regular data sync"). If found, suggest:
+
+> 💡 **Tip**: Your project has a recurring [X] workflow. Run `genius-skill-creator` to create a dedicated project skill that will make genius-dev more efficient for this pattern.
 
 ---
 

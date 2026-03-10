@@ -426,6 +426,42 @@
             <span class="phase-name">Deploy</span>
             <span class="phase-status-dot"></span>
         </button>
+        <!-- v17 Playgrounds -->
+        <button class="phase-tab" data-phase="seo" data-src="seo-dashboard.html" onclick="switchPhase('seo')">
+            <span class="phase-icon">🔍</span>
+            <span class="phase-name">SEO/GEO</span>
+            <span class="phase-status-dot"></span>
+        </button>
+        <button class="phase-tab" data-phase="crypto" data-src="crypto-analyzer.html" onclick="switchPhase('crypto')">
+            <span class="phase-icon">🔮</span>
+            <span class="phase-name">Crypto</span>
+            <span class="phase-status-dot"></span>
+        </button>
+        <button class="phase-tab" data-phase="analytics" data-src="analytics-wizard.html" onclick="switchPhase('analytics')">
+            <span class="phase-icon">📊</span>
+            <span class="phase-name">Analytics</span>
+            <span class="phase-status-dot"></span>
+        </button>
+        <button class="phase-tab" data-phase="perf" data-src="performance-monitor.html" onclick="switchPhase('perf')">
+            <span class="phase-icon">⚡</span>
+            <span class="phase-name">Perf</span>
+            <span class="phase-status-dot"></span>
+        </button>
+        <button class="phase-tab" data-phase="a11y" data-src="accessibility-checker.html" onclick="switchPhase('a11y')">
+            <span class="phase-icon">♿</span>
+            <span class="phase-name">A11y</span>
+            <span class="phase-status-dot"></span>
+        </button>
+        <button class="phase-tab" data-phase="experiments" data-src="experiments-tracker.html" onclick="switchPhase('experiments')">
+            <span class="phase-icon">🧪</span>
+            <span class="phase-name">Experiments</span>
+            <span class="phase-status-dot"></span>
+        </button>
+        <button class="phase-tab" data-phase="codereview" data-src="code-review-reporter.html" onclick="switchPhase('codereview')">
+            <span class="phase-icon">🔍</span>
+            <span class="phase-name">Code Review</span>
+            <span class="phase-status-dot"></span>
+        </button>
     </nav>
 
     <!-- Iframe Container -->
@@ -452,7 +488,14 @@
                 design: { status: 'pending', src: 'design-system-builder.html' },
                 dev: { status: 'pending', src: 'architecture-explorer.html' },
                 qa: { status: 'pending', src: 'test-coverage-map.html' },
-                deploy: { status: 'pending', src: 'deploy-checklist.html' }
+                deploy: { status: 'pending', src: 'deploy-checklist.html' },
+                seo: { status: 'pending', src: 'seo-dashboard.html' },
+                crypto: { status: 'pending', src: 'crypto-analyzer.html' },
+                analytics: { status: 'pending', src: 'analytics-wizard.html' },
+                perf: { status: 'pending', src: 'performance-monitor.html' },
+                a11y: { status: 'pending', src: 'accessibility-checker.html' },
+                experiments: { status: 'pending', src: 'experiments-tracker.html' },
+                codereview: { status: 'pending', src: 'code-review-reporter.html' }
             },
             loadedFrames: new Set(),
             lastStateHash: ''
