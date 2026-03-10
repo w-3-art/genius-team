@@ -123,7 +123,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v17.0 loaded | Guard: $GUARD | Memory: $MEM\"'"
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"\u2705\" || echo \"\u26a0\ufe0f MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"\u2705\" || echo \"\u26a0\ufe0f not generated yet\"); echo \"\ud83d\udee1\ufe0f Genius Team v17.0 loaded | Model: claude-opus-4-6 | Effort: high | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }
@@ -132,7 +132,9 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "GENIUS_TEAM_VERSION": "9.0.0",
-    "GENIUS_TEAM_MODE": "ide"
+    "GENIUS_TEAM_MODE": "ide",
+    "ANTHROPIC_MODEL": "claude-opus-4-6",
+    "CLAUDE_CODE_EFFORT_LEVEL": "high"
   },
   "compaction": {
     "postCompactionSections": [

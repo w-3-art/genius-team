@@ -69,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 9.0 (Omni Mode — Multi-Provider Orchestration)\"; echo \"\"; echo \"<omni_providers>\"; for cmd in codex kimi gemini; do if command -v $cmd &>/dev/null; then echo \"✓ $cmd: $($cmd --version 2>/dev/null | head -1 || echo installed)\"; else echo \"✗ $cmd: not found (fallback → Claude Code)\"; fi; done; echo \"</omni_providers>\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
+            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 9.0 (Omni Mode \u2014 Multi-Provider Orchestration)\"; echo \"\"; echo \"<omni_providers>\"; for cmd in codex kimi gemini; do if command -v $cmd &>/dev/null; then echo \"\u2713 $cmd: $($cmd --version 2>/dev/null | head -1 || echo installed)\"; else echo \"\u2717 $cmd: not found (fallback \u2192 Claude Code)\"; fi; done; echo \"</omni_providers>\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
           }
         ]
       }
@@ -136,7 +136,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v17.0 loaded | Guard: $GUARD | Memory: $MEM\"'"
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"\u2705\" || echo \"\u26a0\ufe0f MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"\u2705\" || echo \"\u26a0\ufe0f not generated yet\"); echo \"\ud83d\udee1\ufe0f Genius Team v17.0 loaded | Model: claude-opus-4-6 | Effort: high | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }
@@ -145,7 +145,9 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "GENIUS_TEAM_VERSION": "9.0.0",
-    "GENIUS_TEAM_MODE": "omni"
+    "GENIUS_TEAM_MODE": "omni",
+    "ANTHROPIC_MODEL": "claude-opus-4-6",
+    "CLAUDE_CODE_EFFORT_LEVEL": "high"
   },
   "compaction": {
     "postCompactionSections": [
