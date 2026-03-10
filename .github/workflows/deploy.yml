@@ -22,3 +22,26 @@ jobs:
         env:
           VERCEL_ORG_ID: team_ToBSibeHExcR9k5VuwLh5Qb9
           VERCEL_PROJECT_ID: prj_Y3vVY70B3F3FvKy3Eo6QnoA9LXaI
+
+      - name: Verify genius.w3art.io is live
+        run: |
+          echo "Waiting for CDN propagation..."
+          sleep 10
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://genius.w3art.io)
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "⚠️ Domain not serving — forcing alias re-bind..."
+            cd docs
+            vercel alias --token=${{ secrets.VERCEL_TOKEN }} genius.w3art.io
+            sleep 5
+            STATUS2=$(curl -s -o /dev/null -w "%{http_code}" https://genius.w3art.io)
+            echo "HTTP status after re-bind: $STATUS2"
+            if [ "$STATUS2" != "200" ]; then
+              echo "❌ genius.w3art.io still not serving after re-bind"
+              exit 1
+            fi
+          fi
+          echo "✅ genius.w3art.io → HTTP $STATUS"
+        env:
+          VERCEL_ORG_ID: team_ToBSibeHExcR9k5VuwLh5Qb9
+          VERCEL_PROJECT_ID: prj_Y3vVY70B3F3FvKy3Eo6QnoA9LXaI
