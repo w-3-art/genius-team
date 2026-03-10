@@ -1,4 +1,4 @@
-# Genius Team v15.0 — Dual Mode
+# Genius Team v17.0 — Dual Mode
 
 > Your AI product team. Builder + Challenger adversarial workflow.
 

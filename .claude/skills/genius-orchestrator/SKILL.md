@@ -7,9 +7,15 @@ description: >-
   "implement the plan". Do NOT use in ideation phase before architecture is approved.
 skills:
   - genius-dev
+  - genius-dev-frontend
+  - genius-dev-backend
+  - genius-dev-mobile
+  - genius-dev-database
+  - genius-dev-api
   - genius-qa-micro
   - genius-debugger
   - genius-reviewer
+  - genius-code-review
 allowed-tools:
   - Read(*)
   - Write(*)
@@ -246,6 +252,25 @@ ONLY STOP CONDITIONS:
 ## Your Role
 
 You are the **LEAD COORDINATOR**. You do NOT write code directly. You delegate ALL implementation to teammates using the Task tool with `subagent_type`.
+
+---
+
+## Task Dispatch
+
+## Specialized Dev Sub-Skill Dispatch
+
+When dispatching coding tasks, select the most specific sub-skill:
+
+| Task type | Sub-skill |
+|-----------|----------|
+| UI, React, CSS, Tailwind, responsive | genius-dev-frontend |
+| API, server, auth, Node.js, REST | genius-dev-backend |
+| React Native, Expo, iOS, Android | genius-dev-mobile |
+| Schema, migration, SQL, Prisma | genius-dev-database |
+| Third-party integration, SDK, webhook | genius-dev-api |
+| Full-stack or unclassified | genius-dev |
+
+For PR/code review: use **genius-code-review** (multi-agent, more thorough than genius-reviewer).
 
 ---
 

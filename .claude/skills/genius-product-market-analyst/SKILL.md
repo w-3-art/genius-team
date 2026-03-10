@@ -1,6 +1,12 @@
 ---
 name: genius-product-market-analyst
-description: Market research and business strategy skill that validates product-market fit, analyzes competition, identifies market gaps, and proposes business models. Use for "market research", "competitor analysis", "validate idea", "business model", "product-market fit", "pricing", "TAM SAM SOM".
+description: >-
+  Market research and business strategy skill. Validates product-market fit, analyzes
+  competition, identifies market gaps, and proposes business models. Use when user says
+  "market research", "competitor analysis", "validate idea", "business model",
+  "product-market fit", "pricing", "TAM SAM SOM", "market opportunity".
+  Do NOT use for building the product (genius-dev skills) or tracking post-launch metrics
+  (genius-analytics).
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -45,7 +51,7 @@ Update state.json with:
 
 ---
 
-# Genius Product Market Analyst v14.0 — Strategic Intelligence
+# Genius Product Market Analyst v17.0 — Strategic Intelligence
 
 **Turn ideas into validated opportunities.**
 
@@ -199,3 +205,10 @@ Provides: MARKET-ANALYSIS.xml, competitive positioning, pricing recommendation
 
 ### To: genius-marketer
 Provides: Positioning map, target segments, competitive intelligence
+
+## Handoff to genius-analytics
+
+After launch, use **genius-analytics** to:
+- Validate the TAM/SAM estimates against real user data
+- Track conversion rates and acquisition costs
+- Measure retention and churn against the model projections

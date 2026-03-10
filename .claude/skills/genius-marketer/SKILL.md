@@ -1,6 +1,12 @@
 ---
 name: genius-marketer
-description: Go-to-market strategy skill that defines audience segments, positioning, acquisition channels, launch plans, and success metrics. Creates MARKETING-STRATEGY.xml and TRACKING-PLAN.xml. Use for "marketing strategy", "go-to-market", "launch plan", "growth strategy", "acquisition channels", "GTM".
+description: >-
+  Go-to-market strategy skill. Defines audience segments, positioning, acquisition
+  channels, launch plans, and success metrics. Creates MARKETING-STRATEGY.xml and
+  TRACKING-PLAN.xml. Use when user says "marketing strategy", "go-to-market", "GTM",
+  "launch plan", "growth strategy", "acquisition channels", "user acquisition",
+  "retention strategy". Do NOT use for content creation (genius-content), copywriting
+  (genius-copywriter), or product-market fit analysis (genius-product-market-analyst).
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -19,7 +25,7 @@ description: Go-to-market strategy skill that defines audience segments, positio
 
 ---
 
-# Genius Marketer v14.0 — Growth Strategist
+# Genius Marketer v17.0 — Growth Strategist
 
 **From zero to traction with data-driven marketing.**
 
@@ -170,3 +176,12 @@ Provides: MARKETING-STRATEGY.xml, messaging framework, target personas
 
 ### To: genius-integration-guide
 Provides: TRACKING-PLAN.xml, analytics tool recommendations
+
+## Handoff to genius-content
+
+After defining the marketing strategy, hand off to **genius-content** for:
+- Blog posts aligned with the GTM strategy
+- Social media content calendar
+- Newsletter sequence for launch
+
+Hand off to **genius-analytics** post-launch to track acquisition channel performance.
