@@ -124,5 +124,8 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "GENIUS_TEAM_VERSION": "9.0.0",
     "GENIUS_TEAM_MODE": "ide"
+  },
+  "compaction": {
+    "postCompactionSections": ["## Genius Team", "## Memory", "## Anti-Drift Rules", "## Current Phase"]
   }
 }

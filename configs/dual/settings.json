@@ -140,5 +140,8 @@
     "DUAL_CHALLENGER_MODEL": "codex",
     "DUAL_MAX_ROUNDS": "3",
     "DUAL_CHALLENGER_PROFILE": "balanced"
+  },
+  "compaction": {
+    "postCompactionSections": ["## Genius Team", "## Memory", "## Anti-Drift Rules", "## Current Phase"]
   }
 }
