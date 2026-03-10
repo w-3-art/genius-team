@@ -393,3 +393,14 @@ When the user asks to "see all playgrounds", "generate a dashboard", or "show ov
 | genius-docs | documentation, README, API docs, Storybook, ADR |
 | genius-content | contenu, blog, newsletter, social media, copy SEO |
 | genius-template | template projet, boilerplate, starter, projet type |
+
+---
+
+## Dual Mode — Cross-Engine Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/challenge` | Challenge the other engine's last action (reads dual-bridge.json automatically) |
+| `/genius-switch-engine dual` | Enable true dual mode with bridge |
+| `/genius-switch-engine claude` | Switch back to Claude Code only |
+| `/genius-switch-engine codex` | Switch to Codex only |

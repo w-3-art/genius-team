@@ -27,6 +27,50 @@ hooks:
 
 **Two minds are better than one. Especially when one is trying to break your code.**
 
+## True Simultaneous Dual — Bridge Architecture
+
+**Two terminals. One project. Real-time cross-challenges.**
+
+### Setup
+
+1. Open Terminal 1: `claude` (Claude Code)
+2. Open Terminal 2: `codex` (Codex CLI)
+3. Both read/write `.genius/dual-bridge.json` automatically
+
+### The Bridge
+
+`.genius/dual-bridge.json` records each engine's last action:
+- What task was done
+- Which files were modified
+- The actual diff (what changed)
+- Timestamp
+
+Updated automatically by the `Stop` hook after every dev action.
+
+### /challenge — Cross-Engine Review
+
+In either terminal, type `/challenge` to:
+1. Read what the OTHER engine just did (from the bridge)
+2. Get the diff automatically
+3. Run genius-code-review on those changes
+4. Receive: CRITICAL / HIGH / MEDIUM / LOW findings
+
+**No context needed.** The bridge handles it.
+
+### Hook Integration
+
+The `Stop` hook in both engines calls `scripts/update-dual-bridge.sh` automatically:
+
+```bash
+# In Claude Code Stop hook:
+bash scripts/update-dual-bridge.sh claude "$TASK_DESCRIPTION"
+
+# In Codex Stop hook (AGENTS.md):
+bash scripts/update-dual-bridge.sh codex "$TASK_DESCRIPTION"
+```
+
+---
+
 ## Overview
 
 The Dual Engine coordinates two AI models in complementary roles:
