@@ -18,6 +18,7 @@ NC='\033[0m'
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
 TARGET_VERSION="17.0.0"
+CLAUDE_SKILL_DIR=".claude/skills"
 
 # ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────
 # This runs even when the local upgrade.sh targets an old version
@@ -344,7 +345,7 @@ upgrade_to_v15() {
   done
 
   # ── Skills ────────────────────────────────────────────────────────────────
-  log_info "Skills (21+)..."
+  log_info "Skills (core set)..."
   local skills=(
     "genius-team"
     "genius-start"
