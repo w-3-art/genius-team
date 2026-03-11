@@ -143,8 +143,27 @@ copy_dir() {
 # Core files
 copy_dir  "${GENIUS_SRC}/.claude"         "./.claude"
 copy_file "${GENIUS_SRC}/CLAUDE.md"       "./CLAUDE.md"
-copy_dir  "${GENIUS_SRC}/scripts"         "./scripts"
-copy_dir  "${GENIUS_SRC}/configs"         "./configs"
+# Scripts: ALWAYS overwrite (critical for upgrades to work)
+if [ -d "./scripts" ]; then
+  cp -r "${GENIUS_SRC}/scripts/"* "./scripts/"
+  ok "Updated ${CYAN}scripts/${NC} (force-overwrite)"
+  ((COPIED++)) || true
+else
+  cp -r "${GENIUS_SRC}/scripts" "./scripts"
+  ok "Added ${CYAN}scripts/${NC}"
+  ((COPIED++)) || true
+fi
+
+# Configs: ALWAYS overwrite (mode settings must match latest version)
+if [ -d "./configs" ]; then
+  cp -r "${GENIUS_SRC}/configs/"* "./configs/"
+  ok "Updated ${CYAN}configs/${NC} (force-overwrite)"
+  ((COPIED++)) || true
+else
+  cp -r "${GENIUS_SRC}/configs" "./configs"
+  ok "Added ${CYAN}configs/${NC}"
+  ((COPIED++)) || true
+fi
 copy_file "${GENIUS_SRC}/GENIUS_GUARD.md" "./GENIUS_GUARD.md"
 copy_file "${GENIUS_SRC}/VERSION"         "./VERSION"
 
