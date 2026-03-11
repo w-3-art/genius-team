@@ -277,7 +277,7 @@ fi
 
 # Check for deprecated memory function usage in skills
 _dep="mind"; _pat="${_dep}_recall\|${_dep}_log\|${_dep}_search\|${_dep}_remind"
-MIND_REFS=$(grep -rl "$_pat" "${CLAUDE_SKILL_DIR}/" 2>/dev/null | wc -l | tr -d ' ')
+MIND_REFS=$(grep -rl "$_pat" "${SKILLS_DIR}/" 2>/dev/null | wc -l | tr -d ' ')
 if [ "$MIND_REFS" -gt 0 ]; then
   echo -e "  ${RED}✗${NC} Found $MIND_REFS skills with deprecated memory function references"
   ERRORS=$((ERRORS + 1))
