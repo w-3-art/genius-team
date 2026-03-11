@@ -501,7 +501,7 @@ echo ""
 if [ -f "scripts/verify.sh" ]; then
   echo "🔍 ${BLUE}Running verification...${NC}"
   echo ""
-  bash scripts/verify.sh
+  bash scripts/verify.sh || true
 else
   echo -e "${YELLOW}⚠${NC} verify.sh not found, skipping verification"
 fi

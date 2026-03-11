@@ -167,7 +167,8 @@ SKILLS=(
   "genius-template"
   "genius-playground-generator"
   "genius-dual-engine"
-  "genius-save-token"
+  "genius-omni-router"
+  "genius-start"
   "genius-updater"
 )
 
