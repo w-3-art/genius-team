@@ -144,7 +144,12 @@ copy_dir() {
 copy_dir  "${GENIUS_SRC}/.claude"         "./.claude"
 copy_file "${GENIUS_SRC}/CLAUDE.md"       "./CLAUDE.md"
 copy_dir  "${GENIUS_SRC}/scripts"         "./scripts"
+copy_dir  "${GENIUS_SRC}/configs"         "./configs"
 copy_file "${GENIUS_SRC}/GENIUS_GUARD.md" "./GENIUS_GUARD.md"
+copy_file "${GENIUS_SRC}/VERSION"         "./VERSION"
+
+# Templates (needed for dual-bridge etc.)
+[ -d "${GENIUS_SRC}/templates" ] && copy_dir "${GENIUS_SRC}/templates" "./templates"
 
 # Optional but useful
 [ -f "${GENIUS_SRC}/MEMORY-SYSTEM.md" ] && copy_file "${GENIUS_SRC}/MEMORY-SYSTEM.md" "./MEMORY-SYSTEM.md"

@@ -1,8 +1,8 @@
 #!/bin/bash
-# Genius Team v9.0 — Verification Script
+# Genius Team v17.0 — Verification Script
 # Verify that the environment is properly set up
 
-echo "🔍 Genius Team v9.0 — Environment Verification"
+echo "🔍 Genius Team v17.0 — Environment Verification"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
@@ -122,7 +122,7 @@ check_file "scripts/memory-extract.sh"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════
-# 4. Skills (21 expected)
+# 4. Skills (42 expected)
 # ═══════════════════════════════════════════════════════════════
 echo "🎯 Checking skills..."
 
@@ -138,16 +138,37 @@ SKILLS=(
   "genius-architect"
   "genius-orchestrator"
   "genius-dev"
+  "genius-dev-frontend"
+  "genius-dev-backend"
+  "genius-dev-mobile"
+  "genius-dev-database"
+  "genius-dev-api"
   "genius-qa"
   "genius-qa-micro"
   "genius-debugger"
   "genius-reviewer"
+  "genius-code-review"
   "genius-security"
   "genius-deployer"
   "genius-memory"
   "genius-onboarding"
   "genius-test-assistant"
   "genius-team-optimizer"
+  "genius-seo"
+  "genius-crypto"
+  "genius-skill-creator"
+  "genius-experiments"
+  "genius-analytics"
+  "genius-performance"
+  "genius-accessibility"
+  "genius-i18n"
+  "genius-docs"
+  "genius-content"
+  "genius-template"
+  "genius-playground-generator"
+  "genius-dual-engine"
+  "genius-save-token"
+  "genius-updater"
 )
 
 # Determine skills directory based on engine
@@ -240,7 +261,7 @@ else
 fi
 
 if [ -f ".mcp.json" ]; then
-  echo -e "  ${YELLOW}⚠${NC} .mcp.json exists (not needed in v9)"
+  echo -e "  ${YELLOW}⚠${NC} .mcp.json exists (not needed in v17)"
   WARNINGS=$((WARNINGS + 1))
 else
   echo -e "  ${GREEN}✓${NC} No .mcp.json"
@@ -287,13 +308,13 @@ echo "════════════════════════�
 
 if [ $ERRORS -eq 0 ]; then
   if [ $WARNINGS -eq 0 ]; then
-    echo -e "${GREEN}✅ All checks passed! Genius Team v9.0 is ready.${NC}"
+    echo -e "${GREEN}✅ All checks passed! Genius Team v17.0 is ready.${NC}"
     echo ""
     echo "Run /genius-start to begin."
   else
     echo -e "${YELLOW}⚠️ $WARNINGS warning(s), but ready to use.${NC}"
     echo ""
-    echo "Genius Team v9.0 is functional. Warnings are non-blocking."
+    echo "Genius Team v17.0 is functional. Warnings are non-blocking."
   fi
 else
   echo -e "${RED}❌ $ERRORS error(s) found.${NC}"

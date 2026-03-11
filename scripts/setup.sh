@@ -413,11 +413,21 @@ else
 fi
 
 # Update config.json with mode and engine
-if [ -f ".genius/config.json" ]; then
+if [ ! -f ".genius/config.json" ]; then
+  NOW=$(date -Iseconds 2>/dev/null || date '+%Y-%m-%dT%H:%M:%S')
+  cat > .genius/config.json << CFGEOF
+{
+  "mode": "$MODE",
+  "engine": "$ENGINE",
+  "version": "17.0.0",
+  "created_at": "$NOW",
+  "updated_at": "$NOW"
+}
+CFGEOF
+  echo -e "${GREEN}✓${NC} Created config.json (mode: ${MODE}, engine: ${ENGINE})"
+else
   jq --arg mode "$MODE" --arg engine "$ENGINE" '.mode = $mode | .engine = $engine' .genius/config.json > .genius/config.json.tmp && mv .genius/config.json.tmp .genius/config.json
   echo -e "${GREEN}✓${NC} Mode set to '${MODE}', engine set to '${ENGINE}' in config.json"
-else
-  echo -e "${YELLOW}⚠${NC} config.json not found"
 fi
 
 # Engine=dual specific: Initialize dual-engine coordination state
