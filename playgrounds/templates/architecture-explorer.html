@@ -4,30 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture Explorer | Genius Playground</title>
+    <link rel="stylesheet" href="./design-tokens.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --border: #30363d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --accent: #58a6ff;
-            --accent-hover: #79b8ff;
-            --success: #3fb950;
-            --warning: #d29922;
-            --danger: #f85149;
-            --purple: #a371f7;
-            --cyan: #39c5cf;
-            --orange: #f0883e;
-            --pink: #db61a2;
+            --border: var(--border-color);
+            --accent: var(--accent-blue);
+            --accent-hover: var(--accent-blue-hover);
+            --success: var(--accent-green);
+            --warning: var(--accent-orange);
+            --danger: var(--accent-red);
+            --purple: var(--accent-purple);
+            --cyan: var(--accent-cyan);
+            --orange: var(--accent-orange-bright);
+            --pink: var(--accent-pink);
         }
+
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -92,7 +88,7 @@
         .preset-btn.active {
             background: var(--accent);
             border-color: var(--accent);
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .main-container {
@@ -176,12 +172,12 @@
         }
 
         .node:hover {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 20px var(--overlay-black-40);
         }
 
         .node.selected {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 0 0 3px var(--tone-blue-30);
         }
 
         .node.dragging {
@@ -199,12 +195,12 @@
             border-radius: 10px 10px 0 0;
         }
 
-        .node[data-type="frontend"] .node-header { background: linear-gradient(135deg, rgba(88, 166, 255, 0.2), transparent); }
-        .node[data-type="api"] .node-header { background: linear-gradient(135deg, rgba(63, 185, 80, 0.2), transparent); }
-        .node[data-type="database"] .node-header { background: linear-gradient(135deg, rgba(163, 113, 247, 0.2), transparent); }
-        .node[data-type="external"] .node-header { background: linear-gradient(135deg, rgba(240, 136, 62, 0.2), transparent); }
-        .node[data-type="queue"] .node-header { background: linear-gradient(135deg, rgba(210, 153, 34, 0.2), transparent); }
-        .node[data-type="cache"] .node-header { background: linear-gradient(135deg, rgba(57, 197, 207, 0.2), transparent); }
+        .node[data-type="frontend"] .node-header { background: linear-gradient(135deg, var(--tone-blue-20), transparent); }
+        .node[data-type="api"] .node-header { background: linear-gradient(135deg, var(--tone-green-20), transparent); }
+        .node[data-type="database"] .node-header { background: linear-gradient(135deg, var(--tone-purple-20), transparent); }
+        .node[data-type="external"] .node-header { background: linear-gradient(135deg, var(--tone-orange-20), transparent); }
+        .node[data-type="queue"] .node-header { background: linear-gradient(135deg, var(--tone-orange-20), transparent); }
+        .node[data-type="cache"] .node-header { background: linear-gradient(135deg, var(--tone-blue-20), transparent); }
 
         .node-icon {
             font-size: 20px;
@@ -428,7 +424,7 @@
             background: var(--accent);
             border: none;
             border-radius: 6px;
-            color: #fff;
+            color: var(--text-inverse);
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
@@ -473,7 +469,7 @@
             font-size: 13px;
             display: none;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.4);
+            box-shadow: 0 4px 12px var(--tone-blue-30);
         }
 
         .connection-mode.active {
