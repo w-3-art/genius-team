@@ -113,77 +113,17 @@ After every cycle iteration, update `.genius/dual-state.json` with:
 
 ## Mode 1: Build-Review Cycle
 
-The primary workflow. Builder implements, Challenger reviews.
+Builder implements → Challenger reviews → APPROVE / REQUEST_CHANGES / REJECT.
 
-### Protocol
+**Flow:**
+1. Set `dual-state.json` → `active: true, mode: "build-review", cycle: 0`
+2. Builder implements using genius-dev patterns
+3. Builder writes summary to `.genius/dual-review-request.md` (task, files changed, approach, test status)
+4. Spawn Challenger (`genius-challenger`) with read-only access + review request + profile config
+5. Challenger writes `.genius/dual-verdict.md` (verdict, score /100, findings by severity, rationale)
+6. **APPROVE** → done, log history. **REQUEST_CHANGES** → builder fixes, cycle++, escalate if `>= DUAL_MAX_ROUNDS`. **REJECT** → escalate immediately.
 
-```
-┌─────────────┐     implement     ┌─────────────┐
-│   BUILDER   │ ───────────────→  │  Code/Files  │
-└─────────────┘                   └──────┬───────┘
-                                         │
-                                         ▼
-                                  ┌─────────────┐
-                                  │ CHALLENGER   │
-                                  │  (review)    │
-                                  └──────┬───────┘
-                                         │
-                              ┌──────────┼──────────┐
-                              ▼          ▼          ▼
-                         APPROVE   REQUEST_CHANGES  REJECT
-                           │          │              │
-                           ▼          ▼              ▼
-                         Done    Builder fixes   Escalate
-                                  (cycle++)      to user
-```
-
-### Step-by-Step
-
-1. **Activate**: Set `dual-state.json` → `active: true, mode: "build-review", cycle: 0`
-2. **Builder Phase**: Builder receives the task and implements it normally using genius-dev patterns
-3. **Handoff**: Builder signals completion. Write implementation summary to `.genius/dual-review-request.md`:
-   ```markdown
-   # Dual Review Request
-   ## Task: [description]
-   ## Files Changed: [list]
-   ## Approach: [summary]
-   ## Tests: [pass/fail status]
-   ```
-4. **Challenger Phase**: Spawn Challenger agent (`genius-challenger`) with:
-   - Read-only access to all project files
-   - The review request document
-   - The challenger profile configuration
-5. **Verdict**: Challenger writes `.genius/dual-verdict.md`:
-   ```markdown
-   # Challenger Verdict — Cycle N
-   ## Verdict: APPROVE | REQUEST_CHANGES | REJECT
-   ## Score: XX/100
-   ## Findings:
-   ### Critical (must fix)
-   ### Important (should fix)
-   ### Minor (could fix)
-   ## Rationale: [explanation]
-   ```
-6. **Resolution**:
-   - **APPROVE** → Task complete. Log to history. Set `active: false`.
-   - **REQUEST_CHANGES** → Builder receives findings, fixes issues. Increment `cycle`. If `cycle >= DUAL_MAX_ROUNDS` → escalate to user.
-   - **REJECT** → Escalate to user immediately with Challenger's rationale.
-
-### Spawning the Challenger
-
-Use Agent Teams task delegation:
-```
-Task the genius-challenger agent: Review the implementation described in .genius/dual-review-request.md.
-Apply the {DUAL_CHALLENGER_PROFILE} profile. Write verdict to .genius/dual-verdict.md.
-```
-
-If the configured challenger model CLI is available (codex, kimi, gemini), use it:
-```bash
-# Example with Codex CLI
-codex --approval-mode full-auto "Review the code changes in .genius/dual-review-request.md. Write your verdict to .genius/dual-verdict.md following the format in ${CLAUDE_SKILL_DIR}/genius-dual-engine/SKILL.md"
-```
-
-If no external CLI is available, fall back to spawning a Claude Code Task with the genius-challenger agent prompt.
+**Spawning**: Use Agent Teams task delegation or external CLI (codex/kimi/gemini) if available, else Claude Code Task.
 
 ---
 
