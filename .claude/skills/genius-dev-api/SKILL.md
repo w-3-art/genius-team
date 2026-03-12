@@ -59,164 +59,30 @@ hooks:
 
 ## API Wrapper Pattern
 
-### The standard wrapper structure
-
-```typescript
-// lib/integrations/stripe.ts
-
-import Stripe from 'stripe';
-
-// Single instance (singleton)
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
-
-export class StripeService {
-  // Wrap each operation — never expose raw Stripe client
-  
-  async createCustomer(email: string, name: string): Promise<string> {
-    try {
-      const customer = await stripe.customers.create({ email, name });
-      return customer.id;
-    } catch (error) {
-      if (error instanceof Stripe.errors.StripeError) {
-        throw new IntegrationError('stripe', error.code ?? 'unknown', error.message);
-      }
-      throw error;
-    }
-  }
-
-  async createCheckoutSession(params: {
-    customerId: string;
-    priceId: string;
-    successUrl: string;
-    cancelUrl: string;
-  }): Promise<string> {
-    const session = await stripe.checkout.sessions.create({
-      customer: params.customerId,
-      payment_method_types: ['card'],
-      line_items: [{ price: params.priceId, quantity: 1 }],
-      mode: 'subscription',
-      success_url: params.successUrl,
-      cancel_url: params.cancelUrl,
-    });
-    return session.url!;
-  }
-}
-
-export const stripeService = new StripeService();
-```
-
-### Custom error class
-```typescript
-// lib/errors.ts
-export class IntegrationError extends Error {
-  constructor(
-    public provider: string,
-    public code: string,
-    message: string,
-  ) {
-    super(`[${provider}] ${code}: ${message}`);
-    this.name = 'IntegrationError';
-  }
-}
-```
+Create `lib/integrations/<provider>.ts` with:
+- **Singleton client** — single instance, configured from env vars
+- **Service class** — wraps each operation, never exposes raw client
+- **Error handling** — catch provider-specific errors, rethrow as `IntegrationError(provider, code, message)`
+- **Custom error class** — `lib/errors.ts` with `IntegrationError extends Error` (fields: provider, code, message)
 
 ---
 
 ## Retry Logic with Exponential Backoff
 
-```typescript
-// lib/utils/retry.ts
-export async function withRetry<T>(
-  fn: () => Promise<T>,
-  options: {
-    maxAttempts?: number;
-    initialDelayMs?: number;
-    maxDelayMs?: number;
-    retryOn?: (error: unknown) => boolean;
-  } = {}
-): Promise<T> {
-  const {
-    maxAttempts = 3,
-    initialDelayMs = 500,
-    maxDelayMs = 10000,
-    retryOn = (e) => e instanceof Error && ['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND'].includes((e as any).code),
-  } = options;
-
-  let lastError: unknown;
-  
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error;
-      
-      if (attempt === maxAttempts || !retryOn(error)) throw error;
-      
-      const delay = Math.min(initialDelayMs * 2 ** (attempt - 1), maxDelayMs);
-      const jitter = delay * 0.1 * Math.random();
-      await new Promise(resolve => setTimeout(resolve, delay + jitter));
-    }
-  }
-  
-  throw lastError;
-}
-
-// Usage
-const result = await withRetry(() => openai.chat.completions.create(...), {
-  maxAttempts: 3,
-  retryOn: (e) => e instanceof OpenAI.APIError && e.status === 429,
-});
-```
+Create `lib/utils/retry.ts` with `withRetry<T>(fn, options)`:
+- Options: `maxAttempts` (default 3), `initialDelayMs` (500), `maxDelayMs` (10000), `retryOn` predicate
+- Delay formula: `min(initialDelay × 2^(attempt-1), maxDelay) + jitter`
+- Default retryOn: network errors (ECONNRESET, ETIMEDOUT, ENOTFOUND); customize for 429 rate limits
 
 ---
 
 ## Webhook Handling
 
-### Signature verification (critical security step)
-
-```typescript
-// routes/webhooks/stripe.ts
-import express from 'express';
-import Stripe from 'stripe';
-
-const router = express.Router();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-// ⚠️ Must use raw body for signature verification
-router.post('/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature']!;
-  
-  let event: Stripe.Event;
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err);
-    return res.status(400).send('Webhook Error');
-  }
-
-  // Idempotency: check if we've already processed this event
-  const existing = await db.webhookEvents.findUnique({ where: { eventId: event.id } });
-  if (existing) return res.json({ received: true, duplicate: true });
-
-  // Process event
-  await db.webhookEvents.create({ data: { eventId: event.id, type: event.type } });
-
-  switch (event.type) {
-    case 'checkout.session.completed':
-      await handleCheckoutComplete(event.data.object as Stripe.Checkout.Session);
-      break;
-    case 'customer.subscription.deleted':
-      await handleSubscriptionCancelled(event.data.object as Stripe.Subscription);
-      break;
-    default:
-      console.log(`Unhandled event type: ${event.type}`);
-  }
-
-  res.json({ received: true });
-});
-```
+Every webhook endpoint MUST:
+1. **Verify signature** — use raw body (not parsed JSON) + provider's SDK verification method
+2. **Idempotency check** — store processed event IDs in DB, skip duplicates
+3. **Switch on event type** — handle each type explicitly, log unhandled types
+4. **Return 200 quickly** — process async if heavy; return `{ received: true }` immediately
 
 ---
 
