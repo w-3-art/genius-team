@@ -243,6 +243,87 @@ export function errorHandler(err, req, res, next) {
 }
 ```
 
+### Async route + operational error pattern
+```typescript
+class AppError extends Error {
+  constructor(
+    public statusCode: number,
+    public code: string,
+    message: string,
+    public details?: Record<string, unknown>,
+  ) {
+    super(message);
+  }
+}
+
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+app.get('/api/users/:id', asyncHandler(async (req, res) => {
+  const user = await userService.getById(req.params.id);
+  if (!user) {
+    throw new AppError(404, 'USER_NOT_FOUND', 'User not found');
+  }
+
+  res.json({ data: user });
+}));
+
+export function errorHandler(err, req, res, next) {
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({
+      error: {
+        code: err.code,
+        message: err.message,
+        details: err.details,
+        statusCode: err.statusCode,
+      },
+    });
+  }
+
+  return res.status(500).json({
+    error: { code: 'INTERNAL_ERROR', message: 'Internal server error', statusCode: 500 },
+  });
+}
+```
+
+### Retry transient dependency failures only
+```typescript
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function retry<T>(
+  operation: () => Promise<T>,
+  { retries = 3, baseMs = 100 }: { retries?: number; baseMs?: number } = {},
+): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      const isRetryable =
+        error instanceof Error &&
+        /timeout|temporar|deadlock|ECONNRESET|ETIMEDOUT/i.test(error.message);
+
+      if (!isRetryable || attempt === retries) {
+        throw error;
+      }
+
+      await sleep(baseMs * 2 ** attempt);
+    }
+  }
+
+  throw lastError;
+}
+
+const profile = await retry(() => billingClient.getCustomerProfile(userId));
+```
+
+Rules:
+- Retry network/database timeouts, deadlocks, and 429/503-style upstream failures
+- Never retry validation, auth, or duplicate-write errors without idempotency protection
+- Log retry count and final failure so operators can distinguish flaky dependencies from code bugs
+
 ---
 
 ## API Testing with curl
