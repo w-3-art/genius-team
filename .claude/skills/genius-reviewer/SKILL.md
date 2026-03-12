@@ -1,10 +1,12 @@
 ---
 name: genius-reviewer
 description: >-
-  Code review skill. Reviews code quality, patterns, readability, and maintainability.
-  For multi-agent PR review (bugs + security + quality in parallel), use genius-code-review instead.
-  Use when user says "review my code", "code review", "check code quality", "is this good code".
-  After review, suggest /simplify for complex sections.
+  Single-agent code review for quality, patterns, readability, and maintainability.
+  Use when user says "review my code", "check code quality", "is this good code",
+  "review this file", "code style check".
+  Do NOT use for PR/pull request reviews (use genius-code-review for multi-agent PR review).
+  Do NOT use for security audits (use genius-security).
+  Do NOT use for QA testing (use genius-qa).
 context: fork
 agent: genius-reviewer
 user-invocable: false

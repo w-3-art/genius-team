@@ -4,6 +4,8 @@ description: >-
   Session initialization skill. Loads memory, shows project status, and routes to next appropriate
   action. Use when user runs /genius-start or says "let's begin this session", "where were we",
   "resume", "what's the status". Runs at the start of every session.
+  Do NOT use for new project creation (use genius-interviewer).
+  Do NOT use for implementation (use genius-dev skills).
 user-invocable: true
 ---
 

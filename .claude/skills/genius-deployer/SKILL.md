@@ -2,7 +2,10 @@
 name: genius-deployer
 description: >-
   Deployment skill. Handles environment setup, CI/CD configuration, and production deployment.
-  Use when user says "deploy", "ship it", "go to production", "setup CI/CD", "configure deployment".
+  Use when user says "deploy", "ship it", "go to production", "setup CI/CD", "configure deployment",
+  "publish", "release", "push to prod", "make it live".
+  Do NOT use for development/coding (use genius-dev skills).
+  Do NOT use for testing (use genius-qa).
   After deployment, suggest genius-seo and genius-analytics for post-launch optimization.
 ---
 

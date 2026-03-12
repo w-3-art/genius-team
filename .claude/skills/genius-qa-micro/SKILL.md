@@ -4,7 +4,9 @@ description: >-
   Quick per-task validation. Verifies a single completed task before moving to the next.
   Supports /loop for continuous monitoring during active dev sessions. Use after each
   genius-dev task completes, or when user says "quick check", "validate this", "did it work".
-  Can be run continuously with /loop 2m /genius-qa-micro.
+  Do NOT use for full project QA audits (use genius-qa).
+  Do NOT use for security audits (use genius-security).
+  Do NOT use for code review (use genius-reviewer or genius-code-review).
 context: fork
 agent: genius-qa-micro
 user-invocable: false

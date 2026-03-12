@@ -5,7 +5,13 @@ description: >-
   sub-skill: genius-dev-frontend (UI/CSS/React), genius-dev-backend (API/auth/server),
   genius-dev-mobile (React Native/Expo), genius-dev-database (schema/migrations/queries),
   genius-dev-api (third-party integrations). Handles full-stack or unclassified tasks directly.
-  Use when user says "implement", "code", "build feature", "write code", "create component".
+  Use when user says "implement", "code", "build feature", "write code", "create component",
+  "add feature", "build this", "make this work".
+  Do NOT use for code review (use genius-reviewer or genius-code-review).
+  Do NOT use for debugging existing bugs (use genius-debugger).
+  Do NOT use for QA/testing (use genius-qa or genius-qa-micro).
+  IMPORTANT: When the task clearly targets frontend, backend, mobile, database, or API,
+  route DIRECTLY to the sub-skill instead of going through genius-dev.
   Do NOT use for QA, design, or architecture tasks.
 context: fork
 agent: genius-dev
