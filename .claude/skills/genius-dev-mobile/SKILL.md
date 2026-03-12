@@ -166,55 +166,9 @@ const Tab = createBottomTabNavigator();
 
 ## Native APIs
 
-### Camera (Expo Camera)
-```bash
-npx expo install expo-camera
-```
-```tsx
-import { CameraView, useCameraPermissions } from 'expo-camera';
-
-export function CameraScreen() {
-  const [permission, requestPermission] = useCameraPermissions();
-  
-  if (!permission?.granted) {
-    return (
-      <View>
-        <Text>Camera access needed</Text>
-        <Button title="Grant Access" onPress={requestPermission} />
-      </View>
-    );
-  }
-  
-  return <CameraView style={{ flex: 1 }} facing="back" />;
-}
-```
-
-### Location (Expo Location)
-```bash
-npx expo install expo-location
-```
-```tsx
-import * as Location from 'expo-location';
-
-const [status, requestPermission] = Location.useForegroundPermissions();
-const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-// { coords: { latitude, longitude, accuracy } }
-```
-
-### Biometrics (Expo LocalAuthentication)
-```bash
-npx expo install expo-local-authentication
-```
-```tsx
-import * as LocalAuthentication from 'expo-local-authentication';
-
-const result = await LocalAuthentication.authenticateAsync({
-  promptMessage: 'Authenticate to continue',
-  fallbackLabel: 'Use PIN',
-  disableDeviceFallback: false,
-});
-if (result.success) { /* proceed */ }
-```
+### Camera → `npx expo install expo-camera` → `CameraView` + `useCameraPermissions()` — always handle permission request
+### Location → `npx expo install expo-location` → `Location.getCurrentPositionAsync()` + `useForegroundPermissions()`
+### Biometrics → `npx expo install expo-local-authentication` → `LocalAuthentication.authenticateAsync()` with fallback
 
 ---
 
