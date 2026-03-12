@@ -117,47 +117,8 @@ ANALYZE=true npm run build
 
 ### Step 3 — Image Optimization
 
-#### Next.js (built-in `next/image`)
-
-```tsx
-import Image from 'next/image'
-
-// ✅ Correct — automatic WebP conversion, lazy loading, size optimization
-<Image
-  src="/hero.jpg"
-  alt="Hero image"
-  width={1200}
-  height={630}
-  priority // Only for above-the-fold images (LCP element)
-  sizes="(max-width: 768px) 100vw, 50vw"
-/>
-
-// ❌ Wrong — no optimization
-<img src="/hero.jpg" alt="Hero" />
-```
-
-#### Manual optimization (non-Next.js)
-
-```bash
-# Install sharp for server-side conversion
-npm install sharp
-
-# Convert to WebP
-npx sharp -i input.jpg -o output.webp
-
-# Generate responsive sizes
-for size in 400 800 1200 1600; do
-  sharp -i hero.jpg -o hero-${size}.webp resize $size
-done
-```
-
-```html
-<!-- Use <picture> for responsive images -->
-<picture>
-  <source srcset="hero-400.webp 400w, hero-800.webp 800w" type="image/webp">
-  <img src="hero-800.jpg" alt="Hero" loading="lazy" decoding="async">
-</picture>
-```
+- **Next.js**: Use `next/image` with `width`, `height`, `sizes`, `priority` (LCP only). Never use raw `<img>`.
+- **Non-Next.js**: Use `sharp` for WebP conversion + responsive sizes (400/800/1200/1600w). Use `<picture>` with `srcset` and `loading="lazy" decoding="async"`.
 
 ### Step 4 — Code Splitting
 
@@ -267,23 +228,7 @@ async function processItems(items: Item[]) {
 
 ### Step 8 — Caching Strategy
 
-```typescript
-// next.config.ts — static assets caching
-module.exports = {
-  async headers() {
-    return [
-      {
-        source: '/_next/static/(.*)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-      },
-      {
-        source: '/images/(.*)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
-      },
-    ]
-  },
-}
-```
+Set Cache-Control headers: static assets (`/_next/static/`) → `public, max-age=31536000, immutable`; images → `public, max-age=86400, stale-while-revalidate=604800`. Configure in `next.config.ts` `headers()` or server/CDN config.
 
 ### Step 9 — CDN Setup
 
