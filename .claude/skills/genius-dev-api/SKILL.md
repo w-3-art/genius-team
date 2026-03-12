@@ -334,3 +334,14 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-api" | .status = "complete
 - → **genius-integration-guide**: Full step-by-step setup docs for the service
 - → **genius-security**: Review secrets handling and webhook auth
 - → **genius-qa-micro**: Mock-based integration tests
+
+---
+
+## Playground Update (MANDATORY)
+
+After completing your task:
+1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
+2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
+3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
+4. Remove any mock/placeholder data from your tab
+5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`

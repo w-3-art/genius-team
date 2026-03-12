@@ -342,3 +342,14 @@ Update `.genius/state.json`:
 - **→ genius-analytics** — Send Core Web Vitals to GA4 via `web-vitals` library
 - **→ genius-seo** — Good Core Web Vitals improve Google rankings (Page Experience signal)
 - **→ genius-reviewer** — Review code changes for performance regressions
+
+---
+
+## Playground Update (MANDATORY)
+
+After completing your task:
+1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
+2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
+3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
+4. Remove any mock/placeholder data from your tab
+5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`

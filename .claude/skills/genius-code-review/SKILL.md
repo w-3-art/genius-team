@@ -259,3 +259,14 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-code-review" | .status = "comp
 - → **genius-security**: Deep security audit if CRITICAL issues found
 - → **genius-qa-micro**: Generate tests to cover bug scenarios found
 - → **genius-reviewer**: Ongoing code quality coaching (non-PR specific)
+
+---
+
+## Playground Update (MANDATORY)
+
+After completing your task:
+1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
+2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
+3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
+4. Remove any mock/placeholder data from your tab
+5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
