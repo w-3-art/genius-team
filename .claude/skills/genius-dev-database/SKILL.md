@@ -87,75 +87,11 @@ updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 deleted_at  TIMESTAMPTZ,
 ```
 
-### Prisma schema example
+### Schema examples
 
-```prisma
-// prisma/schema.prisma
-generator client {
-  provider = "prisma-client-js"
-}
+**Prisma**: Use `cuid()` IDs, `@unique` on email, `@updatedAt`, `DateTime?` for soft delete, `@@index` on foreign keys + common queries, `@@map` for table names. Define enums separately.
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  name      String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // soft delete
-
-  posts     Post[]
-  profile   Profile?
-
-  @@index([email])
-  @@map("users")
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-model Post {
-  id          String   @id @default(cuid())
-  title       String
-  content     String?
-  published   Boolean  @default(false)
-  authorId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([authorId])
-  @@index([published, createdAt(sort: Desc)])
-  @@map("posts")
-}
-```
-
-### Drizzle schema example
-
-```typescript
-// db/schema.ts
-import { pgTable, uuid, text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
-
-export const roleEnum = pgEnum('role', ['USER', 'ADMIN']);
-
-export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  email: text('email').notNull().unique(),
-  name: text('name').notNull(),
-  role: roleEnum('role').default('USER').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-  deletedAt: timestamp('deleted_at', { withTimezone: true }),
-});
-```
+**Drizzle**: Use `pgTable` + `pgEnum`, `uuid().defaultRandom().primaryKey()`, `timestamp('...', { withTimezone: true })`. Mirror same patterns as Prisma.
 
 ---
 
