@@ -4,6 +4,8 @@ description: >-
   Builder + Challenger adversarial workflow. One engine builds, another challenges with a critical review.
   Use when user says "dual review", "challenge mode", "builder challenger", "adversarial review",
   or when task is marked with 🔄. Requires --engine=dual or --engine=codex.
+  Do NOT use for single-engine code review (use genius-reviewer or genius-code-review).
+  Do NOT use for standard QA (use genius-qa or genius-qa-micro).
 context: fork
 user-invocable: true
 allowed-tools:

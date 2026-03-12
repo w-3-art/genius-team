@@ -3,7 +3,9 @@ name: genius-integration-guide
 description: >-
   Service integration guide. Provides setup instructions for third-party services
   (Stripe, Supabase, SendGrid, etc.). Use when user says "how to integrate X", "setup [service]",
-  "connect to [API]", "third-party setup guide". For coding the integration itself, use genius-dev-api.
+  "connect to [API]", "third-party setup guide".
+  Do NOT use for coding the integration (use genius-dev-api).
+  Do NOT use for architecture decisions (use genius-architect).
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

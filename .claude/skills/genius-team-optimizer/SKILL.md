@@ -4,6 +4,8 @@ description: >-
   Self-improvement skill that analyzes team performance and suggests optimizations. Use when user
   says "optimize the team", "improve workflow", "team retrospective", "how can we be more
   efficient". Typically runs after project completion.
+  Do NOT use for project debugging (use genius-debugger).
+  Do NOT use for code review (use genius-reviewer or genius-code-review).
 ---
 
 # Genius Team Optimizer v17.0 — Self-Evolution Engine
