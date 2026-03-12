@@ -567,4 +567,3 @@ main() {
 }
 
 main "$@"
-# test
