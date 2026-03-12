@@ -60,89 +60,14 @@ cat package.json | grep -E "next-intl|i18next|react-i18next|vue-i18n|i18n"
 
 ### Step 3 — Setup (Next.js + next-intl)
 
-```bash
-npm install next-intl
-```
+Install: `npm install next-intl`
 
-**Directory structure:**
-
-```
-messages/
-  en.json
-  fr.json
-  ar.json       # RTL
-  ja.json
-src/
-  i18n/
-    routing.ts  # Locale config
-    request.ts  # Server-side locale resolution
-  middleware.ts
-  app/
-    [locale]/
-      layout.tsx
-      page.tsx
-```
-
-```typescript
-// src/i18n/routing.ts
-import { defineRouting } from 'next-intl/routing'
-
-export const routing = defineRouting({
-  locales: ['en', 'fr', 'de', 'ar', 'ja'],
-  defaultLocale: 'en',
-  localePrefix: 'as-needed', // /fr/... but /... for default locale
-})
-```
-
-```typescript
-// src/middleware.ts
-import createMiddleware from 'next-intl/middleware'
-import { routing } from './i18n/routing'
-
-export default createMiddleware(routing)
-
-export const config = {
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)', '/'],
-}
-```
-
-```typescript
-// src/i18n/request.ts
-import { getRequestConfig } from 'next-intl/server'
-import { routing } from './routing'
-
-export default getRequestConfig(async ({ requestLocale }) => {
-  let locale = await requestLocale
-  if (!locale || !routing.locales.includes(locale as any)) {
-    locale = routing.defaultLocale
-  }
-  return {
-    locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
-  }
-})
-```
-
-```tsx
-// app/[locale]/layout.tsx
-import { NextIntlClientProvider } from 'next-intl'
-import { getMessages } from 'next-intl/server'
-
-export default async function LocaleLayout({ children, params }) {
-  const { locale } = await params
-  const messages = await getMessages()
-
-  return (
-    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
-  )
-}
-```
+**Required files:**
+- `messages/{locale}.json` — translation files per locale
+- `src/i18n/routing.ts` — `defineRouting({ locales, defaultLocale, localePrefix: 'as-needed' })`
+- `src/i18n/request.ts` — `getRequestConfig()` to resolve locale + load messages
+- `src/middleware.ts` — `createMiddleware(routing)` with matcher excluding api/_next
+- `app/[locale]/layout.tsx` — wrap children in `NextIntlClientProvider`, set `dir` for RTL
 
 ### Step 4 — Locale File Structure
 
@@ -172,30 +97,9 @@ export default async function LocaleLayout({ children, params }) {
 
 ### Step 5 — Using Translations in Components
 
-```tsx
-// Server component
-import { getTranslations } from 'next-intl/server'
-
-export default async function Page() {
-  const t = await getTranslations('dashboard')
-  return <h1>{t('welcome', { name: 'Alice' })}</h1>
-}
-
-// Client component
-'use client'
-import { useTranslations } from 'next-intl'
-
-export function NavItem() {
-  const t = useTranslations('nav')
-  return <a href="/">{t('home')}</a>
-}
-
-// Pluralization
-const t = useTranslations('dashboard')
-t('items_count', { count: 5 }) // "5 items"
-t('items_count', { count: 1 }) // "1 item"
-t('items_count', { count: 0 }) // "No items"
-```
+- **Server**: `getTranslations('namespace')` from `next-intl/server`, then `t('key', { param })` in JSX
+- **Client**: `useTranslations('namespace')` hook with `'use client'`
+- **Pluralization**: `t('items_count', { count })` with ICU pluralization rules in locale files
 
 ### Step 6 — Date, Number & Currency Formatting
 
