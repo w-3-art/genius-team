@@ -200,52 +200,15 @@ The prompt output panel auto-generates a sprint summary containing:
 - Blockers and risks
 
 ### Sprint Summary Output
-When execution completes, copy the prompt output from the dashboard which includes:
-```markdown
-# 📊 Sprint Progress Report
-
-## Overview
-- **Progress:** X% complete (Y/Z tasks)
-- **ETA:** N working days
-- **Total Estimated:** Xh
-- **Total Spent:** Yh
-
-## Status Breakdown
-[... detailed breakdown ...]
-
-## Agent Status
-[... agent workload ...]
-```
+On completion, generate a sprint progress report with: progress %, ETA, status breakdown, agent workload, blockers.
 
 ---
 
 ## CRITICAL: NEVER STOP RULE
 
-```
-============================================================
-              AUTONOMOUS EXECUTION MANDATE
-============================================================
+**AUTONOMOUS EXECUTION**: Never pause, never ask "should I proceed?", never wait for confirmation. Continue to next task immediately. Handle errors (retry 3x). Run genius-qa-micro after EVERY task. Update PROGRESS.md after each task. Report progress every 5 tasks.
 
-NEVER say "Let me know if you want me to continue"
-NEVER pause between tasks
-NEVER wait for user confirmation
-NEVER ask "should I proceed?"
-
-ALWAYS continue to the next task immediately
-ALWAYS handle errors and retry (max 3 attempts)
-ALWAYS complete ALL tasks
-ALWAYS sync task status to .claude/plan.md
-ALWAYS update PROGRESS.md after each task
-ALWAYS report progress every 5 tasks
-ALWAYS run genius-qa-micro after EVERY task
-
-ONLY STOP CONDITIONS:
-1. ALL tasks in .claude/plan.md are [x] complete
-2. User explicitly says "STOP" or "PAUSE"
-3. Critical system error (not individual task error)
-
-============================================================
-```
+**ONLY STOP when**: (1) ALL tasks `[x]` complete, (2) user says STOP/PAUSE, (3) critical system error.
 
 ---
 
