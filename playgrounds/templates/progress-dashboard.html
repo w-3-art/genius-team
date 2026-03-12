@@ -4,29 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progress Dashboard - Genius Playground</title>
+    <link rel="stylesheet" href="./design-tokens.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --bg-hover: #30363d;
-            --border-color: #30363d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --accent-yellow: #d29922;
-            --accent-orange: #db6d28;
-            --accent-red: #f85149;
-            --accent-purple: #a371f7;
-            --accent-pink: #db61a2;
         }
 
         body {
@@ -90,7 +73,7 @@
         }
 
         .view-btn:hover:not(.active) {
-            background: var(--bg-hover);
+            background: var(--border-color);
             color: var(--text-primary);
         }
 
@@ -167,9 +150,9 @@
         }
 
         .progress-done { background: var(--accent-green); }
-        .progress-review { background: var(--accent-yellow); }
+        .progress-review { background: var(--accent-orange-deep); }
         .progress-inprogress { background: var(--accent-blue); }
-        .progress-todo { background: var(--bg-hover); }
+        .progress-todo { background: var(--border-color); }
 
         /* Main Layout */
         .main-container {
@@ -216,7 +199,7 @@
 
         .agent-card.active {
             border-color: var(--accent-blue);
-            background: rgba(88, 166, 255, 0.1);
+            background: var(--tone-blue-10);
         }
 
         .agent-header {
@@ -239,7 +222,7 @@
 
         .agent-avatar.dev { background: var(--accent-blue); }
         .agent-avatar.qa { background: var(--accent-green); }
-        .agent-avatar.debugger { background: var(--accent-orange); }
+        .agent-avatar.debugger { background: var(--accent-orange-deep); }
         .agent-avatar.reviewer { background: var(--accent-purple); }
 
         .agent-info {
@@ -263,7 +246,7 @@
         }
 
         .agent-status.online { background: var(--accent-green); }
-        .agent-status.busy { background: var(--accent-yellow); }
+        .agent-status.busy { background: var(--accent-orange-deep); }
         .agent-status.offline { background: var(--text-muted); }
 
         .agent-task {
@@ -297,7 +280,7 @@
         }
 
         .filter-item:hover {
-            background: var(--bg-hover);
+            background: var(--border-color);
         }
 
         .filter-item.active {
@@ -318,7 +301,7 @@
         }
 
         .priority-high { background: var(--accent-red); }
-        .priority-medium { background: var(--accent-yellow); }
+        .priority-medium { background: var(--accent-orange-deep); }
         .priority-low { background: var(--accent-green); }
 
         /* Content Area */
@@ -371,10 +354,10 @@
             font-size: 12px;
         }
 
-        .column-icon.todo { background: var(--bg-hover); }
-        .column-icon.inprogress { background: rgba(88, 166, 255, 0.2); color: var(--accent-blue); }
-        .column-icon.review { background: rgba(210, 153, 34, 0.2); color: var(--accent-yellow); }
-        .column-icon.done { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+        .column-icon.todo { background: var(--border-color); }
+        .column-icon.inprogress { background: var(--tone-blue-20); color: var(--accent-blue); }
+        .column-icon.review { background: var(--tone-orange-20); color: var(--accent-orange-deep); }
+        .column-icon.done { background: var(--tone-green-20); color: var(--accent-green); }
 
         .column-count {
             background: var(--bg-tertiary);
@@ -394,7 +377,7 @@
         }
 
         .column-tasks.drag-over {
-            background: rgba(88, 166, 255, 0.05);
+            background: var(--tone-blue-05);
         }
 
         /* Task Card */
@@ -479,7 +462,7 @@
         }
 
         .task-time.overdue {
-            background: rgba(248, 81, 73, 0.2);
+            background: var(--tone-red-20);
             color: var(--accent-red);
         }
 
@@ -530,7 +513,7 @@
         }
 
         .gantt-day.today {
-            background: rgba(88, 166, 255, 0.1);
+            background: var(--tone-blue-10);
             color: var(--accent-blue);
             font-weight: 600;
         }
@@ -576,7 +559,7 @@
         }
 
         .gantt-grid-cell.today {
-            background: rgba(88, 166, 255, 0.05);
+            background: var(--tone-blue-05);
         }
 
         .gantt-bar {
@@ -595,9 +578,9 @@
             overflow: hidden;
         }
 
-        .gantt-bar.todo { background: var(--bg-hover); color: var(--text-secondary); }
+        .gantt-bar.todo { background: var(--border-color); color: var(--text-secondary); }
         .gantt-bar.inprogress { background: var(--accent-blue); }
-        .gantt-bar.review { background: var(--accent-yellow); color: #000; }
+        .gantt-bar.review { background: var(--accent-orange-deep); color: var(--text-dark); }
         .gantt-bar.done { background: var(--accent-green); }
 
         /* Right Panel - Prompt Output */
@@ -638,7 +621,7 @@
         }
 
         .copy-btn:hover {
-            background: #4393e6;
+            background: var(--accent-blue-strong);
         }
 
         .copy-btn.copied {
@@ -732,7 +715,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: var(--overlay-black-70);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -838,7 +821,7 @@
         }
 
         .btn-secondary:hover {
-            background: var(--bg-hover);
+            background: var(--border-color);
         }
 
         .btn-primary {
@@ -847,7 +830,7 @@
         }
 
         .btn-primary:hover {
-            background: #4393e6;
+            background: var(--accent-blue-strong);
         }
 
         /* Scrollbar */
@@ -861,7 +844,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--bg-hover);
+            background: var(--border-color);
             border-radius: 4px;
         }
 
