@@ -59,31 +59,7 @@ violations.filter(v => ['critical','serious'].includes(v.impact))
 
 #### Playwright + axe (CI integration)
 
-```typescript
-// tests/accessibility.spec.ts
-import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
-
-test.describe('WCAG 2.2 AA compliance', () => {
-  test('homepage has no violations', async ({ page }) => {
-    await page.goto('/')
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
-      .analyze()
-    expect(results.violations).toEqual([])
-  })
-
-  test('checkout flow is accessible', async ({ page }) => {
-    await page.goto('/checkout')
-    const results = await new AxeBuilder({ page }).analyze()
-    expect(results.violations).toEqual([])
-  })
-})
-```
-
-```bash
-npx playwright test tests/accessibility.spec.ts
-```
+Use `@axe-core/playwright` with `AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()`. Test all key pages (home, checkout, forms). Run: `npx playwright test tests/accessibility.spec.ts`
 
 ### Step 2 — Color Contrast
 
@@ -320,20 +296,9 @@ import FocusTrap from 'focus-trap-react'
 **Manual testing checklist:**
 
 ```markdown
-## macOS VoiceOver (CMD+F5)
-- [ ] Page title read on load
-- [ ] Landmark regions announced (header, main, nav, footer)
-- [ ] All form inputs have descriptive labels
-- [ ] Error messages announced via aria-live
-- [ ] Images have meaningful alt text
-- [ ] Interactive elements announced with role (button, link, checkbox)
-- [ ] Modal traps focus and announces dialog name
-
-## Windows NVDA (free, download nvaccess.org)
-- [ ] Same checklist as above
-- [ ] Tab order is logical
-- [ ] Heading navigation works (H key to jump)
-```
+**Screen Reader Checklist** (VoiceOver CMD+F5 on mac, NVDA on Windows):
+- [ ] Page title, landmarks, form labels, error messages (aria-live), alt text, interactive roles all announced correctly
+- [ ] Tab order logical, heading navigation works (H key), modal traps focus
 
 ---
 
