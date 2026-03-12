@@ -177,3 +177,17 @@ When this skill completes its work:
 → **Automatically suggest**: "Copy complete! Ready to set up service integrations? I'll hand off to **genius-integration-guide**."
 → If user approves: route to genius-integration-guide
 → Update state.json: `currentSkill = "genius-integration-guide"`
+
+
+---
+
+## Definition of Done
+
+Copy MUST be:
+1. **Immediately usable**: Copy-paste ready, no placeholders like [YOUR PRODUCT NAME]
+2. **Complete**: All sections filled (hero, features, CTA, footer)
+3. **Consistent voice**: Same tone throughout
+4. **Specific benefits**: "Save 2 hours/day" not "saves time"
+5. **Clear CTAs**: Specific action + specific outcome (e.g., "Start free trial — no credit card")
+
+If you don't have specific product details → ask before guessing. Generic copy is worse than no copy.

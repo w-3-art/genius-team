@@ -313,3 +313,17 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+
+---
+
+## Definition of Done
+
+Content MUST be:
+1. **Complete draft**: Full article, not outline or placeholder sections
+2. **GEO-optimized**: Includes clear factual claims, structured for AI citation
+3. **Word count met**: Minimum 800 words for blog posts, 400 for newsletters
+4. **SEO elements**: Title tag, meta description, H2 structure defined
+5. **CTA included**: Clear next step for the reader
+
+Provide a word count at the end. Never submit a partial draft as complete.

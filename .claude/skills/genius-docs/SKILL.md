@@ -394,3 +394,17 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+
+---
+
+## Definition of Done
+
+Documentation MUST be:
+1. **Immediately usable**: A developer can follow it without asking questions
+2. **Tested**: Every code example has been verified to run correctly
+3. **Complete**: All public APIs/functions documented, no "TODO" sections
+4. **Structured**: Uses Divio system (tutorials, how-to guides, explanation, reference)
+5. **No broken links**: All internal links verified
+
+Run a quick self-review: "If I were a new developer, could I use this project from just this doc?" If not, iterate.
