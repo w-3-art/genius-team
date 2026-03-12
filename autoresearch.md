@@ -29,3 +29,50 @@
 - CLAUDE.md has `🚨 ANTI-DRIFT RULES` but it's lost after compaction
 - The router (genius-team/SKILL.md) has good intent detection table but it's in the skill, not in base instructions
 
+#### Finding 0.4 — 24 skills have zero playground update instructions
+- Only core ideation skills (interviewer, designer, etc.) mention playgrounds
+- All v17 dev/analysis/content skills produce output but don't update dashboard
+- Result: skills create orphan HTML files or don't update anything
+
+#### Finding 0.5 — No auto-chaining between ideation skills
+- Each skill completes and waits for user to manually invoke the next one
+- No "Next Step" suggestions in any skill
+
+#### Finding 0.6 — Router has zero disambiguation logic
+- When request could match multiple skills, no rules for resolution
+- Claude defaults to working solo instead of picking the closest match
+
+---
+
+### Phase 1: Experiments (23:00 → ongoing)
+
+#### Experiment durability-001 ✅ (commit 869871e)
+- **Track**: Session Durability
+- **Change**: Fixed postCompactionSections (headers didn't match CLAUDE.md) + added "Genius Team Core Rules" section
+- **Impact**: CRITICAL — after compaction, Claude now retains skill routing rules, anti-drift, and playground rules
+- **Files**: CLAUDE.md, 4x settings.json
+
+#### Experiment routing-001 ✅ (commit cfd4dfd)
+- **Track**: Skill Routing
+- **Change**: Added negative triggers to 5 skills, clarified confusion pairs
+- **Impact**: Reduced ambiguity for reviewer/code-review, qa/qa-micro, dev/dev-frontend
+- **Files**: 5x SKILL.md
+
+#### Experiment playground-001 ✅ (commit dbb7d5c)
+- **Track**: Playground Content
+- **Change**: Added mandatory "Playground Update" section to 13 skills
+- **Impact**: Skills now instructed to update dashboard tabs, not create orphan files
+- **Files**: 13x SKILL.md
+
+#### Experiment routing-002 ✅ (commit 189d595)
+- **Track**: Skill Routing
+- **Change**: Added disambiguation rules to router
+- **Impact**: 5 common confusion pairs now have explicit resolution rules
+- **Files**: genius-team/SKILL.md
+
+#### Experiment orchestration-001 ✅ (commit 0e83de3)
+- **Track**: Orchestration
+- **Change**: Added auto-chain "Next Step" to 8 ideation skills
+- **Impact**: Skills now suggest the next skill when they complete
+- **Files**: 8x SKILL.md
+
