@@ -90,3 +90,11 @@ Next: {next_pending_task}
 ### Step 6: Wait for User Input
 
 Route to appropriate skill based on response using genius-team router.
+
+## Definition of Done
+
+- [ ] Session context is loaded from state, briefing, and plan inputs
+- [ ] Current status is summarized accurately for the user
+- [ ] Missing artifacts or recovery conditions are surfaced early
+- [ ] Next recommended action points to a concrete skill
+- [ ] The user can resume work without additional context gathering

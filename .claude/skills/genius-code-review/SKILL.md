@@ -286,3 +286,11 @@ The review report MUST include for EVERY issue found:
 Summary section must include: total issues by severity, overall assessment, go/no-go recommendation.
 
 If 0 issues found: provide positive confirmation with specific strengths observed.
+
+## Definition of Done
+
+- [ ] Review covers changed files and user-stated scope
+- [ ] Findings include file references, severity, and actionable fixes
+- [ ] Security, regression, and test gaps evaluated where relevant
+- [ ] Overall go/no-go recommendation is explicit
+- [ ] Dashboard tab or status output updated if the workflow expects it

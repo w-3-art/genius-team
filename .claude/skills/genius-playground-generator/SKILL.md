@@ -227,3 +227,11 @@ After each major skill (genius-specs, genius-architect, genius-qa, genius-deploy
 ```
 💡 Tip: Run genius-playground-generator to visualize your project's current state.
 ```
+
+## Definition of Done
+
+- [ ] Requested playground HTML is generated at the documented path
+- [ ] The file renders current project data, not placeholders
+- [ ] Output path and refresh instructions are shown to the user
+- [ ] `.genius/outputs/state.json` reflects the generation result
+- [ ] Any referenced dashboard remains consistent with the new artifact

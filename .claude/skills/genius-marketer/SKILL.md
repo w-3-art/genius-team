@@ -195,3 +195,11 @@ When this skill completes its work:
 → **Automatically suggest**: "Marketing strategy defined! Ready for copywriting? I'll hand off to **genius-copywriter**."
 → If user approves: route to genius-copywriter
 → Update state.json: `currentSkill = "genius-copywriter"`
+
+## Definition of Done
+
+- [ ] Target audience, positioning, and channels are defined
+- [ ] Success metrics or tracking implications are included
+- [ ] Strategy artifacts are ready for copywriting and analytics handoff
+- [ ] Recommendations are grounded in the stated product context
+- [ ] Next-step routing is explicit

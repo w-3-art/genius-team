@@ -353,3 +353,11 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+## Definition of Done
+
+- [ ] App builds and changed mobile flows run without new errors
+- [ ] Platform-specific behaviors are verified or explicitly documented
+- [ ] Required backend or SDK dependencies are coordinated with handoff skills
+- [ ] genius-qa-micro validation completed for the task
+- [ ] Dashboard or progress output reflects the delivered mobile work

@@ -289,3 +289,11 @@ To switch to Codex only:
 ```
 
 This preserves all your project data (.genius/) and only reconfigures the engine files.
+
+## Definition of Done
+
+- [ ] Builder and Challenger roles are both exercised for the marked task
+- [ ] Challenger feedback is concrete and either resolved or escalated
+- [ ] Final status is one of `APPROVE`, `REVISE`, or `ESCALATE`
+- [ ] Dual-mode status files reflect the latest outcome
+- [ ] User can see the remaining next step without rereading the thread

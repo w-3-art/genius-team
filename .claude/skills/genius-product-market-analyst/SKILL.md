@@ -222,3 +222,11 @@ When this skill completes its work:
 → **Automatically suggest**: "Market analysis complete! Ready to write specifications? I'll hand off to **genius-specs**."
 → If user approves: route to genius-specs
 → Update state.json: `currentSkill = "genius-specs"`
+
+## Definition of Done
+
+- [ ] Market problem, audience, and competitive landscape are analyzed
+- [ ] Findings produce actionable positioning or pricing implications
+- [ ] Output is concrete enough to drive specifications
+- [ ] Key assumptions and unknowns are called out explicitly
+- [ ] Next-step handoff to specs or marketing is clear

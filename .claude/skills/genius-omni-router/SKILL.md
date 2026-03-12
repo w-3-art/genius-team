@@ -243,3 +243,11 @@ On every Omni Mode session:
 3. ✅ Report available providers and fallback status
 4. ✅ Load BRIEFING.md and plan.md as usual
 5. ✅ Proceed with routing-aware task execution
+
+## Definition of Done
+
+- [ ] Provider choice is justified by task type, cost, or latency
+- [ ] Health checks or fallback status are surfaced before execution
+- [ ] Output from secondary providers is reviewed before integration
+- [ ] Routing preserves Genius Team ownership of the final result
+- [ ] Failure path names the fallback provider or local execution plan

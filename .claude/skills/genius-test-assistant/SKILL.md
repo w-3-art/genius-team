@@ -66,3 +66,11 @@ Provides: Specific error details, full context, fix prompt
 
 ### To genius-dev
 Provides: Bug details, reproduction steps, fix suggestions
+
+## Definition of Done
+
+- [ ] Test script covers the requested user journey or risk area
+- [ ] Steps are executable by a human without extra interpretation
+- [ ] Expected results and evidence to capture are explicit
+- [ ] Issues are packaged for QA, debugger, or dev handoff
+- [ ] Session summary makes next actions obvious

@@ -315,3 +315,11 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-skill-creator" | .status = "co
 - → **genius-specs**: When the skill defines a complex workflow that needs formal specification
 - → **genius-updater**: When a skill needs to be updated/versioned
 - → **genius-orchestrator**: Register new skill in the routing logic
+
+## Definition of Done
+
+- [ ] New or updated skill has valid frontmatter and trigger guidance
+- [ ] Required sections are present and internally consistent
+- [ ] Referenced files, scripts, and handoffs resolve correctly
+- [ ] Skill stays concise enough for practical use
+- [ ] Registration or follow-up routing instructions are included

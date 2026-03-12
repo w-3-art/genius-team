@@ -134,3 +134,11 @@ After template selection, generate:
 - **API** → `genius-dev-api` → `genius-docs` (OpenAPI)
 - **Web3** → `genius-crypto` → `genius-dev-frontend`
 - **Game** → `genius-dev-frontend` → `genius-performance`
+
+## Definition of Done
+
+- [ ] Template choice maps to a coherent stack and follow-up skills
+- [ ] Generated starter state matches the selected template
+- [ ] Recommendations are specific enough to start execution
+- [ ] Template-specific caveats or assumptions are noted
+- [ ] Handoff path is explicit

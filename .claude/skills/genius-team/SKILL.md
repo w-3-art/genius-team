@@ -327,3 +327,11 @@ If a routed skill fails (crashes, produces empty output, or gets stuck):
 3. **Log the failure** in `.genius/errors.log` with timestamp, skill name, and error
 4. **Notify user**: "⚠️ {skill} encountered an issue. Falling back to {fallback}."
 5. Never silently swallow errors — always surface them
+
+## Definition of Done
+
+- [ ] Selected skill matches the user's intent and current project state
+- [ ] Checkpoint and artifact validation happened before routing
+- [ ] Ambiguous requests were clarified or resolved with explicit rules
+- [ ] Fallback behavior is defined for routing failures
+- [ ] User sees the next skill or recovery step clearly

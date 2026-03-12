@@ -320,3 +320,11 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-experiments" | .status = "comp
 - → **genius-qa-micro**: Validate that winning changes don't break tests
 - → **genius-reviewer**: Code review winning changes before merging to main
 - → **genius-deployer**: Deploy winning changes after validation
+
+## Definition of Done
+
+- [ ] Hypothesis, metric, and experiment scope are stated before changes land
+- [ ] Each experiment branch or commit is traceable and reversible
+- [ ] Results identify a winner, loser, or inconclusive outcome
+- [ ] Risk of polluting protected branches is avoided
+- [ ] Winning changes are ready for QA handoff

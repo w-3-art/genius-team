@@ -205,3 +205,11 @@ When this skill completes its work:
 → **Automatically suggest**: "Integrations mapped! Ready to design the technical architecture? I'll hand off to **genius-architect**."
 → If user approves: route to genius-architect
 → Update state.json: `currentSkill = "genius-architect"`
+
+## Definition of Done
+
+- [ ] Required services, credentials, and setup steps are documented
+- [ ] `.env.example` or equivalent config guidance is complete
+- [ ] Integration constraints and prerequisites are called out clearly
+- [ ] Downstream architecture handoff includes the configured service list
+- [ ] Dashboard or playground refresh instructions are included when applicable

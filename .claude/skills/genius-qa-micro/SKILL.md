@@ -122,3 +122,11 @@ Provides: Issues found, files checked, reason for escalation
 ## Continuous Monitoring with /loop
 
 Use `/loop 2m /genius-qa-micro` to run automatic validation every 2 minutes during active development sessions. This catches regressions in real-time without manual checks.
+
+## Definition of Done
+
+- [ ] Validation targets the just-completed task, not a vague project-wide check
+- [ ] Pass/fail result is explicit and supported by evidence
+- [ ] Blocking issues include file references or repro detail
+- [ ] Escalation to debugger or full QA is triggered when thresholds are met
+- [ ] The workflow does not advance on a failed micro-QA result
