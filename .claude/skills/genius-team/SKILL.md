@@ -316,3 +316,14 @@ When the user asks to "see all playgrounds", "generate a dashboard", or "show ov
 | `/genius-switch-engine dual` | Enable true dual mode with bridge |
 | `/genius-switch-engine claude` | Switch back to Claude Code only |
 | `/genius-switch-engine codex` | Switch to Codex only |
+
+---
+
+## Error Recovery
+
+If a routed skill fails (crashes, produces empty output, or gets stuck):
+1. **Retry once** with the same skill
+2. If still fails, **fall back to genius-dev** for implementation tasks or **genius-reviewer** for review tasks
+3. **Log the failure** in `.genius/errors.log` with timestamp, skill name, and error
+4. **Notify user**: "⚠️ {skill} encountered an issue. Falling back to {fallback}."
+5. Never silently swallow errors — always surface them
