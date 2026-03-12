@@ -34,17 +34,6 @@ hooks:
 
 ---
 
-## Mode Compatibility
-
-| Mode | Behavior |
-|------|----------|
-| **CLI** | Full skill creation pipeline; updates CLAUDE.md automatically |
-| **IDE** (VS Code/Cursor) | Creates skill files; open in editor for review before installing |
-| **Omni** | Claude handles skill design; route to best model for content generation |
-| **Dual** | Claude designs skill architecture; Codex fills in implementation sections |
-
----
-
 ## When to Create a Skill
 
 Create a skill when you observe:
@@ -122,11 +111,7 @@ hooks:
 - genius- prefix for all Genius Team skills
 - Descriptive but concise: `genius-stripe-payments`, `genius-i18n`, `genius-analytics`
 
-**Description rules** (Anthropic guide):
-- Start with WHAT it does (imperative verb)
-- Include specific trigger phrases in quotes
-- Include NOT WHEN with alternatives
-- Keep under 3 sentences total
+**Description rules**: start with the job, include concrete triggers, include anti-triggers, keep it under 3 sentences.
 
 ---
 
@@ -192,11 +177,7 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-{name}" | .status = "complete"
 - → **[other-skill]**: [when/why to hand off]
 ```
 
-**Constraints**:
-- Max 5000 words total
-- Code examples must be runnable
-- Every section needs a clear purpose
-- No padding — every sentence earns its place
+**Constraints**: keep it concise, runnable, and purpose-driven.
 
 ---
 
@@ -246,30 +227,16 @@ Add an entry like:
 
 ---
 
-## Concrete Example: Creating a "stripe-payments" Skill
+## Concrete Example
 
-```bash
-mkdir -p .claude/skills/genius-stripe-payments/references
-```
+Use a short, project-specific skill such as `genius-stripe-payments` when a payment workflow repeats often.
 
-`SKILL.md` frontmatter:
+Example frontmatter:
 ```yaml
----
 name: genius-stripe-payments
 description: >-
-  Stripe payment integration skill. Sets up checkout sessions, subscription
-  management, and webhook handling for Stripe. Use when task involves
-  "add Stripe", "payment integration", "subscription billing", "checkout flow".
-  Do NOT use for other payment providers — use genius-dev-api for those.
-context: fork
-agent: genius-stripe-payments
-user-invocable: false
-allowed-tools:
-  - Read(*)
-  - Write(*)
-  - Edit(*)
-  - Bash(npm *)
----
+  Stripe payment integration skill. Use when work involves "add Stripe",
+  "subscription billing", or "checkout flow". Do NOT use for other providers.
 ```
 
 Reference file `.claude/skills/genius-stripe-payments/references/setup-checklist.md`:

@@ -37,17 +37,6 @@ hooks:
 
 ---
 
-## Mode Compatibility
-
-| Mode | Behavior |
-|------|----------|
-| **CLI** | Full Expo CLI execution, simulator commands, EAS build triggers |
-| **IDE** (VS Code/Cursor) | Use Expo Go for live preview; Cursor handles component editing |
-| **Omni** | Claude handles architecture; switch to best model for native-specific code |
-| **Dual** | Claude designs navigation/state; Codex implements screen boilerplate |
-
----
-
 ## Core Principles
 
 1. **Cross-platform by default**: Write once, test on both iOS and Android
@@ -79,28 +68,7 @@ npx expo start
 ```
 
 ### Key config in `app.json`
-```json
-{
-  "expo": {
-    "name": "MyApp",
-    "slug": "my-app",
-    "version": "1.0.0",
-    "ios": {
-      "bundleIdentifier": "com.company.myapp",
-      "buildNumber": "1"
-    },
-    "android": {
-      "package": "com.company.myapp",
-      "versionCode": 1
-    },
-    "plugins": [
-      "expo-camera",
-      "expo-location",
-      ["expo-notifications", { "icon": "./assets/notification-icon.png" }]
-    ]
-  }
-}
-```
+Set the app name, slug, iOS bundle ID, Android package, and any Expo plugins needed for native features.
 
 ### EAS Build (production)
 ```bash
@@ -147,20 +115,7 @@ export function AppNavigator() {
 ```
 
 ### Tab Navigator (bottom tabs)
-```bash
-npm install @react-navigation/bottom-tabs
-```
-
-```tsx
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
-
-<Tab.Navigator screenOptions={{ tabBarActiveTintColor: '#007AFF' }}>
-  <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarIcon: ... }} />
-  <Tab.Screen name="Search" component={SearchScreen} />
-  <Tab.Screen name="Profile" component={ProfileScreen} />
-</Tab.Navigator>
-```
+Install `@react-navigation/bottom-tabs` when the app needs persistent bottom navigation.
 
 ---
 
@@ -279,13 +234,7 @@ useEffect(() => {
   maxToRenderPerBatch={10}
 />
 
-// ✅ Memoize list items
-const ItemRow = memo(({ item }) => <View>...</View>);
-
-// ✅ useCallback for handlers passed to list items
-const handlePress = useCallback((id: string) => { ... }, []);
-
-// ❌ Avoid anonymous functions in renderItem
+// ✅ Memoize list items and keep handlers stable when lists re-render heavily
 ```
 
 ---
