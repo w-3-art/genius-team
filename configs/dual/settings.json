@@ -154,10 +154,11 @@
   },
   "compaction": {
     "postCompactionSections": [
-      "## Genius Team",
-      "## Memory",
-      "## Anti-Drift Rules",
-      "## Current Phase"
+      "## Genius Team Core Rules",
+      "## \ud83d\udea8 ANTI-DRIFT RULES",
+      "## \ud83e\udde0 Memory",
+      "## Commands",
+      "## Two Phases"
     ]
   }
 }
