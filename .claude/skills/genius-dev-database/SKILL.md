@@ -376,3 +376,15 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Before marking task complete, verify ALL of these:
+1. **Migration runs cleanly**: `npm run db:migrate` exits with code 0
+2. **Schema valid**: No orphan foreign keys, all required fields have defaults
+3. **Indexes defined**: Frequently queried columns have appropriate indexes
+4. **Rollback script**: Every migration has a corresponding down migration
+
+If any check fails → fix before declaring done.

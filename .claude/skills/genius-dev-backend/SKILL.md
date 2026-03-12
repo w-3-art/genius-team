@@ -297,3 +297,16 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Before marking task complete, verify ALL of these:
+1. **Build passes**: App starts without errors (`npm start` or `node index.js`)
+2. **Endpoints tested**: All new endpoints return expected status codes
+3. **Error handling**: 400/401/404/500 cases handled (not just happy path)
+4. **No hardcoded secrets**: No API keys, passwords, or tokens in code
+5. **Input validation**: All user inputs are validated before processing
+
+If any check fails → fix before declaring done.

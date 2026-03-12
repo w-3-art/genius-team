@@ -394,3 +394,15 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Accessibility audit MUST include:
+1. **WCAG level**: Specify which criteria (e.g., "WCAG 2.2 AA 1.4.3") fails
+2. **Element reference**: CSS selector or description of the specific element
+3. **Impact**: Who is affected (screen reader users, keyboard users, etc.)
+4. **Fix code**: Exact HTML/CSS/JS change to resolve each issue
+
+Never say "add ARIA labels" without specifying which elements need them.

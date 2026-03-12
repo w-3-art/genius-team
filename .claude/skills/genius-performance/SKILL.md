@@ -353,3 +353,16 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Performance report MUST include:
+1. **Baseline score**: Lighthouse scores BEFORE optimizations
+2. **Specific issues**: Exact file names and line numbers causing slowdowns
+3. **Implementation steps**: Code-ready fixes, not vague suggestions
+4. **Expected after**: Projected scores AFTER applying all fixes
+5. **Priority order**: Which fixes give the most improvement per effort
+
+Never recommend "lazy loading" without specifying which images/components.

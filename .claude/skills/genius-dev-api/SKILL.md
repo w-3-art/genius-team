@@ -345,3 +345,15 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Before marking task complete, verify ALL of these:
+1. **Integration tested**: API call returns expected response (not just code written)
+2. **Error handling**: Network failures, 4xx, 5xx responses all handled gracefully
+3. **Rate limiting**: Rate limit headers respected if present
+4. **Secrets in env**: All API keys in environment variables, not hardcoded
+
+If any check fails → fix before declaring done.

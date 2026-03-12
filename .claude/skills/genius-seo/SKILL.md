@@ -147,3 +147,15 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Every recommendation MUST be:
+1. **Specific**: Reference actual page URL, file path, or element selector
+2. **Actionable**: Include exact code/content change to make
+3. **Measurable**: State expected metric improvement (e.g., "improve LCP from 3.2s to <2.5s")
+4. **Prioritized**: Mark as Critical / High / Medium / Low
+
+No generic advice like "improve your content quality" — always reference the specific page and the specific fix.

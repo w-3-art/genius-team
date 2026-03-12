@@ -276,3 +276,15 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Every analytics implementation MUST:
+1. **Be verified**: Confirm events fire correctly (check browser network tab or DebugView)
+2. **Include test cases**: Provide manual steps to verify each event
+3. **Cover edge cases**: Empty states, errors, and cancellations tracked, not just success
+4. **Document the schema**: Event name, properties, types clearly documented
+
+No "I've added the tracking" without verification steps.
