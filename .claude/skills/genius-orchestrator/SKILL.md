@@ -484,3 +484,11 @@ provides:
 - Log decisions and errors to memory
 - Keep plan.md in sync
 - Read BRIEFING.md for context
+
+## Definition of Done
+
+- [ ] All plan.md tasks marked `[x]` complete
+- [ ] PROGRESS.md reflects 100% completion
+- [ ] State.json matches PROGRESS.md (consistency verified)
+- [ ] Sprint summary report generated
+- [ ] No blocked tasks remaining

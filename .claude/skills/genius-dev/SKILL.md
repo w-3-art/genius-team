@@ -231,3 +231,11 @@ If `GENIUS_MCP_CODE_MODE=true` is set and a Cloudflare Code Mode MCP server is c
 
 **Enable:** Add `cloudflare-code-mode` to your `mcpServers` in `.claude/settings.json`
 **Guide:** See `docs/cloudflare-mcp-guide.md` for setup instructions
+
+## Definition of Done
+
+- [ ] Code compiles/builds without errors
+- [ ] genius-qa-micro ran and passed
+- [ ] Changes committed with descriptive message
+- [ ] PROGRESS.md updated with completed task
+- [ ] No console.log or debug code left in production paths

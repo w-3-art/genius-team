@@ -113,3 +113,11 @@ After completing the review:
 1. For complex sections flagged as hard to read → suggest: "Use `/simplify` on [file:lines] to reduce complexity without changing behavior."
 2. For security issues → hand off to genius-security
 3. For PR-level multi-agent review → suggest genius-code-review
+
+## Definition of Done
+
+- [ ] All files in scope reviewed
+- [ ] Critical issues flagged with severity
+- [ ] Review report generated in `.genius/REVIEW.md`
+- [ ] Score ≥ 70 for APPROVE
+- [ ] Actionable feedback (not just "looks good")

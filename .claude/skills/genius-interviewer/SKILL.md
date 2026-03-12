@@ -339,3 +339,11 @@ When discovery interview is complete and DISCOVERY.xml is generated:
 → **Automatically suggest**: "Discovery complete! Ready for market analysis? I'll hand off to **genius-product-market-analyst**."
 → If user approves (or doesn't object): route to genius-product-market-analyst
 → Update state.json: `currentSkill = "genius-product-market-analyst"`
+
+## Definition of Done
+
+- [ ] All 7 interview phases completed
+- [ ] DISCOVERY.xml generated with structured findings
+- [ ] Dashboard state updated (`interviewComplete: true`)
+- [ ] Key insights logged in `.genius/memory/decisions.json`
+- [ ] Next step suggested (genius-product-market-analyst or genius-specs)
