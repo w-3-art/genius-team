@@ -288,56 +288,7 @@ Generate `.claude/discovery/DISCOVERY.xml` with full structured output including
 
 ## Unified State Schema
 
-The dashboard reads from `.genius/outputs/state.json` with this structure:
-
-```json
-{
-  "projectName": "string",
-  "engine": "claude",
-  "currentPhase": "discovery",
-  "phases": {
-    "discovery": {
-      "status": "in-progress | complete | pending",
-      "data": {
-        "problem": "string - the core problem being solved",
-        "solution": "string - how we solve it",
-        "users": "string - target personas",
-        "value": "string - unique value proposition",
-        "features": "string - bullet list of key features",
-        "notes": {
-          "problem": "string - deep problem insights, risks",
-          "solution": "string - technical approach notes",
-          "users": "string - user research findings",
-          "value": "string - competitive analysis",
-          "features": "string - priority/roadmap notes"
-        },
-        "tags": {
-          "problem": ["Urgent", "Expensive"],
-          "solution": ["AI-powered", "Automated"],
-          "users": ["B2B", "Enterprise"],
-          "value": ["Faster", "Better UX"],
-          "features": ["MVP", "V2"]
-        },
-        "interviewPhase": "Phase 1: Vision",
-        "interviewComplete": false
-      }
-    },
-    "market": { "status": "pending", "data": {} },
-    "specs": { "status": "pending", "data": {} },
-    "design": { "status": "pending", "data": {} },
-    "dev": { "status": "pending", "data": {} },
-    "qa": { "status": "pending", "data": {} },
-    "deploy": { "status": "pending", "data": {} }
-  }
-}
-```
-
-**Tag suggestions by category:**
-- **problem:** Pain point, Urgent, Expensive, Frequent
-- **solution:** Innovative, Simple, Automated, AI-powered
-- **users:** B2B, B2C, Enterprise, SMB, Developers
-- **value:** Faster, Cheaper, Better UX, All-in-one
-- **features:** MVP, V2, Nice-to-have
+Dashboard reads `.genius/outputs/state.json`. Key fields: `projectName`, `currentPhase: "discovery"`, `phases.discovery.data` with `problem`, `solution`, `users`, `value`, `features` (strings), plus `notes` and `tags` objects for each. Update `interviewPhase` and `interviewComplete` during interview. See `playgrounds/templates/project-dashboard.html` for full schema reference.
 
 ---
 
