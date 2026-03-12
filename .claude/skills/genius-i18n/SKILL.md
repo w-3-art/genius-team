@@ -333,3 +333,17 @@ Update `.genius/state.json`:
 - **→ genius-copywriter** — Provide locale file templates for professional translation
 - **→ genius-dev-frontend** — Apply CSS logical properties across all components
 - **→ genius-accessibility** — Ensure `lang` and `dir` attributes are set correctly on `<html>`
+
+
+---
+
+## Definition of Done
+
+Internationalization work MUST be:
+1. **Complete coverage**: Every user-visible string extracted to translation file
+2. **Verified**: Run `i18n-check` or equivalent to verify no missing keys
+3. **RTL tested**: If supporting Arabic/Hebrew/Persian, layout tested in RTL mode
+4. **Pluralization handled**: All plural forms configured (not just 1/many)
+5. **Date/time/currency**: All locale-sensitive values use locale-aware formatting
+
+Never mark i18n complete without running a missing-key scan.

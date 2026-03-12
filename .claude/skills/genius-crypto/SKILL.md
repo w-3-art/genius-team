@@ -154,3 +154,17 @@ After completing your task:
 3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
 4. Remove any mock/placeholder data from your tab
 5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+
+---
+
+## Definition of Done
+
+Crypto/Web3 implementation MUST be:
+1. **Contract audited**: Smart contract reviewed for common vulnerabilities (reentrancy, overflow, access control)
+2. **Testnet verified**: All functions tested on testnet before mainnet
+3. **Gas optimized**: Loops and storage patterns reviewed for gas efficiency
+4. **ABI documented**: All public functions documented with parameters and events
+5. **Error handling**: All revert reasons documented and user-friendly messages added
+
+Never deploy to mainnet without testnet verification.
