@@ -168,3 +168,8 @@ Crypto/Web3 implementation MUST be:
 5. **Error handling**: All revert reasons documented and user-friendly messages added
 
 Never deploy to mainnet without testnet verification.
+
+## Handoffs
+- → **genius-dev-backend**: For implementing smart contracts or blockchain integrations
+- → **genius-security**: For security audit of crypto implementations
+- → **genius-deployer**: For deploying Web3 applications

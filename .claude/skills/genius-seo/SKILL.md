@@ -159,3 +159,8 @@ Every recommendation MUST be:
 4. **Prioritized**: Mark as Critical / High / Medium / Low
 
 No generic advice like "improve your content quality" — always reference the specific page and the specific fix.
+
+## Handoffs
+- → **genius-content**: For implementing content improvements recommended by SEO audit
+- → **genius-dev-frontend**: For technical SEO fixes (Core Web Vitals, structured data)
+- → **genius-analytics**: For setting up tracking to measure SEO impact
