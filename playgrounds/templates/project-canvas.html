@@ -4,26 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Canvas - Discovery Mind Map</title>
+    <link rel="stylesheet" href="./design-tokens.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --border-color: #30363d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --accent-purple: #a371f7;
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --accent-orange: #d29922;
-            --accent-red: #f85149;
-            --accent-pink: #db61a2;
         }
 
         body {
@@ -161,7 +147,7 @@
         .canvas-area {
             position: relative;
             background: 
-                radial-gradient(circle at 50% 50%, rgba(163, 113, 247, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, var(--tone-purple-03) 0%, transparent 50%),
                 linear-gradient(var(--bg-primary) 1px, transparent 1px),
                 linear-gradient(90deg, var(--bg-primary) 1px, transparent 1px),
                 var(--bg-secondary);
@@ -200,13 +186,13 @@
         }
 
         .node:hover {
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px var(--overlay-black-30);
         }
 
         .node.dragging {
             cursor: grabbing;
             z-index: 100;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 16px 48px var(--overlay-black-40);
         }
 
         .node.updated {
@@ -215,12 +201,12 @@
 
         @keyframes nodeUpdate {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(163, 113, 247, 0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 0 20px var(--tone-purple-50); }
         }
 
         .node.center-node {
             border-color: var(--accent-purple);
-            background: linear-gradient(135deg, var(--bg-secondary), rgba(163, 113, 247, 0.1));
+            background: linear-gradient(135deg, var(--bg-secondary), var(--tone-purple-10));
             min-width: 240px;
         }
 
@@ -249,12 +235,12 @@
             font-size: 12px;
         }
 
-        .node.problem .node-icon { background: rgba(248, 81, 73, 0.2); }
-        .node.solution .node-icon { background: rgba(63, 185, 80, 0.2); }
-        .node.users .node-icon { background: rgba(88, 166, 255, 0.2); }
-        .node.value .node-icon { background: rgba(210, 153, 34, 0.2); }
-        .node.features .node-icon { background: rgba(219, 97, 162, 0.2); }
-        .node.center-node .node-icon { background: rgba(163, 113, 247, 0.2); }
+        .node.problem .node-icon { background: var(--tone-red-20); }
+        .node.solution .node-icon { background: var(--tone-green-20); }
+        .node.users .node-icon { background: var(--tone-blue-20); }
+        .node.value .node-icon { background: var(--tone-orange-20); }
+        .node.features .node-icon { background: var(--tone-pink-20); }
+        .node.center-node .node-icon { background: var(--tone-purple-20); }
 
         .node-content textarea {
             width: 100%;
@@ -413,7 +399,7 @@
 
         .progress-phase.active .phase-icon {
             border-color: var(--accent-purple);
-            background: rgba(163, 113, 247, 0.2);
+            background: var(--tone-purple-20);
         }
 
         .progress-phase.completed .phase-icon {
@@ -449,7 +435,7 @@
         }
 
         .btn-primary:hover {
-            background: #8957e5;
+            background: var(--accent-purple);
         }
 
         .btn-secondary {
