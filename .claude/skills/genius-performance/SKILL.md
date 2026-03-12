@@ -245,40 +245,7 @@ Set Cache-Control headers: static assets (`/_next/static/`) → `public, max-age
 
 ## Output
 
-Save report to `.genius/performance-report.md`:
-
-```markdown
-# Performance Report — {date}
-
-## Scores
-- Performance: 94/100
-- LCP: 1.8s ✅
-- CLS: 0.05 ✅
-- INP: 180ms ✅
-
-## Issues Fixed
-1. Hero image converted to WebP (-240KB)
-2. Lodash replaced with lodash-es (-18KB gzipped)
-3. Dashboard component lazy-loaded (-67KB initial bundle)
-
-## Remaining Issues
-- [ ] Third-party chat widget adds 350ms to INP
-```
-
-Update `.genius/state.json`:
-
-```json
-{
-  "performance": {
-    "score": 94,
-    "lcp": "1.8s",
-    "cls": "0.05",
-    "inp": "180ms",
-    "last_audit": "2026-03-10",
-    "report": ".genius/performance-report.md"
-  }
-}
-```
+Save `.genius/performance-report.md` with baseline, fixes, remaining issues, and projected impact. Mirror the headline metrics in `.genius/state.json`.
 
 ---
 
@@ -290,24 +257,16 @@ Update `.genius/state.json`:
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real performance data and point the user to `.genius/DASHBOARD.html`.
 
 ---
 
 ## Definition of Done
 
-Performance report MUST include:
-1. **Baseline score**: Lighthouse scores BEFORE optimizations
-2. **Specific issues**: Exact file names and line numbers causing slowdowns
-3. **Implementation steps**: Code-ready fixes, not vague suggestions
-4. **Expected after**: Projected scores AFTER applying all fixes
-5. **Priority order**: Which fixes give the most improvement per effort
-
-Never recommend "lazy loading" without specifying which images/components.
+- [ ] Baseline metrics captured before optimization
+- [ ] Slow points reference specific files or components
+- [ ] Recommended fixes are implementation-ready
+- [ ] Expected impact is estimated
+- [ ] Priority order is clear

@@ -255,44 +255,13 @@ psql $DATABASE_URL < backup-2025-01-01.sql
 
 ## Redis Patterns
 
-```typescript
-import { createClient } from 'redis';
-const redis = createClient({ url: process.env.REDIS_URL });
-
-// Cache-aside pattern
-async function getUserCached(id: string) {
-  const cached = await redis.get(`user:${id}`);
-  if (cached) return JSON.parse(cached);
-  
-  const user = await prisma.user.findUnique({ where: { id } });
-  await redis.setEx(`user:${id}`, 3600, JSON.stringify(user)); // TTL: 1 hour
-  return user;
-}
-
-// Invalidate on update
-async function updateUser(id: string, data: Partial<User>) {
-  const user = await prisma.user.update({ where: { id }, data });
-  await redis.del(`user:${id}`); // Invalidate cache
-  return user;
-}
-
-// Rate limiting with Redis
-async function checkRateLimit(key: string, limit: number, windowSec: number) {
-  const count = await redis.incr(key);
-  if (count === 1) await redis.expire(key, windowSec);
-  return count <= limit;
-}
-```
+Use Redis for cache-aside reads, invalidation on writes, and simple fixed-window rate limiting when the schema needs supporting infrastructure.
 
 ---
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-database" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-database` with a fresh timestamp.
 
 ---
 
@@ -304,23 +273,15 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-database" | .status = "com
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real database progress data and point the user to `.genius/DASHBOARD.html`.
 
 ---
 
 ## Definition of Done
 
-Before marking task complete, verify ALL of these:
-1. **Migration runs cleanly**: `npm run db:migrate` exits with code 0
-2. **Schema valid**: No orphan foreign keys, all required fields have defaults
-3. **Indexes defined**: Frequently queried columns have appropriate indexes
-4. **Rollback script**: Every migration has a corresponding down migration
-
-If any check fails → fix before declaring done.
+- [ ] Migrations run cleanly
+- [ ] Schema integrity is sound
+- [ ] Important query paths have indexes
+- [ ] Rollback path exists

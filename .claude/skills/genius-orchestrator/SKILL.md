@@ -83,64 +83,7 @@ This skill uses `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`:
 
 ## Playground Integration
 
-### Progress Dashboard
-The orchestrator maintains a **real-time visual dashboard** for sprint progress tracking.
-
-**Template:** `playgrounds/templates/progress-dashboard.html`
-**Live Output:** `.genius/outputs/PROGRESS.html`
-**State File:** `.genius/state.json`
-
-### State Structure (`.genius/state.json`)
-Top-level keys: `sprint` (name, dates, eta), `tasks[]` (id, title, status, agent, priority, estimated/actual hours), `agents[]` (id, name, status, currentTask), `history[]` (taskId, action, timestamp), `stats` (totals + progressPercent). See `playgrounds/templates/progress-dashboard.html` for full schema.
-
-### Dashboard Features
-The playground visualizes:
-- **📋 Kanban View** — Tasks organized by status columns (TODO, In Progress, Review, Done)
-- **📊 Gantt View** — Timeline visualization with task bars and dependencies
-- **👥 Agent Status** — Each agent's current task and availability
-- **📈 Progress Bar** — Global completion percentage with ETA
-- **📜 Completion History** — Recent task completions with timestamps
-- **🎯 Filters** — Filter by priority (high/medium/low) or by agent
-
-### Update Protocol (MANDATORY)
-
-**On Sprint Start:**
-```bash
-# Initialize state
-mkdir -p .genius/outputs
-cp playgrounds/templates/progress-dashboard.html .genius/outputs/PROGRESS.html
-echo '{"sprint":{},"tasks":[],"agents":[],"history":[],"stats":{}}' > .genius/state.json
-```
-
-**On Task Status Change:**
-Update `.genius/state.json` and regenerate PROGRESS.html:
-```bash
-# After updating state.json, inject state into HTML
-node -e "
-const fs = require('fs');
-const state = JSON.parse(fs.readFileSync('.genius/state.json', 'utf8'));
-let html = fs.readFileSync('.genius/outputs/PROGRESS.html', 'utf8');
-html = html.replace(/const state = \{[\s\S]*?\};/, 'const state = ' + JSON.stringify(state, null, 2) + ';');
-fs.writeFileSync('.genius/outputs/PROGRESS.html', html);
-"
-```
-
-**When to Update:**
-- `[ ]` → `[~]` (task started) → Update agent status to "busy", task to "inprogress"
-- `[~]` → QA pass → Update task to "review"  
-- QA fail → spawn debugger → Update task to "inprogress", add to history
-- `[~]` → `[x]` (task done) → Update task to "done", add completedAt, update stats
-- `[~]` → `[!]` (task blocked) → Update task status, log reason
-
-**Every 5 Tasks or On Completion:**
-The prompt output panel auto-generates a sprint summary containing:
-- Progress percentage and ETA
-- Status breakdown by column
-- Agent workload summary
-- Blockers and risks
-
-### Sprint Summary Output
-On completion, generate a sprint progress report with: progress %, ETA, status breakdown, agent workload, blockers.
+Maintain `playgrounds/templates/progress-dashboard.html` as `.genius/outputs/PROGRESS.html` backed by `.genius/state.json`. Sync task, agent, history, and stats data on every task change, keep status markers aligned with plan markers, and emit a short sprint summary every 5 tasks and at completion.
 
 ---
 
@@ -204,14 +147,7 @@ This is non-negotiable. No exceptions.
 
 ## Task Tool Syntax
 
-All tasks use `Task({ description, prompt, subagent_type })`. Always include BRIEFING.md context in prompts.
-
-| Action | subagent_type | When |
-|--------|--------------|------|
-| Implement | `genius-dev` | New feature/change. Include requirements + file list + verification steps |
-| QA | `genius-qa-micro` | **MANDATORY** after every dev task. Check syntax, imports, types, functionality |
-| Debug | `genius-debugger` | When QA fails. Include error message + file + context |
-| Review | `genius-reviewer` | Optional, every 5 tasks. Score correctness, maintainability, security |
+Use `Task({ description, prompt, subagent_type })` and always include BRIEFING context. Use `genius-dev` for implementation, `genius-qa-micro` after every dev task, `genius-debugger` on QA failures, and `genius-reviewer` periodically for quality scoring.
 
 ---
 
@@ -225,50 +161,22 @@ Task markers:
 - `[x]` = Completed
 - `[!]` = Blocked/Skipped
 
-### Sync-Back Protocol (MANDATORY)
+### Sync-Back Protocol
 
-**Before starting a task:**
-```bash
-sed -i '' 's/- \[ \] {task_description}/- [~] {task_description}/' .claude/plan.md
-```
-
-**After task + QA pass:**
-```bash
-sed -i '' 's/- \[~\] {task_description}/- [x] {task_description}/' .claude/plan.md
-echo "- [x] {task_description} ($(date +%H:%M))" >> PROGRESS.md
-```
-
-**If task fails after 3 retries:**
-```bash
-sed -i '' 's/- \[~\] {task_description}/- [!] {task_description}/' .claude/plan.md
-```
+Before a task starts, move it to `[~]` in `.claude/plan.md`. After implementation plus QA pass, mark it `[x]` and append the completion to `PROGRESS.md`. After 3 failed attempts, mark it `[!]`.
 
 ---
 
 ## Execution Loop
 
-```
-FOR EACH incomplete task (marked with [ ]):
-
-  1. Mark [~] in plan.md
-
-  2. Spawn genius-dev teammate with Task()
-     (include BRIEFING.md context)
-
-  3. If FAIL → spawn genius-debugger (up to 3 retries)
-     If still failing → mark [!], log error, CONTINUE
-
-  4. MANDATORY: Spawn genius-qa-micro
-     If QA FAILS → spawn genius-debugger → Re-QA
-     Cycle until QA passes or 3 total attempts
-
-  5. Mark [x] in plan.md, update PROGRESS.md
-     Append to progress.json
-
-  6. Every 5 tasks: spawn genius-reviewer for quality score
-
-  7. IMMEDIATELY continue to next task (NO PAUSE)
-```
+For each incomplete task:
+1. Mark it `[~]`.
+2. Delegate implementation with the most specific dev sub-skill.
+3. If implementation or QA fails, use `genius-debugger` and retry up to 3 times.
+4. Run `genius-qa-micro` before completion is allowed.
+5. Mark success as `[x]`, update `PROGRESS.md`, and append memory progress.
+6. Every 5 tasks, run `genius-reviewer`.
+7. Continue immediately unless the user says `STOP`/`PAUSE` or a critical system error occurs.
 
 ---
 
@@ -297,64 +205,14 @@ Task(
 
 ## Completion Protocol
 
-When ALL tasks are done:
-
-Update PROGRESS.md:
-```markdown
-## Status: COMPLETE
-## Completed: {date}
-### Summary
-- Total tasks: {total}
-- Completed: {completed}
-- Skipped: {skipped}
-```
-
-Announce:
-```
-================================================
-          EXECUTION COMPLETE
-================================================
-
-All [X] tasks completed!
-
-Summary:
-- Completed: [Y]
-- Skipped: [Z] (see ISSUES.md)
-
-Next steps:
-1. Run full QA: "run full QA"
-2. Security audit: "security audit"
-3. Deploy: "deploy to staging"
-
-📊 **Dashboard:**
-   open .genius/DASHBOARD.html
-   (run /genius-dashboard to refresh with all completed playgrounds)
-
-================================================
-```
+When all tasks are done, mark `PROGRESS.md` complete with totals, surface skipped items, and point the user to the next sequence: full QA, security audit, then deploy. Always mention `.genius/DASHBOARD.html`.
 
 ---
 
 ## Handoffs
 
-### From genius-architect
-```yaml
-receives:
-  - .claude/plan.md (task list with dependencies)
-  - ARCHITECTURE.md
-action: |
-  1. Read BRIEFING.md for context
-  2. Verify approval received
-  3. Begin execution loop
-```
-
-### To genius-qa (on completion)
-```yaml
-provides:
-  - PROGRESS.md summary
-  - All implemented files
-  - Any skipped tasks
-```
+- From `genius-architect`: read `.claude/plan.md`, `ARCHITECTURE.md`, and approval state before starting.
+- To `genius-qa`: provide the `PROGRESS.md` summary, implemented files, and any skipped tasks.
 
 ---
 

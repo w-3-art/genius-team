@@ -304,42 +304,7 @@ import FocusTrap from 'focus-trap-react'
 
 ## Output
 
-Write `.genius/a11y-report.md`:
-
-```markdown
-# Accessibility Report — {date}
-## Summary
-- Critical violations: 2
-- Serious violations: 5
-- WCAG level: AA (targeting)
-
-## Critical Issues (fix immediately)
-1. **[1.1.1 Non-text Content]** — 14 images missing alt text (paths listed below)
-2. **[4.1.2 Name, Role, Value]** — Custom dropdown missing ARIA attributes
-
-## Serious Issues
-3. **[1.4.3 Contrast]** — `.text-muted` (#9CA3AF on #FFF) = 2.8:1 — needs 4.5:1
-...
-
-## ✅ Passing
-- Skip links present
-- Heading hierarchy correct
-- All form inputs labelled
-```
-
-Update `.genius/state.json`:
-
-```json
-{
-  "accessibility": {
-    "wcag_level": "AA",
-    "violations_critical": 2,
-    "violations_serious": 5,
-    "last_audit": "2026-03-10",
-    "report": ".genius/a11y-report.md"
-  }
-}
-```
+Write `.genius/a11y-report.md` with severity-grouped findings and record the audit summary in `.genius/state.json`.
 
 ---
 
@@ -351,23 +316,15 @@ Update `.genius/state.json`:
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real accessibility data and point the user to `.genius/DASHBOARD.html`.
 
 ---
 
 ## Definition of Done
 
-Accessibility audit MUST include:
-1. **WCAG level**: Specify which criteria (e.g., "WCAG 2.2 AA 1.4.3") fails
-2. **Element reference**: CSS selector or description of the specific element
-3. **Impact**: Who is affected (screen reader users, keyboard users, etc.)
-4. **Fix code**: Exact HTML/CSS/JS change to resolve each issue
-
-Never say "add ARIA labels" without specifying which elements need them.
+- [ ] Failed WCAG criterion is named for each issue
+- [ ] Affected element or selector is identified
+- [ ] User impact is stated
+- [ ] Fix guidance is concrete enough to implement

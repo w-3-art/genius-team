@@ -247,36 +247,13 @@ export function errorHandler(err, req, res, next) {
 
 ## API Testing with curl
 
-```bash
-# GET list
-curl -s http://localhost:3000/api/users | jq
-
-# POST create
-curl -s -X POST http://localhost:3000/api/users \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"email": "test@example.com", "name": "Test User"}' | jq
-
-# PATCH update
-curl -s -X PATCH http://localhost:3000/api/users/123 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"name": "Updated Name"}' | jq
-
-# DELETE
-curl -s -X DELETE http://localhost:3000/api/users/123 \
-  -H "Authorization: Bearer $TOKEN" -o /dev/null -w "%{http_code}"
-```
+Smoke-test list, create, update, and delete flows with authenticated `curl` requests against the changed endpoints.
 
 ---
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-backend" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-backend` with a fresh timestamp.
 
 ---
 
@@ -289,24 +266,16 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-backend" | .status = "comp
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real backend progress data and point the user to `.genius/DASHBOARD.html`.
 
 ---
 
 ## Definition of Done
 
-Before marking task complete, verify ALL of these:
-1. **Build passes**: App starts without errors (`npm start` or `node index.js`)
-2. **Endpoints tested**: All new endpoints return expected status codes
-3. **Error handling**: 400/401/404/500 cases handled (not just happy path)
-4. **No hardcoded secrets**: No API keys, passwords, or tokens in code
-5. **Input validation**: All user inputs are validated before processing
-
-If any check fails → fix before declaring done.
+- [ ] App starts cleanly after the change
+- [ ] New endpoints are exercised
+- [ ] Error paths are covered
+- [ ] Secrets are not hardcoded
+- [ ] Inputs are validated before use

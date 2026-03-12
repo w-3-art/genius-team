@@ -328,11 +328,7 @@ npx expo start --tunnel  # if on different network
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-mobile" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-mobile` with a fresh timestamp.
 
 ---
 
@@ -345,14 +341,9 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-mobile" | .status = "compl
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real mobile progress data and point the user to `.genius/DASHBOARD.html`.
 
 ## Definition of Done
 

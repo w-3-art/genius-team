@@ -41,114 +41,11 @@ hooks:
 
 ## 🔴 UNIFIED DASHBOARD MODE
 
-### Step 1: Start the Unified Dashboard
+At the start of the interview, create `.genius/outputs/`, copy the dashboard templates, initialize `.genius/outputs/state.json` with `currentPhase: "discovery"`, and open `project-dashboard.html`.
 
-**AT THE VERY BEGINNING of the interview, run:**
+After every answer, update the discovery payload in `.genius/outputs/state.json` so the dashboard reflects the latest `projectName`, `problem`, `solution`, `users`, `value`, `features`, `notes`, `tags`, and `interviewPhase`.
 
-```bash
-# Create output directory
-mkdir -p .genius/outputs
-
-# Copy ALL playground templates + unified dashboard
-cp -r playgrounds/templates/* .genius/outputs/
-
-# Initialize state with unified structure
-cat > .genius/outputs/state.json << 'EOF'
-{
-  "projectName": "",
-  "engine": "claude",
-  "currentPhase": "discovery",
-  "phases": {
-    "discovery": {
-      "status": "in-progress",
-      "data": {
-        "problem": "",
-        "solution": "",
-        "users": "",
-        "value": "",
-        "features": "",
-        "notes": {
-          "problem": "",
-          "solution": "",
-          "users": "",
-          "value": "",
-          "features": ""
-        },
-        "tags": {
-          "problem": [],
-          "solution": [],
-          "users": [],
-          "value": [],
-          "features": []
-        },
-        "interviewPhase": "Phase 1: Vision",
-        "interviewComplete": false
-      }
-    },
-    "market": { "status": "pending", "data": {} },
-    "specs": { "status": "pending", "data": {} },
-    "design": { "status": "pending", "data": {} },
-    "dev": { "status": "pending", "data": {} },
-    "qa": { "status": "pending", "data": {} },
-    "deploy": { "status": "pending", "data": {} }
-  }
-}
-EOF
-
-# Start Python HTTP server in background (port 8888)
-cd .genius/outputs && python3 -m http.server 8888 &
-echo $! > .genius/outputs/server.pid
-
-# Wait for server to start
-sleep 1
-
-# Open the UNIFIED dashboard
-open http://localhost:8888/project-dashboard.html
-```
-
-**Tell the user:** "🎯 I've opened the Project Dashboard in your browser. Watch your project evolve across all phases as we work together!"
-
-### Step 2: Update State After EVERY Answer
-
-After the user answers a question, update `.genius/outputs/state.json` (discovery phase data):
-
-```bash
-# Example: After getting project name - use jq or full rewrite
-# Update projectName and discovery phase data
-cat > .genius/outputs/state.json << 'EOF'
-{
-  "projectName": "TaskFlow",
-  "engine": "claude",
-  "currentPhase": "discovery",
-  "phases": {
-    "discovery": {
-      "status": "in-progress",
-      "data": {
-        "problem": "",
-        "solution": "",
-        "users": "",
-        "value": "",
-        "features": "",
-        "notes": { ... },
-        "tags": { ... },
-        "interviewPhase": "Phase 1: Vision",
-        "interviewComplete": false
-      }
-    },
-    "market": { "status": "pending", "data": {} },
-    "specs": { "status": "pending", "data": {} },
-    "design": { "status": "pending", "data": {} },
-    "dev": { "status": "pending", "data": {} },
-    "qa": { "status": "pending", "data": {} },
-    "deploy": { "status": "pending", "data": {} }
-  }
-}
-EOF
-```
-
-### Step 3: Update Interview Phase as You Progress
-
-Change `phases.discovery.data.interviewPhase` as you move through sections:
+Use these `interviewPhase` values as the interview progresses:
 - `"Phase 1: Vision"` — Vision & Problem questions
 - `"Phase 2: Users"` — Target Users questions
 - `"Phase 3: Features"` — Core Features questions
@@ -158,15 +55,7 @@ Change `phases.discovery.data.interviewPhase` as you move through sections:
 - `"Validation"` — Final summary check
 - `"Complete"` — Interview done
 
-### Step 4: Mark Discovery Complete
-
-```bash
-# Mark discovery phase complete, ready for market analysis
-# Update state.json with:
-# - phases.discovery.status = "complete"
-# - phases.discovery.data.interviewComplete = true
-# - phases.market.status = "ready" (or keep pending if skipping)
-```
+When discovery finishes, set `phases.discovery.status = "complete"`, mark `interviewComplete = true`, and move the next phase to `ready` or `pending` as appropriate.
 
 ---
 
@@ -182,41 +71,23 @@ Never ask multiple questions. Listen. Dig deeper. Validate understanding.
 Read `@.genius/memory/BRIEFING.md` for any previous project context.
 
 ### During Interview
-After each key discovery, append to `.genius/memory/decisions.json`:
-```json
-{"id": "d-XXX", "decision": "DISCOVERY: [insight]", "reason": "user interview", "timestamp": "ISO-date", "tags": ["discovery", "interview"]}
-```
+Log key discoveries to `.genius/memory/decisions.json`.
 
 ### After Interview Complete
-Append to `.genius/memory/decisions.json`:
-```json
-{"id": "d-XXX", "decision": "PROJECT DEFINED: [name] | PROBLEM: [problem] | USERS: [users]", "reason": "interview complete", "timestamp": "ISO-date", "tags": ["project", "discovery", "complete"]}
-```
+Append a final summary decision covering project name, problem, and users.
 
 ---
 
 ## The 5 Layers of Understanding
 
-```
-+-------------------------------------------------------------+
-|  Layer 5: THE VISION                                        |
-|  "What does success look like in 2 years?"                  |
-+-------------------------------------------------------------+
-|  Layer 4: THE BUSINESS                                      |
-|  "How does this make/save money?"                           |
-+-------------------------------------------------------------+
-|  Layer 3: THE USERS                                         |
-|  "Who uses this and why do they care?"                      |
-+-------------------------------------------------------------+
-|  Layer 2: THE FEATURES                                      |
-|  "What should it do?" (what they usually start with)        |
-+-------------------------------------------------------------+
-|  Layer 1: THE PROBLEM                                       |
-|  "What pain are we solving?"                                |
-+-------------------------------------------------------------+
-```
+Move from features to fundamentals, then back up to vision:
+1. Problem
+2. Features
+3. Users
+4. Business
+5. Vision
 
-**Most clients start at Layer 2.** Your job is to go down to Layer 1, then up to Layer 5.
+Most users start at features. Drive the conversation down to the problem, then back up to the longer-term outcome.
 
 ---
 

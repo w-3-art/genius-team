@@ -169,28 +169,13 @@ class RateLimitedClient {
 
 ## Common Integrations Quick Reference
 
-| Service | Package | Key Docs |
-|---------|---------|----------|
-| Stripe | `stripe` | stripe.com/docs/api |
-| OpenAI | `openai` | platform.openai.com/docs |
-| Resend | `resend` | resend.com/docs |
-| Supabase | `@supabase/supabase-js` | supabase.com/docs |
-| Twilio | `twilio` | twilio.com/docs |
-| Cloudinary | `cloudinary` | cloudinary.com/documentation |
-| SendGrid | `@sendgrid/mail` | docs.sendgrid.com |
-| Pusher | `pusher` | pusher.com/docs |
-
-For detailed setup guides per service → **genius-integration-guide** skill.
+Typical SDKs include Stripe, OpenAI, Resend, Supabase, Twilio, Cloudinary, SendGrid, and Pusher. Use `genius-integration-guide` for detailed setup guides.
 
 ---
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-api" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-api` with a fresh timestamp.
 
 ---
 
@@ -203,23 +188,15 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-api" | .status = "complete
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real integration progress data and point the user to `.genius/DASHBOARD.html`.
 
 ---
 
 ## Definition of Done
 
-Before marking task complete, verify ALL of these:
-1. **Integration tested**: API call returns expected response (not just code written)
-2. **Error handling**: Network failures, 4xx, 5xx responses all handled gracefully
-3. **Rate limiting**: Rate limit headers respected if present
-4. **Secrets in env**: All API keys in environment variables, not hardcoded
-
-If any check fails → fix before declaring done.
+- [ ] Integration tested with real or mocked responses
+- [ ] Network, 4xx, and 5xx failures handled cleanly
+- [ ] Rate limits respected when relevant
+- [ ] Secrets stored in environment variables, not code

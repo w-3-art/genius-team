@@ -64,50 +64,13 @@ hooks:
 
 ## ⛔ MANDATORY CHECKS (NON-NEGOTIABLE)
 
-**BEFORE ANY ACTION:**
-```bash
-# 1. Read state.json
-cat .genius/state.json
-```
-
-**BEFORE ANY ROUTING:**
-```bash
-# 2. Verify the previous checkpoint
-jq '.currentSkill, .lastCheckpoint, .checkpointValidated' .genius/state.json
-```
-- If `checkpointValidated = false` → DO NOT route, complete the checkpoint first
-
-**BEFORE ANY SKILL:**
-```bash
-# 3. Verify that the previous artifact exists
-ls -la .genius/*.xml .genius/*.html 2>/dev/null
-```
-- If artifact missing per the ARTIFACT VALIDATION table → BLOCK and force generation
-
-**🚨 THESE CHECKS ARE MANDATORY. NO EXCEPTIONS.**
+Before routing, read `.genius/state.json`, verify the previous checkpoint is validated, and confirm the required artifact/playground exists. If any check fails, block routing and recover first.
 
 ---
 
-## Quick Start
-
-When user starts a new project or conversation:
-
-```
-🚀 **Welcome to Genius Team v17.0!**
-
-I'm your AI product team — from idea to production.
-Powered by Agent Teams + file-based memory.
-
-What would you like to do?
-```
-
 ## Memory Integration
 
-### On Session Start
-Read `@.genius/memory/BRIEFING.md` for full project context.
-
-### Before Routing
-Check BRIEFING.md and plan.md for current state before deciding where to route.
+Read `@.genius/memory/BRIEFING.md` at session start and check `plan.md` before routing.
 
 ## Intent Detection
 
@@ -145,118 +108,64 @@ Check BRIEFING.md and plan.md for current state before deciding where to route.
 
 ## Context Detection
 
-**⚠️ MANDATORY: Check both .xml AND .html (playgrounds)**
+Check both the phase artifact and any required playground before routing:
+- No project files: `genius-interviewer`
+- `DISCOVERY.xml` + `DISCOVERY.html`: `genius-product-market-analyst`
+- `MARKET-ANALYSIS.xml`: `genius-specs`
+- `SPECIFICATIONS.xml`: approval gate, then `genius-designer`
+- `DESIGN-SYSTEM.xml` + `DESIGN-SYSTEM.html`: choice gate, then `genius-marketer`
+- `MARKETING-PLAN.xml`: `genius-copywriter`
+- `COPY-SYSTEM.xml` + `COPY-SYSTEM.html`: `genius-integration-guide`
+- `INTEGRATIONS.xml`: `genius-architect`
+- `ARCHITECTURE.md`: approval gate, then `genius-orchestrator`
+- `.claude/plan.md` with active work: resume `genius-orchestrator`
+- `PROGRESS.md` complete: `genius-qa` or `genius-deployer`
 
-Check for existing files to determine current state:
-
-| Files Present | Playground Required | Project State | Action |
-|---------------|---------------------|--------------|--------|
-| No project files | - | Fresh start | genius-interviewer |
-| DISCOVERY.xml | DISCOVERY.html ✓ | Discovery done | genius-product-market-analyst |
-| MARKET-ANALYSIS.xml | - | Market done | genius-specs |
-| SPECIFICATIONS.xml | - | Specs done | Check approval → genius-designer |
-| DESIGN-SYSTEM.xml | DESIGN-SYSTEM.html ✓ | Design done | Check choice → genius-marketer |
-| MARKETING-PLAN.xml | - | Marketing done | genius-copywriter |
-| COPY-SYSTEM.xml | COPY-SYSTEM.html ✓ | Copy done | genius-integration-guide |
-| INTEGRATIONS.xml | - | Integrations done | genius-architect |
-| ARCHITECTURE.md | - | Architecture done | Check approval → genius-orchestrator |
-| .claude/plan.md + "IN PROGRESS" | - | Execution active | Resume genius-orchestrator |
-| PROGRESS.md = "COMPLETE" | - | Build done | genius-qa or genius-deployer |
-
-### 🔴 STRICT RULE: If artifact missing
-
-```
-If the previous skill did not generate its artifact (XML or HTML per table):
-1. DO NOT advance to the next skill
-2. Re-run the previous skill with: "Generate the missing [NAME] artifact"
-3. Verify generation before continuing
-```
+If the previous artifact or required playground is missing, block routing and regenerate it first.
 
 ---
 
 ## ⚡ ARTIFACT VALIDATION
 
-**Each skill MUST produce its artifacts before moving to the next.**
+Required handoff artifacts are:
+- `genius-interviewer`: `DISCOVERY.xml` + `DISCOVERY.html`
+- `genius-product-market-analyst`: `MARKET-ANALYSIS.xml`
+- `genius-specs`: `SPECIFICATIONS.xml`
+- `genius-designer`: `DESIGN-SYSTEM.xml` + `DESIGN-SYSTEM.html`
+- `genius-marketer`: `MARKETING-PLAN.xml`
+- `genius-copywriter`: `COPY-SYSTEM.xml` + `COPY-SYSTEM.html`
+- `genius-integration-guide`: `INTEGRATIONS.xml`
+- `genius-architect`: `ARCHITECTURE.md`
+- `genius-orchestrator`: updated `plan.md`
+- `genius-qa`: `QA-REPORT.xml`
+- `genius-security`: `SECURITY-AUDIT.xml`
+- `genius-deployer`: `DEPLOYMENT.md`
 
-| Skill | XML Output | HTML Playground | Must Exist Before Next |
-|-------|------------|-----------------|------------------------|
-| genius-interviewer | DISCOVERY.xml | DISCOVERY.html | ✓ |
-| genius-product-market-analyst | MARKET-ANALYSIS.xml | - | ✓ |
-| genius-specs | SPECIFICATIONS.xml | - | ✓ |
-| genius-designer | DESIGN-SYSTEM.xml | DESIGN-SYSTEM.html | ✓ |
-| genius-marketer | MARKETING-PLAN.xml | - | ✓ |
-| genius-copywriter | COPY-SYSTEM.xml | COPY-SYSTEM.html | ✓ |
-| genius-integration-guide | INTEGRATIONS.xml | - | ✓ |
-| genius-architect | ARCHITECTURE.md | - | ✓ |
-| genius-orchestrator | plan.md (updated) | - | ✓ |
-| genius-qa | QA-REPORT.xml | - | ✓ |
-| genius-security | SECURITY-AUDIT.xml | - | ✓ |
-| genius-deployer | DEPLOYMENT.md | - | ✓ |
-
-> For validation scripts and recovery protocol, see `GENIUS_GUARD.md`.
+See `GENIUS_GUARD.md` for full recovery protocol.
 
 ---
 
-## Checkpoints (User Input Required)
+## Checkpoints
 
-1. **After Specs**: "Specifications complete. Ready for design phase?"
-2. **After Designer**: "Which design option do you prefer? (A, B, or C)"
-3. **After Architect**: "Architecture complete. Ready to start building?"
-
-All other transitions happen AUTOMATICALLY without user input.
-
-## Two-Phase Architecture
-
-### Phase 1: IDEATION (Conversational)
-Skills ASK questions. User input expected at checkpoints.
-
-```
-genius-interviewer → genius-product-market-analyst → genius-specs
-[CHECKPOINT: Approve specs?]
-→ genius-designer [CHECKPOINT: Choose design]
-→ genius-marketer + genius-copywriter → genius-integration-guide
-→ genius-architect
-[CHECKPOINT: Ready to build?]
-```
-
-### Phase 2: EXECUTION (Autonomous)
-Agent Teams EXECUTE without stopping. No questions.
-
-```
-genius-orchestrator (Lead, coordinates):
-├── genius-dev (teammate)
-├── genius-qa-micro (teammate, MANDATORY after every task)
-├── genius-debugger (teammate)
-└── genius-reviewer (teammate)
-
-Then: genius-qa → genius-security → genius-deployer
-```
+User approval is only required after `genius-specs`, `genius-designer`, and `genius-architect`. All other valid handoffs are automatic.
 
 ## State Management
 
-Update `.genius/state.json` when routing:
-
-```bash
-jq '.currentSkill = "genius-interviewer" | .updated_at = "'"$(date -Iseconds)"'"' .genius/state.json > tmp.json && mv tmp.json .genius/state.json
-```
+Update `.genius/state.json` on every successful handoff with the chosen skill and a fresh `updated_at` timestamp.
 
 ---
 
 ## 🚫 Handoff Protocol (BLOCKING)
 
-Before routing to the next skill: (1) artifact MUST exist per table above, (2) checkpoint validated if required, (3) playground exists if required. **If any fails → BLOCK and generate missing artifact first.**
-
-On successful handoff: update `state.json`, pass context, announce transition briefly.
+Before routing: required artifact exists, required checkpoint is validated, and required playground exists. On success, update `state.json`, pass context, and announce the transition briefly.
 
 ---
 
 ## Memory Triggers
 
-Detect and route memory-related phrases:
-- "Remember that..." → Append to `.genius/memory/decisions.json`, confirm
-- "We decided..." → Append to `.genius/memory/decisions.json`, confirm
-- "This broke because..." → Append to `.genius/memory/errors.json`, confirm
-- "Pattern: ..." → Append to `.genius/memory/patterns.json`, confirm
+- "Remember that..." / "We decided..." → `.genius/memory/decisions.json`
+- "This broke because..." → `.genius/memory/errors.json`
+- "Pattern: ..." → `.genius/memory/patterns.json`
 
 ## Disambiguation Rules
 
@@ -274,48 +183,15 @@ When the user's request is ambiguous or could match multiple skills:
 
 ## Commands
 
-| Command | Action |
-|---------|--------|
-| `/genius-start` | Initialize environment, load memory |
-| `/genius-start --recover` | Reinitialize while keeping valid artifacts |
-| `/status` | Show current project status |
-| `/continue` | Resume execution from last point |
-| `/reset` | Start over (with confirmation) |
-| `/save-tokens` | Toggle save-token mode |
-| `/update-check` | Check for Claude Code updates |
-| `/genius-dashboard` | Generate master dashboard aggregating all project playgrounds |
-| `STOP` or `PAUSE` | Pause autonomous execution |
+Use `/genius-start`, `/status`, `/continue`, `/reset`, `/update-check`, and `/genius-dashboard` as the primary control commands. `STOP` or `PAUSE` halts autonomous execution.
 
 ## Master Dashboard
 
-**📊 PROACTIVE RULE — Always mention the Dashboard. Don't wait for the user to ask.**
+Mention `.genius/DASHBOARD.html` after skill completion, `/genius-start`, `/status`, and checkpoint approvals. When the user wants an overview, refresh it with `/genius-dashboard` instead of generating separate summary pages.
 
-After any skill completes, after `/genius-start`, after `/status`, after any checkpoint approval:
-```
-📊 **Dashboard updated** → `open .genius/DASHBOARD.html`
-Run `/genius-dashboard` to refresh it with the latest playgrounds.
-```
+## Dual Mode
 
-When the user asks to "see all playgrounds", "generate a dashboard", or "show overview":
-- Run `/genius-dashboard` → generates `.genius/DASHBOARD.html`
-- Do NOT create separate HTML files per phase when a unified view is requested
-- Individual playground files (`.genius/DISCOVERY.html`, etc.) are sources; DASHBOARD.html is the hub
-- After generating multiple playgrounds in one session, always offer: "Run `/genius-dashboard` to see all in one page"
-
----
-
-> **v17 skills**: All triggers are in the Intent Detection table above. No separate list needed.
-
----
-
-## Dual Mode — Cross-Engine Commands
-
-| Command | What it does |
-|---------|-------------|
-| `/challenge` | Challenge the other engine's last action (reads dual-bridge.json automatically) |
-| `/genius-switch-engine dual` | Enable true dual mode with bridge |
-| `/genius-switch-engine claude` | Switch back to Claude Code only |
-| `/genius-switch-engine codex` | Switch to Codex only |
+Use `/challenge` and `/genius-switch-engine {dual|claude|codex}` for cross-engine workflows.
 
 ---
 

@@ -134,23 +134,13 @@ cat $REPORT_PATH
 
 ## CLI / Non-Multi-Agent Mode
 
-When not running in Agent Teams mode, perform all 3 reviews sequentially:
-1. First pass: bugs (read diff with bug-finder mindset)
-2. Second pass: security (re-read with attacker mindset)
-3. Third pass: quality (re-read with maintainer mindset)
-4. Consolidate findings into the standard report format
-
-This is slower but still far better than a single-pass review.
+Without Agent Teams, run three sequential passes: bugs, security, and maintainability. Consolidate them into the standard report format.
 
 ---
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-code-review" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-code-review` with a fresh timestamp.
 
 ---
 
@@ -162,30 +152,16 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-code-review" | .status = "comp
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real review data and tell the user to open `.genius/DASHBOARD.html`.
 
 
 ---
 
 ## Output Quality Requirements
 
-The review report MUST include for EVERY issue found:
-1. **File + line number**: e.g., `src/auth.js:42`
-2. **Severity**: Critical (blocks deploy) / High (should fix) / Medium (should fix) / Low (optional)
-3. **Category**: Bug / Security / Performance / Maintainability / Style
-4. **Description**: What is wrong and why it matters
-5. **Fix**: Exact code example showing the corrected version
-
-Summary section must include: total issues by severity, overall assessment, go/no-go recommendation.
-
-If 0 issues found: provide positive confirmation with specific strengths observed.
+Every issue must include file:line, severity, category, description, and a concrete fix. The summary must include counts by severity, an overall assessment, and a go/no-go call. If no issues are found, say so and name the observed strengths.
 
 ## Definition of Done
 

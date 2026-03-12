@@ -231,32 +231,13 @@ NEXT_PUBLIC_PLAUSIBLE_DOMAIN=yourdomain.com
 
 ### Step 8 — Dashboard Setup
 
-**Recommended dashboards to create:**
-
-1. **Acquisition** — Traffic sources, signups by channel
-2. **Activation** — Onboarding completion rate, time-to-activation
-3. **Retention** — DAU/WAU/MAU, cohort retention
-4. **Revenue** — MRR, churn, LTV by acquisition channel
-5. **Core Feature** — Usage frequency, power users
+Recommended dashboards: acquisition, activation, retention, revenue, and core-feature usage.
 
 ---
 
 ## Output
 
-Update `.genius/state.json`:
-
-```json
-{
-  "analytics": {
-    "provider": "posthog",
-    "initialized": true,
-    "events_count": 24,
-    "events_registry": ".genius/analytics-events.md",
-    "gdpr_compliant": true,
-    "funnels_defined": ["free_to_paid", "onboarding"]
-  }
-}
-```
+Record provider, event registry, funnel coverage, and compliance state in `.genius/state.json`.
 
 ---
 
@@ -268,23 +249,15 @@ Update `.genius/state.json`:
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real analytics data and point the user to `.genius/DASHBOARD.html`.
 
 ---
 
 ## Definition of Done
 
-Every analytics implementation MUST:
-1. **Be verified**: Confirm events fire correctly (check browser network tab or DebugView)
-2. **Include test cases**: Provide manual steps to verify each event
-3. **Cover edge cases**: Empty states, errors, and cancellations tracked, not just success
-4. **Document the schema**: Event name, properties, types clearly documented
-
-No "I've added the tracking" without verification steps.
+- [ ] Events are verified in a real debug surface
+- [ ] Manual verification steps are documented
+- [ ] Error and cancellation paths are tracked where relevant
+- [ ] Event schema is documented clearly

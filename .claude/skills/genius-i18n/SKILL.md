@@ -173,62 +173,13 @@ npx i18next-parser
 
 ### Step 9 — CI/CD: Missing Key Detection
 
-```yaml
-# .github/workflows/i18n-check.yml
-name: i18n Check
-on: [push, pull_request]
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - name: Check missing translation keys
-        run: |
-          node -e "
-          const en = require('./messages/en.json');
-          const fr = require('./messages/fr.json');
-          function getKeys(obj, prefix = '') {
-            return Object.entries(obj).flatMap(([k, v]) =>
-              typeof v === 'object' ? getKeys(v, prefix + k + '.') : [prefix + k]
-            );
-          }
-          const missing = getKeys(en).filter(k => {
-            const keys = k.split('.');
-            let fr_val = fr;
-            for (const key of keys) {
-              if (!fr_val[key]) return true;
-              fr_val = fr_val[key];
-            }
-            return false;
-          });
-          if (missing.length) {
-            console.error('Missing FR keys:', missing);
-            process.exit(1);
-          }
-          console.log('All keys present ✅');
-          "
-```
+Add a CI check that compares translation-key sets across locale files and fails the build when any locale is missing a key.
 
 ---
 
 ## Output
 
-Update `.genius/state.json`:
-
-```json
-{
-  "i18n": {
-    "framework": "next-intl",
-    "locales": ["en", "fr", "de", "ar"],
-    "default_locale": "en",
-    "rtl_locales": ["ar"],
-    "messages_path": "messages/",
-    "locale_routing": true,
-    "ci_check": true
-  }
-}
-```
+Record framework, locales, default locale, RTL locales, messages path, locale routing, and CI coverage in `.genius/state.json`.
 
 ---
 
@@ -243,11 +194,8 @@ Update `.genius/state.json`:
 
 ## Definition of Done
 
-Internationalization work MUST be:
-1. **Complete coverage**: Every user-visible string extracted to translation file
-2. **Verified**: Run `i18n-check` or equivalent to verify no missing keys
-3. **RTL tested**: If supporting Arabic/Hebrew/Persian, layout tested in RTL mode
-4. **Pluralization handled**: All plural forms configured (not just 1/many)
-5. **Date/time/currency**: All locale-sensitive values use locale-aware formatting
-
-Never mark i18n complete without running a missing-key scan.
+- [ ] User-visible strings are extracted
+- [ ] Missing-key scan passes
+- [ ] RTL is tested when supported
+- [ ] Pluralization is configured
+- [ ] Locale-aware formatting is used

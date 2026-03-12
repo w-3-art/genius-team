@@ -272,28 +272,7 @@ After publishing, distribute across channels:
 
 ## Output
 
-Write content to:
-- `content/blog/{slug}.md` (blog posts)
-- `content/newsletters/{date}.md` (newsletters)
-- `content/social/{platform}-{date}.md` (social media)
-
-Update `.genius/state.json`:
-
-```json
-{
-  "content": {
-    "strategy_defined": true,
-    "pillars": ["education", "thought-leadership", "product", "social-proof"],
-    "cadence": {
-      "blog": "2x/week",
-      "newsletter": "weekly",
-      "linkedin": "3x/week"
-    },
-    "last_piece": "how-we-cut-churn-40-percent",
-    "published_count": 12
-  }
-}
-```
+Write content to the appropriate `content/` path and update `.genius/state.json` with the current strategy, cadence, and latest piece metadata.
 
 ---
 
@@ -305,25 +284,17 @@ Update `.genius/state.json`:
 
 ---
 
-## Playground Update (MANDATORY)
+## Playground Update
 
-After completing your task:
-1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
-2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
-3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
-4. Remove any mock/placeholder data from your tab
-5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+Refresh the existing dashboard tab with real content data and point the user to `.genius/DASHBOARD.html`.
 
 
 ---
 
 ## Definition of Done
 
-Content MUST be:
-1. **Complete draft**: Full article, not outline or placeholder sections
-2. **GEO-optimized**: Includes clear factual claims, structured for AI citation
-3. **Word count met**: Minimum 800 words for blog posts, 400 for newsletters
-4. **SEO elements**: Title tag, meta description, H2 structure defined
-5. **CTA included**: Clear next step for the reader
-
-Provide a word count at the end. Never submit a partial draft as complete.
+- [ ] Draft is complete, not skeletal
+- [ ] GEO/SEO structure is present
+- [ ] Minimum word count is met
+- [ ] CTA is clear
+- [ ] Word count is provided
