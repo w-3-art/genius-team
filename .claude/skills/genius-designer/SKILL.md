@@ -254,3 +254,13 @@ Provides: DESIGN-SYSTEM.html, design-config.json, brand personality
 
 ### To: genius-dev (later)
 Provides: design-config.json (Tailwind or CSS variables ready)
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Design system created! Ready for marketing strategy? (CHECKPOINT: choose design option first) I'll hand off to **genius-marketer**."
+→ If user approves: route to genius-marketer
+→ Update state.json: `currentSkill = "genius-marketer"`

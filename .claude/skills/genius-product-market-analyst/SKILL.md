@@ -212,3 +212,13 @@ After launch, use **genius-analytics** to:
 - Validate the TAM/SAM estimates against real user data
 - Track conversion rates and acquisition costs
 - Measure retention and churn against the model projections
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Market analysis complete! Ready to write specifications? I'll hand off to **genius-specs**."
+→ If user approves: route to genius-specs
+→ Update state.json: `currentSkill = "genius-specs"`

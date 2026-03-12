@@ -185,3 +185,13 @@ After defining the marketing strategy, hand off to **genius-content** for:
 - Newsletter sequence for launch
 
 Hand off to **genius-analytics** post-launch to track acquisition channel performance.
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Marketing strategy defined! Ready for copywriting? I'll hand off to **genius-copywriter**."
+→ If user approves: route to genius-copywriter
+→ Update state.json: `currentSkill = "genius-copywriter"`

@@ -167,3 +167,13 @@ Provides: COPY.md with component-mapped copy, all UI text strings
 
 ### To: genius-integration-guide (parallel)
 Coordinates: CTA tracking, email service setup
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Copy complete! Ready to set up service integrations? I'll hand off to **genius-integration-guide**."
+→ If user approves: route to genius-integration-guide
+→ Update state.json: `currentSkill = "genius-integration-guide"`

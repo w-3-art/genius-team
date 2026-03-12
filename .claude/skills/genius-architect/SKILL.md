@@ -233,3 +233,13 @@ Based on the architecture, recommend the appropriate genius-dev sub-skills:
 - Third-party integrations → mention genius-dev-api
 - Web3/crypto project → suggest genius-crypto for analysis phase
 - Post-launch → suggest genius-seo, genius-analytics, genius-performance
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Architecture approved! Ready to start building? (CHECKPOINT: approve architecture first) I'll hand off to **genius-orchestrator**."
+→ If user approves: route to genius-orchestrator
+→ Update state.json: `currentSkill = "genius-orchestrator"`

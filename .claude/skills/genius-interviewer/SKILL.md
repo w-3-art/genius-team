@@ -381,3 +381,10 @@ Provides: DISCOVERY.xml, user context, constraints
 - Challenge assumptions respectfully
 - **Update state.json live so the dashboard shows progress**
 - **Use the unified dashboard (project-dashboard.html), NOT individual HTML files**
+
+## Next Step (Auto-Chain)
+
+When discovery interview is complete and DISCOVERY.xml is generated:
+→ **Automatically suggest**: "Discovery complete! Ready for market analysis? I'll hand off to **genius-product-market-analyst**."
+→ If user approves (or doesn't object): route to genius-product-market-analyst
+→ Update state.json: `currentSkill = "genius-product-market-analyst"`

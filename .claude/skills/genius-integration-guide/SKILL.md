@@ -195,3 +195,13 @@ Receives: TRACKING-PLAN.xml, project requirements
 
 ### To: genius-architect
 Provides: INTEGRATIONS.md, .env.example, configured services list, STACK-CONFIG.html playground
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Integrations mapped! Ready to design the technical architecture? I'll hand off to **genius-architect**."
+→ If user approves: route to genius-architect
+→ Update state.json: `currentSkill = "genius-architect"`

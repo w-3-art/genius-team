@@ -232,3 +232,13 @@ Provides: SPECIFICATIONS.xml, screen definitions, component list
 
 ### To: genius-architect
 Provides: SPECIFICATIONS.xml, data model, API endpoints, NFRs
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Specifications complete! Ready for the design phase? (CHECKPOINT: approve specs first) I'll hand off to **genius-designer**."
+→ If user approves: route to genius-designer
+→ Update state.json: `currentSkill = "genius-designer"`
