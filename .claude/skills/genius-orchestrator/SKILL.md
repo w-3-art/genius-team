@@ -210,6 +210,8 @@ On completion, generate a sprint progress report with: progress %, ETA, status b
 
 **ONLY STOP when**: (1) ALL tasks `[x]` complete, (2) user says STOP/PAUSE, (3) critical system error.
 
+**STATE CHECK every 5 tasks**: Verify `.genius/state.json` matches `PROGRESS.md` task counts. If mismatch, reconcile from PROGRESS.md (source of truth). Log discrepancies to `.genius/orchestrator.log`.
+
 ---
 
 ## Your Role
