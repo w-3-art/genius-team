@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "created": "2026-03-12",
+  "note": "Baseline metrics — to be filled after first benchmark run",
+  "tracks": {
+    "1-skill-routing": {
+      "accuracy": null,
+      "baseline_date": null
+    },
+    "2-playground-content": {
+      "content_accuracy": null,
+      "orphan_files": null,
+      "baseline_date": null
+    },
+    "3-playground-design": {
+      "lighthouse_avg": null,
+      "design_coherence": null,
+      "baseline_date": null
+    },
+    "4-orchestration": {
+      "chain_completion": null,
+      "manual_interventions": null,
+      "baseline_date": null
+    },
+    "5-skill-quality": {
+      "build_success_rate": null,
+      "specificity_avg": null,
+      "baseline_date": null
+    },
+    "6-context-efficiency": {
+      "avg_tokens_per_task": null,
+      "baseline_date": null
+    }
+  },
+  "endurance": {
+    "phase1_accuracy": null,
+    "phase2_accuracy": null,
+    "phase3_accuracy": null,
+    "compaction_triggered_at_task": null
+  }
+}
