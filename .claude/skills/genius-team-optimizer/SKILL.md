@@ -39,6 +39,36 @@ Append to `.genius/memory/decisions.json`:
 
 ---
 
+## What to Check (Optimization Checklist)
+
+### Skill Health
+- Every invocable skill has specific trigger phrases in its description
+- Every skill has negative triggers (what NOT to use it for)
+- Skills that produce output have "Definition of Done" or "Output Quality" section
+- Skills that chain have "## Next Step" section
+- The genius-team router's intent table includes all skills
+
+### Session Durability
+- `postCompactionSections` in all 4 configs reference existing CLAUDE.md headers
+- PostCompact hook fires to reinject anti-drift rules
+- PreCompact hook saves current state, BRIEFING.md, and plan status
+- GENIUS_GUARD.md is up to date with current skill list
+
+### Playground Health
+- All playgrounds link to `design-tokens.css`
+- No orphan playground files (must be in templates/)
+- Playgrounds update from state.json (real data, not mock)
+
+### Config Health
+- All 4 configs have same core structure
+- `ANTHROPIC_MODEL` set correctly
+- `CLAUDE_CODE_EFFORT_LEVEL` set to high
+- `compaction.postCompactionSections` headers exist in CLAUDE.md
+
+Run: `bash scripts/verify.sh` to check 43+ skills are present and correctly configured.
+
+---
+
 ## Auto-Optimization (No approval needed)
 
 - Updating deprecated syntax
