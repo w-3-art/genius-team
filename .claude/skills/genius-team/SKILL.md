@@ -193,76 +193,7 @@ If the previous skill did not generate its artifact (XML or HTML per table):
 | genius-security | SECURITY-AUDIT.xml | - | ✓ |
 | genius-deployer | DEPLOYMENT.md | - | ✓ |
 
-### Validation Script
-
-```bash
-# Verify all expected artifacts for the current skill
-validate_artifacts() {
-  local skill="$1"
-  case "$skill" in
-    "genius-interviewer")
-      [[ -f .genius/DISCOVERY.xml && -f .genius/DISCOVERY.html ]] && echo "✓" || echo "✗ DISCOVERY.xml or DISCOVERY.html missing"
-      ;;
-    "genius-designer")
-      [[ -f .genius/DESIGN-SYSTEM.xml && -f .genius/DESIGN-SYSTEM.html ]] && echo "✓" || echo "✗ DESIGN-SYSTEM.xml or DESIGN-SYSTEM.html missing"
-      ;;
-    "genius-copywriter")
-      [[ -f .genius/COPY-SYSTEM.xml && -f .genius/COPY-SYSTEM.html ]] && echo "✓" || echo "✗ COPY-SYSTEM.xml or COPY-SYSTEM.html missing"
-      ;;
-    *)
-      echo "Manual check required"
-      ;;
-  esac
-}
-```
-
----
-
-## 🔄 RECOVERY PROTOCOL
-
-### How to detect drift
-
-**Drift symptoms:**
-1. `state.json` indicates a skill but artifacts don't match
-2. The current skill asks for info that should have been collected before
-3. "File not found" errors on expected artifacts
-4. The user receives questions already asked
-
-**Diagnostic command:**
-```bash
-# Check state/artifact consistency
-echo "=== STATE ===" && cat .genius/state.json
-echo "=== ARTIFACTS ===" && ls -la .genius/*.xml .genius/*.html 2>/dev/null
-echo "=== EXPECTED ===" && jq -r '.currentSkill' .genius/state.json
-```
-
-### How to get back on track
-
-**Step 1: Identify the last valid artifact**
-```bash
-ls -lt .genius/*.xml .genius/*.html | head -5
-```
-
-**Step 2: Go back to the corresponding skill**
-- If last artifact = DISCOVERY.xml → resume at genius-product-market-analyst
-- If last artifact = SPECIFICATIONS.xml → resume at genius-designer
-- etc.
-
-**Step 3: Update state.json**
-```bash
-jq '.currentSkill = "[CORRECT_SKILL]" | .recovered = true | .recoveredAt = "'"$(date -Iseconds)"'"' .genius/state.json > tmp.json && mv tmp.json .genius/state.json
-```
-
-### When to use `/genius-start` vs `/continue`
-
-| Situation | Command | Reason |
-|-----------|----------|--------|
-| New project | `/genius-start` | Initializes everything from scratch |
-| Resume after pause | `/continue` | Resumes where you left off |
-| Minor drift (1-2 skills) | `/continue` after fixing state.json | Manual fix is sufficient |
-| Major drift (inconsistent state) | `/genius-start --recover` | Reinitializes while keeping valid artifacts |
-| Corrupted artifacts | `/reset` then `/genius-start` | Start fresh |
-| Major scope change | `/genius-start` | New discovery needed |
+> For validation scripts and recovery protocol, see `GENIUS_GUARD.md`.
 
 ---
 
@@ -313,46 +244,9 @@ jq '.currentSkill = "genius-interviewer" | .updated_at = "'"$(date -Iseconds)"'"
 
 ## 🚫 Handoff Protocol (BLOCKING)
 
-**⛔ STRICT RULES — NO EXCEPTIONS**
+Before routing to the next skill: (1) artifact MUST exist per table above, (2) checkpoint validated if required, (3) playground exists if required. **If any fails → BLOCK and generate missing artifact first.**
 
-When transitioning between skills:
-
-### BEFORE routing to the next skill:
-
-1. **VERIFY the artifact** — The current skill's artifact MUST exist
-   ```bash
-   # Example for genius-interviewer
-   [[ -f .genius/DISCOVERY.xml ]] || { echo "❌ BLOCKED: DISCOVERY.xml missing"; exit 1; }
-   ```
-
-2. **VERIFY the checkpoint** — If checkpoint required, it MUST be validated
-   ```bash
-   jq -e '.checkpointValidated == true' .genius/state.json || { echo "❌ BLOCKED: Checkpoint not validated"; exit 1; }
-   ```
-
-3. **VERIFY the playground** — If playground required (see table), it MUST exist
-   ```bash
-   # Example for genius-interviewer
-   [[ -f .genius/DISCOVERY.html ]] || { echo "❌ BLOCKED: DISCOVERY.html missing"; exit 1; }
-   ```
-
-### 🔴 IF VERIFICATION FAILS:
-
-```
-❌ HANDOFF BLOCKED
-
-Missing artifact: [NAME]
-Required action: Complete skill [CURRENT_SKILL] before continuing
-
-Would you like me to generate the missing artifact now?
-```
-
-### IF VERIFICATION OK:
-
-1. Update state: `.genius/state.json`
-2. Pass relevant files/context to next skill
-3. Ensure teammate reads `@.genius/memory/BRIEFING.md`
-4. Announce transition to user (brief)
+On successful handoff: update `state.json`, pass context, announce transition briefly.
 
 ---
 
@@ -410,27 +304,7 @@ When the user asks to "see all playgrounds", "generate a dashboard", or "show ov
 
 ---
 
-## New Skills in v17
-
-| Skill | Triggers |
-|-------|---------|
-| genius-dev-frontend | UI, React, CSS, Tailwind, composants, animations, responsive |
-| genius-dev-backend | API, server, auth, middleware, REST, GraphQL, Node |
-| genius-dev-mobile | React Native, Expo, mobile, iOS, Android, push notifications |
-| genius-dev-database | schema, migration, SQL, NoSQL, indexing, Prisma, Drizzle |
-| genius-dev-api | intégration API tierce, SDK, webhook, OpenAPI |
-| genius-code-review | code review, PR review, audit code, review pull request |
-| genius-skill-creator | créer un skill, nouveau skill projet, workflow récurrent |
-| genius-experiments | expérimenter, optimiser overnight, loop autonome, A/B code |
-| genius-seo | SEO, GEO, citabilité IA, llms.txt, schema markup, audit site |
-| genius-crypto | crypto, DeFi, NFT, token, blockchain, DexScreener, OpenSea, Dune |
-| genius-analytics | analytics, tracking, GA4, Plausible, funnels, événements |
-| genius-performance | performance, Lighthouse, bundle, lazy loading, optimisation |
-| genius-accessibility | accessibilité, WCAG, ARIA, a11y, contraste, screen reader |
-| genius-i18n | internationalisation, i18n, traduction, locale, RTL |
-| genius-docs | documentation, README, API docs, Storybook, ADR |
-| genius-content | contenu, blog, newsletter, social media, copy SEO |
-| genius-template | template projet, boilerplate, starter, projet type |
+> **v17 skills**: All triggers are in the Intent Detection table above. No separate list needed.
 
 ---
 
