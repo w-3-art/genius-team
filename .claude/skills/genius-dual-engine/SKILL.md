@@ -225,100 +225,25 @@ When Builder and Challenger disagree on **approach** (not just implementation de
 
 ## Mode 3: Audit Mode
 
-Challenger performs an independent, comprehensive audit of the current codebase or feature.
-
-### Audit Checklist
-
-The Challenger runs through these checks independently:
-
-| Check | Method | Reference Skill |
-|-------|--------|----------------|
-| **Test Suite** | Run all tests, report failures | genius-qa |
-| **Security Audit** | OWASP Top 10, dependency scan, secrets detection | genius-security |
-| **Performance** | Identify bottlenecks, O(n²) patterns, memory leaks | genius-performance |
-| **Spec Compliance** | Compare implementation against SPECS.md / plan.md | genius-reviewer |
-
-### Audit Output
-
-Write to `.genius/dual-audit-report.md`:
-```markdown
-# Dual Audit Report
-Date: YYYY-MM-DD
-Challenger: [model]
-Profile: [strict|balanced|lenient]
-
-## Summary
-- Tests: X passed, Y failed, Z skipped
-- Security: [score/grade]
-- Performance: [score/grade]
-- Spec Compliance: [percentage]
-
-## Critical Findings
-## Important Findings
-## Minor Findings
-## Recommendations
-
-## Overall Verdict: PASS | CONDITIONAL_PASS | FAIL
-```
+Challenger performs independent audit: tests (genius-qa), security/OWASP (genius-security), performance (genius-performance), spec compliance (genius-reviewer).
+Output to `.genius/dual-audit-report.md` with Summary, Critical/Important/Minor Findings, Recommendations, and Verdict (PASS/CONDITIONAL_PASS/FAIL).
 
 ---
 
 ## Challenger Profiles
 
-Configure via `DUAL_CHALLENGER_PROFILE` env var or per-task override.
-
-### `strict`
-- Challenges every design decision
-- Requires 90+ score for APPROVE
-- Runs full audit suite on every review
-- Security findings are always Critical
-- Best for: production releases, security-critical code, public APIs
-
-### `balanced` (default)
-- Normal senior-engineer code review standards
-- Requires 70+ score for APPROVE
-- Runs tests + basic security check
-- Proportionate severity ratings
-- Best for: regular feature development, most tasks
-
-### `lenient`
-- Focus on real bugs and breaking changes only
-- Requires 50+ score for APPROVE
-- Runs tests only (skips deep audit)
-- Fast approval for straightforward changes
-- Best for: prototyping, internal tools, rapid iteration
+Set via `DUAL_CHALLENGER_PROFILE` env var or per-task override:
+- **strict** (90+ to approve): full audit, every decision challenged. For production/security-critical.
+- **balanced** (70+, default): standard code review. For regular development.
+- **lenient** (50+): bugs/breaking changes only, tests only. For prototyping/internal tools.
 
 ---
 
 ## Integration with Agent Teams
 
-### Team Structure
-```
-Lead Agent (Builder)
-  ├── genius-dev (implementation)
-  ├── genius-architect (design)
-  └── genius-challenger (Challenger) — read-only + review
-```
-
-### Communication Protocol
-- Builder → Challenger: via `.genius/dual-review-request.md`
-- Challenger → Builder: via `.genius/dual-verdict.md`
-- Discussion: via `.genius/dual-discussion.md`
-- Audit: via `.genius/dual-audit-report.md`
-- State: via `.genius/dual-state.json`
-
-All communication is file-based. No direct inter-process messaging required.
-
-### Plan.md Annotations
-Mark tasks requiring dual review in `.claude/plan.md`:
-```markdown
-- [ ] 🔄 Implement auth middleware (DUAL: build-review, strict)
-- [ ] 🔄 Design database schema (DUAL: discussion)
-- [ ] 🔄 Pre-launch audit (DUAL: audit, strict)
-- [ ] Regular task (no dual review needed)
-```
-
-The `🔄` prefix and `(DUAL: ...)` annotation signal the orchestrator to activate the dual engine for that task.
+Team: Lead Agent (Builder) + genius-dev + genius-architect + genius-challenger (read-only reviewer).
+Communication is file-based: `.genius/dual-review-request.md`, `.genius/dual-verdict.md`, `.genius/dual-discussion.md`, `.genius/dual-audit-report.md`, `.genius/dual-state.json`.
+In plan.md, prefix dual tasks with `🔄` and `(DUAL: mode, profile)` to signal the orchestrator.
 
 ---
 
