@@ -305,3 +305,10 @@ When this skill completes its work:
 → **Automatically suggest**: "Design system created! Ready for marketing strategy? (CHECKPOINT: choose design option first) I'll hand off to **genius-marketer**."
 → If user approves: route to genius-marketer
 → Update state.json: `currentSkill = "genius-marketer"`
+## Definition of Done
+
+- [ ] Design system tokens defined (colors, typography, spacing)
+- [ ] 3 design options (A/B/C) presented with trade-offs
+- [ ] User selected preferred option at checkpoint
+- [ ] Design decisions logged in `.genius/memory/decisions.json`
+- [ ] Responsive breakpoints defined (mobile, tablet, desktop)

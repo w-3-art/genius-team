@@ -243,3 +243,10 @@ When this skill completes its work:
 → **Automatically suggest**: "Architecture approved! Ready to start building? (CHECKPOINT: approve architecture first) I'll hand off to **genius-orchestrator**."
 → If user approves: route to genius-orchestrator
 → Update state.json: `currentSkill = "genius-orchestrator"`
+## Definition of Done
+
+- [ ] Architecture diagram exists (mermaid or ASCII) in `.genius/ARCHITECTURE.md`
+- [ ] All major decisions logged in `.genius/memory/decisions.json`
+- [ ] Tech stack justified with trade-offs documented
+- [ ] plan.md created with tasks broken into < 2 hour chunks
+- [ ] User approved architecture at checkpoint

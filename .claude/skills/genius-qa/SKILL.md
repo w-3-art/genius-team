@@ -202,3 +202,10 @@ Also generate `QA-REPORT.md` with:
 - Latest test run summary
 - Prioritized recommendations
 - Module-by-module breakdown
+## Definition of Done
+
+- [ ] Test suite runs with 0 failures
+- [ ] Coverage meets project threshold
+- [ ] All critical paths tested (happy + error paths)
+- [ ] Performance benchmarks within targets
+- [ ] QA report generated in `.genius/QA-REPORT.md`

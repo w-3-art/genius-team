@@ -329,3 +329,10 @@ After successful deployment:
 - **genius-seo** — Optimize for AI and traditional search (GEO + SEO audit)
 - **genius-analytics** — Set up event tracking and conversion funnels
 - **genius-performance** — Run Lighthouse audit and optimize Core Web Vitals
+## Definition of Done
+
+- [ ] All tests passing before deploy
+- [ ] Environment variables verified
+- [ ] Build succeeds cleanly (no warnings)
+- [ ] Deployment verified with health check URL
+- [ ] Rollback plan documented
