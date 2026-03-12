@@ -58,69 +58,7 @@ cat package.json | grep storybook
 
 ### Step 2 — README
 
-Every project needs a great README. Use this template:
-
-```markdown
-# Project Name
-
-> One-sentence description of what this does and for whom.
-
-[![npm version](https://img.shields.io/npm/v/your-package)](https://npmjs.com/package/your-package)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-## What is this?
-
-2-3 sentences. What problem does it solve? Who is it for?
-
-## Why?
-
-Brief motivation. What alternatives exist and why this is different/better.
-
-## Quick Start
-
-\`\`\`bash
-npm install your-package
-\`\`\`
-
-\`\`\`typescript
-import { thing } from 'your-package'
-
-const result = thing({ option: 'value' })
-console.log(result)
-\`\`\`
-
-## Installation
-
-Prerequisites, detailed install steps, environment setup.
-
-## Usage
-
-### Basic example
-
-### Advanced example
-
-### Configuration
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-
-## API Reference
-
-Link to full API docs or inline for small APIs.
-
-## Contributing
-
-1. Fork the repo
-2. Create feature branch (`git checkout -b feat/amazing`)
-3. Commit with conventional commits (`git commit -m 'feat: add amazing feature'`)
-4. Push and open a PR
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
-
-## License
-
-[MIT](LICENSE) — Copyright © 2026 Your Name
-```
+Generate a README with these sections (in order): title + tagline, badges, What is this, Why, Quick Start (install + usage snippet), Installation, Usage (basic, advanced, configuration table), API Reference, Contributing (fork → branch → commit → PR), License.
 
 ### Step 3 — API Documentation (OpenAPI / Swagger)
 
@@ -251,71 +189,7 @@ npm run build-storybook
 
 ### Step 5 — Architecture Decision Records (ADRs)
 
-Create `docs/adr/` directory with numbered records:
-
-```markdown
-<!-- docs/adr/0001-use-next-auth.md -->
-# ADR-0001: Use NextAuth.js for Authentication
-
-**Date:** 2026-03-10
-**Status:** Accepted
-**Deciders:** Ben, Genius Team
-
-## Context
-
-We need authentication with OAuth providers (Google, GitHub), email/password,
-and session management for a Next.js 15 app.
-
-## Decision
-
-We will use NextAuth.js (Auth.js v5) as the authentication solution.
-
-## Rationale
-
-**Considered alternatives:**
-- **Supabase Auth** — Good DX but adds vendor dependency; chosen for other projects
-- **Clerk** — Best DX, but $25/mo for >10k MAU; budget doesn't support this yet
-- **Custom JWT** — Full control, but significant security surface area
-
-**Why NextAuth:**
-- First-class Next.js App Router support in v5
-- Built-in adapters for Prisma, Drizzle
-- Free and open source
-- Handles CSRF, session rotation, token refresh
-
-## Consequences
-
-**Positive:**
-- Reduces auth implementation time by ~2 weeks
-- Community-tested security practices
-
-**Negative:**
-- NextAuth v5 (beta) has breaking changes vs v4
-- Less flexibility for custom auth flows (magic links, passkeys) vs Clerk
-
-## References
-
-- [Auth.js Documentation](https://authjs.dev)
-- [Migration guide v4→v5](https://authjs.dev/getting-started/migrating-to-v5)
-```
-
-```bash
-# Create ADR template
-mkdir -p docs/adr
-cat > docs/adr/template.md << 'EOF'
-# ADR-XXXX: Title
-
-**Date:** YYYY-MM-DD
-**Status:** Proposed | Accepted | Deprecated | Superseded by ADR-XXXX
-**Deciders:** 
-
-## Context
-## Decision
-## Rationale
-## Consequences
-## References
-EOF
-```
+Create `docs/adr/` with numbered records (`ADR-XXXX: Title`). Each ADR has: Date, Status (Proposed|Accepted|Deprecated|Superseded), Deciders, Context, Decision, Rationale (with considered alternatives), Consequences (+/-), References. Create a `docs/adr/template.md` with these sections.
 
 ### Step 6 — Changelog Automation
 
