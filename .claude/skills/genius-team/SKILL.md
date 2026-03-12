@@ -351,6 +351,20 @@ Detect and route memory-related phrases:
 - "This broke because..." → Append to `.genius/memory/errors.json`, confirm
 - "Pattern: ..." → Append to `.genius/memory/patterns.json`, confirm
 
+## Disambiguation Rules
+
+When the user's request is ambiguous or could match multiple skills:
+
+1. **Prefer specificity over generality**: If the request mentions "React component" → genius-dev-frontend directly (don't go through genius-dev dispatcher)
+2. **When genuinely ambiguous**: Ask ONE clarifying question: "This could be [skill A] or [skill B]. Which direction?"
+3. **NEVER default to working without a skill** — if unsure, pick the most likely skill. Wrong skill > no skill.
+4. **Common confusions**:
+   - "review" without "PR" → genius-reviewer (single-agent). "review PR" / "review pull request" → genius-code-review (multi-agent)
+   - "copy" for landing page → genius-copywriter. "blog post" / "article" → genius-content
+   - "integrate Stripe" / "add [service]" → genius-dev-api (implementation). "how to setup [service]" → genius-integration-guide (guide only)
+   - "test" / "QA" after full build → genius-qa. "quick check" / after single task → genius-qa-micro
+   - "build login page" → genius-dev-frontend. "build auth system" → genius-dev-backend. "build login with auth" → genius-dev (dispatcher, splits the task)
+
 ## Commands
 
 | Command | Action |
