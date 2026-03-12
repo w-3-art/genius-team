@@ -95,126 +95,26 @@ Read the diff to understand scope: files changed, lines added/removed, nature of
 
 ## Step 2: Dispatch 3 Reviewers in Parallel
 
-In Claude Code Agent Teams (multi-agent mode), spawn all 3 simultaneously:
+In Agent Teams mode, spawn all 3 simultaneously:
 
-### Reviewer 1: Bug Finder
+**Reviewer 1 — Bug Finder**: Logic errors, edge cases, null handling, race conditions, async misuse, boundary conditions, type mismatches, error handling. Output: `BUGS.md` (severity + file:line + explanation + fix).
 
-**Focus**: Logic errors, incorrect assumptions, edge cases, null/undefined handling, race conditions, data corruption risks.
+**Reviewer 2 — Security Scanner**: SQL injection, XSS, hardcoded secrets, missing auth, IDOR, input validation, path traversal, CORS, rate limiting, weak crypto, webhook verification. Output: `SECURITY.md` (OWASP category + severity + file:line + remediation).
 
-Review checklist:
-- [ ] Off-by-one errors in loops, array access, pagination
-- [ ] Null / undefined dereference (missing guards)
-- [ ] Race conditions (concurrent writes, missing locks)
-- [ ] Incorrect error handling (errors swallowed silently)
-- [ ] Wrong HTTP status codes or API responses
-- [ ] State mutation bugs (shared mutable state, stale closures)
-- [ ] Async/await misuse (missing await, unhandled promise rejections)
-- [ ] Data type mismatches (string vs number, timestamps vs strings)
-- [ ] Boundary conditions (empty arrays, empty strings, zero values)
-- [ ] Infinite loops or recursion without proper termination
-
-Output format: `BUGS.md` with severity + line reference + explanation + fix suggestion.
-
-### Reviewer 2: Security Scanner
-
-**Focus**: Vulnerabilities, exposed secrets, injection vectors, auth flaws, insecure data handling.
-
-Review checklist:
-- [ ] SQL injection (raw queries, unparameterized inputs)
-- [ ] XSS vulnerabilities (unescaped user content in HTML)
-- [ ] Hardcoded secrets, API keys, passwords in code
-- [ ] Missing authentication/authorization checks
-- [ ] Insecure direct object references (IDOR)
-- [ ] Missing input validation and sanitization
-- [ ] Insecure deserialization
-- [ ] Path traversal vulnerabilities
-- [ ] Missing HTTPS enforcement
-- [ ] Overly permissive CORS configuration
-- [ ] Sensitive data logged (PII, tokens in logs)
-- [ ] Missing rate limiting on auth endpoints
-- [ ] Weak cryptography (MD5, SHA1 for passwords)
-- [ ] Missing webhook signature verification
-
-Output format: `SECURITY.md` with OWASP category + severity + file:line + remediation.
-
-### Reviewer 3: Code Quality Reviewer
-
-**Focus**: Maintainability, readability, design patterns, performance, test coverage gaps.
-
-Review checklist:
-- [ ] Code duplication (DRY violations)
-- [ ] Functions/methods that do too much (SRP)
-- [ ] Missing or inadequate test coverage for new code
-- [ ] Poor naming (unclear variable/function names)
-- [ ] Magic numbers/strings (should be named constants)
-- [ ] Complex conditionals that could be simplified
-- [ ] Performance issues (N+1 queries, missing indexes, large data in memory)
-- [ ] Missing error handling in happy-path code
-- [ ] Inconsistent code style with the rest of the codebase
-- [ ] Dead code (unreachable code, unused imports)
-- [ ] Missing documentation for complex logic
-- [ ] API breaking changes without versioning
-
-Output format: `QUALITY.md` with category + impact + file:line + suggestion.
+**Reviewer 3 — Code Quality**: DRY violations, SRP, test coverage, naming, magic numbers, complexity, N+1 queries, dead code, missing docs, breaking changes. Output: `QUALITY.md` (category + impact + file:line + suggestion).
 
 ---
 
 ## Step 3: Consolidate into Final Report
 
-Merge all three reviewer outputs into a single ranked report:
-
-```markdown
-# Code Review Report
-**PR**: [branch name or PR title]
-**Date**: [date]
-**Files changed**: X | **Lines added**: +Y | **Lines removed**: -Z
-
----
-
-## 🔴 CRITICAL
-Issues that must be fixed before merge.
-
-### [C1] SQL Injection in user search endpoint
-- **File**: `src/api/users.ts:47`
-- **Reviewer**: Security Scanner
-- **Category**: OWASP A03:2021 Injection
-- **Issue**: Raw string interpolation in SQL query: `db.query(\`SELECT * FROM users WHERE name = '${name}'\`)`
-- **Fix**: Use parameterized queries: `db.query('SELECT * FROM users WHERE name = $1', [name])`
-
----
-
-## 🟠 HIGH
-Significant bugs or security issues that should be fixed.
-
-### [H1] Missing null check causes crash on empty cart
-- **File**: `src/checkout/cart.ts:23`
-- **Reviewer**: Bug Finder
-- **Issue**: `cart.items[0].price` throws when cart is empty
-- **Fix**: Add guard: `if (!cart.items.length) return 0;`
-
----
-
-## 🟡 MEDIUM
-Issues that affect quality or introduce technical debt.
-
----
-
-## 🟢 LOW
-Minor improvements, style suggestions, documentation gaps.
-
----
-
-## Summary
-
-| Severity | Count | Must Fix Before Merge |
-|----------|-------|----------------------|
-| 🔴 CRITICAL | X | Yes |
-| 🟠 HIGH | X | Recommended |
-| 🟡 MEDIUM | X | Optional |
-| 🟢 LOW | X | Optional |
-
-**Verdict**: ✅ Approved / ⚠️ Approved with changes / ❌ Changes required
-```
+Merge all three reviewer outputs into a ranked report with these sections:
+- Header: PR name, date, files/lines changed
+- **🔴 CRITICAL** — must fix before merge (each: `[C1]` ID, file:line, reviewer, category, issue, fix)
+- **🟠 HIGH** — significant bugs/security (same format with `[H1]` IDs)
+- **🟡 MEDIUM** — quality/tech debt issues
+- **🟢 LOW** — minor improvements, style, docs
+- **Summary table**: severity × count × must-fix-before-merge
+- **Verdict**: ✅ Approved / ⚠️ Approved with changes / ❌ Changes required
 
 ---
 
