@@ -31,45 +31,7 @@ hooks:
 
 ## True Simultaneous Dual — Bridge Architecture
 
-**Two terminals. One project. Real-time cross-challenges.**
-
-### Setup
-
-1. Open Terminal 1: `claude` (Claude Code)
-2. Open Terminal 2: `codex` (Codex CLI)
-3. Both read/write `.genius/dual-bridge.json` automatically
-
-### The Bridge
-
-`.genius/dual-bridge.json` records each engine's last action:
-- What task was done
-- Which files were modified
-- The actual diff (what changed)
-- Timestamp
-
-Updated automatically by the `Stop` hook after every dev action.
-
-### /challenge — Cross-Engine Review
-
-In either terminal, type `/challenge` to:
-1. Read what the OTHER engine just did (from the bridge)
-2. Get the diff automatically
-3. Run genius-code-review on those changes
-4. Receive: CRITICAL / HIGH / MEDIUM / LOW findings
-
-**No context needed.** The bridge handles it.
-
-### Hook Integration
-
-The `Stop` hook in both engines calls `scripts/update-dual-bridge.sh` automatically:
-
-```bash
-# In Claude Code Stop hook:
-bash scripts/update-dual-bridge.sh claude "$TASK_DESCRIPTION"
-
-# In Codex Stop hook (AGENTS.md):
-bash scripts/update-dual-bridge.sh codex "$TASK_DESCRIPTION"
-```
+Run Claude and Codex in separate terminals, both writing to `.genius/dual-bridge.json`. Use `/challenge` in either terminal to review the other engine's latest diff via `genius-code-review`. The shared bridge is refreshed by the `Stop` hook after each action.
 
 ---
 
@@ -85,29 +47,7 @@ The engine is **opt-in per task**. Not every task needs adversarial review — u
 
 ## State Management
 
-### Initialize Dual State
-On first use, create `.genius/dual-state.json`:
-```json
-{
-  "active": false,
-  "mode": null,
-  "cycle": 0,
-  "max_rounds": 3,
-  "builder_model": "opus",
-  "challenger_model": "codex",
-  "challenger_profile": "balanced",
-  "current_task": null,
-  "last_verdict": null,
-  "history": [],
-  "updated_at": "ISO-date"
-}
-```
-
-### Update State
-After every cycle iteration, update `.genius/dual-state.json` with:
-- Incremented `cycle` count
-- `last_verdict`: `"APPROVE"`, `"REQUEST_CHANGES"`, or `"REJECT"`
-- Append to `history[]` with cycle details
+Initialize `.genius/dual-state.json` with mode, cycle, model, profile, current task, verdict, and history fields. After each round, increment `cycle`, update `last_verdict`, and append the result to `history[]`.
 
 ---
 
@@ -231,6 +171,16 @@ To switch to Codex only:
 ```
 
 This preserves all your project data (.genius/) and only reconfigures the engine files.
+
+## Handoff
+
+- → **genius-dev**: Builder implements the approved changes for the active cycle
+- → **genius-reviewer / genius-code-review**: Challenger performs the critical review pass
+- → **genius-qa / genius-security**: Audit mode escalates to full validation when needed
+
+## Next Step
+
+Advance the current dual cycle to a verdict, then either implement the requested changes or escalate the disagreement.
 
 ## Definition of Done
 

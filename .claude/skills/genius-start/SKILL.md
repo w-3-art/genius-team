@@ -98,3 +98,13 @@ Route to appropriate skill based on response using genius-team router.
 - [ ] Missing artifacts or recovery conditions are surfaced early
 - [ ] Next recommended action points to a concrete skill
 - [ ] The user can resume work without additional context gathering
+
+## Handoff
+
+- → **genius-team**: Route the user's next request after initialization completes
+- → **genius-orchestrator**: Resume execution when plan tasks are already active
+- → **genius-memory**: Refresh or regenerate memory artifacts if state is stale
+
+## Next Step
+
+Route the user to the next concrete Genius skill based on current phase, plan status, and requested action.

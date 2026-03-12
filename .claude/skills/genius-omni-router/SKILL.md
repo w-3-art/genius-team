@@ -3,7 +3,8 @@ name: genius-omni-router
 description: >-
   Multi-provider routing for Omni mode. Routes tasks to secondary providers (Codex, Kimi, Gemini)
   based on task type. Use automatically in Omni mode to route specialized tasks to the best
-  available provider. Do NOT invoke manually.
+  available provider. Do NOT invoke manually. Do NOT use for implementation, QA, or
+  architecture decisions outside Omni routing; use the destination Genius skill instead.
 skills:
   - genius-orchestrator
   - genius-team
@@ -243,6 +244,16 @@ On every Omni Mode session:
 3. ✅ Report available providers and fallback status
 4. ✅ Load BRIEFING.md and plan.md as usual
 5. ✅ Proceed with routing-aware task execution
+
+## Handoff
+
+- → **genius-orchestrator**: Return provider choice, fallback status, and command
+- → **genius-dev / specialist skills**: Execute the routed task once the provider is selected
+- → **genius-start**: Report available providers during session bootstrap
+
+## Next Step
+
+Choose the provider, run the delegated task, then hand the output back to Claude for review and integration.
 
 ## Definition of Done
 

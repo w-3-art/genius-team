@@ -228,6 +228,16 @@ After each major skill (genius-specs, genius-architect, genius-qa, genius-deploy
 💡 Tip: Run genius-playground-generator to visualize your project's current state.
 ```
 
+## Handoff
+
+- → **genius-specs / genius-architect / genius-qa / genius-deployer**: Generate an updated dashboard after major artifacts change
+- → **genius-designer**: Revisit the presentation layer if the dashboard needs stronger visual treatment
+- → **genius-start**: Surface the latest dashboard path during session resume
+
+## Next Step
+
+Open the generated dashboard, confirm the data reflects the latest project state, and regenerate after the next major artifact change.
+
 ## Definition of Done
 
 - [ ] Requested playground HTML is generated at the documented path
