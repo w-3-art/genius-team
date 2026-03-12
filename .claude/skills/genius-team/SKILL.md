@@ -129,6 +129,19 @@ Check BRIEFING.md and plan.md for current state before deciding where to route.
 | "remember", "what did we decide", "context", "history" | genius-memory |
 | "optimize skills", "update genius team" | genius-team-optimizer |
 | "check for updates", "new claude code version" | genius-updater |
+| "SEO", "search ranking", "Google ranking", "meta tags", "keywords" | genius-seo |
+| "write blog", "content strategy", "article", "newsletter" | genius-content |
+| "A/B test", "experiment", "hypothesis", "conversion rate" | genius-experiments |
+| "translate", "localization", "i18n", "multi-language" | genius-i18n |
+| "performance", "speed", "load time", "Core Web Vitals" | genius-performance |
+| "accessibility", "a11y", "WCAG", "screen reader" | genius-accessibility |
+| "analytics setup", "tracking", "events", "GA4", "Plausible" | genius-analytics |
+| "code review", "review PR", "review code", "review all files" | genius-code-review |
+| "debug", "fix this error", "why is this broken" | genius-debugger |
+| "documentation", "write docs", "README", "API docs" | genius-docs |
+| "crypto", "Web3", "blockchain", "smart contract", "NFT" | genius-crypto |
+| "onboard", "user onboarding", "welcome flow", "first-time user" | genius-onboarding |
+| "playground template", "generate playground", "create playground" | genius-playground-generator |
 
 ## Context Detection
 
