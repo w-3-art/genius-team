@@ -73,29 +73,11 @@ This skill uses `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`:
 
 ## Memory Integration
 
-### On Session Start
-Read `@.genius/memory/BRIEFING.md` for project context, decisions, and patterns.
-
-### Before Each Task
-Check BRIEFING.md for relevant patterns or previously rejected approaches.
-
-### On Task Complete
-Append to `.genius/memory/progress.json`:
-```json
-{"id": "t-XXX", "task": "task description", "status": "completed", "timestamp": "ISO-date"}
-```
-
-### On Error/Blocker
-Append to `.genius/memory/errors.json`:
-```json
-{"id": "e-XXX", "error": "description", "solution": "how it was resolved", "timestamp": "ISO-date"}
-```
-
-### On Decision Made
-Append to `.genius/memory/decisions.json`:
-```json
-{"id": "d-XXX", "decision": "what", "reason": "why", "timestamp": "ISO-date", "tags": ["execution"]}
-```
+- **Session start**: Read `@.genius/memory/BRIEFING.md` for context + decisions + patterns
+- **Before each task**: Check BRIEFING.md for relevant patterns or rejected approaches
+- **On complete**: Append `{id, task, status, timestamp}` to `.genius/memory/progress.json`
+- **On error**: Append `{id, error, solution, timestamp}` to `.genius/memory/errors.json`
+- **On decision**: Append `{id, decision, reason, timestamp, tags}` to `.genius/memory/decisions.json`
 
 ---
 
@@ -109,49 +91,7 @@ The orchestrator maintains a **real-time visual dashboard** for sprint progress 
 **State File:** `.genius/state.json`
 
 ### State Structure (`.genius/state.json`)
-```json
-{
-  "sprint": {
-    "name": "Sprint Name",
-    "startedAt": "ISO-date",
-    "eta": "ISO-date"
-  },
-  "tasks": [
-    {
-      "id": "t-001",
-      "title": "Task description",
-      "status": "todo|inprogress|review|done",
-      "agent": "dev|qa|debugger|reviewer",
-      "priority": "high|medium|low",
-      "estimated": 4,
-      "actual": 2.5,
-      "startDay": 0,
-      "completedAt": null
-    }
-  ],
-  "agents": [
-    {
-      "id": "dev",
-      "name": "Dev Agent",
-      "status": "busy|online|offline",
-      "currentTask": "t-001"
-    }
-  ],
-  "history": [
-    {"taskId": "t-001", "action": "completed", "timestamp": "ISO-date"}
-  ],
-  "stats": {
-    "totalTasks": 10,
-    "completed": 5,
-    "inProgress": 2,
-    "inReview": 1,
-    "todo": 2,
-    "progressPercent": 50,
-    "totalEstimatedHours": 40,
-    "totalActualHours": 22
-  }
-}
-```
+Top-level keys: `sprint` (name, dates, eta), `tasks[]` (id, title, status, agent, priority, estimated/actual hours), `agents[]` (id, name, status, currentTask), `history[]` (taskId, action, timestamp), `stats` (totals + progressPercent). See `playgrounds/templates/progress-dashboard.html` for full schema.
 
 ### Dashboard Features
 The playground visualizes:
@@ -264,65 +204,14 @@ This is non-negotiable. No exceptions.
 
 ## Task Tool Syntax
 
-### For Implementation:
-```javascript
-Task({
-  description: "Implement [task name]",
-  prompt: `Read @.genius/memory/BRIEFING.md for project context.
+All tasks use `Task({ description, prompt, subagent_type })`. Always include BRIEFING.md context in prompts.
 
-Task: [task description]
-
-Requirements:
-- [req 1]
-- [req 2]
-
-Files to create/modify:
-- [file list]
-
-Verification:
-- [how to verify]`,
-  subagent_type: "genius-dev"
-})
-```
-
-### For QA (MANDATORY after every dev task):
-```javascript
-Task({
-  description: "QA: [component]",
-  prompt: `Quick quality check:
-- Files: [files just created/modified]
-- Check: syntax, imports, types, functionality
-- Run: [test commands if available]`,
-  subagent_type: "genius-qa-micro"
-})
-```
-
-### For Debug (when QA fails):
-```javascript
-Task({
-  description: "Fix: [error]",
-  prompt: `Error from QA:
-[error message]
-
-File: [file]
-Context: [what was happening]
-
-Fix the issue and verify.`,
-  subagent_type: "genius-debugger"
-})
-```
-
-### For Review (optional, every 5 tasks):
-```javascript
-Task({
-  description: "Review: [component]",
-  prompt: `Review code quality:
-- Files: [files]
-- Score: correctness, maintainability, security
-- Provide feedback (read-only)`,
-  subagent_type: "genius-reviewer"
-})
-```
+| Action | subagent_type | When |
+|--------|--------------|------|
+| Implement | `genius-dev` | New feature/change. Include requirements + file list + verification steps |
+| QA | `genius-qa-micro` | **MANDATORY** after every dev task. Check syntax, imports, types, functionality |
+| Debug | `genius-debugger` | When QA fails. Include error message + file + context |
+| Review | `genius-reviewer` | Optional, every 5 tasks. Score correctness, maintainability, security |
 
 ---
 

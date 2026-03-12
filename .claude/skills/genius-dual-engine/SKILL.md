@@ -249,14 +249,7 @@ In plan.md, prefix dual tasks with `🔄` and `(DUAL: mode, profile)` to signal 
 
 ## Relationship to Existing Skills
 
-| Skill | Relationship |
-|-------|-------------|
-| **genius-reviewer** | Challenger uses reviewer's scoring rubric. Reviewer is single-pass; Challenger is iterative. |
-| **genius-qa** | Challenger invokes QA checks during audit. QA is testing-focused; Challenger is holistic. |
-| **genius-security** | Challenger references security skill during audit mode. Complementary, not duplicating. |
-| **genius-dev** | Builder uses dev skill for implementation. Challenger never implements. |
-
----
+Challenger reuses reviewer's scoring rubric (iteratively, not single-pass), invokes QA/security checks during audit, and never implements (that's genius-dev's job).
 
 ## Cost & Performance Notes
 
