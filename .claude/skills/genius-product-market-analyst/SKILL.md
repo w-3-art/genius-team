@@ -4,7 +4,9 @@ description: >-
   Market research and business strategy skill. Validates product-market fit, analyzes
   competition, identifies market gaps, and proposes business models. Use when user says
   "market research", "competitor analysis", "validate idea", "business model",
-  "product-market fit", "pricing", "TAM SAM SOM", "market opportunity".
+  "product-market fit", "pricing", "TAM SAM SOM", "market opportunity", "analyze the market",
+  "who are the competitors", "market size", "target audience analysis".
+  Do NOT use for writing technical specs (genius-specs).
   Do NOT use for building the product (genius-dev skills) or tracking post-launch metrics
   (genius-analytics).
 ---

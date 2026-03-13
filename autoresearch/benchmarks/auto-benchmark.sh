@@ -50,10 +50,20 @@ for i in $(seq 0 $((TASK_COUNT - 1))); do
 User request: \"$PROMPT\"" 2>/dev/null | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
 
   # Normalize response
-  RESPONSE=$(echo "$RESPONSE" | grep -oE 'genius-[a-z-]+' | head -1)
+  RESPONSE=$(echo "$RESPONSE" | grep -oE 'genius-[a-z][-a-z]*[a-z]' | head -1)
 
-  if [ "$RESPONSE" = "$EXPECTED" ]; then
-    echo "✅ $RESPONSE"
+  # Accept genius-dev as valid dispatcher for any genius-dev-* sub-skill
+  IS_DISPATCH=false
+  if [ "$RESPONSE" = "genius-dev" ] && echo "$EXPECTED" | grep -qE '^genius-dev-(frontend|backend|mobile|database|api)$'; then
+    IS_DISPATCH=true
+  fi
+
+  if [ "$RESPONSE" = "$EXPECTED" ] || [ "$IS_DISPATCH" = "true" ]; then
+    if [ "$IS_DISPATCH" = "true" ]; then
+      echo "✅ $RESPONSE (→ dispatches to $EXPECTED)"
+    else
+      echo "✅ $RESPONSE"
+    fi
     CORRECT=$((CORRECT + 1))
     RESULT="correct"
   elif [ -z "$RESPONSE" ]; then

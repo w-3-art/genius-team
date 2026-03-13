@@ -5,8 +5,10 @@ description: >-
   Handles native APIs (camera, location, push notifications, biometrics), navigation,
   offline-first patterns, and App Store submission prep.
   Use when task involves "React Native", "Expo", "mobile app", "iOS", "Android",
-  "push notifications", "mobile navigation", "native features".
-  Do NOT use for web frontend (genius-dev-frontend) or pure backend APIs (genius-dev-backend).
+  "push notifications", "mobile navigation", "native features", "mobile version",
+  "build for mobile", "mobile-responsive" (when meaning a native app, not CSS media queries).
+  Do NOT use for responsive web design or CSS media queries (genius-dev-frontend).
+  Do NOT use for pure backend APIs (genius-dev-backend).
 context: fork
 agent: genius-dev-mobile
 user-invocable: false
