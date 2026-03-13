@@ -1,6 +1,6 @@
-# Genius Team v17.0
+# Genius Team v18.0
 
-[![Version](https://img.shields.io/badge/version-17.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-18.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-1.0%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
@@ -18,7 +18,7 @@ genius-interviewer → genius-specs → genius-architect → genius-dev → geni
 
 Every phase ends with a human checkpoint. You approve. Only then does the next agent spawn.
 
-## What's New in v17.0
+## What's New in v18.0
 
 - 🎯 **42 skills total** — genius-dev splits into 5 domain experts; 12 new standalone skills added
 - 🔍 **genius-code-review** — Multi-agent PR review: bugs + security + quality in parallel
@@ -91,7 +91,7 @@ After install, open your project in Claude Code or Codex and run `/genius-start`
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)
 ```
 
-The script auto-detects your current version and upgrades to v17. Your `.genius/memory/` data is preserved.
+The script auto-detects your current version and upgrades to v18. Your `.genius/memory/` data is preserved.
 
 ---
 
@@ -249,4 +249,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with** 🧠 **Genius Team v17.0** — Agent Orchestration · File-Based Memory · Interactive Playgrounds
+**Built with** 🧠 **Genius Team v18.0** — Agent Orchestration · File-Based Memory · Interactive Playgrounds

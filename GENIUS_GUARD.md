@@ -1,5 +1,5 @@
 # 🚨🚨🚨 GENIUS GUARD RAILS — MANDATORY READING 🚨🚨🚨
-*Genius Team v17.0 | Updated 2026-03-13*
+*Genius Team v18.0 | Updated 2026-03-13*
 
 > **THIS FILE IS NON-NEGOTIABLE.**  
 > **YOU READ IT IN FULL BEFORE EVERY ACTION.**  

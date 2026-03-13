@@ -1,5 +1,37 @@
 # Changelog
 
+## [18.0.0] - 2026-03-13
+
+### Added — Autoresearch Framework
+- 🔬 **Autoresearch optimization loop** — Karpathy-inspired autonomous improvement system
+- 📊 **auto-benchmark.sh** — Automated 30-task routing accuracy test suite
+- ✅ **validate-skills.sh** — Automated skill quality checks (frontmatter, triggers, DoD, handoffs, size)
+- 🎨 **design-tokens.css** — Shared design system for all 18 playground templates
+
+### Improved — Context Efficiency (-30KB)
+- All SKILL.md files compressed: **0 files over 10KB** (was 10)
+- Verbose code blocks, JSON schemas, and templates replaced with concise instructions
+- ~30KB total context savings across 42 skills — more room for actual work
+
+### Improved — Session Durability
+- 🐛 **Critical fix: postCompactionSections mismatch** — headers in settings.json didn't match CLAUDE.md (emojis + case). After compaction, zero sections survived → total context loss. Now fixed.
+- Anti-drift Core Rules injected in all 4 config modes (CLI, IDE, Omni, Dual)
+- PostCompact hook reinjects anti-drift rules after every compaction
+
+### Improved — Routing Accuracy (87-90%)
+- Negative triggers added to 30+ skills (was ~15)
+- Router disambiguation rules for 5 common confusion pairs
+- Definition of Done added to all 42/42 skills
+- Handoff sections standardized across all skills
+- Benchmark: **63.3% → 90%** routing accuracy on 30-task test suite
+
+### Improved — Playground Design
+- All 18 templates migrated to shared design-tokens.css
+- Consistent theming, typography, and color system
+- Responsive layouts standardized
+
+---
+
 ## [17.0.0] - 2026-03-10
 
 ### Added — 18 Nouveaux Skills (total: 42)

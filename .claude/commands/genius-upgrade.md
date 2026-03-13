@@ -44,9 +44,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scr
 🆕 New version available!
 
 Current version: v11.0.0
-Latest version: v17.0.0
+Latest version: v18.0.0
 
-What's new in v17.0:
+What's new in v18.0:
 - 🎯 38 skills total — genius-dev splits into 5 domain experts + 12 new standalone skills
 - 🔍 genius-code-review — Multi-agent PR review: bugs + security + quality in parallel
 - 🛠️ genius-skill-creator — Framework creates new project-specific skills on demand (self-extending)
@@ -69,7 +69,7 @@ After completion: "Run `/genius-start` to reinitialize with v17 features."
 ### If already at latest:
 
 ```
-✅ Genius Team is up to date (v17.0.0)
+✅ Genius Team is up to date (v18.0.0)
 ```
 
 ### If local script gives wrong result:

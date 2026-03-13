@@ -17,7 +17,7 @@ NC='\033[0m'
 
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
-TARGET_VERSION="17.0.0"
+TARGET_VERSION="18.0.0"
 CLAUDE_SKILL_DIR=".claude/skills"
 
 # ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────
@@ -46,7 +46,7 @@ FILES_SKIPPED=0
 print_banner() {
   echo ""
   echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v17.0${NC}                           ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v18.0${NC}                           ${CYAN}║${NC}"
   echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
 }
@@ -67,7 +67,7 @@ show_usage() {
   echo "  --verbose   Show detailed file download output"
   echo "  --help      Show this help"
   echo ""
-  echo "Upgrades your Genius Team project to v17.0 from any previous version."
+  echo "Upgrades your Genius Team project to v18.0 from any previous version."
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
@@ -300,11 +300,11 @@ upgrade_to_v17() {
 
   # ── Update state.json version ────────────────────────────────────────────
   if [ "$DRY_RUN" = false ] && [ -f ".genius/state.json" ]; then
-    sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "17.0.0"/' .genius/state.json
+    sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "18.0.0"/' .genius/state.json
     rm -f .genius/state.json.tmp
   fi
 
-  log_ok "v17.0.0 upgrade complete — 38 skills, 7 new playgrounds, /challenge, engine-switch"
+  log_ok "v18.0.0 upgrade complete — 38 skills, 7 new playgrounds, /challenge, engine-switch"
 }
 
 upgrade_to_v15() {
@@ -466,7 +466,7 @@ print_summary() {
   local from=$1 backup=$2
   echo ""
   echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v17.0${NC}                      ${GREEN}║${NC}"
+  echo -e "${GREEN}║${NC}  ${BOLD}✅ Upgrade Complete! v$from → v18.0${NC}                      ${GREEN}║${NC}"
   echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files downloaded:${NC} $FILES_DOWNLOADED"
@@ -492,7 +492,7 @@ print_dry_run_summary() {
   local from=$1
   echo ""
   echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v17.0${NC}                             ${YELLOW}║${NC}"
+  echo -e "${YELLOW}║${NC}  ${BOLD}🔍 Dry Run — v$from → v18.0${NC}                             ${YELLOW}║${NC}"
   echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files that would be downloaded:${NC} $FILES_DOWNLOADED"
