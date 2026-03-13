@@ -62,8 +62,9 @@
       "id": 9,
       "phase": "dev",
       "prompt": "Build the REST API endpoints for projects CRUD and task management.",
-      "expected_skill": "genius-dev-api",
-      "checkpoint": false
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false,
+      "note": "Building own REST endpoints = backend; genius-dev-api is for third-party integrations"
     },
     {
       "id": 10,
@@ -184,8 +185,9 @@
       "id": 26,
       "phase": "dev",
       "prompt": "Build a mobile-responsive version of the dashboard.",
-      "expected_skill": "genius-dev-mobile",
-      "checkpoint": false
+      "expected_skill": "genius-dev-frontend",
+      "checkpoint": false,
+      "note": "mobile-responsive = CSS responsive design = frontend; genius-dev-mobile is for React Native/Expo native apps"
     },
     {
       "id": 27,

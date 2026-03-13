@@ -50,7 +50,7 @@ for i in $(seq 0 $((TASK_COUNT - 1))); do
 User request: \"$PROMPT\"" 2>/dev/null | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
 
   # Normalize response
-  RESPONSE=$(echo "$RESPONSE" | grep -oE 'genius-[a-z][-a-z]*[a-z]' | head -1)
+  RESPONSE=$(echo "$RESPONSE" | grep -oE 'genius-[a-z0-9][-a-z0-9]*[a-z0-9]' | head -1)
 
   # Accept genius-dev as valid dispatcher for any genius-dev-* sub-skill
   IS_DISPATCH=false
