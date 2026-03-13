@@ -222,3 +222,28 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-frontend" | .status = "com
 - → **genius-accessibility**: full WCAG audit if complex interactive UI
 - → **genius-performance**: Lighthouse audit if performance is critical
 - → **genius-dev-backend**: when component needs a new API endpoint
+
+---
+
+## Playground Update (MANDATORY)
+
+After completing your task:
+1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
+2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
+3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
+4. Remove any mock/placeholder data from your tab
+5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Before marking task complete, verify ALL of these:
+1. **Build passes**: `npm run build` (or equivalent) exits with code 0
+2. **No TypeScript errors**: `npx tsc --noEmit` returns 0 errors
+3. **Lint clean**: `npm run lint` returns 0 errors (warnings OK)
+4. **Responsive**: Component works at 375px, 768px, 1280px viewport widths
+5. **No console errors**: Open browser, check console — must be empty
+6. **Accessibility basics**: Images have alt text, buttons have labels, forms have labels
+
+If any check fails → fix before declaring done. Never mark a task complete with a failing build.

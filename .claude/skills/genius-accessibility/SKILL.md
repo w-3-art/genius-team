@@ -59,31 +59,7 @@ violations.filter(v => ['critical','serious'].includes(v.impact))
 
 #### Playwright + axe (CI integration)
 
-```typescript
-// tests/accessibility.spec.ts
-import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
-
-test.describe('WCAG 2.2 AA compliance', () => {
-  test('homepage has no violations', async ({ page }) => {
-    await page.goto('/')
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
-      .analyze()
-    expect(results.violations).toEqual([])
-  })
-
-  test('checkout flow is accessible', async ({ page }) => {
-    await page.goto('/checkout')
-    const results = await new AxeBuilder({ page }).analyze()
-    expect(results.violations).toEqual([])
-  })
-})
-```
-
-```bash
-npx playwright test tests/accessibility.spec.ts
-```
+Use `@axe-core/playwright` with `AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()`. Test all key pages (home, checkout, forms). Run: `npx playwright test tests/accessibility.spec.ts`
 
 ### Step 2 — Color Contrast
 
@@ -320,61 +296,15 @@ import FocusTrap from 'focus-trap-react'
 **Manual testing checklist:**
 
 ```markdown
-## macOS VoiceOver (CMD+F5)
-- [ ] Page title read on load
-- [ ] Landmark regions announced (header, main, nav, footer)
-- [ ] All form inputs have descriptive labels
-- [ ] Error messages announced via aria-live
-- [ ] Images have meaningful alt text
-- [ ] Interactive elements announced with role (button, link, checkbox)
-- [ ] Modal traps focus and announces dialog name
-
-## Windows NVDA (free, download nvaccess.org)
-- [ ] Same checklist as above
-- [ ] Tab order is logical
-- [ ] Heading navigation works (H key to jump)
-```
+**Screen Reader Checklist** (VoiceOver CMD+F5 on mac, NVDA on Windows):
+- [ ] Page title, landmarks, form labels, error messages (aria-live), alt text, interactive roles all announced correctly
+- [ ] Tab order logical, heading navigation works (H key), modal traps focus
 
 ---
 
 ## Output
 
-Write `.genius/a11y-report.md`:
-
-```markdown
-# Accessibility Report — {date}
-## Summary
-- Critical violations: 2
-- Serious violations: 5
-- WCAG level: AA (targeting)
-
-## Critical Issues (fix immediately)
-1. **[1.1.1 Non-text Content]** — 14 images missing alt text (paths listed below)
-2. **[4.1.2 Name, Role, Value]** — Custom dropdown missing ARIA attributes
-
-## Serious Issues
-3. **[1.4.3 Contrast]** — `.text-muted` (#9CA3AF on #FFF) = 2.8:1 — needs 4.5:1
-...
-
-## ✅ Passing
-- Skip links present
-- Heading hierarchy correct
-- All form inputs labelled
-```
-
-Update `.genius/state.json`:
-
-```json
-{
-  "accessibility": {
-    "wcag_level": "AA",
-    "violations_critical": 2,
-    "violations_serious": 5,
-    "last_audit": "2026-03-10",
-    "report": ".genius/a11y-report.md"
-  }
-}
-```
+Write `.genius/a11y-report.md` with severity-grouped findings and record the audit summary in `.genius/state.json`.
 
 ---
 
@@ -383,3 +313,18 @@ Update `.genius/state.json`:
 - **→ genius-dev-frontend** — Fix identified issues in components
 - **→ genius-performance** — Ensure a11y fixes don't regress performance
 - **→ genius-reviewer** — Add a11y checks to PR review process
+
+---
+
+## Playground Update
+
+Refresh the existing dashboard tab with real accessibility data and point the user to `.genius/DASHBOARD.html`.
+
+---
+
+## Definition of Done
+
+- [ ] Failed WCAG criterion is named for each issue
+- [ ] Affected element or selector is identified
+- [ ] User impact is stated
+- [ ] Fix guidance is concrete enough to implement

@@ -108,3 +108,11 @@ Provides: If fix requires significant refactoring
 
 ### To genius-qa
 Provides: If fix needs comprehensive testing
+
+## Definition of Done
+
+- [ ] Root cause identified and documented
+- [ ] Fix applied and verified (bug no longer reproduces)
+- [ ] Error logged in `.genius/memory/errors.json`
+- [ ] Regression test added to prevent recurrence
+- [ ] PROGRESS.md updated

@@ -4,7 +4,9 @@ description: >-
   Market research and business strategy skill. Validates product-market fit, analyzes
   competition, identifies market gaps, and proposes business models. Use when user says
   "market research", "competitor analysis", "validate idea", "business model",
-  "product-market fit", "pricing", "TAM SAM SOM", "market opportunity".
+  "product-market fit", "pricing", "TAM SAM SOM", "market opportunity", "analyze the market",
+  "who are the competitors", "market size", "target audience analysis".
+  Do NOT use for writing technical specs (genius-specs).
   Do NOT use for building the product (genius-dev skills) or tracking post-launch metrics
   (genius-analytics).
 ---
@@ -212,3 +214,21 @@ After launch, use **genius-analytics** to:
 - Validate the TAM/SAM estimates against real user data
 - Track conversion rates and acquisition costs
 - Measure retention and churn against the model projections
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Market analysis complete! Ready to write specifications? I'll hand off to **genius-specs**."
+→ If user approves: route to genius-specs
+→ Update state.json: `currentSkill = "genius-specs"`
+
+## Definition of Done
+
+- [ ] Market problem, audience, and competitive landscape are analyzed
+- [ ] Findings produce actionable positioning or pricing implications
+- [ ] Output is concrete enough to drive specifications
+- [ ] Key assumptions and unknowns are called out explicitly
+- [ ] Next-step handoff to specs or marketing is clear

@@ -103,47 +103,11 @@ The unified dashboard shows the design phase where users can:
 
 ### Updating state.json with Design Presets
 
-Write design options to `phases.design.data.presets`:
+Write 3+ presets to `phases.design.data.presets` in state.json. Each preset has: primary, secondary, accent, neutralLight, neutralDark (hex colors), fontFamily, fontSize, scaleRatio, spacingBase, borderRadius, shadowIntensity, shadowBlur. Name presets descriptively: `modernMinimal`, `boldEnergetic`, `warmOrganic`, `techProfessional`.
 
-```json
-{
-  "currentPhase": "design",
-  "phases": {
-    "design": {
-      "status": "in-progress",
-      "data": {
-        "presets": {
-          "modernMinimal": {
-            "primary": "#XXXXXX",
-            "secondary": "#XXXXXX",
-            "accent": "#XXXXXX",
-            "neutralLight": "#XXXXXX",
-            "neutralDark": "#XXXXXX",
-            "fontFamily": "Font Name",
-            "fontSize": 16,
-            "scaleRatio": 1.25,
-            "spacingBase": 4,
-            "borderRadius": 8,
-            "shadowIntensity": 0.1,
-            "shadowBlur": 16
-          },
-          "boldEnergetic": { ... },
-          "warmOrganic": { ... }
-        },
-        "selectedPreset": null,
-        "customizations": {}
-      }
-    }
-  }
-}
-```
+### Output: design-tokens.css (MANDATORY)
 
-### Preset Naming Convention
-Use descriptive names reflecting the design direction:
-- `modernMinimal` — Clean, spacious, subtle
-- `boldEnergetic` — High contrast, strong colors
-- `warmOrganic` — Earth tones, rounded, soft shadows
-- `techProfessional` — Blues, sharp, corporate feel
+After user approval, write `playgrounds/templates/design-tokens.css` with `:root` CSS custom properties using the ACTUAL chosen colors. Required tokens: `--color-primary`, `--color-secondary`, `--color-accent`, `--color-bg-*`, `--color-text-*`, `--font-family`, `--font-size-base`, `--spacing-unit`, `--border-radius`, `--color-success/warning/error/info`. All playground templates import this file for brand consistency.
 
 ### DO NOT Create Separate HTML Files
 
@@ -227,22 +191,14 @@ Copy the "Prompt" output and paste it here so I can save your final configuratio
 
 ## Output Files
 
-| File | Location | Purpose |
-|------|----------|---------|
-| `state.json` | `.genius/outputs/` | Unified state with design presets (phases.design.data) |
-| `design-config.json` | `.genius/` | Final validated design tokens |
+- `.genius/outputs/state.json` for unified design phase state
+- `.genius/design-config.json` for validated design tokens
 
 ---
 
-## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
+## 🗂️ Post-Output: Refresh Dashboard
 
-After generating any `.genius/*.html` playground file:
-1. Follow `.claude/commands/genius-dashboard.md` instructions to regenerate `.genius/DASHBOARD.html`
-2. Open it immediately:
-   ```bash
-   open .genius/DASHBOARD.html 2>/dev/null || echo "📂 Open: $(pwd)/.genius/DASHBOARD.html"
-   ```
-   (On macOS/Linux this opens in the default browser. If it fails, the full path is printed as a clickable link.)
+Regenerate `.genius/DASHBOARD.html` via `.claude/commands/genius-dashboard.md` and surface its path to the user.
 
 ## Handoffs
 
@@ -254,3 +210,20 @@ Provides: DESIGN-SYSTEM.html, design-config.json, brand personality
 
 ### To: genius-dev (later)
 Provides: design-config.json (Tailwind or CSS variables ready)
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Design system created! Ready for marketing strategy? (CHECKPOINT: choose design option first) I'll hand off to **genius-marketer**."
+→ If user approves: route to genius-marketer
+→ Update state.json: `currentSkill = "genius-marketer"`
+## Definition of Done
+
+- [ ] Design system tokens defined (colors, typography, spacing)
+- [ ] 3 design options (A/B/C) presented with trade-offs
+- [ ] User selected preferred option at checkpoint
+- [ ] Design decisions logged in `.genius/memory/decisions.json`
+- [ ] Responsive breakpoints defined (mobile, tablet, desktop)

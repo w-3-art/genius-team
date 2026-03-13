@@ -74,3 +74,17 @@ Provides: User profile, initial project idea
 
 ### To genius-memory
 Provides: User preferences to store
+
+
+---
+
+## Definition of Done
+
+Onboarding flow MUST be:
+1. **Complete journey**: From sign-up to first meaningful action fully mapped
+2. **Tested end-to-end**: Manually walked through as a new user (cold start)
+3. **Skip options**: Every step has a skip/dismiss path
+4. **Progress indicator**: User always knows where they are in the flow
+5. **Exit recovery**: If user abandons midway, they can resume where they left off
+
+Report must include: average time to complete, key drop-off points, and recommendations.

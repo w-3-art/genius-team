@@ -122,3 +122,11 @@ Append to patterns.json with pattern description and context.
 Provides: Project context via BRIEFING.md, searchable history via JSON files.
 
 Protocol: Every skill MUST read BRIEFING.md at session start.
+
+## Definition of Done
+
+- [ ] Requested memory entry is captured in the correct JSON file
+- [ ] BRIEFING or summary context is refreshed when needed
+- [ ] Stored entry includes enough rationale to be useful later
+- [ ] No duplicate or malformed records were introduced
+- [ ] Downstream skills can discover the update from standard memory files

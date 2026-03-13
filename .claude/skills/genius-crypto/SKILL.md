@@ -143,3 +143,33 @@ Optional Dune MCP configuration in `.claude/settings.json` → `mcpServers`:
 
 Works in all Genius Team modes (CLI, IDE, OpenClaw, Codex engine).
 In Codex dual mode, use thread forking for parallel DexScreener + Dune queries.
+
+---
+
+## Playground Update (MANDATORY)
+
+After completing your task:
+1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
+2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
+3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
+4. Remove any mock/placeholder data from your tab
+5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+
+---
+
+## Definition of Done
+
+Crypto/Web3 implementation MUST be:
+1. **Contract audited**: Smart contract reviewed for common vulnerabilities (reentrancy, overflow, access control)
+2. **Testnet verified**: All functions tested on testnet before mainnet
+3. **Gas optimized**: Loops and storage patterns reviewed for gas efficiency
+4. **ABI documented**: All public functions documented with parameters and events
+5. **Error handling**: All revert reasons documented and user-friendly messages added
+
+Never deploy to mainnet without testnet verification.
+
+## Handoffs
+- → **genius-dev-backend**: For implementing smart contracts or blockchain integrations
+- → **genius-security**: For security audit of crypto implementations
+- → **genius-deployer**: For deploying Web3 applications

@@ -1,0 +1,5 @@
+{"task_id":"q1","expected":"genius-dev-frontend","actual":"genius-dev","result":"wrong"}
+{"task_id":"q2","expected":"genius-code-review","actual":"genius-code-review","result":"correct"}
+{"task_id":"q3","expected":"genius-seo","actual":"genius-seo","result":"correct"}
+{"task_id":"q4","expected":"genius-dev-database","actual":"genius-dev-database","result":"correct"}
+{"task_id":"q5","expected":"genius-copywriter","actual":"genius-copywriter","result":"correct"}

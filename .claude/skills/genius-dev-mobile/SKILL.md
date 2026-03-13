@@ -5,8 +5,10 @@ description: >-
   Handles native APIs (camera, location, push notifications, biometrics), navigation,
   offline-first patterns, and App Store submission prep.
   Use when task involves "React Native", "Expo", "mobile app", "iOS", "Android",
-  "push notifications", "mobile navigation", "native features".
-  Do NOT use for web frontend (genius-dev-frontend) or pure backend APIs (genius-dev-backend).
+  "push notifications", "mobile navigation", "native features", "mobile version",
+  "build for mobile", "mobile-responsive" (when meaning a native app, not CSS media queries).
+  Do NOT use for responsive web design or CSS media queries (genius-dev-frontend).
+  Do NOT use for pure backend APIs (genius-dev-backend).
 context: fork
 agent: genius-dev-mobile
 user-invocable: false
@@ -34,17 +36,6 @@ hooks:
 # Genius Dev Mobile v17 — Native Experience Builder
 
 **One codebase, two platforms, zero compromises.**
-
----
-
-## Mode Compatibility
-
-| Mode | Behavior |
-|------|----------|
-| **CLI** | Full Expo CLI execution, simulator commands, EAS build triggers |
-| **IDE** (VS Code/Cursor) | Use Expo Go for live preview; Cursor handles component editing |
-| **Omni** | Claude handles architecture; switch to best model for native-specific code |
-| **Dual** | Claude designs navigation/state; Codex implements screen boilerplate |
 
 ---
 
@@ -79,28 +70,7 @@ npx expo start
 ```
 
 ### Key config in `app.json`
-```json
-{
-  "expo": {
-    "name": "MyApp",
-    "slug": "my-app",
-    "version": "1.0.0",
-    "ios": {
-      "bundleIdentifier": "com.company.myapp",
-      "buildNumber": "1"
-    },
-    "android": {
-      "package": "com.company.myapp",
-      "versionCode": 1
-    },
-    "plugins": [
-      "expo-camera",
-      "expo-location",
-      ["expo-notifications", { "icon": "./assets/notification-icon.png" }]
-    ]
-  }
-}
-```
+Set the app name, slug, iOS bundle ID, Android package, and any Expo plugins needed for native features.
 
 ### EAS Build (production)
 ```bash
@@ -147,74 +117,15 @@ export function AppNavigator() {
 ```
 
 ### Tab Navigator (bottom tabs)
-```bash
-npm install @react-navigation/bottom-tabs
-```
-
-```tsx
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
-
-<Tab.Navigator screenOptions={{ tabBarActiveTintColor: '#007AFF' }}>
-  <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarIcon: ... }} />
-  <Tab.Screen name="Search" component={SearchScreen} />
-  <Tab.Screen name="Profile" component={ProfileScreen} />
-</Tab.Navigator>
-```
+Install `@react-navigation/bottom-tabs` when the app needs persistent bottom navigation.
 
 ---
 
 ## Native APIs
 
-### Camera (Expo Camera)
-```bash
-npx expo install expo-camera
-```
-```tsx
-import { CameraView, useCameraPermissions } from 'expo-camera';
-
-export function CameraScreen() {
-  const [permission, requestPermission] = useCameraPermissions();
-  
-  if (!permission?.granted) {
-    return (
-      <View>
-        <Text>Camera access needed</Text>
-        <Button title="Grant Access" onPress={requestPermission} />
-      </View>
-    );
-  }
-  
-  return <CameraView style={{ flex: 1 }} facing="back" />;
-}
-```
-
-### Location (Expo Location)
-```bash
-npx expo install expo-location
-```
-```tsx
-import * as Location from 'expo-location';
-
-const [status, requestPermission] = Location.useForegroundPermissions();
-const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-// { coords: { latitude, longitude, accuracy } }
-```
-
-### Biometrics (Expo LocalAuthentication)
-```bash
-npx expo install expo-local-authentication
-```
-```tsx
-import * as LocalAuthentication from 'expo-local-authentication';
-
-const result = await LocalAuthentication.authenticateAsync({
-  promptMessage: 'Authenticate to continue',
-  fallbackLabel: 'Use PIN',
-  disableDeviceFallback: false,
-});
-if (result.success) { /* proceed */ }
-```
+### Camera → `npx expo install expo-camera` → `CameraView` + `useCameraPermissions()` — always handle permission request
+### Location → `npx expo install expo-location` → `Location.getCurrentPositionAsync()` + `useForegroundPermissions()`
+### Biometrics → `npx expo install expo-local-authentication` → `LocalAuthentication.authenticateAsync()` with fallback
 
 ---
 
@@ -325,13 +236,7 @@ useEffect(() => {
   maxToRenderPerBatch={10}
 />
 
-// ✅ Memoize list items
-const ItemRow = memo(({ item }) => <View>...</View>);
-
-// ✅ useCallback for handlers passed to list items
-const handlePress = useCallback((id: string) => { ... }, []);
-
-// ❌ Avoid anonymous functions in renderItem
+// ✅ Memoize list items and keep handlers stable when lists re-render heavily
 ```
 
 ---
@@ -374,11 +279,7 @@ npx expo start --tunnel  # if on different network
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-mobile" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-mobile` with a fresh timestamp.
 
 ---
 
@@ -388,3 +289,17 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-mobile" | .status = "compl
 - → **genius-dev-backend**: API endpoints the mobile app needs
 - → **genius-dev-api**: Third-party SDK integrations (RevenueCat, Amplitude, etc.)
 - → **genius-security**: Secure storage review, certificate pinning
+
+---
+
+## Playground Update
+
+Refresh the existing dashboard tab with real mobile progress data and point the user to `.genius/DASHBOARD.html`.
+
+## Definition of Done
+
+- [ ] App builds and changed mobile flows run without new errors
+- [ ] Platform-specific behaviors are verified or explicitly documented
+- [ ] Required backend or SDK dependencies are coordinated with handoff skills
+- [ ] genius-qa-micro validation completed for the task
+- [ ] Dashboard or progress output reflects the delivered mobile work

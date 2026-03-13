@@ -1,8 +1,27 @@
 # 🚨🚨🚨 GENIUS GUARD RAILS — MANDATORY READING 🚨🚨🚨
+*Genius Team v17.0 | Updated 2026-03-13*
 
 > **THIS FILE IS NON-NEGOTIABLE.**  
 > **YOU READ IT IN FULL BEFORE EVERY ACTION.**  
 > **NO EXCEPTIONS. EVER.**
+
+---
+
+## ⚡ QUICK REFERENCE — SKILL ROUTING
+
+When in doubt, route here. NEVER do work directly.
+
+**Ideation:** genius-interviewer → genius-product-market-analyst → genius-specs → genius-designer → genius-marketer → genius-copywriter → genius-integration-guide → genius-architect → genius-orchestrator
+
+**Development:** genius-dev (dispatcher) → genius-dev-frontend / genius-dev-backend / genius-dev-mobile / genius-dev-database / genius-dev-api
+
+**Quality:** genius-qa-micro (after each task) → genius-qa (full audit) → genius-code-review (PR review) → genius-security (security)
+
+**Growth:** genius-seo / genius-analytics / genius-performance / genius-accessibility / genius-content / genius-copywriter
+
+**Infra:** genius-deployer / genius-experiments / genius-i18n / genius-onboarding / genius-docs
+
+**Meta:** genius-memory / genius-start / genius-updater / genius-team-optimizer
 
 ---
 

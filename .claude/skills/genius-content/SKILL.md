@@ -268,32 +268,32 @@ After publishing, distribute across channels:
 - [ ] Build 2-3 internal links from existing posts
 ```
 
+### Step 7 — SEO-Optimized Content Checklist
+
+Use this before publishing any long-form piece, landing article, or case study:
+
+- [ ] Search intent is explicit: informational, comparison, transactional, or branded
+- [ ] Primary keyword appears in title, slug, meta description, H1, intro, and one subheading
+- [ ] Secondary keywords and related entities appear naturally without stuffing
+- [ ] Title tag is compelling and stays within typical SERP truncation limits
+- [ ] Meta description is specific, benefit-led, and under ~160 characters
+- [ ] URL slug is short, readable, and avoids dates unless recency matters
+- [ ] Opening section answers the core query quickly for featured snippets and AI summaries
+- [ ] Headings are hierarchical and scannable, with sections that can stand alone in search results
+- [ ] Internal links point to product pages, related posts, and one deeper authority page
+- [ ] External citations point to primary or authoritative sources
+- [ ] Images include descriptive filenames, alt text, and surrounding context
+- [ ] FAQ, how-to steps, comparison tables, or original data are included when they improve search coverage
+- [ ] Schema markup needs are identified: `Article`, `FAQPage`, `HowTo`, or `BreadcrumbList`
+- [ ] Author, publish date, and last updated date are present for trust and freshness signals
+- [ ] CTA matches the query intent instead of interrupting the informational flow too early
+- [ ] GEO signals are present: quotable insights, crisp definitions, and source-backed claims AI tools can cite
+
 ---
 
 ## Output
 
-Write content to:
-- `content/blog/{slug}.md` (blog posts)
-- `content/newsletters/{date}.md` (newsletters)
-- `content/social/{platform}-{date}.md` (social media)
-
-Update `.genius/state.json`:
-
-```json
-{
-  "content": {
-    "strategy_defined": true,
-    "pillars": ["education", "thought-leadership", "product", "social-proof"],
-    "cadence": {
-      "blog": "2x/week",
-      "newsletter": "weekly",
-      "linkedin": "3x/week"
-    },
-    "last_piece": "how-we-cut-churn-40-percent",
-    "published_count": 12
-  }
-}
-```
+Write content to the appropriate `content/` path and update `.genius/state.json` with the current strategy, cadence, and latest piece metadata.
 
 ---
 
@@ -302,3 +302,20 @@ Update `.genius/state.json`:
 - **→ genius-seo** — Audit post-publication rankings and keyword performance
 - **→ genius-copywriter** — Refine product-focused CTAs within content
 - **→ genius-analytics** — Set up content performance tracking (scroll depth, time on page, conversion)
+
+---
+
+## Playground Update
+
+Refresh the existing dashboard tab with real content data and point the user to `.genius/DASHBOARD.html`.
+
+
+---
+
+## Definition of Done
+
+- [ ] Draft is complete, not skeletal
+- [ ] GEO/SEO structure is present
+- [ ] Minimum word count is met
+- [ ] CTA is clear
+- [ ] Word count is provided

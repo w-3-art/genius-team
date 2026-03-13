@@ -243,40 +243,98 @@ export function errorHandler(err, req, res, next) {
 }
 ```
 
+### Async route + operational error pattern
+```typescript
+class AppError extends Error {
+  constructor(
+    public statusCode: number,
+    public code: string,
+    message: string,
+    public details?: Record<string, unknown>,
+  ) {
+    super(message);
+  }
+}
+
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+app.get('/api/users/:id', asyncHandler(async (req, res) => {
+  const user = await userService.getById(req.params.id);
+  if (!user) {
+    throw new AppError(404, 'USER_NOT_FOUND', 'User not found');
+  }
+
+  res.json({ data: user });
+}));
+
+export function errorHandler(err, req, res, next) {
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({
+      error: {
+        code: err.code,
+        message: err.message,
+        details: err.details,
+        statusCode: err.statusCode,
+      },
+    });
+  }
+
+  return res.status(500).json({
+    error: { code: 'INTERNAL_ERROR', message: 'Internal server error', statusCode: 500 },
+  });
+}
+```
+
+### Retry transient dependency failures only
+```typescript
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function retry<T>(
+  operation: () => Promise<T>,
+  { retries = 3, baseMs = 100 }: { retries?: number; baseMs?: number } = {},
+): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      const isRetryable =
+        error instanceof Error &&
+        /timeout|temporar|deadlock|ECONNRESET|ETIMEDOUT/i.test(error.message);
+
+      if (!isRetryable || attempt === retries) {
+        throw error;
+      }
+
+      await sleep(baseMs * 2 ** attempt);
+    }
+  }
+
+  throw lastError;
+}
+
+const profile = await retry(() => billingClient.getCustomerProfile(userId));
+```
+
+Rules:
+- Retry network/database timeouts, deadlocks, and 429/503-style upstream failures
+- Never retry validation, auth, or duplicate-write errors without idempotency protection
+- Log retry count and final failure so operators can distinguish flaky dependencies from code bugs
+
 ---
 
 ## API Testing with curl
 
-```bash
-# GET list
-curl -s http://localhost:3000/api/users | jq
-
-# POST create
-curl -s -X POST http://localhost:3000/api/users \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"email": "test@example.com", "name": "Test User"}' | jq
-
-# PATCH update
-curl -s -X PATCH http://localhost:3000/api/users/123 \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"name": "Updated Name"}' | jq
-
-# DELETE
-curl -s -X DELETE http://localhost:3000/api/users/123 \
-  -H "Authorization: Bearer $TOKEN" -o /dev/null -w "%{http_code}"
-```
+Smoke-test list, create, update, and delete flows with authenticated `curl` requests against the changed endpoints.
 
 ---
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-backend" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-backend` with a fresh timestamp.
 
 ---
 
@@ -286,3 +344,19 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-backend" | .status = "comp
 - → **genius-dev-api**: third-party integrations (Stripe, SendGrid, etc.)
 - → **genius-qa-micro**: API endpoint tests
 - → **genius-security**: security audit on auth/payments routes
+
+---
+
+## Playground Update
+
+Refresh the existing dashboard tab with real backend progress data and point the user to `.genius/DASHBOARD.html`.
+
+---
+
+## Definition of Done
+
+- [ ] App starts cleanly after the change
+- [ ] New endpoints are exercised
+- [ ] Error paths are covered
+- [ ] Secrets are not hardcoded
+- [ ] Inputs are validated before use

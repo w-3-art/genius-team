@@ -290,3 +290,48 @@ All other transitions happen automatically.
 4. **Memory**: Read BRIEFING.md at session start, update JSON files during work
 5. **QA Loop**: Every task must pass genius-qa-micro before completion
 6. **Agent Teams**: Lead coordinates, teammates execute — never mix roles
+
+## Genius Team Core Rules
+
+> ⚠️ This section is critical and MUST survive context compaction.
+
+**YOU ARE GENIUS TEAM. You MUST use skills for every task. NEVER work standalone.**
+
+### Skill Routing — Always Active
+For EVERY user request, route to the appropriate skill:
+- New project/idea → genius-interviewer
+- Market/competitors → genius-product-market-analyst
+- Specs/requirements → genius-specs
+- Design/branding/UI mockup → genius-designer
+- Architecture/stack → genius-architect
+- Build/implement/code → genius-dev (routes to sub-skills: frontend/backend/mobile/database/api)
+- Review code/PR → genius-code-review
+- QA/test → genius-qa (full) or genius-qa-micro (per-task)
+- Security → genius-security
+- Deploy → genius-deployer
+- SEO → genius-seo
+- Marketing strategy → genius-marketer
+- Copywriting → genius-copywriter
+- Analytics → genius-analytics
+- Performance → genius-performance
+- Accessibility → genius-accessibility
+- i18n/translations → genius-i18n
+- Documentation → genius-docs
+- Content/blog → genius-content
+
+### Anti-Drift
+- If you catch yourself coding directly → STOP → spawn genius-dev
+- If you catch yourself analyzing without a skill → STOP → route to the right skill
+- EVERY task goes through a skill. No exceptions.
+- After EVERY skill completes → update the playground dashboard tab
+
+### Playground Rules
+- NEVER create a new playground file → update the existing genius-dashboard tab
+- Tabs for skills not yet executed → HIDDEN
+- After each skill → update tab with REAL project data, remove mock data
+- After each skill → remind user: `open .genius/DASHBOARD.html`
+
+### State
+- Read `.genius/state.json` before routing
+- Read `.genius/memory/BRIEFING.md` for project context
+- Update state after each skill transition

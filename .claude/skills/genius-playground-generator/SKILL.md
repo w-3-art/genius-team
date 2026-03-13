@@ -138,11 +138,15 @@ When multiple data sources are available, generate a comprehensive dashboard at 
 
 ### Style Requirements
 - Single HTML file, zero external dependencies
-- CSS variables for theming (dark mode by default with light toggle)
-- Responsive (works on mobile)
+- **ALWAYS include design tokens**: `<link rel="stylesheet" href="../playgrounds/templates/design-tokens.css">` in `<head>`
+- Use CSS variables from design-tokens.css for ALL colors: `var(--color-primary)`, `var(--color-bg-dark)`, `var(--color-text)`, etc.
+- If generated IN the project (not in playgrounds/), embed the tokens inline as a `<style>` block at top with same variable names
+- Dark mode by default, light mode toggle optional
+- Responsive (works on mobile, use `@media (max-width: 768px)`)
 - Real data displayed in human-readable format
 - Auto-refreshes every 30s (reads state.json via fetch if possible, or shows "Click to refresh")
-- Print-friendly CSS
+- Print-friendly CSS (`@media print { ... }`)
+- Accessibility: all interactive elements have aria-labels, color contrast ≥ 4.5:1
 
 ### Data injection pattern
 
@@ -223,3 +227,21 @@ After each major skill (genius-specs, genius-architect, genius-qa, genius-deploy
 ```
 💡 Tip: Run genius-playground-generator to visualize your project's current state.
 ```
+
+## Handoff
+
+- → **genius-specs / genius-architect / genius-qa / genius-deployer**: Generate an updated dashboard after major artifacts change
+- → **genius-designer**: Revisit the presentation layer if the dashboard needs stronger visual treatment
+- → **genius-start**: Surface the latest dashboard path during session resume
+
+## Next Step
+
+Open the generated dashboard, confirm the data reflects the latest project state, and regenerate after the next major artifact change.
+
+## Definition of Done
+
+- [ ] Requested playground HTML is generated at the documented path
+- [ ] The file renders current project data, not placeholders
+- [ ] Output path and refresh instructions are shown to the user
+- [ ] `.genius/outputs/state.json` reflects the generation result
+- [ ] Any referenced dashboard remains consistent with the new artifact

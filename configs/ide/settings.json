@@ -65,7 +65,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 9.0 (IDE Mode)\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
+            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 17.0 | 42 skills | 4 modes (IDE Mode)\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
           }
         ]
       }
@@ -75,7 +75,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'bash scripts/memory-extract.sh \"$(cat PROGRESS.md 2>/dev/null; echo ---; grep -E \"^- \\\\[\" .claude/plan.md 2>/dev/null | head -30; echo ---; cat .genius/state.json 2>/dev/null)\" 2>/dev/null || true; echo \"<critical_context>\"; if [ -f .genius/memory/BRIEFING.md ]; then cat .genius/memory/BRIEFING.md; fi; echo \"</critical_context>\"'"
+            "command": "bash -c '\n# Generate critical context before compaction\necho \"<critical_context_snapshot>\"\necho \"## Snapshot at: $(date)\"\necho \"\"\n\n# Current state\nif [ -f .genius/state.json ]; then\n  echo \"## Current State\"\n  jq -r '\"Phase: \\(.phase) | Skill: \\(.currentSkill // \"none\") | Task: \\(.currentTask // \"none\")\"' .genius/state.json 2>/dev/null || true\n  echo \"\"\nfi\n\n# BRIEFING\nif [ -f .genius/memory/BRIEFING.md ]; then\n  echo \"## Project Briefing\"\n  head -80 .genius/memory/BRIEFING.md\n  echo \"\"\nfi\n\n# Last 5 completed tasks from plan\nif [ -f .claude/plan.md ]; then\n  echo \"## Recently Completed\"\n  grep -E \"^- \\[x\\]\" .claude/plan.md | tail -5 2>/dev/null || true\n  echo \"## Next Up\"\n  grep -E \"^- \\[ \\]\" .claude/plan.md | head -5 2>/dev/null || true\n  echo \"\"\nfi\n\necho \"</critical_context_snapshot>\"\n\n# Also run the memory extract\nbash scripts/memory-extract.sh \"$(cat PROGRESS.md 2>/dev/null | head -30; echo ---; grep -E \"^- \\[\" .claude/plan.md 2>/dev/null | head -20)\" 2>/dev/null || true\n'"
           }
         ]
       }
@@ -127,6 +127,16 @@
           }
         ]
       }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'echo \"<genius_guard_reminder>\"; echo \"\u26a0\ufe0f ANTI-DRIFT ACTIVE: You MUST use Genius Team skills. NEVER code directly. Route every task to a skill.\"; echo \"Router: genius-team skill routes all requests.\"; echo \"Playground: NEVER create new HTML files \u2014 update existing dashboard tabs.\"; if [ -f GENIUS_GUARD.md ]; then echo \"Full rules: cat GENIUS_GUARD.md\"; fi; echo \"</genius_guard_reminder>\"'"
+          }
+        ]
+      }
     ]
   },
   "env": {
@@ -138,10 +148,11 @@
   },
   "compaction": {
     "postCompactionSections": [
-      "## Genius Team",
-      "## Memory",
-      "## Anti-Drift Rules",
-      "## Current Phase"
+      "## Genius Team Core Rules",
+      "## \ud83d\udea8 ANTI-DRIFT RULES",
+      "## \ud83e\udde0 Memory",
+      "## Commands",
+      "## Two Phases"
     ]
   }
 }

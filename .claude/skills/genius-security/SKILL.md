@@ -209,3 +209,17 @@ The playground generates a comprehensive security report containing:
 - **Category Breakdown**: Issues per OWASP category
 
 User copies this prompt output to feed back into the dev workflow.
+
+
+---
+
+## Definition of Done
+
+Security audit report MUST include:
+1. **Severity classification**: Critical / High / Medium / Low / Info for each finding
+2. **OWASP reference**: Which OWASP Top 10 category each finding belongs to
+3. **Evidence**: Code snippet or request/response showing the vulnerability
+4. **Remediation**: Exact code change to fix each finding (not just "validate inputs")
+5. **Retest criteria**: How to verify the fix worked
+
+Report must have an Executive Summary: total findings by severity + overall risk rating (1-10).

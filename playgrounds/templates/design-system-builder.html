@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design System Builder | Genius Playground</title>
+    <link rel="stylesheet" href="./design-tokens.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -11,17 +12,17 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
-            --ui-bg: #0f0f0f;
-            --ui-surface: #1a1a1a;
-            --ui-surface-2: #252525;
-            --ui-border: #333;
-            --ui-text: #e5e5e5;
-            --ui-text-muted: #888;
-            --ui-accent: #6366f1;
-            --ui-accent-hover: #818cf8;
+            --ui-bg: var(--surface-dark-0);
+            --ui-surface: var(--surface-dark-2);
+            --ui-surface-2: var(--surface-dark-5);
+            --ui-border: var(--surface-dark-6);
+            --ui-text: var(--text-primary);
+            --ui-text-muted: var(--text-secondary);
+            --ui-accent: var(--surface-violet);
+            --ui-accent-hover: var(--surface-violet-light);
         }
+
 
         body {
             font-family: 'Inter', -apple-system, sans-serif;
@@ -541,7 +542,7 @@
         }
 
         .output-code {
-            background: #0d0d0d;
+            background: var(--surface-dark-0);
             border-radius: 8px;
             padding: 16px;
             font-family: 'SF Mono', Monaco, 'Courier New', monospace;
@@ -549,7 +550,7 @@
             line-height: 1.6;
             white-space: pre-wrap;
             word-break: break-all;
-            color: #a5b4fc;
+            color: var(--surface-violet-light);
             max-height: 100%;
             overflow-y: auto;
         }

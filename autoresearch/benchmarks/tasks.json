@@ -1,0 +1,249 @@
+{
+  "version": "1.0",
+  "description": "30-task sequence simulating a full SaaS project build. Used for endurance testing.",
+  "tasks": [
+    {
+      "id": 1,
+      "phase": "discovery",
+      "prompt": "I want to build a SaaS project management tool for freelancers. Help me define the product.",
+      "expected_skill": "genius-interviewer",
+      "checkpoint": false
+    },
+    {
+      "id": 2,
+      "phase": "discovery",
+      "prompt": "Analyze the market for freelancer project management tools. Who are the competitors?",
+      "expected_skill": "genius-product-market-analyst",
+      "checkpoint": false
+    },
+    {
+      "id": 3,
+      "phase": "specs",
+      "prompt": "Write the technical specs for this project based on what we discussed.",
+      "expected_skill": "genius-specs",
+      "checkpoint": false
+    },
+    {
+      "id": 4,
+      "phase": "design",
+      "prompt": "Design the UI/UX for the main dashboard and project views.",
+      "expected_skill": "genius-designer",
+      "checkpoint": false
+    },
+    {
+      "id": 5,
+      "phase": "architecture",
+      "prompt": "Define the technical architecture: stack, database schema, API structure.",
+      "expected_skill": "genius-architect",
+      "checkpoint": false
+    },
+    {
+      "id": 6,
+      "phase": "dev",
+      "prompt": "Set up the Next.js project with the basic folder structure and config.",
+      "expected_skill": "genius-dev-frontend",
+      "checkpoint": false
+    },
+    {
+      "id": 7,
+      "phase": "dev",
+      "prompt": "Build the authentication system with email/password and Google OAuth.",
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false
+    },
+    {
+      "id": 8,
+      "phase": "dev",
+      "prompt": "Create the database schema for users, projects, tasks, and time tracking.",
+      "expected_skill": "genius-dev-database",
+      "checkpoint": false
+    },
+    {
+      "id": 9,
+      "phase": "dev",
+      "prompt": "Build the REST API endpoints for projects CRUD and task management.",
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false,
+      "note": "Building own REST endpoints = backend; genius-dev-api is for third-party integrations"
+    },
+    {
+      "id": 10,
+      "phase": "dev",
+      "prompt": "Build the main dashboard page with project cards and recent activity.",
+      "expected_skill": "genius-dev-frontend",
+      "checkpoint": true,
+      "checkpoint_label": "baseline"
+    },
+    {
+      "id": 11,
+      "phase": "dev",
+      "prompt": "Add the time tracking feature with start/stop timer and weekly reports.",
+      "expected_skill": "genius-dev-frontend",
+      "checkpoint": false
+    },
+    {
+      "id": 12,
+      "phase": "dev",
+      "prompt": "Build the invoicing module: generate PDF invoices from tracked time.",
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false
+    },
+    {
+      "id": 13,
+      "phase": "qa",
+      "prompt": "Review the codebase for bugs and security issues.",
+      "expected_skill": "genius-code-review",
+      "checkpoint": false
+    },
+    {
+      "id": 14,
+      "phase": "qa",
+      "prompt": "Run a full QA pass on the authentication and invoicing flows.",
+      "expected_skill": "genius-qa",
+      "checkpoint": false
+    },
+    {
+      "id": 15,
+      "phase": "optimization",
+      "prompt": "Check the app's performance: load times, bundle size, database queries.",
+      "expected_skill": "genius-performance",
+      "checkpoint": false
+    },
+    {
+      "id": 16,
+      "phase": "optimization",
+      "prompt": "Run an accessibility audit on all pages.",
+      "expected_skill": "genius-accessibility",
+      "checkpoint": false
+    },
+    {
+      "id": 17,
+      "phase": "content",
+      "prompt": "Write the landing page copy: hero, features, pricing, FAQ.",
+      "expected_skill": "genius-copywriter",
+      "checkpoint": false
+    },
+    {
+      "id": 18,
+      "phase": "seo",
+      "prompt": "Optimize the site for search engines and AI search (ChatGPT, Perplexity).",
+      "expected_skill": "genius-seo",
+      "checkpoint": false
+    },
+    {
+      "id": 19,
+      "phase": "i18n",
+      "prompt": "Add French and Spanish translations for the entire app.",
+      "expected_skill": "genius-i18n",
+      "checkpoint": false
+    },
+    {
+      "id": 20,
+      "phase": "docs",
+      "prompt": "Generate API documentation and a getting started guide for developers.",
+      "expected_skill": "genius-docs",
+      "checkpoint": true,
+      "checkpoint_label": "pre-compaction"
+    },
+    {
+      "id": 21,
+      "phase": "dev",
+      "prompt": "Add Stripe integration for subscription billing.",
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false
+    },
+    {
+      "id": 22,
+      "phase": "dev",
+      "prompt": "Build a notification system: email + in-app notifications.",
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false
+    },
+    {
+      "id": 23,
+      "phase": "dev",
+      "prompt": "Create the settings page: profile, billing, team management.",
+      "expected_skill": "genius-dev-frontend",
+      "checkpoint": false
+    },
+    {
+      "id": 24,
+      "phase": "dev",
+      "prompt": "Add real-time collaboration: live cursors and task updates via WebSocket.",
+      "expected_skill": "genius-dev-backend",
+      "checkpoint": false
+    },
+    {
+      "id": 25,
+      "phase": "qa",
+      "prompt": "Security audit: check for XSS, CSRF, SQL injection, auth bypasses.",
+      "expected_skill": "genius-security",
+      "checkpoint": true,
+      "checkpoint_label": "post-compaction"
+    },
+    {
+      "id": 26,
+      "phase": "dev",
+      "prompt": "Build a mobile-responsive version of the dashboard.",
+      "expected_skill": "genius-dev-frontend",
+      "checkpoint": false,
+      "note": "mobile-responsive = CSS responsive design = frontend; genius-dev-mobile is for React Native/Expo native apps"
+    },
+    {
+      "id": 27,
+      "phase": "analytics",
+      "prompt": "Set up analytics tracking: user events, funnel analysis, retention metrics.",
+      "expected_skill": "genius-analytics",
+      "checkpoint": false
+    },
+    {
+      "id": 28,
+      "phase": "marketing",
+      "prompt": "Create a marketing strategy for the launch: channels, messaging, timeline.",
+      "expected_skill": "genius-marketer",
+      "checkpoint": false
+    },
+    {
+      "id": 29,
+      "phase": "deploy",
+      "prompt": "Deploy the app to production with CI/CD pipeline.",
+      "expected_skill": "genius-deployer",
+      "checkpoint": false
+    },
+    {
+      "id": 30,
+      "phase": "review",
+      "prompt": "Final review: check everything works end-to-end before launch.",
+      "expected_skill": "genius-qa",
+      "checkpoint": true,
+      "checkpoint_label": "final"
+    }
+  ],
+  "quick_test_tasks": [
+    {
+      "id": "q1",
+      "prompt": "Build a login page",
+      "expected_skill": "genius-dev-frontend"
+    },
+    {
+      "id": "q2",
+      "prompt": "Review this PR for bugs",
+      "expected_skill": "genius-code-review"
+    },
+    {
+      "id": "q3",
+      "prompt": "Optimize SEO for AI search engines",
+      "expected_skill": "genius-seo"
+    },
+    {
+      "id": "q4",
+      "prompt": "Create the database models for an e-commerce app",
+      "expected_skill": "genius-dev-database"
+    },
+    {
+      "id": "q5",
+      "prompt": "Write marketing copy for our product launch",
+      "expected_skill": "genius-copywriter"
+    }
+  ]
+}

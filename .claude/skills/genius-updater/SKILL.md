@@ -192,3 +192,11 @@ Provides: New features that could improve skills
 
 ### From SessionStart hook
 Triggered: When version mismatch detected (Claude Code or Genius Team)
+
+## Definition of Done
+
+- [ ] Version gap is identified with concrete impacted files or features
+- [ ] Proposed changes are reviewed before any modification happens
+- [ ] Backup, verification, and logging steps are specified
+- [ ] User approval requirements remain explicit
+- [ ] Follow-up optimization or maintenance handoff is clear

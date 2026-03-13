@@ -231,32 +231,13 @@ NEXT_PUBLIC_PLAUSIBLE_DOMAIN=yourdomain.com
 
 ### Step 8 — Dashboard Setup
 
-**Recommended dashboards to create:**
-
-1. **Acquisition** — Traffic sources, signups by channel
-2. **Activation** — Onboarding completion rate, time-to-activation
-3. **Retention** — DAU/WAU/MAU, cohort retention
-4. **Revenue** — MRR, churn, LTV by acquisition channel
-5. **Core Feature** — Usage frequency, power users
+Recommended dashboards: acquisition, activation, retention, revenue, and core-feature usage.
 
 ---
 
 ## Output
 
-Update `.genius/state.json`:
-
-```json
-{
-  "analytics": {
-    "provider": "posthog",
-    "initialized": true,
-    "events_count": 24,
-    "events_registry": ".genius/analytics-events.md",
-    "gdpr_compliant": true,
-    "funnels_defined": ["free_to_paid", "onboarding"]
-  }
-}
-```
+Record provider, event registry, funnel coverage, and compliance state in `.genius/state.json`.
 
 ---
 
@@ -265,3 +246,18 @@ Update `.genius/state.json`:
 - **→ genius-seo** — After analytics setup, audit organic traffic acquisition
 - **→ genius-performance** — Connect Core Web Vitals to GA4 via web-vitals library
 - **→ genius-copywriter** — Optimize conversion copy based on funnel drop-off data
+
+---
+
+## Playground Update
+
+Refresh the existing dashboard tab with real analytics data and point the user to `.genius/DASHBOARD.html`.
+
+---
+
+## Definition of Done
+
+- [ ] Events are verified in a real debug surface
+- [ ] Manual verification steps are documented
+- [ ] Error and cancellation paths are tracked where relevant
+- [ ] Event schema is documented clearly

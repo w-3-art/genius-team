@@ -3,7 +3,9 @@ name: genius-integration-guide
 description: >-
   Service integration guide. Provides setup instructions for third-party services
   (Stripe, Supabase, SendGrid, etc.). Use when user says "how to integrate X", "setup [service]",
-  "connect to [API]", "third-party setup guide". For coding the integration itself, use genius-dev-api.
+  "connect to [API]", "third-party setup guide".
+  Do NOT use for coding the integration (use genius-dev-api).
+  Do NOT use for architecture decisions (use genius-architect).
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -195,3 +197,21 @@ Receives: TRACKING-PLAN.xml, project requirements
 
 ### To: genius-architect
 Provides: INTEGRATIONS.md, .env.example, configured services list, STACK-CONFIG.html playground
+
+
+---
+
+## Next Step (Auto-Chain)
+
+When this skill completes its work:
+→ **Automatically suggest**: "Integrations mapped! Ready to design the technical architecture? I'll hand off to **genius-architect**."
+→ If user approves: route to genius-architect
+→ Update state.json: `currentSkill = "genius-architect"`
+
+## Definition of Done
+
+- [ ] Required services, credentials, and setup steps are documented
+- [ ] `.env.example` or equivalent config guidance is complete
+- [ ] Integration constraints and prerequisites are called out clearly
+- [ ] Downstream architecture handoff includes the configured service list
+- [ ] Dashboard or playground refresh instructions are included when applicable

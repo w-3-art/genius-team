@@ -87,75 +87,11 @@ updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 deleted_at  TIMESTAMPTZ,
 ```
 
-### Prisma schema example
+### Schema examples
 
-```prisma
-// prisma/schema.prisma
-generator client {
-  provider = "prisma-client-js"
-}
+**Prisma**: Use `cuid()` IDs, `@unique` on email, `@updatedAt`, `DateTime?` for soft delete, `@@index` on foreign keys + common queries, `@@map` for table names. Define enums separately.
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  name      String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // soft delete
-
-  posts     Post[]
-  profile   Profile?
-
-  @@index([email])
-  @@map("users")
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-model Post {
-  id          String   @id @default(cuid())
-  title       String
-  content     String?
-  published   Boolean  @default(false)
-  authorId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([authorId])
-  @@index([published, createdAt(sort: Desc)])
-  @@map("posts")
-}
-```
-
-### Drizzle schema example
-
-```typescript
-// db/schema.ts
-import { pgTable, uuid, text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
-
-export const roleEnum = pgEnum('role', ['USER', 'ADMIN']);
-
-export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  email: text('email').notNull().unique(),
-  name: text('name').notNull(),
-  role: roleEnum('role').default('USER').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-  deletedAt: timestamp('deleted_at', { withTimezone: true }),
-});
-```
+**Drizzle**: Use `pgTable` + `pgEnum`, `uuid().defaultRandom().primaryKey()`, `timestamp('...', { withTimezone: true })`. Mirror same patterns as Prisma.
 
 ---
 
@@ -319,44 +255,13 @@ psql $DATABASE_URL < backup-2025-01-01.sql
 
 ## Redis Patterns
 
-```typescript
-import { createClient } from 'redis';
-const redis = createClient({ url: process.env.REDIS_URL });
-
-// Cache-aside pattern
-async function getUserCached(id: string) {
-  const cached = await redis.get(`user:${id}`);
-  if (cached) return JSON.parse(cached);
-  
-  const user = await prisma.user.findUnique({ where: { id } });
-  await redis.setEx(`user:${id}`, 3600, JSON.stringify(user)); // TTL: 1 hour
-  return user;
-}
-
-// Invalidate on update
-async function updateUser(id: string, data: Partial<User>) {
-  const user = await prisma.user.update({ where: { id }, data });
-  await redis.del(`user:${id}`); // Invalidate cache
-  return user;
-}
-
-// Rate limiting with Redis
-async function checkRateLimit(key: string, limit: number, windowSec: number) {
-  const count = await redis.incr(key);
-  if (count === 1) await redis.expire(key, windowSec);
-  return count <= limit;
-}
-```
+Use Redis for cache-aside reads, invalidation on writes, and simple fixed-window rate limiting when the schema needs supporting infrastructure.
 
 ---
 
 ## Output
 
-Update `.genius/outputs/state.json` on completion:
-
-```bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-database" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-```
+Mark `.genius/outputs/state.json` complete for `genius-dev-database` with a fresh timestamp.
 
 ---
 
@@ -365,3 +270,18 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-dev-database" | .status = "com
 - → **genius-dev-backend**: API routes that use the schema
 - → **genius-qa-micro**: Seed data for test environments
 - → **genius-security**: Column-level encryption for sensitive fields (PII, payment data)
+
+---
+
+## Playground Update
+
+Refresh the existing dashboard tab with real database progress data and point the user to `.genius/DASHBOARD.html`.
+
+---
+
+## Definition of Done
+
+- [ ] Migrations run cleanly
+- [ ] Schema integrity is sound
+- [ ] Important query paths have indexes
+- [ ] Rollback path exists

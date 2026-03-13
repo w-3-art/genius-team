@@ -41,17 +41,6 @@ Inspired by Andrej Karpathy's autoresearch approach: autonomous iteration over a
 
 ---
 
-## Mode Compatibility
-
-| Mode | Behavior |
-|------|----------|
-| **CLI** | Primary mode — leave running in background; safe to close terminal (use `tmux` or `screen`) |
-| **IDE** (VS Code/Cursor) | Use as Task runner; view live logs in `.genius/experiments.log` |
-| **Omni** | Route experiment generation to best model; Claude evaluates results |
-| **Dual** | Claude designs experiment variants; Codex implements the changes; Claude evaluates |
-
----
-
 ## Core Principles
 
 1. **Metric-driven**: Every experiment must have a measurable success criterion
@@ -185,29 +174,7 @@ echo "{\"run\": $RUN_NUMBER, \"metric\": $RESULT, \"improved\": $([ $RESULT < $B
 
 ### Phase 3: Stop Conditions
 
-```bash
-# Check all stop conditions after each run
-if [ $RUN_NUMBER -ge $MAX_RUNS ]; then
-  echo "Stop: max runs ($MAX_RUNS) reached"
-  break
-fi
-
-if [ $CONSECUTIVE_REGRESSIONS -ge $MAX_CONSECUTIVE_REGRESSIONS ]; then
-  echo "Stop: $MAX_CONSECUTIVE_REGRESSIONS consecutive regressions"
-  break
-fi
-
-ELAPSED=$(($(date +%s) - START_TIME))
-if [ $ELAPSED -ge $MAX_TIME_SECONDS ]; then
-  echo "Stop: max time (${MAX_TIME_SECONDS}s) elapsed"
-  break
-fi
-
-if [ $(echo "$BEST_METRIC <= $TARGET_METRIC" | bc -l) -eq 1 ]; then
-  echo "Stop: target metric reached! 🎉"
-  break
-fi
-```
+Stop when any configured limit is hit: max runs, max time, max consecutive regressions, or target metric reached.
 
 ---
 
@@ -249,15 +216,9 @@ Written to `.genius/experiments/report-{date}.md`:
 
 ## Recommendations
 
-1. **Keep**: Redis cache layer (run 7) — biggest impact
-2. **Consider next**: Try connection pooling — untested in this experiment
-3. **Avoid**: Larger page sizes — increases memory pressure
-
-## Next Experiment Ideas
-
-- [ ] Try edge caching (Cloudflare KV)
-- [ ] Profile individual query steps
-- [ ] Test with real production data volume
+1. **Keep**: Highest-impact winning change
+2. **Test next**: One untried improvement
+3. **Avoid**: Regressions that clearly worsened the metric
 ```
 
 ---
@@ -320,3 +281,11 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-experiments" | .status = "comp
 - → **genius-qa-micro**: Validate that winning changes don't break tests
 - → **genius-reviewer**: Code review winning changes before merging to main
 - → **genius-deployer**: Deploy winning changes after validation
+
+## Definition of Done
+
+- [ ] Hypothesis, metric, and experiment scope are stated before changes land
+- [ ] Each experiment branch or commit is traceable and reversible
+- [ ] Results identify a winner, loser, or inconclusive outcome
+- [ ] Risk of polluting protected branches is avoided
+- [ ] Winning changes are ready for QA handoff

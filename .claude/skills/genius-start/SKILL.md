@@ -4,6 +4,8 @@ description: >-
   Session initialization skill. Loads memory, shows project status, and routes to next appropriate
   action. Use when user runs /genius-start or says "let's begin this session", "where were we",
   "resume", "what's the status". Runs at the start of every session.
+  Do NOT use for new project creation (use genius-interviewer).
+  Do NOT use for implementation (use genius-dev skills).
 user-invocable: true
 ---
 
@@ -88,3 +90,21 @@ Next: {next_pending_task}
 ### Step 6: Wait for User Input
 
 Route to appropriate skill based on response using genius-team router.
+
+## Definition of Done
+
+- [ ] Session context is loaded from state, briefing, and plan inputs
+- [ ] Current status is summarized accurately for the user
+- [ ] Missing artifacts or recovery conditions are surfaced early
+- [ ] Next recommended action points to a concrete skill
+- [ ] The user can resume work without additional context gathering
+
+## Handoff
+
+- → **genius-team**: Route the user's next request after initialization completes
+- → **genius-orchestrator**: Resume execution when plan tasks are already active
+- → **genius-memory**: Refresh or regenerate memory artifacts if state is stale
+
+## Next Step
+
+Route the user to the next concrete Genius skill based on current phase, plan status, and requested action.

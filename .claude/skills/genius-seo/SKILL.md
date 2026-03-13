@@ -136,3 +136,31 @@ jq --arg ts "$(date -Iseconds)" '.skill = "genius-seo" | .status = "complete" | 
 - **IDE mode**: Same, output in terminal panel
 - **OpenClaw**: Deliver report via channel + save to .genius/
 - **Codex engine**: Use thread forking for parallel sub-audits
+
+---
+
+## Playground Update (MANDATORY)
+
+After completing your task:
+1. **DO NOT create a new HTML file** — update the existing genius-dashboard tab
+2. Open `.genius/DASHBOARD.html` and update YOUR tab's data section with real project data
+3. If your tab doesn't exist yet, add it to the dashboard (hidden tabs become visible on first real data)
+4. Remove any mock/placeholder data from your tab
+5. Tell the user: `📊 Dashboard updated → open .genius/DASHBOARD.html`
+
+---
+
+## Definition of Done
+
+Every recommendation MUST be:
+1. **Specific**: Reference actual page URL, file path, or element selector
+2. **Actionable**: Include exact code/content change to make
+3. **Measurable**: State expected metric improvement (e.g., "improve LCP from 3.2s to <2.5s")
+4. **Prioritized**: Mark as Critical / High / Medium / Low
+
+No generic advice like "improve your content quality" — always reference the specific page and the specific fix.
+
+## Handoffs
+- → **genius-content**: For implementing content improvements recommended by SEO audit
+- → **genius-dev-frontend**: For technical SEO fixes (Core Web Vitals, structured data)
+- → **genius-analytics**: For setting up tracking to measure SEO impact
