@@ -140,16 +140,6 @@
           }
         ]
       }
-    ],
-    "PostCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'echo \"<genius_guard_reminder>\"; echo \"\u26a0\ufe0f ANTI-DRIFT ACTIVE: You MUST use Genius Team skills. NEVER code directly. Route every task to a skill.\"; echo \"Router: genius-team skill routes all requests.\"; echo \"Playground: NEVER create new HTML files \u2014 update existing dashboard tabs.\"; if [ -f GENIUS_GUARD.md ]; then echo \"Full rules: cat GENIUS_GUARD.md\"; fi; echo \"</genius_guard_reminder>\"'"
-          }
-        ]
-      }
     ]
   },
   "env": {
