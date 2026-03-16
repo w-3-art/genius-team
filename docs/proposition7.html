@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — Anyone Can Build</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: hidden; }
+html.lenis, html.lenis body { height: auto; }
+body { font-family: 'Sora', sans-serif; background: #000; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+:root { --blue: #4f6ef7; --cyan: #22d3ee; --emerald: #34d399; --dim: rgba(255,255,255,0.4); --subtle: rgba(255,255,255,0.06); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
+.nav-l { font-size: 1rem; font-weight: 700; }
+.nav-r { display: flex; gap: 1.5rem; align-items: center; }
+.nav-r a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color 0.2s; }
+.nav-r a:hover { color: #fff; }
+
+/* ═══ PINNED HERO ═══ */
+.pinned-hero { height: 300vh; position: relative; }
+.pinned-inner { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
+.ph-bg { position: absolute; inset: 0; background: url('img/hero-brain.jpg') center/cover; opacity: 0; transition: opacity 0.3s; }
+.ph-title { font-size: clamp(4rem, 12vw, 10rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.95; position: relative; z-index: 1; }
+.ph-title .line { display: block; overflow: hidden; }
+.ph-title .line span { display: inline-block; }
+.ph-sub { font-size: clamp(1rem, 2vw, 1.3rem); color: var(--dim); max-width: 400px; margin-top: 1.5rem; line-height: 1.6; font-weight: 300; position: relative; z-index: 1; opacity: 0; }
+.ph-cta { margin-top: 2rem; position: relative; z-index: 1; opacity: 0; }
+.ph-cta a { padding: 0.8rem 2.5rem; border-radius: 100px; background: #fff; color: #000; font-weight: 700; font-size: 0.95rem; text-decoration: none; display: inline-block; transition: all 0.3s; }
+.ph-cta a:hover { transform: scale(1.05); box-shadow: 0 6px 30px rgba(255,255,255,0.2); }
+
+/* ═══ HORIZONTAL SCROLL SECTION ═══ */
+.hscroll-wrap { overflow: hidden; }
+.hscroll-container { display: flex; width: max-content; will-change: transform; }
+.hscroll-panel { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 4rem; position: relative; }
+.hscroll-panel .panel-content { max-width: 500px; }
+.hscroll-panel .panel-visual { position: absolute; right: 8%; top: 50%; transform: translateY(-50%); width: 40%; max-width: 450px; }
+.hscroll-panel .panel-visual img { width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+.hscroll-panel h2 { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.1; }
+.hscroll-panel p { color: var(--dim); font-size: 1.05rem; line-height: 1.6; }
+.hscroll-panel .panel-num { font-size: 8rem; font-weight: 900; color: rgba(255,255,255,0.03); position: absolute; top: 2rem; left: 4rem; line-height: 1; }
+.panel-accent { color: var(--cyan); }
+.panel-divider { width: 40px; height: 3px; background: var(--blue); margin: 1.5rem 0; border-radius: 2px; }
+
+/* ═══ CATEGORIES — STACKED REVEAL ═══ */
+.categories { padding: 10rem 2rem; }
+.cat-inner { max-width: 1000px; margin: 0 auto; }
+.cat-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; text-align: center; letter-spacing: -0.03em; margin-bottom: 1rem; }
+.cat-sub { text-align: center; color: var(--dim); margin-bottom: 5rem; font-size: 1.05rem; }
+.cat-row { display: flex; align-items: center; gap: 3rem; padding: 3rem 0; border-bottom: 1px solid var(--subtle); }
+.cat-row:last-child { border-bottom: none; }
+.cat-row .cat-num { font-size: 4rem; font-weight: 900; color: rgba(79, 110, 247, 0.15); flex-shrink: 0; width: 80px; }
+.cat-row .cat-info { flex: 1; }
+.cat-row .cat-info h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; }
+.cat-row .cat-info p { color: var(--dim); font-size: 0.9rem; margin-bottom: 0.75rem; }
+.cat-row .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.cat-row .pill { padding: 0.2rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--subtle); font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+
+/* ═══ CTA ═══ */
+.final-cta { padding: 12rem 2rem; text-align: center; position: relative; }
+.final-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(79,110,247,0.08), transparent); pointer-events: none; }
+.final-cta h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+.final-cta h2 .shimmer { background: linear-gradient(90deg, var(--blue), var(--cyan), var(--blue)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
+@keyframes shimmer { to { background-position: 200% center; } }
+.final-cta p { color: var(--dim); font-size: 1.1rem; margin-bottom: 2.5rem; position: relative; z-index: 1; }
+.cmd { display: inline-flex; align-items: center; gap: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--subtle); border-radius: 16px; padding: 1.2rem 2.5rem; font-family: monospace; font-size: 1rem; color: var(--emerald); cursor: pointer; transition: all 0.4s; position: relative; z-index: 1; }
+.cmd:hover { border-color: var(--blue); box-shadow: 0 0 50px rgba(79,110,247,0.12); }
+.cmd .dim { font-family: 'Sora'; font-size: 0.72rem; color: var(--dim); }
+
+/* FOOTER */
+footer { padding: 3rem; border-top: 1px solid var(--subtle); display: flex; justify-content: space-between; font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+footer a { color: rgba(255,255,255,0.3); text-decoration: none; }
+footer a:hover { color: var(--blue); }
+footer .links { display: flex; gap: 1.5rem; }
+
+/* PROP NAV */
+.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.35rem; z-index: 100; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border: 1px solid var(--subtle); border-radius: 100px; padding: 0.35rem; }
+.prop-nav a { padding: 0.4rem 0.9rem; border-radius: 100px; color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.72rem; font-weight: 500; transition: all 0.3s; }
+.prop-nav a:hover { color: #fff; }
+.prop-nav a.active { background: var(--blue); color: #fff; }
+
+@media (max-width: 968px) {
+  .hscroll-panel .panel-visual { display: none; }
+  .hscroll-panel .panel-content { max-width: 90%; }
+  .cat-row { flex-direction: column; gap: 1rem; text-align: center; }
+  .cat-row .pills { justify-content: center; }
+  nav { padding: 1rem 1.5rem; }
+  .nav-r { display: none; }
+}
+@media (max-width: 640px) {
+  .ph-title { font-size: 3.5rem; }
+  footer { flex-direction: column; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-l">🧠 Genius Team</div>
+  <div class="nav-r">
+    <a href="#categories">The Team</a>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
+    <a href="#cta" style="padding:0.45rem 1.2rem;border-radius:100px;background:#fff;color:#000;font-weight:600">Get Started</a>
+  </div>
+</nav>
+
+<!-- PINNED HERO — text + bg image reveals on scroll -->
+<section class="pinned-hero" id="pinnedHero">
+  <div class="pinned-inner">
+    <div class="ph-bg" id="phBg"></div>
+    <div class="ph-title" id="phTitle">
+      <div class="line"><span>Anyone</span></div>
+      <div class="line"><span>can build.</span></div>
+    </div>
+    <p class="ph-sub" id="phSub">42 AI agents. Zero code. One command.</p>
+    <div class="ph-cta" id="phCta"><a href="#cta">Start free →</a></div>
+  </div>
+</section>
+
+<!-- HORIZONTAL SCROLL — 3 panels -->
+<section class="hscroll-wrap" id="hscrollWrap">
+  <div class="hscroll-container" id="hscrollContainer">
+    <div class="hscroll-panel" style="background: linear-gradient(135deg, #0a0a1a, #0f0f2e)">
+      <div class="panel-num">01</div>
+      <div class="panel-content">
+        <h2>You <span class="panel-accent">describe</span> it.</h2>
+        <div class="panel-divider"></div>
+        <p>"Build me a booking app for my yoga studio with online payments and a class schedule."</p>
+      </div>
+      <div class="panel-visual"><img src="img/hero-brain.jpg" alt="" loading="lazy"></div>
+    </div>
+    <div class="hscroll-panel" style="background: linear-gradient(135deg, #0f0f2e, #0a1a1a)">
+      <div class="panel-num">02</div>
+      <div class="panel-content">
+        <h2>AI <span class="panel-accent">builds</span> it.</h2>
+        <div class="panel-divider"></div>
+        <p>42 specialists collaborate in real-time: interviewer → designer → developer → QA → security → SEO → deployer.</p>
+      </div>
+      <div class="panel-visual"><img src="img/workflow-steps.jpg" alt="" loading="lazy"></div>
+    </div>
+    <div class="hscroll-panel" style="background: linear-gradient(135deg, #0a1a1a, #0a0a0a)">
+      <div class="panel-num">03</div>
+      <div class="panel-content">
+        <h2>You <span class="panel-accent">ship</span> it.</h2>
+        <div class="panel-divider"></div>
+        <p>Production-ready code. Tested. Documented. Optimized. Live on the internet.</p>
+      </div>
+      <div class="panel-visual"><img src="img/app-mockup.jpg" alt="" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES — clean list -->
+<section class="categories" id="categories">
+  <div class="cat-inner">
+    <h2 class="cat-heading">Your AI team.</h2>
+    <p class="cat-sub">42 agents. 6 departments. One mission: build your product.</p>
+    
+    <div class="cat-row">
+      <div class="cat-num">01</div>
+      <div class="cat-info">
+        <h3>💡 Ideation</h3>
+        <p>Understand users, analyze markets, write specs, craft messaging.</p>
+        <div class="pills"><span class="pill">Interviewer</span><span class="pill">Analyst</span><span class="pill">Specs</span><span class="pill">Copywriter</span><span class="pill">Content</span></div>
+      </div>
+    </div>
+    <div class="cat-row">
+      <div class="cat-num">02</div>
+      <div class="cat-info">
+        <h3>⚡ Development</h3>
+        <p>Architecture, UI, APIs, mobile apps, database design.</p>
+        <div class="pills"><span class="pill">Architect</span><span class="pill">Designer</span><span class="pill">Frontend</span><span class="pill">Backend</span><span class="pill">Mobile</span><span class="pill">Database</span><span class="pill">API</span></div>
+      </div>
+    </div>
+    <div class="cat-row">
+      <div class="cat-num">03</div>
+      <div class="cat-info">
+        <h3>🛡️ Quality</h3>
+        <p>Code review, security audit, accessibility, automated testing.</p>
+        <div class="pills"><span class="pill">Code Review</span><span class="pill">QA</span><span class="pill">Security</span><span class="pill">A11y</span><span class="pill">Debugger</span></div>
+      </div>
+    </div>
+    <div class="cat-row">
+      <div class="cat-num">04</div>
+      <div class="cat-info">
+        <h3>📈 Growth</h3>
+        <p>SEO, analytics, performance, marketing, internationalization.</p>
+        <div class="pills"><span class="pill">SEO</span><span class="pill">Analytics</span><span class="pill">Perf</span><span class="pill">Marketing</span><span class="pill">i18n</span></div>
+      </div>
+    </div>
+    <div class="cat-row">
+      <div class="cat-num">05</div>
+      <div class="cat-info">
+        <h3>🚀 Operations</h3>
+        <p>Deploy, document, template, and maintain.</p>
+        <div class="pills"><span class="pill">Deployer</span><span class="pill">Docs</span><span class="pill">Template</span><span class="pill">Updater</span></div>
+      </div>
+    </div>
+    <div class="cat-row">
+      <div class="cat-num">06</div>
+      <div class="cat-info">
+        <h3>🧠 Intelligence</h3>
+        <p>Orchestrate, route, optimize, and self-improve.</p>
+        <div class="pills"><span class="pill">Orchestrator</span><span class="pill">Router</span><span class="pill">Experiments</span><span class="pill">Optimizer</span><span class="pill">Memory</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final-cta" id="cta">
+  <h2>Start <span class="shimmer">building.</span></h2>
+  <p>One command. Free forever.</p>
+  <div class="cmd" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app'); this.querySelector('.dim').textContent='✓ copied!'">
+    $ bash &lt;(curl -fsSL .../create.sh) my-app
+    <span class="dim">click to copy</span>
+  </div>
+  <div style="margin-top:2rem">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" style="padding:0.7rem 2rem;border-radius:100px;background:#fff;color:#000;font-weight:700;font-size:0.9rem;text-decoration:none;display:inline-block;transition:all 0.3s">⭐ Star on GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <div>🧠 Genius Team v18.0 — MIT</div>
+  <div class="links"><a href="https://github.com/w-3-art/genius-team">GitHub</a> <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></div>
+</footer>
+
+<div class="prop-nav">
+  <a href="/proposition1">1</a><a href="/proposition2">2</a><a href="/proposition3">3</a><a href="/proposition4">4</a><a href="/proposition5">5</a><a href="/proposition6">6</a><a href="/proposition7" class="active">7</a>
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ═══ LENIS ═══
+const lenis = new Lenis({ duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// ═══ PINNED HERO — title shrinks, bg appears, sub + cta fade in ═══
+const heroTl = gsap.timeline({
+  scrollTrigger: { trigger: '#pinnedHero', start: 'top top', end: 'bottom bottom', scrub: 1, pin: false }
+});
+heroTl
+  .fromTo('#phTitle', { scale: 1 }, { scale: 0.6, duration: 1 }, 0)
+  .to('#phBg', { opacity: 0.2, duration: 1 }, 0.3)
+  .to('#phSub', { opacity: 1, duration: 0.5 }, 0.5)
+  .to('#phCta', { opacity: 1, duration: 0.5 }, 0.7);
+
+// ═══ HORIZONTAL SCROLL ═══
+const panels = gsap.utils.toArray('.hscroll-panel');
+gsap.to('#hscrollContainer', {
+  x: () => -(document.getElementById('hscrollContainer').scrollWidth - window.innerWidth),
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#hscrollWrap',
+    pin: true,
+    scrub: 1.5,
+    end: () => '+=' + document.getElementById('hscrollContainer').scrollWidth,
+    invalidateOnRefresh: true
+  }
+});
+
+// ═══ CATEGORY ROWS ═══
+gsap.utils.toArray('.cat-row').forEach((row, i) => {
+  gsap.from(row, {
+    x: i % 2 === 0 ? -60 : 60,
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: row, start: 'top 75%' }
+  });
+});
+
+// ═══ CTA ═══
+gsap.from('.final-cta h2, .final-cta p, .cmd', {
+  y: 40, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.final-cta', start: 'top 60%' }
+});
+</script>
+</body>
+</html>

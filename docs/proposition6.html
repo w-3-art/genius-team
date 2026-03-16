@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — Your AI Product Team</title>
+<meta name="description" content="42 AI specialists build your app while you describe it. Zero coding required.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- GSAP + ScrollTrigger + SplitText -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<!-- Lenis smooth scroll -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<style>
+/* ═══ RESET ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: hidden; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body { font-family: 'Sora', sans-serif; background: #050507; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+:root {
+  --blue: #4f6ef7;
+  --cyan: #22d3ee;
+  --emerald: #34d399;
+  --violet: #8b5cf6;
+  --rose: #fb7185;
+  --orange: #fb923c;
+  --dim: rgba(255,255,255,0.4);
+  --subtle: rgba(255,255,255,0.06);
+}
+
+/* ═══ SMOOTH CURSOR LIGHT ═══ */
+.cursor-light { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(79, 110, 247, 0.07), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); will-change: transform; }
+
+/* ═══ NAV ═══ */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.4s; }
+nav.scrolled { background: rgba(5,5,7,0.85); backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid var(--subtle); }
+.nav-logo { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.nav-logo .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 10px var(--emerald); animation: pulse 2.5s ease infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
+.nav-right { display: flex; gap: 2rem; align-items: center; }
+.nav-right a { color: var(--dim); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.nav-right a:hover { color: #fff; }
+.nav-cta { padding: 0.55rem 1.5rem !important; border-radius: 100px; background: var(--blue) !important; color: #fff !important; font-weight: 600 !important; transition: all 0.3s !important; }
+.nav-cta:hover { box-shadow: 0 0 30px rgba(79, 110, 247, 0.4); transform: translateY(-1px); }
+
+/* ═══ SECTION 1: HERO ═══ */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 6rem 2rem; position: relative; overflow: hidden; }
+.hero-bg-img { position: absolute; inset: 0; background: url('img/hero-brain.jpg') center/cover no-repeat; opacity: 0.15; }
+.hero-gradient { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(79, 110, 247, 0.12), transparent 70%), radial-gradient(ellipse 50% 40% at 70% 70%, rgba(139, 92, 246, 0.08), transparent 60%), linear-gradient(to bottom, transparent 60%, #050507); }
+.hero-content { position: relative; z-index: 1; max-width: 900px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 1rem 0.35rem 0.5rem; border-radius: 100px; background: rgba(79, 110, 247, 0.1); border: 1px solid rgba(79, 110, 247, 0.2); font-size: 0.8rem; color: var(--blue); margin-bottom: 2rem; opacity: 0; }
+.hero-badge .tag { padding: 0.15rem 0.5rem; border-radius: 100px; background: var(--blue); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; }
+.hero h1 { font-size: clamp(3rem, 7.5vw, 5.5rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+.hero h1 .word { display: inline-block; opacity: 0; transform: translateY(60px) rotateX(40deg); }
+.hero h1 .accent { background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-sub { font-size: 1.2rem; color: var(--dim); max-width: 480px; margin: 0 auto 3rem; line-height: 1.7; font-weight: 300; opacity: 0; }
+.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; opacity: 0; }
+.btn-primary { padding: 0.9rem 2.5rem; border-radius: 100px; background: var(--blue); color: #fff; font-weight: 600; font-size: 1rem; border: none; cursor: pointer; text-decoration: none; transition: all 0.4s; position: relative; overflow: hidden; }
+.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--violet), var(--blue)); opacity: 0; transition: opacity 0.4s; }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(79, 110, 247, 0.35); }
+.btn-primary:hover::after { opacity: 1; }
+.btn-ghost { padding: 0.9rem 2.5rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #fff; font-weight: 500; font-size: 1rem; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+.btn-ghost:hover { border-color: var(--blue); background: rgba(79, 110, 247, 0.05); }
+.hero-mockup { margin-top: 4rem; width: 100%; max-width: 1000px; opacity: 0; position: relative; z-index: 1; }
+.hero-mockup img { width: 100%; border-radius: 20px; box-shadow: 0 40px 80px rgba(0,0,0,0.5); }
+
+/* ═══ SECTION 2: SCROLL TEXT REVEAL ═══ */
+.text-reveal { padding: 15rem 3rem; position: relative; }
+.text-reveal-inner { max-width: 800px; margin: 0 auto; }
+.reveal-text { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 600; line-height: 1.5; letter-spacing: -0.02em; }
+.reveal-text .word { display: inline-block; color: rgba(255,255,255,0.08); transition: color 0.3s; margin-right: 0.3em; }
+.reveal-text .word.active { color: #fff; }
+.reveal-text .word.highlight { color: var(--blue); }
+.reveal-text .word.highlight.active { color: var(--cyan); text-shadow: 0 0 30px rgba(34, 211, 238, 0.3); }
+
+/* ═══ SECTION 3: BEFORE / AFTER ═══ */
+.transform-section { padding: 10rem 2rem; overflow: hidden; }
+.transform-inner { max-width: 1100px; margin: 0 auto; }
+.transform-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: var(--blue); margin-bottom: 1rem; }
+.transform-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4rem; line-height: 1.1; }
+.transform-columns { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 2rem; align-items: start; }
+.col-before, .col-after { display: flex; flex-direction: column; gap: 1.5rem; }
+.pain-item { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-radius: 16px; background: rgba(255,60,60,0.04); border: 1px solid rgba(255,60,60,0.08); font-size: 1rem; color: rgba(255,255,255,0.5); text-decoration: line-through; transition: all 0.5s; }
+.pain-item .icon { font-size: 1.3rem; flex-shrink: 0; }
+.gain-item { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-radius: 16px; background: rgba(34,211,238,0.04); border: 1px solid rgba(34,211,238,0.08); font-size: 1rem; transition: all 0.5s; }
+.gain-item .icon { font-size: 1.3rem; flex-shrink: 0; }
+.col-arrow { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--blue); align-self: center; }
+
+/* ═══ SECTION 4: WORKFLOW ═══ */
+.workflow { padding: 10rem 2rem; position: relative; }
+.workflow-inner { max-width: 1000px; margin: 0 auto; }
+.workflow-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 1rem; }
+.workflow-sub { text-align: center; color: var(--dim); font-size: 1.1rem; margin-bottom: 4rem; }
+.workflow-image { width: 100%; max-width: 800px; margin: 0 auto 4rem; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+.workflow-image img { width: 100%; display: block; }
+.workflow-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.w-step { text-align: center; padding: 2rem 1.5rem; border-radius: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--subtle); transition: all 0.5s; }
+.w-step:hover { border-color: rgba(79, 110, 247, 0.2); background: rgba(79, 110, 247, 0.03); transform: translateY(-5px); }
+.w-step .num { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 1rem; }
+.w-step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+.w-step p { color: var(--dim); font-size: 0.9rem; line-height: 1.6; }
+
+/* ═══ SECTION 5: SKILL CATEGORIES ═══ */
+.skills-section { padding: 10rem 2rem; }
+.skills-inner { max-width: 1100px; margin: 0 auto; }
+.skills-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 1rem; }
+.skills-sub { text-align: center; color: var(--dim); font-size: 1.1rem; margin-bottom: 4rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.cat-card { border-radius: 24px; padding: 2rem; border: 1px solid var(--subtle); background: rgba(255,255,255,0.02); position: relative; overflow: hidden; transition: all 0.5s; cursor: default; }
+.cat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 3px 3px 0 0; opacity: 0; transition: opacity 0.4s; }
+.cat-card:hover { transform: translateY(-6px); border-color: transparent; }
+.cat-card:hover::before { opacity: 1; }
+.cat-card.ideation::before { background: linear-gradient(90deg, var(--violet), var(--rose)); }
+.cat-card.ideation:hover { box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.2); }
+.cat-card.dev::before { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
+.cat-card.dev:hover { box-shadow: 0 20px 50px rgba(79, 110, 247, 0.15); border-color: rgba(79, 110, 247, 0.2); }
+.cat-card.quality::before { background: linear-gradient(90deg, var(--emerald), var(--cyan)); }
+.cat-card.quality:hover { box-shadow: 0 20px 50px rgba(52, 211, 153, 0.15); border-color: rgba(52, 211, 153, 0.2); }
+.cat-card.growth::before { background: linear-gradient(90deg, var(--orange), var(--rose)); }
+.cat-card.growth:hover { box-shadow: 0 20px 50px rgba(251, 146, 60, 0.15); border-color: rgba(251, 146, 60, 0.2); }
+.cat-card.ops::before { background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+.cat-card.ops:hover { box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15); border-color: rgba(34, 211, 238, 0.2); }
+.cat-card.intelligence::before { background: linear-gradient(90deg, var(--violet), var(--blue)); }
+.cat-card.intelligence:hover { box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.2); }
+.cat-card .cat-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+.cat-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+.cat-card .cat-desc { font-size: 0.88rem; color: var(--dim); line-height: 1.5; margin-bottom: 1rem; }
+.cat-agents { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.cat-agents .agent { padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.04); font-size: 0.72rem; color: rgba(255,255,255,0.5); }
+
+/* ═══ SECTION 6: CTA ═══ */
+.cta-section { padding: 12rem 2rem; text-align: center; position: relative; overflow: hidden; }
+.cta-glow { position: absolute; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(79, 110, 247, 0.1), transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+.cta-section h2 { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; position: relative; z-index: 1; }
+.cta-section h2 .glow { color: var(--cyan); text-shadow: 0 0 40px rgba(34, 211, 238, 0.3); }
+.cta-section p { color: var(--dim); font-size: 1.1rem; margin-bottom: 2.5rem; position: relative; z-index: 1; }
+.install-box { display: inline-flex; align-items: center; gap: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--subtle); border-radius: 16px; padding: 1rem 2rem; font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem; color: var(--emerald); cursor: pointer; transition: all 0.4s; position: relative; z-index: 1; }
+.install-box:hover { border-color: var(--blue); box-shadow: 0 0 40px rgba(79, 110, 247, 0.15); background: rgba(79, 110, 247, 0.03); }
+.install-box .hint { font-family: 'Sora', sans-serif; font-size: 0.72rem; color: var(--dim); }
+.cta-github { margin-top: 2rem; position: relative; z-index: 1; }
+
+/* ═══ FOOTER ═══ */
+footer { padding: 3rem; border-top: 1px solid var(--subtle); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--dim); }
+footer a { color: var(--dim); text-decoration: none; transition: color 0.2s; }
+footer a:hover { color: var(--blue); }
+footer .links { display: flex; gap: 1.5rem; }
+
+/* ═══ PROP NAV ═══ */
+.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.35rem; z-index: 100; background: rgba(5,5,7,0.85); backdrop-filter: blur(20px); border: 1px solid var(--subtle); border-radius: 100px; padding: 0.35rem; }
+.prop-nav a { padding: 0.4rem 0.9rem; border-radius: 100px; color: var(--dim); text-decoration: none; font-size: 0.72rem; font-weight: 500; transition: all 0.3s; }
+.prop-nav a:hover { color: #fff; }
+.prop-nav a.active { background: var(--blue); color: #fff; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .transform-columns { grid-template-columns: 1fr; }
+  .col-arrow { transform: rotate(90deg); padding: 1rem 0; }
+  .workflow-steps { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  .cat-grid { grid-template-columns: 1fr 1fr; }
+  .nav-right { display: none; }
+  nav { padding: 1rem 1.5rem; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: 2.5rem; }
+  .cat-grid { grid-template-columns: 1fr; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  footer { flex-direction: column; gap: 1rem; }
+  .text-reveal { padding: 8rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-light" id="cursorLight"></div>
+
+<nav id="mainNav">
+  <div class="nav-logo"><span class="pulse"></span> Genius Team</div>
+  <div class="nav-right">
+    <a href="#workflow">How it works</a>
+    <a href="#skills">The team</a>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
+    <a href="#cta" class="nav-cta">Get Started Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg-img"></div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-badge" id="heroBadge">
+      <span class="tag">v18</span> Free & Open Source
+    </div>
+    <h1 id="heroTitle">
+      <span class="word">Your</span>
+      <span class="word">idea,</span>
+      <span class="word accent">built</span>
+      <span class="word accent">by</span>
+      <span class="word accent">AI.</span>
+    </h1>
+    <p class="hero-sub" id="heroSub">42 AI specialists design, code, test, and deploy your app. You just describe what you want.</p>
+    <div class="hero-actions" id="heroActions">
+      <a href="#cta" class="btn-primary"><span>Start Building — Free</span></a>
+      <a href="#reveal" class="btn-ghost">Discover ↓</a>
+    </div>
+  </div>
+  <div class="hero-mockup" id="heroMockup">
+    <img src="img/app-mockup.jpg" alt="App built with Genius Team" loading="lazy">
+  </div>
+</section>
+
+<!-- SCROLL TEXT REVEAL -->
+<section class="text-reveal" id="reveal">
+  <div class="text-reveal-inner">
+    <p class="reveal-text" id="revealText">
+      <span class="word">For</span>
+      <span class="word">decades,</span>
+      <span class="word">building</span>
+      <span class="word">software</span>
+      <span class="word">meant</span>
+      <span class="word">months</span>
+      <span class="word">of</span>
+      <span class="word">learning,</span>
+      <span class="word">expensive</span>
+      <span class="word">teams,</span>
+      <span class="word">and</span>
+      <span class="word">endless</span>
+      <span class="word">debugging.</span>
+      <span class="word highlight">Now</span>
+      <span class="word highlight">you</span>
+      <span class="word highlight">just</span>
+      <span class="word highlight">describe</span>
+      <span class="word highlight">what</span>
+      <span class="word highlight">you</span>
+      <span class="word highlight">want.</span>
+    </p>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="transform-section" id="transform">
+  <div class="transform-inner">
+    <div class="transform-label">The shift</div>
+    <h2 class="transform-heading">What used to take months<br>now takes minutes.</h2>
+    <div class="transform-columns">
+      <div class="col-before">
+        <div class="pain-item"><span class="icon">📚</span> Learn to code for months</div>
+        <div class="pain-item"><span class="icon">💸</span> Hire developers ($$$)</div>
+        <div class="pain-item"><span class="icon">🤯</span> Manage a team</div>
+        <div class="pain-item"><span class="icon">🐛</span> Debug until 3am</div>
+        <div class="pain-item"><span class="icon">🤞</span> Ship and pray</div>
+      </div>
+      <div class="col-arrow">→</div>
+      <div class="col-after">
+        <div class="gain-item"><span class="icon">💬</span> Describe your idea</div>
+        <div class="gain-item"><span class="icon">🤖</span> 42 AI agents build it</div>
+        <div class="gain-item"><span class="icon">✅</span> Auto-tested & reviewed</div>
+        <div class="gain-item"><span class="icon">🚀</span> Deploy in one click</div>
+        <div class="gain-item"><span class="icon">🆓</span> Free & open source</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section class="workflow" id="workflow">
+  <div class="workflow-inner">
+    <h2 class="workflow-heading">Three steps. Sixty seconds.</h2>
+    <p class="workflow-sub">No account, no credit card, no experience needed.</p>
+    <div class="workflow-image">
+      <img src="img/workflow-steps.jpg" alt="Genius Team workflow" loading="lazy">
+    </div>
+    <div class="workflow-steps">
+      <div class="w-step">
+        <div class="num">01</div>
+        <h3>Describe it</h3>
+        <p>"Build me an online store for handmade jewelry with Stripe checkout"</p>
+      </div>
+      <div class="w-step">
+        <div class="num">02</div>
+        <h3>Watch it build</h3>
+        <p>42 specialists collaborate: design → code → test → secure → optimize</p>
+      </div>
+      <div class="w-step">
+        <div class="num">03</div>
+        <h3>Ship it</h3>
+        <p>Production-ready. Tested. Documented. SEO optimized. Live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILL CATEGORIES -->
+<section class="skills-section" id="skills">
+  <div class="skills-inner">
+    <h2 class="skills-heading">Meet your team.</h2>
+    <p class="skills-sub">42 AI agents organized into 6 departments. Each one a domain expert.</p>
+    <div class="cat-grid">
+      <div class="cat-card ideation">
+        <span class="cat-icon">💡</span>
+        <h3>Ideation</h3>
+        <p class="cat-desc">Research your market, interview users, write specs, and plan the product.</p>
+        <div class="cat-agents">
+          <span class="agent">Interviewer</span>
+          <span class="agent">Market Analyst</span>
+          <span class="agent">Specs</span>
+          <span class="agent">Copywriter</span>
+          <span class="agent">Content</span>
+        </div>
+      </div>
+      <div class="cat-card dev">
+        <span class="cat-icon">⚡</span>
+        <h3>Development</h3>
+        <p class="cat-desc">Design the architecture and build every layer: frontend, backend, mobile, database, API.</p>
+        <div class="cat-agents">
+          <span class="agent">Architect</span>
+          <span class="agent">Designer</span>
+          <span class="agent">Frontend</span>
+          <span class="agent">Backend</span>
+          <span class="agent">Mobile</span>
+          <span class="agent">Database</span>
+          <span class="agent">API</span>
+        </div>
+      </div>
+      <div class="cat-card quality">
+        <span class="cat-icon">🛡️</span>
+        <h3>Quality</h3>
+        <p class="cat-desc">Review every line, test every flow, audit security, and ensure accessibility.</p>
+        <div class="cat-agents">
+          <span class="agent">Code Review</span>
+          <span class="agent">QA</span>
+          <span class="agent">Security</span>
+          <span class="agent">Accessibility</span>
+          <span class="agent">Debugger</span>
+        </div>
+      </div>
+      <div class="cat-card growth">
+        <span class="cat-icon">📈</span>
+        <h3>Growth</h3>
+        <p class="cat-desc">SEO, analytics, marketing strategy, performance optimization, and i18n.</p>
+        <div class="cat-agents">
+          <span class="agent">SEO</span>
+          <span class="agent">Analytics</span>
+          <span class="agent">Performance</span>
+          <span class="agent">Marketing</span>
+          <span class="agent">i18n</span>
+        </div>
+      </div>
+      <div class="cat-card ops">
+        <span class="cat-icon">🚀</span>
+        <h3>Operations</h3>
+        <p class="cat-desc">Deploy, document, and maintain. Continuous integration and delivery.</p>
+        <div class="cat-agents">
+          <span class="agent">Deployer</span>
+          <span class="agent">Docs</span>
+          <span class="agent">Template</span>
+          <span class="agent">Updater</span>
+        </div>
+      </div>
+      <div class="cat-card intelligence">
+        <span class="cat-icon">🧠</span>
+        <h3>Intelligence</h3>
+        <p class="cat-desc">Orchestrate everything, optimize routing, and self-improve the framework.</p>
+        <div class="cat-agents">
+          <span class="agent">Orchestrator</span>
+          <span class="agent">Router</span>
+          <span class="agent">Experiments</span>
+          <span class="agent">Optimizer</span>
+          <span class="agent">Memory</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-glow"></div>
+  <h2>Start <span class="glow">building.</span></h2>
+  <p>One command. Free forever. No limits.</p>
+  <div class="install-box" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app'); this.querySelector('.hint').textContent='✓ copied!'">
+    $ bash &lt;(curl -fsSL .../create.sh) my-app
+    <span class="hint">click to copy</span>
+  </div>
+  <div class="cta-github">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-primary"><span>⭐ Star on GitHub</span></a>
+  </div>
+</section>
+
+<footer>
+  <div>🧠 Genius Team v18.0 — MIT License</div>
+  <div class="links">
+    <a href="https://github.com/w-3-art/genius-team">GitHub</a>
+    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a>
+    <a href="https://github.com/w-3-art/genius-team/blob/main/CONTRIBUTING.md">Contribute</a>
+  </div>
+</footer>
+
+<div class="prop-nav">
+  <a href="/proposition1">1</a>
+  <a href="/proposition2">2</a>
+  <a href="/proposition3">3</a>
+  <a href="/proposition4">4</a>
+  <a href="/proposition5">5</a>
+  <a href="/proposition6" class="active">6</a>
+  <a href="/proposition7">7</a>
+</div>
+
+<script>
+// ═══ LENIS SMOOTH SCROLL ═══
+const lenis = new Lenis({ duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), touchMultiplier: 1.5 });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+gsap.ticker.lagSmoothing(0);
+
+// ═══ NAV SCROLL ═══
+ScrollTrigger.create({
+  start: 'top -80',
+  onUpdate: (self) => {
+    document.getElementById('mainNav').classList.toggle('scrolled', self.progress > 0);
+  }
+});
+
+// ═══ CURSOR LIGHT ═══
+const light = document.getElementById('cursorLight');
+let mx = 0, my = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
+gsap.ticker.add(() => {
+  cx += (mx - cx) * 0.08;
+  cy += (my - cy) * 0.08;
+  light.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`;
+});
+
+// ═══ HERO ANIMATIONS ═══
+const heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+heroTl
+  .to('#heroBadge', { opacity: 1, y: 0, duration: 0.8 }, 0.2)
+  .to('#heroTitle .word', { opacity: 1, y: 0, rotateX: 0, stagger: 0.08, duration: 1 }, 0.4)
+  .to('#heroSub', { opacity: 1, y: 0, duration: 0.8 }, 0.9)
+  .to('#heroActions', { opacity: 1, y: 0, duration: 0.8 }, 1.1)
+  .to('#heroMockup', { opacity: 1, y: 0, duration: 1.2 }, 1.3);
+
+// ═══ HERO MOCKUP PARALLAX ═══
+gsap.to('#heroMockup', {
+  y: -80,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+});
+gsap.to('.hero-bg-img', {
+  y: 100,
+  scale: 1.1,
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 2 }
+});
+
+// ═══ SCROLL TEXT REVEAL ═══
+const words = document.querySelectorAll('#revealText .word');
+ScrollTrigger.create({
+  trigger: '.text-reveal',
+  start: 'top 80%',
+  end: 'bottom 20%',
+  scrub: 1,
+  onUpdate: (self) => {
+    const progress = self.progress;
+    const totalWords = words.length;
+    words.forEach((word, i) => {
+      const wordProgress = i / totalWords;
+      if (wordProgress < progress) {
+        word.classList.add('active');
+      } else {
+        word.classList.remove('active');
+      }
+    });
+  }
+});
+
+// ═══ TRANSFORM SECTION ═══
+gsap.from('.pain-item', {
+  x: -40, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.transform-section', start: 'top 60%' }
+});
+gsap.from('.gain-item', {
+  x: 40, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.transform-section', start: 'top 50%' }
+});
+
+// ═══ WORKFLOW STEPS ═══
+gsap.from('.w-step', {
+  y: 50, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.workflow-steps', start: 'top 70%' }
+});
+
+// ═══ SKILL CATEGORY CARDS ═══
+gsap.from('.cat-card', {
+  y: 60, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.cat-grid', start: 'top 70%' }
+});
+
+// ═══ CTA ═══
+gsap.from('.cta-section h2, .cta-section p, .install-box, .cta-github', {
+  y: 40, opacity: 0, stagger: 0.12, duration: 0.8, ease: 'power3.out',
+  scrollTrigger: { trigger: '.cta-section', start: 'top 60%' }
+});
+</script>
+</body>
+</html>

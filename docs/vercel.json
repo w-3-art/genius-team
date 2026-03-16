@@ -9,7 +9,9 @@
     { "source": "/proposition2", "destination": "/proposition2.html" },
     { "source": "/proposition3", "destination": "/proposition3.html" },
     { "source": "/proposition4", "destination": "/proposition4.html" },
-    { "source": "/proposition5", "destination": "/proposition5.html" }
+    { "source": "/proposition5", "destination": "/proposition5.html" },
+    { "source": "/proposition6", "destination": "/proposition6.html" },
+    { "source": "/proposition7", "destination": "/proposition7.html" }
   ],
   "headers": [
     {
