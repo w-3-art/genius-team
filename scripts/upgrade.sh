@@ -1,7 +1,7 @@
 #!/bin/bash
 #═══════════════════════════════════════════════════════════════════════════════
 # Genius Team Universal Upgrade Script
-# Upgrades from any previous version to v17.0
+# Upgrades from any previous version to v18.0
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -306,7 +306,38 @@ upgrade_to_v17() {
     rm -f .genius/state.json.tmp
   fi
 
-  log_ok "v18.0.0 upgrade complete — 38 skills, 7 new playgrounds, /challenge, engine-switch"
+  log_success "v17.0.0 upgrade complete — 42 skills, 7 new playgrounds, /challenge, engine-switch"
+}
+
+upgrade_to_v18() {
+  upgrade_to_v17
+
+  # ── v18 extras ─────────────────────────────────────────────────────────────
+  log_info "v18 autoresearch + quality files..."
+  download_file "scripts/validate-skills.sh"                "scripts/validate-skills.sh"
+  download_file "playgrounds/templates/design-tokens.css"   "playgrounds/templates/design-tokens.css"
+
+  # ── Re-download configs (anti-drift + PostCompact fix) ─────────────────────
+  log_info "v18 config updates (session durability fixes)..."
+  for mode in cli ide omni dual; do
+    download_file "configs/$mode/settings.json" "configs/$mode/settings.json"
+    download_file "configs/$mode/CLAUDE.md"     "configs/$mode/CLAUDE.md"
+  done
+
+  # ── Re-download core files (v18 refs) ─────────────────────────────────────
+  download_file "CLAUDE.md"       "CLAUDE.md"
+  download_file "GENIUS_GUARD.md" "GENIUS_GUARD.md"
+  download_file "CHANGELOG.md"    "CHANGELOG.md"
+  download_file "README.md"       "README.md"
+  download_file "VERSION"         "VERSION"
+
+  # ── Update state.json version ────────────────────────────────────────────
+  if [ "$DRY_RUN" = false ] && [ -f ".genius/state.json" ]; then
+    sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "18.0.0"/' .genius/state.json
+    rm -f .genius/state.json.tmp
+  fi
+
+  log_success "v18.0.0 upgrade complete — 42 skills, 90% routing accuracy, -30KB context"
 }
 
 upgrade_to_v15() {
@@ -475,17 +506,17 @@ print_summary() {
   echo -e "  ${BOLD}Files skipped:${NC}    $FILES_SKIPPED (already present, not overwritten)"
   echo -e "  ${BOLD}Backup:${NC}           $backup"
   echo ""
-  echo -e "${CYAN}New in v17.0:${NC}"
-  echo "  • 🎯 38 skills total — genius-dev splits into 5 domain experts + 12 new standalone skills"
-  echo "  • 🔍 genius-code-review — Multi-agent PR review: bugs + security + quality in parallel"
-  echo "  • 🛠️ genius-skill-creator — Framework creates new project-specific skills on demand"
-  echo "  • 🔬 genius-experiments — Autonomous overnight optimization loop (Karpathy pattern)"
-  echo "  • 🌐 genius-seo — GEO-first: optimize for ChatGPT, Perplexity, Claude + traditional search"
-  echo "  • 🪙 genius-crypto — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL"
+  echo -e "${CYAN}New in v18.0:${NC}"
+  echo "  • 🔬 Autoresearch framework — autonomous optimization loop (Karpathy pattern)"
+  echo "  • 📊 90% routing accuracy — benchmark-validated with 30-task test suite"
+  echo "  • 🗜️ -30KB context savings — all skills compressed, 0 files over 10KB"
+  echo "  • 🛡️ Session durability fix — critical postCompactionSections bug fixed"
+  echo "  • ✅ 42/42 Definition of Done — every skill has quality gates"
+  echo "  • 🎨 Shared design-tokens.css — unified playground theming"
   echo ""
   echo -e "${YELLOW}Next steps:${NC}"
-  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v17 features"
-  echo "  2. Open the dashboard: ${BOLD}node scripts/genius-server.js --open${NC}"
+  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v18 features"
+  echo "  2. Open the dashboard: ${BOLD}open .genius/DASHBOARD.html${NC}"
   echo "  3. See ${BOLD}CHANGELOG.md${NC} for full details"
   echo ""
 }
@@ -548,8 +579,8 @@ main() {
   [ "$DRY_RUN" = false ] && log_success "Backup: $BACKUP_DIR"
 
   # ── Step 4: Download ───────────────────────────────────────────────────────
-  log_step 4 5 "Downloading v17.0 files..."
-  upgrade_to_v17
+  log_step 4 5 "Downloading v18.0 files..."
+  upgrade_to_v18
   log_success "$FILES_DOWNLOADED files downloaded"
 
   # ── Step 5: Verify ─────────────────────────────────────────────────────────
