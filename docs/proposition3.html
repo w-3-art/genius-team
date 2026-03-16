@@ -35,7 +35,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 
 .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding: 0 3rem; overflow: hidden; scroll-snap-align: start; }
 .hero-bg-line { position: absolute; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(57, 255, 20, 0.15), transparent); }
 .hero-text { position: relative; z-index: 1; }
-.mega-text { font-size: clamp(4rem, 15vw, 14rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; }
+.mega-text { font-size: clamp(3rem, 10vw, 9rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; }
 .mega-text .line { display: block; overflow: hidden; }
 .mega-text .line span { display: inline-block; animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(100%); }
 .mega-text .line:nth-child(1) span { animation-delay: 0.2s; }
@@ -184,9 +184,9 @@ footer .right a:hover { color: var(--neon-green); }
 <section class="manifesto" id="manifesto">
   <div class="manifesto-counter reveal">01</div>
   <div class="manifesto-text reveal">
-    <strong>The tools changed.</strong> The gatekeepers didn't notice. For decades, building software meant years of training, expensive teams, and technical debt. <em>That era is over.</em><br><br>
-    <strong>Genius Team</strong> is your AI product team — 42 specialists that <em>design, code, test, and deploy</em> while you focus on what matters: <strong>your vision.</strong><br><br>
-    No coding bootcamp. No technical co-founder. No venture capital. Just you and <em>an idea worth building.</em>
+    <strong>You describe it.</strong> <em>42 AI agents build it.</em><br><br>
+    No code. No bootcamp. No technical co-founder.<br>
+    Just <strong>your idea</strong> and an AI team that <em>ships it.</em>
   </div>
 </section>
 
@@ -204,37 +204,37 @@ footer .right a:hover { color: var(--neon-green); }
     <div class="hscroll-card">
       <div class="card-num">001 — Intelligence</div>
       <h3>42 Domain Experts</h3>
-      <p>Not one AI that does everything poorly. 42 specialists, each mastering their domain — from UX interviews to database optimization to SEO.</p>
+      <p>Designer, developer, security expert, SEO — each one a specialist. They collaborate like a real team.</p>
       <div class="card-tags"><span class="tag">Interviewer</span><span class="tag">Designer</span><span class="tag">Developer</span><span class="tag">Security</span></div>
     </div>
     <div class="hscroll-card">
       <div class="card-num">002 — Autonomy</div>
       <h3>Describe, Don't Code</h3>
-      <p>"Build me a booking system for my restaurant." That's all you say. Genius handles architecture, tech stack, implementation, testing, and deployment.</p>
+      <p>"Build me a booking system for my restaurant." That's it. Genius does the rest.</p>
       <div class="card-tags"><span class="tag">Natural Language</span><span class="tag">Zero Config</span></div>
     </div>
     <div class="hscroll-card">
       <div class="card-num">003 — Memory</div>
       <h3>It Never Forgets</h3>
-      <p>File-based memory system preserves every decision, pattern, and lesson learned. Pick up where you left off, even weeks later.</p>
+      <p>Every decision remembered. Pick up weeks later, right where you stopped.</p>
       <div class="card-tags"><span class="tag">Persistent</span><span class="tag">File-Based</span><span class="tag">Auto-Briefing</span></div>
     </div>
     <div class="hscroll-card">
       <div class="card-num">004 — Quality</div>
-      <h3>Built-in QA Pipeline</h3>
-      <p>Every feature gets automated code review, security audit, accessibility check, and performance optimization. No shortcuts.</p>
+      <h3>Built-in Quality</h3>
+      <p>Code review, security audit, accessibility check — automatic on every feature.</p>
       <div class="card-tags"><span class="tag">Code Review</span><span class="tag">Security</span><span class="tag">A11y</span><span class="tag">Perf</span></div>
     </div>
     <div class="hscroll-card">
       <div class="card-num">005 — Flexibility</div>
-      <h3>4 Operating Modes</h3>
-      <p>CLI for purists. IDE for visual thinkers. Omni for multi-provider power. Dual for adversarial code review. Your style, your rules.</p>
+      <h3>4 Modes</h3>
+      <p>Terminal, VS Code, multi-provider, or dual-engine. Your style.</p>
       <div class="card-tags"><span class="tag">CLI</span><span class="tag">IDE</span><span class="tag">Omni</span><span class="tag">Dual</span></div>
     </div>
     <div class="hscroll-card">
       <div class="card-num">006 — Freedom</div>
-      <h3>Open Source. MIT.</h3>
-      <p>No vendor lock-in. No subscription. No data collection. Fork it, extend it, own it. Built by the community, for the community.</p>
+      <h3>Open Source. Free.</h3>
+      <p>MIT licensed. No lock-in. No subscription. It's yours.</p>
       <div class="card-tags"><span class="tag">MIT License</span><span class="tag">GitHub</span><span class="tag">Community</span></div>
     </div>
   </div>
@@ -315,9 +315,9 @@ footer .right a:hover { color: var(--neon-green); }
 
 <!-- Prop nav -->
 <div class="prop-nav">
-  <a href="/proposition1">1 — Transform</a>
-  <a href="/proposition2">2 — Playground</a>
-  <a href="/proposition3" class="active">3 — Statement</a>
+  <a href="/proposition1">1</a>
+  <a href="/proposition2">2</a>
+  <a href="/proposition3" class="active">3</a>
 </div>
 
 <script>

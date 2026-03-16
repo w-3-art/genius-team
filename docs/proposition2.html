@@ -55,8 +55,8 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2r
 .chat-status { font-size: 0.75rem; color: var(--green); display: flex; align-items: center; gap: 0.3rem; }
 .chat-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-.chat-body { padding: 1.5rem; min-height: 280px; display: flex; flex-direction: column; gap: 1rem; }
-.chat-msg { max-width: 80%; padding: 0.9rem 1.2rem; border-radius: 16px; font-size: 0.95rem; line-height: 1.5; opacity: 0; transform: translateY(15px); animation: msgIn 0.5s ease forwards; }
+.chat-body { padding: 1.5rem; min-height: 240px; display: flex; flex-direction: column; gap: 0.75rem; }
+.chat-msg { max-width: 75%; padding: 0.7rem 1rem; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; opacity: 0; transform: translateY(15px); animation: msgIn 0.5s ease forwards; }
 .chat-msg.user { align-self: flex-end; background: var(--green); color: white; border-bottom-right-radius: 6px; }
 .chat-msg.ai { align-self: flex-start; background: #f3f4f6; color: var(--text1); border-bottom-left-radius: 6px; }
 .chat-msg:nth-child(1) { animation-delay: 0.6s; }
@@ -212,10 +212,10 @@ footer { padding: 3rem 2rem; border-top: 1px solid var(--border); }
       </div>
       <div class="chat-body">
         <div class="chat-msg user">I want to build a booking app for my yoga studio</div>
-        <div class="chat-msg ai">Great idea! Let me assemble the team. First, I'll interview you about your students and classes to understand the needs. 🎤</div>
-        <div class="chat-msg ai">The designer is creating a clean, calming interface. The developer is setting up the booking system with real-time availability. 🎨</div>
+        <div class="chat-msg ai">On it! Interviewing you first to understand your students... 🎤</div>
+        <div class="chat-msg ai">Designer + developer activated — building your booking system 🎨</div>
         <div class="chat-msg user">Can students pay online?</div>
-        <div class="chat-msg ai">Absolutely — the API specialist is integrating Stripe payments right now. Your students will be able to book and pay in one click. ✅</div>
+        <div class="chat-msg ai">Stripe integration in progress. Book + pay in one click ✅</div>
       </div>
       <div class="chat-input">
         <input type="text" placeholder="What do you want to build?" disabled>
@@ -384,9 +384,11 @@ footer { padding: 3rem 2rem; border-top: 1px solid var(--border); }
 
 <!-- Prop nav -->
 <div class="prop-nav">
-  <a href="/proposition1">1 — Transformation</a>
-  <a href="/proposition2" class="active">2 — Playground</a>
-  <a href="/proposition3">3 — Statement</a>
+  <a href="/proposition1">1</a>
+  <a href="/proposition2" class="active">2</a>
+  <a href="/proposition3">3</a>
+  <a href="/proposition4">4</a>
+  <a href="/proposition5">5</a>
 </div>
 
 <script>

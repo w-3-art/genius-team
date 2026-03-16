@@ -7,7 +7,9 @@
     { "source": "/api/chat", "destination": "/api/chat.js" },
     { "source": "/proposition1", "destination": "/proposition1.html" },
     { "source": "/proposition2", "destination": "/proposition2.html" },
-    { "source": "/proposition3", "destination": "/proposition3.html" }
+    { "source": "/proposition3", "destination": "/proposition3.html" },
+    { "source": "/proposition4", "destination": "/proposition4.html" },
+    { "source": "/proposition5", "destination": "/proposition5.html" }
   ],
   "headers": [
     {
