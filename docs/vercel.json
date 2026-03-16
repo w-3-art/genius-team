@@ -4,7 +4,10 @@
   "framework": null,
   "alias": ["genius.w3art.io"],
   "rewrites": [
-    { "source": "/api/chat", "destination": "/api/chat.js" }
+    { "source": "/api/chat", "destination": "/api/chat.js" },
+    { "source": "/proposition1", "destination": "/proposition1.html" },
+    { "source": "/proposition2", "destination": "/proposition2.html" },
+    { "source": "/proposition3", "destination": "/proposition3.html" }
   ],
   "headers": [
     {

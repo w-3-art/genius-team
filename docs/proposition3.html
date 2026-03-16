@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — Proposition 3: The Statement</title>
+<meta name="description" content="Anyone can build. 42 AI agents. Zero coding.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; scroll-snap-type: y proximity; }
+body { font-family: 'Instrument Sans', -apple-system, sans-serif; background: #0c0c0c; color: #f5f5f5; overflow-x: hidden; }
+
+:root {
+  --neon-green: #39ff14;
+  --neon-blue: #00d4ff;
+  --neon-pink: #ff006e;
+  --white: #f5f5f5;
+  --gray: #888;
+  --dark: #0c0c0c;
+  --darker: #060606;
+}
+
+/* ═══ NAV ═══ */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
+.nav-logo { font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--white); }
+.nav-right { display: flex; gap: 2rem; align-items: center; }
+.nav-right a { color: var(--white); text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; transition: opacity 0.3s; }
+.nav-right a:hover { opacity: 0.6; }
+.btn-neon { padding: 0.6rem 1.5rem; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Space Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; background: transparent; transition: all 0.3s; text-decoration: none; }
+.btn-neon:hover { background: var(--neon-green); color: var(--dark); box-shadow: 0 0 30px rgba(57, 255, 20, 0.3); }
+
+/* ═══ HERO — KINETIC TYPE ═══ */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding: 0 3rem; overflow: hidden; scroll-snap-align: start; }
+.hero-bg-line { position: absolute; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(57, 255, 20, 0.15), transparent); }
+.hero-text { position: relative; z-index: 1; }
+.mega-text { font-size: clamp(4rem, 15vw, 14rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; }
+.mega-text .line { display: block; overflow: hidden; }
+.mega-text .line span { display: inline-block; animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(100%); }
+.mega-text .line:nth-child(1) span { animation-delay: 0.2s; }
+.mega-text .line:nth-child(2) span { animation-delay: 0.4s; color: var(--neon-green); text-shadow: 0 0 60px rgba(57, 255, 20, 0.3); }
+.mega-text .line:nth-child(3) span { animation-delay: 0.6s; }
+@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+.hero-meta { display: flex; gap: 4rem; margin-top: 3rem; animation: fadeIn 1s 1s ease backwards; }
+.hero-meta-item { font-family: 'Space Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gray); }
+.hero-meta-item strong { display: block; font-size: 1.5rem; color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+.hero-scroll { position: absolute; bottom: 3rem; left: 3rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gray); animation: fadeIn 1s 1.5s ease backwards; display: flex; align-items: center; gap: 1rem; }
+.hero-scroll::before { content: ''; width: 40px; height: 1px; background: var(--gray); animation: lineGrow 1s 2s ease forwards; transform-origin: left; transform: scaleX(0); }
+@keyframes lineGrow { to { transform: scaleX(1); } }
+
+/* ═══ MANIFESTO ═══ */
+.manifesto { padding: 10rem 3rem; position: relative; scroll-snap-align: start; }
+.manifesto-text { max-width: 900px; font-size: clamp(1.5rem, 3vw, 2.8rem); font-weight: 400; line-height: 1.5; color: var(--gray); }
+.manifesto-text strong { color: var(--white); font-weight: 600; }
+.manifesto-text em { font-style: normal; color: var(--neon-green); }
+.manifesto-counter { position: absolute; right: 3rem; top: 10rem; font-family: 'Space Mono', monospace; font-size: 8rem; font-weight: 700; color: rgba(57, 255, 20, 0.05); line-height: 1; writing-mode: vertical-lr; }
+
+/* ═══ HORIZONTAL SCROLL FEATURES ═══ */
+.hscroll-section { padding: 6rem 0; position: relative; scroll-snap-align: start; }
+.hscroll-header { padding: 0 3rem; margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
+.hscroll-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--neon-green); }
+.hscroll-title { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; }
+.hscroll-hint { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; }
+.hscroll-track { display: flex; gap: 1.5rem; padding: 0 3rem; overflow-x: auto; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; cursor: grab; }
+.hscroll-track::-webkit-scrollbar { display: none; }
+.hscroll-card { min-width: 380px; max-width: 420px; border: 1px solid rgba(255,255,255,0.08); border-radius: 2px; padding: 2.5rem; flex-shrink: 0; scroll-snap-align: start; position: relative; background: var(--darker); transition: all 0.4s; }
+.hscroll-card:hover { border-color: var(--neon-green); box-shadow: 0 0 40px rgba(57, 255, 20, 0.05); }
+.hscroll-card .card-num { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--neon-green); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; }
+.hscroll-card h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+.hscroll-card p { color: var(--gray); font-size: 0.95rem; line-height: 1.7; }
+.hscroll-card .card-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+.hscroll-card .tag { padding: 0.3rem 0.8rem; border: 1px solid rgba(255,255,255,0.1); font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); }
+
+/* ═══ THE TEAM GRID ═══ */
+.team-grid { padding: 8rem 3rem; scroll-snap-align: start; }
+.team-header { margin-bottom: 4rem; }
+.team-count { font-family: 'Space Mono', monospace; font-size: clamp(5rem, 12vw, 10rem); font-weight: 700; color: var(--neon-green); text-shadow: 0 0 80px rgba(57, 255, 20, 0.2); line-height: 1; }
+.team-subtitle { font-size: 1.2rem; color: var(--gray); margin-top: 0.5rem; }
+.agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1px; background: rgba(255,255,255,0.04); }
+.agent-cell { background: var(--dark); padding: 1.2rem; text-align: center; transition: all 0.3s; cursor: default; }
+.agent-cell:hover { background: rgba(57, 255, 20, 0.03); }
+.agent-cell .emoji { font-size: 1.5rem; margin-bottom: 0.4rem; display: block; }
+.agent-cell .name { font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); }
+.agent-cell:hover .name { color: var(--neon-green); }
+
+/* ═══ CODE BLOCK ═══ */
+.install-section { padding: 8rem 3rem; text-align: center; scroll-snap-align: start; position: relative; }
+.install-section::before { content: ''; position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(57, 255, 20, 0.04), transparent 70%); transform: translate(-50%, -50%); pointer-events: none; }
+.install-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--neon-green); margin-bottom: 2rem; }
+.install-title { font-size: clamp(2rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 3rem; }
+.install-block { display: inline-block; background: var(--darker); border: 1px solid rgba(57, 255, 20, 0.15); padding: 1.5rem 3rem; font-family: 'Space Mono', monospace; font-size: clamp(0.8rem, 1.5vw, 1.1rem); color: var(--neon-green); cursor: pointer; transition: all 0.3s; position: relative; z-index: 1; margin-bottom: 2rem; }
+.install-block:hover { box-shadow: 0 0 40px rgba(57, 255, 20, 0.1); border-color: var(--neon-green); }
+.install-block .cursor-blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.install-sub { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ═══ FOOTER ═══ */
+footer { padding: 3rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+footer .left { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; }
+footer .right { display: flex; gap: 2rem; }
+footer .right a { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s; }
+footer .right a:hover { color: var(--neon-green); }
+
+/* ═══ PROP NAV ═══ */
+.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 100; background: rgba(12,12,12,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem; }
+.prop-nav a { padding: 0.5rem 1.2rem; color: var(--gray); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.3s; }
+.prop-nav a:hover { color: var(--white); }
+.prop-nav a.active { background: var(--neon-green); color: var(--dark); }
+
+/* ═══ NOISE OVERLAY ═══ */
+.noise { position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* ═══ SCROLL PROGRESS ═══ */
+.scroll-line { position: fixed; left: 3rem; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.05); z-index: 99; }
+.scroll-line-fill { position: fixed; left: 3rem; top: 0; width: 1px; background: var(--neon-green); z-index: 100; height: 0%; transition: height 0.1s; box-shadow: 0 0 10px rgba(57, 255, 20, 0.5); }
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .hero { padding: 0 1.5rem; }
+  .mega-text { font-size: 4rem; }
+  .manifesto { padding: 6rem 1.5rem; }
+  .manifesto-counter { display: none; }
+  .hero-meta { flex-direction: column; gap: 1.5rem; }
+  .nav-right { display: none; }
+  .scroll-line, .scroll-line-fill { display: none; }
+  .hscroll-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .agents-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+@media (max-width: 640px) {
+  .mega-text { font-size: 2.8rem; }
+  .hscroll-card { min-width: 300px; }
+  nav { padding: 1rem 1.5rem; }
+  footer { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="scroll-line"></div>
+<div class="scroll-line-fill" id="scrollFill"></div>
+
+<nav>
+  <div class="nav-logo">Genius Team</div>
+  <div class="nav-right">
+    <a href="#manifesto">Manifesto</a>
+    <a href="#features">Features</a>
+    <a href="#team">The Team</a>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
+    <a href="#install" class="btn-neon">Get Started</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg-line" style="left: 20%;"></div>
+  <div class="hero-bg-line" style="left: 40%;"></div>
+  <div class="hero-bg-line" style="left: 60%;"></div>
+  <div class="hero-bg-line" style="left: 80%;"></div>
+  
+  <div class="hero-text">
+    <div class="mega-text" aria-label="Anyone can build">
+      <div class="line"><span>Anyone</span></div>
+      <div class="line"><span>Can</span></div>
+      <div class="line"><span>Build.</span></div>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>42</strong> AI Agents</div>
+      <div class="hero-meta-item"><strong>0</strong> Code Required</div>
+      <div class="hero-meta-item"><strong>∞</strong> Possibilities</div>
+    </div>
+  </div>
+  
+  <div class="hero-scroll">Scroll to discover</div>
+</section>
+
+<!-- Manifesto -->
+<section class="manifesto" id="manifesto">
+  <div class="manifesto-counter reveal">01</div>
+  <div class="manifesto-text reveal">
+    <strong>The tools changed.</strong> The gatekeepers didn't notice. For decades, building software meant years of training, expensive teams, and technical debt. <em>That era is over.</em><br><br>
+    <strong>Genius Team</strong> is your AI product team — 42 specialists that <em>design, code, test, and deploy</em> while you focus on what matters: <strong>your vision.</strong><br><br>
+    No coding bootcamp. No technical co-founder. No venture capital. Just you and <em>an idea worth building.</em>
+  </div>
+</section>
+
+<!-- Horizontal Scroll Features -->
+<section class="hscroll-section" id="features">
+  <div class="hscroll-header">
+    <div>
+      <div class="hscroll-label reveal">Features</div>
+      <div class="hscroll-title reveal">What makes it different</div>
+    </div>
+    <div class="hscroll-hint reveal">← Scroll →</div>
+  </div>
+  
+  <div class="hscroll-track" id="hscrollTrack">
+    <div class="hscroll-card">
+      <div class="card-num">001 — Intelligence</div>
+      <h3>42 Domain Experts</h3>
+      <p>Not one AI that does everything poorly. 42 specialists, each mastering their domain — from UX interviews to database optimization to SEO.</p>
+      <div class="card-tags"><span class="tag">Interviewer</span><span class="tag">Designer</span><span class="tag">Developer</span><span class="tag">Security</span></div>
+    </div>
+    <div class="hscroll-card">
+      <div class="card-num">002 — Autonomy</div>
+      <h3>Describe, Don't Code</h3>
+      <p>"Build me a booking system for my restaurant." That's all you say. Genius handles architecture, tech stack, implementation, testing, and deployment.</p>
+      <div class="card-tags"><span class="tag">Natural Language</span><span class="tag">Zero Config</span></div>
+    </div>
+    <div class="hscroll-card">
+      <div class="card-num">003 — Memory</div>
+      <h3>It Never Forgets</h3>
+      <p>File-based memory system preserves every decision, pattern, and lesson learned. Pick up where you left off, even weeks later.</p>
+      <div class="card-tags"><span class="tag">Persistent</span><span class="tag">File-Based</span><span class="tag">Auto-Briefing</span></div>
+    </div>
+    <div class="hscroll-card">
+      <div class="card-num">004 — Quality</div>
+      <h3>Built-in QA Pipeline</h3>
+      <p>Every feature gets automated code review, security audit, accessibility check, and performance optimization. No shortcuts.</p>
+      <div class="card-tags"><span class="tag">Code Review</span><span class="tag">Security</span><span class="tag">A11y</span><span class="tag">Perf</span></div>
+    </div>
+    <div class="hscroll-card">
+      <div class="card-num">005 — Flexibility</div>
+      <h3>4 Operating Modes</h3>
+      <p>CLI for purists. IDE for visual thinkers. Omni for multi-provider power. Dual for adversarial code review. Your style, your rules.</p>
+      <div class="card-tags"><span class="tag">CLI</span><span class="tag">IDE</span><span class="tag">Omni</span><span class="tag">Dual</span></div>
+    </div>
+    <div class="hscroll-card">
+      <div class="card-num">006 — Freedom</div>
+      <h3>Open Source. MIT.</h3>
+      <p>No vendor lock-in. No subscription. No data collection. Fork it, extend it, own it. Built by the community, for the community.</p>
+      <div class="card-tags"><span class="tag">MIT License</span><span class="tag">GitHub</span><span class="tag">Community</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- The Team -->
+<section class="team-grid" id="team">
+  <div class="team-header reveal">
+    <div class="team-count">42</div>
+    <div class="team-subtitle">Specialized AI agents. Each one a domain expert.</div>
+  </div>
+  <div class="agents-grid reveal">
+    <div class="agent-cell"><span class="emoji">🎤</span><span class="name">Interviewer</span></div>
+    <div class="agent-cell"><span class="emoji">📊</span><span class="name">Market Analyst</span></div>
+    <div class="agent-cell"><span class="emoji">📋</span><span class="name">Specs</span></div>
+    <div class="agent-cell"><span class="emoji">🎨</span><span class="name">Designer</span></div>
+    <div class="agent-cell"><span class="emoji">🏗️</span><span class="name">Architect</span></div>
+    <div class="agent-cell"><span class="emoji">🖥️</span><span class="name">Frontend</span></div>
+    <div class="agent-cell"><span class="emoji">⚙️</span><span class="name">Backend</span></div>
+    <div class="agent-cell"><span class="emoji">📱</span><span class="name">Mobile</span></div>
+    <div class="agent-cell"><span class="emoji">🗄️</span><span class="name">Database</span></div>
+    <div class="agent-cell"><span class="emoji">🔌</span><span class="name">API</span></div>
+    <div class="agent-cell"><span class="emoji">🔍</span><span class="name">Code Review</span></div>
+    <div class="agent-cell"><span class="emoji">✅</span><span class="name">QA</span></div>
+    <div class="agent-cell"><span class="emoji">🐛</span><span class="name">Debugger</span></div>
+    <div class="agent-cell"><span class="emoji">👁️</span><span class="name">Reviewer</span></div>
+    <div class="agent-cell"><span class="emoji">🛡️</span><span class="name">Security</span></div>
+    <div class="agent-cell"><span class="emoji">🌐</span><span class="name">SEO</span></div>
+    <div class="agent-cell"><span class="emoji">⚡</span><span class="name">Performance</span></div>
+    <div class="agent-cell"><span class="emoji">♿</span><span class="name">Accessibility</span></div>
+    <div class="agent-cell"><span class="emoji">🌍</span><span class="name">i18n</span></div>
+    <div class="agent-cell"><span class="emoji">📝</span><span class="name">Docs</span></div>
+    <div class="agent-cell"><span class="emoji">📣</span><span class="name">Marketing</span></div>
+    <div class="agent-cell"><span class="emoji">✍️</span><span class="name">Copywriter</span></div>
+    <div class="agent-cell"><span class="emoji">📈</span><span class="name">Content</span></div>
+    <div class="agent-cell"><span class="emoji">🚀</span><span class="name">Deployer</span></div>
+    <div class="agent-cell"><span class="emoji">📊</span><span class="name">Analytics</span></div>
+    <div class="agent-cell"><span class="emoji">🪙</span><span class="name">Crypto</span></div>
+    <div class="agent-cell"><span class="emoji">🔬</span><span class="name">Experiments</span></div>
+    <div class="agent-cell"><span class="emoji">🛠️</span><span class="name">Skill Creator</span></div>
+    <div class="agent-cell"><span class="emoji">📦</span><span class="name">Template</span></div>
+    <div class="agent-cell"><span class="emoji">🎮</span><span class="name">Playground</span></div>
+    <div class="agent-cell"><span class="emoji">🧭</span><span class="name">Orchestrator</span></div>
+    <div class="agent-cell"><span class="emoji">🔀</span><span class="name">Router</span></div>
+    <div class="agent-cell"><span class="emoji">🔄</span><span class="name">Dual Engine</span></div>
+    <div class="agent-cell"><span class="emoji">💡</span><span class="name">Start</span></div>
+    <div class="agent-cell"><span class="emoji">🧠</span><span class="name">Memory</span></div>
+    <div class="agent-cell"><span class="emoji">📐</span><span class="name">Onboarding</span></div>
+    <div class="agent-cell"><span class="emoji">🏷️</span><span class="name">Integration</span></div>
+    <div class="agent-cell"><span class="emoji">🔧</span><span class="name">Updater</span></div>
+    <div class="agent-cell"><span class="emoji">🎯</span><span class="name">Optimizer</span></div>
+    <div class="agent-cell"><span class="emoji">🧪</span><span class="name">Test</span></div>
+    <div class="agent-cell"><span class="emoji">🔮</span><span class="name">Omni Router</span></div>
+    <div class="agent-cell"><span class="emoji">🧠</span><span class="name">Genius Team</span></div>
+  </div>
+</section>
+
+<!-- Install -->
+<section class="install-section" id="install">
+  <div class="install-label reveal">Get Started</div>
+  <div class="install-title reveal">One command.<br>Zero friction.</div>
+  <div class="install-block reveal" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app')">
+    $ bash &lt;(curl -fsSL .../create.sh) my-app<span class="cursor-blink">▌</span>
+  </div>
+  <div class="install-sub reveal">Click to copy · Works on Mac, Linux, WSL</div>
+  <div style="margin-top:2.5rem" class="reveal">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-neon" style="padding:0.8rem 2rem;font-size:0.8rem">★ Star on GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <div class="left">Genius Team v18.0 — MIT License — Open Source</div>
+  <div class="right">
+    <a href="https://github.com/w-3-art/genius-team">GitHub</a>
+    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a>
+  </div>
+</footer>
+
+<!-- Prop nav -->
+<div class="prop-nav">
+  <a href="/proposition1">1 — Transform</a>
+  <a href="/proposition2">2 — Playground</a>
+  <a href="/proposition3" class="active">3 — Statement</a>
+</div>
+
+<script>
+// Scroll progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('scrollFill').style.height = pct + '%';
+});
+
+// Reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Horizontal scroll drag
+const track = document.getElementById('hscrollTrack');
+let isDown = false, startX, scrollLeft;
+track.addEventListener('mousedown', e => { isDown = true; track.style.cursor = 'grabbing'; startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft; });
+track.addEventListener('mouseleave', () => { isDown = false; track.style.cursor = 'grab'; });
+track.addEventListener('mouseup', () => { isDown = false; track.style.cursor = 'grab'; });
+track.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - track.offsetLeft; track.scrollLeft = scrollLeft - (x - startX) * 1.5; });
+</script>
+</body>
+</html>

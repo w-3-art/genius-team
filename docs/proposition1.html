@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — Proposition 1: The Transformation</title>
+<meta name="description" content="Your AI product team. From idea to reality. No coding required.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ RESET & BASE ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; overflow-x: hidden; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0a0f; color: #e8e4df; line-height: 1.6; overflow-x: hidden; }
+
+/* ═══ CSS VARIABLES ═══ */
+:root {
+  --amber: #f59e0b;
+  --coral: #f97066;
+  --violet: #8b5cf6;
+  --warm-white: #faf5ef;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glow-amber: 0 0 80px rgba(245, 158, 11, 0.15);
+  --glow-violet: 0 0 80px rgba(139, 92, 246, 0.15);
+}
+
+/* ═══ SCROLL PROGRESS BAR ═══ */
+.scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--coral), var(--violet)); z-index: 9999; width: 0%; transition: width 0.1s; }
+
+/* ═══ NAVIGATION ═══ */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10, 10, 15, 0.7); border-bottom: 1px solid var(--glass-border); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+nav.scrolled { padding: 1rem 3rem; background: rgba(10, 10, 15, 0.9); }
+.nav-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--amber), var(--coral)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-links { display: flex; gap: 2.5rem; align-items: center; }
+.nav-links a { color: rgba(232, 228, 223, 0.7); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--amber); transition: width 0.3s; }
+.nav-links a:hover { color: var(--warm-white); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta { padding: 0.6rem 1.5rem; border-radius: 100px; background: linear-gradient(135deg, var(--amber), var(--coral)); color: #0a0a0f; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-decoration: none; }
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3); }
+
+/* ═══ HERO ═══ */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(245, 158, 11, 0.08), transparent 70%), radial-gradient(ellipse 60% 40% at 70% 60%, rgba(139, 92, 246, 0.06), transparent 70%); }
+.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black, transparent); animation: gridMove 20s linear infinite; }
+@keyframes gridMove { to { background-position: 60px 60px; } }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.2rem; border-radius: 100px; background: var(--glass-bg); border: 1px solid var(--glass-border); font-size: 0.85rem; color: var(--amber); margin-bottom: 2rem; backdrop-filter: blur(10px); animation: fadeInUp 0.8s ease; }
+.hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+.hero h1 .line { display: block; animation: fadeInUp 0.8s ease backwards; }
+.hero h1 .line:nth-child(1) { animation-delay: 0.2s; }
+.hero h1 .line:nth-child(2) { animation-delay: 0.4s; color: var(--warm-white); }
+.hero h1 .line:nth-child(3) { animation-delay: 0.6s; }
+.hero h1 .gradient { background: linear-gradient(135deg, var(--amber), var(--coral), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: shimmer 3s ease infinite; }
+@keyframes shimmer { 0%, 100% { background-position: 0% center; } 50% { background-position: 100% center; } }
+.hero-sub { font-size: clamp(1.1rem, 2vw, 1.4rem); color: rgba(232, 228, 223, 0.6); max-width: 600px; margin-bottom: 3rem; animation: fadeInUp 0.8s 0.8s ease backwards; line-height: 1.7; }
+.hero-actions { display: flex; gap: 1rem; animation: fadeInUp 0.8s 1s ease backwards; flex-wrap: wrap; justify-content: center; }
+.btn-primary { padding: 1rem 2.5rem; border-radius: 100px; background: linear-gradient(135deg, var(--amber), var(--coral)); color: #0a0a0f; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; text-decoration: none; }
+.btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--coral), var(--violet)); opacity: 0; transition: opacity 0.4s; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3); }
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-secondary { padding: 1rem 2.5rem; border-radius: 100px; background: transparent; color: var(--warm-white); font-weight: 600; font-size: 1.1rem; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.3s; text-decoration: none; }
+.btn-secondary:hover { border-color: var(--amber); background: rgba(245, 158, 11, 0.05); }
+.hero-visual { margin-top: 4rem; width: 100%; max-width: 900px; animation: fadeInUp 0.8s 1.2s ease backwards; position: relative; z-index: 1; }
+.hero-terminal { background: rgba(15, 15, 25, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 0; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.5), var(--glow-amber); }
+.terminal-bar { display: flex; gap: 8px; padding: 14px 20px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+.terminal-dot:nth-child(1) { background: #ff5f57; }
+.terminal-dot:nth-child(2) { background: #ffbd2e; }
+.terminal-dot:nth-child(3) { background: #28c840; }
+.terminal-body { padding: 24px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem; min-height: 200px; }
+.terminal-line { opacity: 0; transform: translateY(10px); animation: typeIn 0.5s ease forwards; display: flex; margin-bottom: 8px; }
+.terminal-line .prompt { color: var(--amber); margin-right: 8px; }
+.terminal-line .cmd { color: var(--warm-white); }
+.terminal-line .output { color: rgba(232, 228, 223, 0.5); }
+.terminal-line .success { color: #22c55e; }
+.terminal-line:nth-child(1) { animation-delay: 1.5s; }
+.terminal-line:nth-child(2) { animation-delay: 2.3s; }
+.terminal-line:nth-child(3) { animation-delay: 3.1s; }
+.terminal-line:nth-child(4) { animation-delay: 3.9s; }
+.terminal-line:nth-child(5) { animation-delay: 4.7s; }
+.terminal-line:nth-child(6) { animation-delay: 5.5s; }
+@keyframes typeIn { to { opacity: 1; transform: translateY(0); } }
+
+/* ═══ TRANSFORMATION SECTION ═══ */
+.transform { padding: 8rem 2rem; position: relative; }
+.transform-inner { max-width: 1200px; margin: 0 auto; }
+.section-label { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--amber); font-weight: 600; margin-bottom: 1rem; }
+.section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.1; }
+.section-desc { font-size: 1.15rem; color: rgba(232, 228, 223, 0.6); max-width: 600px; line-height: 1.7; margin-bottom: 4rem; }
+.transform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.transform-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 2.5rem; position: relative; overflow: hidden; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px); }
+.transform-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--coral), var(--violet)); opacity: 0; transition: opacity 0.4s; }
+.transform-card:hover { transform: translateY(-8px); border-color: rgba(245, 158, 11, 0.2); box-shadow: var(--glow-amber); }
+.transform-card:hover::before { opacity: 1; }
+.card-step { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.1)); font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--amber); margin-bottom: 1.5rem; }
+.transform-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+.transform-card p { color: rgba(232, 228, 223, 0.55); font-size: 1rem; line-height: 1.7; }
+.card-arrow { position: absolute; top: 50%; right: -1rem; transform: translateY(-50%); color: var(--amber); font-size: 1.5rem; opacity: 0.3; display: none; }
+
+/* ═══ SKILLS SHOWCASE ═══ */
+.skills { padding: 8rem 2rem; background: linear-gradient(180deg, transparent, rgba(245, 158, 11, 0.02), transparent); }
+.skills-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+.skills-marquee { overflow: hidden; margin-top: 3rem; mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent); }
+.skills-track { display: flex; gap: 1rem; animation: marquee 40s linear infinite; width: max-content; }
+.skills-track:hover { animation-play-state: paused; }
+.skill-chip { padding: 0.7rem 1.5rem; border-radius: 100px; background: var(--glass-bg); border: 1px solid var(--glass-border); font-size: 0.9rem; white-space: nowrap; color: rgba(232, 228, 223, 0.7); transition: all 0.3s; cursor: default; display: flex; align-items: center; gap: 0.5rem; }
+.skill-chip:hover { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); color: var(--warm-white); transform: scale(1.05); }
+.skill-chip .emoji { font-size: 1.1rem; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ═══ SOCIAL PROOF ═══ */
+.proof { padding: 8rem 2rem; }
+.proof-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 4rem; }
+.stat { padding: 2rem; }
+.stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 800; background: linear-gradient(135deg, var(--amber), var(--coral)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 0.5rem; }
+.stat-label { color: rgba(232, 228, 223, 0.5); font-size: 0.95rem; }
+
+/* ═══ HOW IT WORKS ═══ */
+.how { padding: 8rem 2rem; position: relative; }
+.how-inner { max-width: 900px; margin: 0 auto; }
+.how-steps { position: relative; padding-left: 3rem; }
+.how-steps::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--amber), var(--coral), var(--violet)); }
+.how-step { position: relative; padding: 2rem 0 3rem 2rem; }
+.how-step::before { content: ''; position: absolute; left: -3rem; top: 2.2rem; width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--amber), var(--coral)); border: 4px solid #0a0a0f; z-index: 1; }
+.how-step h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+.how-step p { color: rgba(232, 228, 223, 0.55); font-size: 1.05rem; line-height: 1.7; }
+
+/* ═══ CTA SECTION ═══ */
+.cta-section { padding: 10rem 2rem; text-align: center; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 70%, rgba(139, 92, 246, 0.1), transparent 70%); }
+.cta-section h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+.cta-section p { font-size: 1.2rem; color: rgba(232, 228, 223, 0.6); margin-bottom: 3rem; max-width: 500px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+.cta-code { display: inline-block; background: rgba(15, 15, 25, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem 2rem; font-family: 'SF Mono', monospace; font-size: 1rem; color: var(--amber); margin-bottom: 2rem; cursor: pointer; transition: all 0.3s; position: relative; z-index: 1; }
+.cta-code:hover { border-color: var(--amber); box-shadow: var(--glow-amber); }
+.cta-code .copy-hint { font-size: 0.75rem; color: rgba(232, 228, 223, 0.4); margin-left: 1rem; }
+
+/* ═══ FOOTER ═══ */
+footer { padding: 4rem 2rem 2rem; border-top: 1px solid var(--glass-border); }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.footer-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; color: rgba(232, 228, 223, 0.4); }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { color: rgba(232, 228, 223, 0.4); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+.footer-links a:hover { color: var(--amber); }
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ═══ FLOATING PARTICLES ═══ */
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.particle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--amber); opacity: 0.2; animation: float 15s infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 25% { transform: translateY(-30px) translateX(15px); } 50% { transform: translateY(-15px) translateX(-10px); } 75% { transform: translateY(-40px) translateX(20px); } }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 968px) {
+  .transform-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: 2.8rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+}
+
+/* ═══ SMOOTH CURSOR GLOW ═══ */
+.cursor-glow { position: fixed; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(245, 158, 11, 0.06), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); transition: left 0.5s ease, top 0.5s ease; }
+
+/* ═══ PROPOSITION BADGE ═══ */
+.prop-badge { position: fixed; bottom: 2rem; right: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(20px); border-radius: 12px; padding: 0.8rem 1.2rem; font-size: 0.8rem; color: rgba(232, 228, 223, 0.5); z-index: 100; }
+.prop-badge strong { color: var(--amber); }
+.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 100; background: rgba(10,10,15,0.8); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 100px; padding: 0.5rem; }
+.prop-nav a { padding: 0.5rem 1.2rem; border-radius: 100px; color: rgba(232,228,223,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.3s; }
+.prop-nav a:hover { color: var(--warm-white); background: rgba(255,255,255,0.05); }
+.prop-nav a.active { background: linear-gradient(135deg, var(--amber), var(--coral)); color: #0a0a0f; }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Navigation -->
+<nav id="nav">
+  <div class="nav-logo">🧠 Genius Team</div>
+  <div class="nav-links">
+    <a href="#transform">How it works</a>
+    <a href="#skills">42 Skills</a>
+    <a href="#proof">Community</a>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
+    <a href="#cta" class="nav-cta">Get Started Free</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  
+  <div class="hero-badge">
+    <span class="dot"></span>
+    v18.0 — Open Source & Free
+  </div>
+  
+  <h1>
+    <span class="line">You have an idea.</span>
+    <span class="line"><span class="gradient">AI builds it.</span></span>
+    <span class="line">You ship it.</span>
+  </h1>
+  
+  <p class="hero-sub">
+    42 AI specialists work together to turn your vision into reality.<br>
+    No coding experience needed. Just describe what you want.
+  </p>
+  
+  <div class="hero-actions">
+    <a href="#cta" class="btn-primary"><span>Start Building — It's Free</span></a>
+    <a href="#transform" class="btn-secondary">See How It Works ↓</a>
+  </div>
+  
+  <div class="hero-visual">
+    <div class="hero-terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-line"><span class="prompt">you:</span><span class="cmd">Build me a project management app for freelancers</span></div>
+        <div class="terminal-line"><span class="prompt">genius:</span><span class="output">Starting with user interviews to understand your audience...</span></div>
+        <div class="terminal-line"><span class="prompt">genius:</span><span class="output">Designing the dashboard and project views...</span></div>
+        <div class="terminal-line"><span class="prompt">genius:</span><span class="output">Building authentication, database, and API...</span></div>
+        <div class="terminal-line"><span class="prompt">genius:</span><span class="output">Running quality checks — 47 tests passed ✓</span></div>
+        <div class="terminal-line"><span class="prompt">genius:</span><span class="success">✅ Your app is ready. Deploying to production...</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Transformation -->
+<section class="transform" id="transform">
+  <div class="transform-inner">
+    <div class="section-label reveal">✦ THE JOURNEY</div>
+    <h2 class="section-title reveal">From "I wish I could build this"<br>to "I built this."</h2>
+    <p class="section-desc reveal">Genius Team replaces an entire product team. You bring the vision — 42 AI specialists handle the rest.</p>
+    
+    <div class="transform-grid">
+      <div class="transform-card reveal reveal-delay-1">
+        <div class="card-step">1</div>
+        <h3>Describe your idea</h3>
+        <p>Talk to Genius like you'd talk to a friend. "I want to build a booking app for my yoga studio." That's enough to start.</p>
+      </div>
+      <div class="transform-card reveal reveal-delay-2">
+        <div class="card-step">2</div>
+        <h3>AI team assembles</h3>
+        <p>42 specialized agents activate: interviewer, designer, developer, security expert, SEO specialist... Each one a domain expert.</p>
+      </div>
+      <div class="transform-card reveal reveal-delay-3">
+        <div class="card-step">3</div>
+        <h3>Ship with confidence</h3>
+        <p>Every line of code is reviewed, tested, and optimized. You get a production-ready app with documentation, not a prototype.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills Marquee -->
+<section class="skills" id="skills">
+  <div class="skills-inner">
+    <div class="section-label reveal">✦ YOUR AI TEAM</div>
+    <h2 class="section-title reveal">42 specialists. One command.</h2>
+    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto">Each skill is a domain expert that knows exactly what to do. They collaborate, review each other's work, and never sleep.</p>
+  </div>
+  <div class="skills-marquee">
+    <div class="skills-track">
+      <div class="skill-chip"><span class="emoji">🎤</span> Interviewer</div>
+      <div class="skill-chip"><span class="emoji">📊</span> Market Analyst</div>
+      <div class="skill-chip"><span class="emoji">📋</span> Specs Writer</div>
+      <div class="skill-chip"><span class="emoji">🎨</span> Designer</div>
+      <div class="skill-chip"><span class="emoji">🏗️</span> Architect</div>
+      <div class="skill-chip"><span class="emoji">🖥️</span> Frontend Dev</div>
+      <div class="skill-chip"><span class="emoji">⚙️</span> Backend Dev</div>
+      <div class="skill-chip"><span class="emoji">📱</span> Mobile Dev</div>
+      <div class="skill-chip"><span class="emoji">🗄️</span> Database</div>
+      <div class="skill-chip"><span class="emoji">🔌</span> API Integration</div>
+      <div class="skill-chip"><span class="emoji">🔍</span> Code Review</div>
+      <div class="skill-chip"><span class="emoji">✅</span> Quality Assurance</div>
+      <div class="skill-chip"><span class="emoji">🛡️</span> Security Audit</div>
+      <div class="skill-chip"><span class="emoji">🌐</span> SEO & GEO</div>
+      <div class="skill-chip"><span class="emoji">⚡</span> Performance</div>
+      <div class="skill-chip"><span class="emoji">♿</span> Accessibility</div>
+      <div class="skill-chip"><span class="emoji">🌍</span> Translations</div>
+      <div class="skill-chip"><span class="emoji">📝</span> Documentation</div>
+      <div class="skill-chip"><span class="emoji">📣</span> Marketing</div>
+      <div class="skill-chip"><span class="emoji">🚀</span> Deployment</div>
+      <div class="skill-chip"><span class="emoji">🪙</span> Web3 / Crypto</div>
+      <!-- Duplicate for seamless loop -->
+      <div class="skill-chip"><span class="emoji">🎤</span> Interviewer</div>
+      <div class="skill-chip"><span class="emoji">📊</span> Market Analyst</div>
+      <div class="skill-chip"><span class="emoji">📋</span> Specs Writer</div>
+      <div class="skill-chip"><span class="emoji">🎨</span> Designer</div>
+      <div class="skill-chip"><span class="emoji">🏗️</span> Architect</div>
+      <div class="skill-chip"><span class="emoji">🖥️</span> Frontend Dev</div>
+      <div class="skill-chip"><span class="emoji">⚙️</span> Backend Dev</div>
+      <div class="skill-chip"><span class="emoji">📱</span> Mobile Dev</div>
+      <div class="skill-chip"><span class="emoji">🗄️</span> Database</div>
+      <div class="skill-chip"><span class="emoji">🔌</span> API Integration</div>
+      <div class="skill-chip"><span class="emoji">🔍</span> Code Review</div>
+      <div class="skill-chip"><span class="emoji">✅</span> Quality Assurance</div>
+      <div class="skill-chip"><span class="emoji">🛡️</span> Security Audit</div>
+      <div class="skill-chip"><span class="emoji">🌐</span> SEO & GEO</div>
+      <div class="skill-chip"><span class="emoji">⚡</span> Performance</div>
+      <div class="skill-chip"><span class="emoji">♿</span> Accessibility</div>
+      <div class="skill-chip"><span class="emoji">🌍</span> Translations</div>
+      <div class="skill-chip"><span class="emoji">📝</span> Documentation</div>
+      <div class="skill-chip"><span class="emoji">📣</span> Marketing</div>
+      <div class="skill-chip"><span class="emoji">🚀</span> Deployment</div>
+      <div class="skill-chip"><span class="emoji">🪙</span> Web3 / Crypto</div>
+    </div>
+  </div>
+</section>
+
+<!-- Social Proof -->
+<section class="proof" id="proof">
+  <div class="proof-inner">
+    <div class="section-label reveal">✦ COMMUNITY</div>
+    <h2 class="section-title reveal">Used by builders worldwide</h2>
+    <div class="stats-grid">
+      <div class="stat reveal reveal-delay-1">
+        <div class="stat-number" data-count="42">0</div>
+        <div class="stat-label">AI Specialists</div>
+      </div>
+      <div class="stat reveal reveal-delay-2">
+        <div class="stat-number" data-count="4">0</div>
+        <div class="stat-label">Operating Modes</div>
+      </div>
+      <div class="stat reveal reveal-delay-3">
+        <div class="stat-number" data-count="90">0</div>
+        <div class="stat-label">% Routing Accuracy</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Possibilities</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="section-label reveal">✦ GETTING STARTED</div>
+    <h2 class="section-title reveal">Up and running in 60 seconds</h2>
+    <p class="section-desc reveal">No accounts. No subscriptions. No credit card. Just one command.</p>
+    
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <h3>Install Claude Code</h3>
+        <p>Genius Team runs on top of Claude Code, Anthropic's AI coding agent. Install it with <code style="color:var(--amber)">npm install -g @anthropic-ai/claude-code</code>.</p>
+      </div>
+      <div class="how-step reveal">
+        <h3>Create your project</h3>
+        <p>One command creates everything: <code style="color:var(--amber)">bash &lt;(curl -fsSL genius.w3art.io/install) my-app</code>. That's it — your AI team is ready.</p>
+      </div>
+      <div class="how-step reveal">
+        <h3>Tell it what to build</h3>
+        <p>Open Claude Code and say what you want. "Build me a SaaS for managing restaurant reservations." The team takes over from there.</p>
+      </div>
+      <div class="how-step reveal">
+        <h3>Watch it come to life</h3>
+        <p>42 specialists collaborate: the interviewer asks the right questions, the architect designs the system, the developers build it, and QA tests everything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <h2 class="reveal">Ready to build<br>something <span class="gradient">extraordinary</span>?</h2>
+  <p class="reveal">One command. Zero experience required. Completely free.</p>
+  <div class="cta-code reveal" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app')">
+    bash &lt;(curl -fsSL .../create.sh) my-app
+    <span class="copy-hint">click to copy</span>
+  </div>
+  <div class="reveal" style="margin-top:1rem">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-primary"><span>⭐ Star on GitHub</span></a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">🧠 Genius Team v18.0</div>
+    <div class="footer-links">
+      <a href="https://github.com/w-3-art/genius-team">GitHub</a>
+      <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE">MIT License</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Proposition Navigation -->
+<div class="prop-nav">
+  <a href="/proposition1" class="active">1 — Transformation</a>
+  <a href="/proposition2">2 — Playground</a>
+  <a href="/proposition3">3 — Statement</a>
+</div>
+
+<script>
+// Scroll progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('scrollProgress').style.width = pct + '%';
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Cursor glow
+document.addEventListener('mousemove', e => {
+  const g = document.getElementById('cursorGlow');
+  g.style.left = e.clientX + 'px';
+  g.style.top = e.clientY + 'px';
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Counter animation
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = parseInt(e.target.dataset.count);
+      if (!target) return;
+      let current = 0;
+      const step = target / 40;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(timer); }
+        e.target.textContent = Math.round(current);
+      }, 30);
+      countObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-number[data-count]').forEach(el => countObserver.observe(el));
+
+// Particles
+const particles = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.top = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 10 + 's';
+  p.style.animationDuration = (10 + Math.random() * 15) + 's';
+  p.style.opacity = Math.random() * 0.15 + 0.05;
+  p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+  particles.appendChild(p);
+}
+</script>
+</body>
+</html>
