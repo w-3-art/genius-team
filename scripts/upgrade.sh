@@ -121,7 +121,9 @@ check_prerequisites() {
   local errors=0
 
   if [ ! -f "CLAUDE.md" ]; then
-    log_error "CLAUDE.md not found. Run this from inside a Genius Team project."
+    log_error "CLAUDE.md not found. Run this from inside a Genius Team project directory."
+    log_error "  Example: cd my-project && bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)"
+    log_error "  Current directory: $(pwd)"
     errors=$((errors + 1))
   fi
 

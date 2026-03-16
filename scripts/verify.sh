@@ -1,8 +1,8 @@
 #!/bin/bash
-# Genius Team v17.0 — Verification Script
+# Genius Team v18.0 — Verification Script
 # Verify that the environment is properly set up
 
-echo "🔍 Genius Team v17.0 — Environment Verification"
+echo "🔍 Genius Team v18.0 — Environment Verification"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
@@ -309,13 +309,13 @@ echo "════════════════════════�
 
 if [ $ERRORS -eq 0 ]; then
   if [ $WARNINGS -eq 0 ]; then
-    echo -e "${GREEN}✅ All checks passed! Genius Team v17.0 is ready.${NC}"
+    echo -e "${GREEN}✅ All checks passed! Genius Team v18.0 is ready.${NC}"
     echo ""
     echo "Run /genius-start to begin."
   else
     echo -e "${YELLOW}⚠️ $WARNINGS warning(s), but ready to use.${NC}"
     echo ""
-    echo "Genius Team v17.0 is functional. Warnings are non-blocking."
+    echo "Genius Team v18.0 is functional. Warnings are non-blocking."
   fi
 else
   echo -e "${RED}❌ $ERRORS error(s) found.${NC}"

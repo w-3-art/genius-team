@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# Genius Team v17.0 — Add to Existing Project
+# Genius Team v18.0 — Add to Existing Project
 # Usage: cd your-project && bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh) [--mode cli|ide|omni|dual] [--engine claude|codex|dual]
 # ═══════════════════════════════════════════════════════════════
 set -e
@@ -58,7 +58,7 @@ fi
 # ── Banner ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v17.0 — Add to Existing Project  ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v18.0 — Add to Existing Project  ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Target:  ${CYAN}$(pwd)${NC}"
@@ -186,7 +186,7 @@ echo ""
 
 # ── Done ─────────────────────────────────────────────────────
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v17.0 — Ready!                   ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v18.0 — Ready!                   ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Genius Team has been added to your existing project."
