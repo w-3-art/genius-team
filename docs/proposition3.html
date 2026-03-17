@@ -1,346 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — Proposition 3: The Statement</title>
-<meta name="description" content="Anyone can build. 42 AI agents. Zero coding.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — P3: The Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="wizard.js"></script>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: hidden; scroll-snap-type: y proximity; }
-body { font-family: 'Instrument Sans', -apple-system, sans-serif; background: #0c0c0c; color: #f5f5f5; overflow-x: hidden; }
+:root{--blue:#4f6ef7;--cyan:#22d3ee;--green:#34d399;--dim:rgba(255,255,255,.4);--font:'Sora',sans-serif}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}
+body{font-family:var(--font);background:#050510;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 2.5rem;display:flex;justify-content:space-between;align-items:center}
+nav.solid{background:rgba(5,5,16,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{font-weight:700;font-size:1.1rem;text-decoration:none;color:#fff}
+.btn-cta{padding:.55rem 1.4rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:.88rem;border:none;cursor:pointer;font-family:var(--font);transition:all .3s}
+.btn-cta:hover{box-shadow:0 0 25px rgba(79,110,247,.4);transform:translateY(-2px)}
 
-:root {
-  --neon-green: #39ff14;
-  --neon-blue: #00d4ff;
-  --neon-pink: #ff006e;
-  --white: #f5f5f5;
-  --gray: #888;
-  --dark: #0c0c0c;
-  --darker: #060606;
-}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url(img/holographic-ui.jpg) center/cover;opacity:.08}
+.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(79,110,247,.15),transparent 70%),linear-gradient(to bottom,transparent 40%,#050510)}
+.badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem 1rem .35rem .5rem;border-radius:100px;background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.2);font-size:.78rem;color:var(--blue);margin-bottom:2rem;position:relative;z-index:1}
+.badge .tag{padding:.12rem .45rem;border-radius:100px;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700}
+.hero h1{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:800;line-height:1.07;letter-spacing:-.04em;margin-bottom:1.5rem;position:relative;z-index:1}
+.hero h1 .g{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.15rem;color:var(--dim);max-width:450px;line-height:1.7;font-weight:300;margin-bottom:2.5rem;position:relative;z-index:1}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.bp{padding:.85rem 2.5rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;text-decoration:none;transition:all .4s;font-family:var(--font)}
+.bp:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(79,110,247,.35)}
+.bg{padding:.85rem 2.5rem;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#fff;font-weight:500;font-size:1rem;cursor:pointer;text-decoration:none;transition:all .3s;font-family:var(--font)}
+.bg:hover{border-color:var(--blue)}
 
-/* ═══ NAV ═══ */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
-.nav-logo { font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--white); }
-.nav-right { display: flex; gap: 2rem; align-items: center; }
-.nav-right a { color: var(--white); text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; transition: opacity 0.3s; }
-.nav-right a:hover { opacity: 0.6; }
-.btn-neon { padding: 0.6rem 1.5rem; border: 1px solid var(--neon-green); color: var(--neon-green); font-family: 'Space Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; background: transparent; transition: all 0.3s; text-decoration: none; }
-.btn-neon:hover { background: var(--neon-green); color: var(--dark); box-shadow: 0 0 30px rgba(57, 255, 20, 0.3); }
+/* PROGRESS BAR */
+.scroll-hint{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);font-size:.75rem;color:rgba(255,255,255,.3);z-index:50;text-align:center;pointer-events:none}
 
-/* ═══ HERO — KINETIC TYPE ═══ */
-.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding: 0 3rem; overflow: hidden; scroll-snap-align: start; }
-.hero-bg-line { position: absolute; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(57, 255, 20, 0.15), transparent); }
-.hero-text { position: relative; z-index: 1; }
-.mega-text { font-size: clamp(3rem, 10vw, 9rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.05em; text-transform: uppercase; }
-.mega-text .line { display: block; overflow: hidden; }
-.mega-text .line span { display: inline-block; animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(100%); }
-.mega-text .line:nth-child(1) span { animation-delay: 0.2s; }
-.mega-text .line:nth-child(2) span { animation-delay: 0.4s; color: var(--neon-green); text-shadow: 0 0 60px rgba(57, 255, 20, 0.3); }
-.mega-text .line:nth-child(3) span { animation-delay: 0.6s; }
-@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-.hero-meta { display: flex; gap: 4rem; margin-top: 3rem; animation: fadeIn 1s 1s ease backwards; }
-.hero-meta-item { font-family: 'Space Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gray); }
-.hero-meta-item strong { display: block; font-size: 1.5rem; color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.25rem; }
-.hero-scroll { position: absolute; bottom: 3rem; left: 3rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gray); animation: fadeIn 1s 1.5s ease backwards; display: flex; align-items: center; gap: 1rem; }
-.hero-scroll::before { content: ''; width: 40px; height: 1px; background: var(--gray); animation: lineGrow 1s 2s ease forwards; transform-origin: left; transform: scaleX(0); }
-@keyframes lineGrow { to { transform: scaleX(1); } }
+/* HORIZONTAL SCROLL */
+.hscroll{overflow:hidden}
+.hscroll-track{display:flex;will-change:transform}
+.hpanel{width:100vw;min-height:100vh;display:flex;align-items:center;padding:5rem;flex-shrink:0;position:relative;overflow:hidden}
+.hpanel .p-num{position:absolute;top:2rem;left:5rem;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.2)}
+.hpanel .p-content{max-width:480px;position:relative;z-index:1}
+.hpanel .p-img{position:absolute;right:0;top:0;bottom:0;width:50%;overflow:hidden;opacity:.4}
+.hpanel .p-img img{width:100%;height:100%;object-fit:cover}
+.hpanel .p-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--bg-color),transparent 60%)}
+.hpanel h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;line-height:1.1}
+.hpanel .accent{color:var(--cyan)}
+.hpanel .div{width:40px;height:3px;background:var(--blue);border-radius:2px;margin:1.5rem 0}
+.hpanel p{color:var(--dim);font-size:1.05rem;line-height:1.6;margin-bottom:1.5rem}
+.hpanel .eg{display:inline-block;padding:.5rem 1rem;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:.85rem;color:rgba(255,255,255,.6);font-style:italic}
+.p1-bg{--bg-color:#050510;background:linear-gradient(135deg,#050510,#0c0c25)}
+.p2-bg{--bg-color:#05100a;background:linear-gradient(135deg,#050510,#0a1a0f)}
+.p3-bg{--bg-color:#100510;background:linear-gradient(135deg,#050510,#1a0520)}
 
-/* ═══ MANIFESTO ═══ */
-.manifesto { padding: 10rem 3rem; position: relative; scroll-snap-align: start; }
-.manifesto-text { max-width: 900px; font-size: clamp(1.5rem, 3vw, 2.8rem); font-weight: 400; line-height: 1.5; color: var(--gray); }
-.manifesto-text strong { color: var(--white); font-weight: 600; }
-.manifesto-text em { font-style: normal; color: var(--neon-green); }
-.manifesto-counter { position: absolute; right: 3rem; top: 10rem; font-family: 'Space Mono', monospace; font-size: 8rem; font-weight: 700; color: rgba(57, 255, 20, 0.05); line-height: 1; writing-mode: vertical-lr; }
+/* SKILLS */
+.skills{padding:8rem 2rem}
+.skills-inner{max-width:1100px;margin:0 auto}
+.sec-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--blue);margin-bottom:.75rem}
+.sec-h{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.75rem}
+.sec-sub{color:var(--dim);font-size:1rem;margin-bottom:3rem;max-width:500px}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.cat-card{border-radius:20px;padding:1.75rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);transition:all .4s}
+.cat-card:hover{transform:translateY(-5px)}
+.cat-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem}
+.cat-ico{font-size:1.4rem}.cat-name{font-size:1rem;font-weight:700;flex:1}
+.cat-count{font-size:.72rem;color:rgba(255,255,255,.3);background:rgba(255,255,255,.06);padding:.2rem .55rem;border-radius:100px}
+.cat-desc{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.5;margin-bottom:.9rem}
+.cat-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.cat-tags span{padding:.2rem .55rem;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.68rem;color:rgba(255,255,255,.45)}
 
-/* ═══ HORIZONTAL SCROLL FEATURES ═══ */
-.hscroll-section { padding: 6rem 0; position: relative; scroll-snap-align: start; }
-.hscroll-header { padding: 0 3rem; margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
-.hscroll-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--neon-green); }
-.hscroll-title { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; }
-.hscroll-hint { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; }
-.hscroll-track { display: flex; gap: 1.5rem; padding: 0 3rem; overflow-x: auto; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; cursor: grab; }
-.hscroll-track::-webkit-scrollbar { display: none; }
-.hscroll-card { min-width: 380px; max-width: 420px; border: 1px solid rgba(255,255,255,0.08); border-radius: 2px; padding: 2.5rem; flex-shrink: 0; scroll-snap-align: start; position: relative; background: var(--darker); transition: all 0.4s; }
-.hscroll-card:hover { border-color: var(--neon-green); box-shadow: 0 0 40px rgba(57, 255, 20, 0.05); }
-.hscroll-card .card-num { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--neon-green); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; }
-.hscroll-card h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
-.hscroll-card p { color: var(--gray); font-size: 0.95rem; line-height: 1.7; }
-.hscroll-card .card-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
-.hscroll-card .tag { padding: 0.3rem 0.8rem; border: 1px solid rgba(255,255,255,0.1); font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); }
-
-/* ═══ THE TEAM GRID ═══ */
-.team-grid { padding: 8rem 3rem; scroll-snap-align: start; }
-.team-header { margin-bottom: 4rem; }
-.team-count { font-family: 'Space Mono', monospace; font-size: clamp(5rem, 12vw, 10rem); font-weight: 700; color: var(--neon-green); text-shadow: 0 0 80px rgba(57, 255, 20, 0.2); line-height: 1; }
-.team-subtitle { font-size: 1.2rem; color: var(--gray); margin-top: 0.5rem; }
-.agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1px; background: rgba(255,255,255,0.04); }
-.agent-cell { background: var(--dark); padding: 1.2rem; text-align: center; transition: all 0.3s; cursor: default; }
-.agent-cell:hover { background: rgba(57, 255, 20, 0.03); }
-.agent-cell .emoji { font-size: 1.5rem; margin-bottom: 0.4rem; display: block; }
-.agent-cell .name { font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); }
-.agent-cell:hover .name { color: var(--neon-green); }
-
-/* ═══ CODE BLOCK ═══ */
-.install-section { padding: 8rem 3rem; text-align: center; scroll-snap-align: start; position: relative; }
-.install-section::before { content: ''; position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(57, 255, 20, 0.04), transparent 70%); transform: translate(-50%, -50%); pointer-events: none; }
-.install-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--neon-green); margin-bottom: 2rem; }
-.install-title { font-size: clamp(2rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 3rem; }
-.install-block { display: inline-block; background: var(--darker); border: 1px solid rgba(57, 255, 20, 0.15); padding: 1.5rem 3rem; font-family: 'Space Mono', monospace; font-size: clamp(0.8rem, 1.5vw, 1.1rem); color: var(--neon-green); cursor: pointer; transition: all 0.3s; position: relative; z-index: 1; margin-bottom: 2rem; }
-.install-block:hover { box-shadow: 0 0 40px rgba(57, 255, 20, 0.1); border-color: var(--neon-green); }
-.install-block .cursor-blink { animation: blink 1s step-end infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.install-sub { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; }
-
-/* ═══ FOOTER ═══ */
-footer { padding: 3rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
-footer .left { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; }
-footer .right { display: flex; gap: 2rem; }
-footer .right a { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--gray); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s; }
-footer .right a:hover { color: var(--neon-green); }
-
-/* ═══ PROP NAV ═══ */
-.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 100; background: rgba(12,12,12,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem; }
-.prop-nav a { padding: 0.5rem 1.2rem; color: var(--gray); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.3s; }
-.prop-nav a:hover { color: var(--white); }
-.prop-nav a.active { background: var(--neon-green); color: var(--dark); }
-
-/* ═══ NOISE OVERLAY ═══ */
-.noise { position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-
-/* ═══ SCROLL PROGRESS ═══ */
-.scroll-line { position: fixed; left: 3rem; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.05); z-index: 99; }
-.scroll-line-fill { position: fixed; left: 3rem; top: 0; width: 1px; background: var(--neon-green); z-index: 100; height: 0%; transition: height 0.1s; box-shadow: 0 0 10px rgba(57, 255, 20, 0.5); }
-
-/* ═══ ANIMATIONS ═══ */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* ═══ RESPONSIVE ═══ */
-@media (max-width: 968px) {
-  .hero { padding: 0 1.5rem; }
-  .mega-text { font-size: 4rem; }
-  .manifesto { padding: 6rem 1.5rem; }
-  .manifesto-counter { display: none; }
-  .hero-meta { flex-direction: column; gap: 1.5rem; }
-  .nav-right { display: none; }
-  .scroll-line, .scroll-line-fill { display: none; }
-  .hscroll-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .agents-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-}
-@media (max-width: 640px) {
-  .mega-text { font-size: 2.8rem; }
-  .hscroll-card { min-width: 300px; }
-  nav { padding: 1rem 1.5rem; }
-  footer { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
-}
+/* CTA */
+.cta-s{padding:10rem 2rem;text-align:center;position:relative;overflow:hidden}
+.cta-s::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,.08),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.cta-s h2{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;position:relative;z-index:1}
+.cta-s p{color:var(--dim);font-size:1.05rem;margin-bottom:2.5rem;position:relative;z-index:1}
+.cmd{display:inline-flex;align-items:center;gap:1.5rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1rem 2rem;font-family:monospace;font-size:.9rem;color:var(--green);cursor:pointer;transition:all .4s;position:relative;z-index:1}
+.cmd:hover{border-color:var(--blue);box-shadow:0 0 40px rgba(79,110,247,.12)}
+.cmd .h{font-family:var(--font);font-size:.7rem;color:rgba(255,255,255,.3)}
+footer{padding:2.5rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.3)}
+footer a{color:rgba(255,255,255,.3);text-decoration:none}footer a:hover{color:var(--blue)}
+.footer-links{display:flex;gap:1.5rem}
+.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.35rem;z-index:200;background:rgba(0,0,0,.8);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:100px;padding:.35rem}
+.prop-nav a{padding:.4rem .9rem;border-radius:100px;color:rgba(255,255,255,.35);text-decoration:none;font-size:.72rem;font-weight:600;transition:all .3s}
+.prop-nav a:hover{color:#fff}.prop-nav a.active{background:var(--blue);color:#fff}
+@media(max-width:768px){.hpanel{padding:3rem 1.5rem}.hpanel .p-img{display:none}.cat-grid{grid-template-columns:1fr 1fr}nav{padding:1rem 1.5rem}footer{flex-direction:column;gap:1rem}}
+@media(max-width:480px){.cat-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<nav id="nav"><a class="logo" href="#">🧠 Genius Team</a><button class="btn-cta" onclick="GeniusWizard.open()">Get Started</button></nav>
+<div class="scroll-hint" id="scrollHint">SCROLL THE STORY →</div>
 
-<div class="noise"></div>
-<div class="scroll-line"></div>
-<div class="scroll-line-fill" id="scrollFill"></div>
-
-<nav>
-  <div class="nav-logo">Genius Team</div>
-  <div class="nav-right">
-    <a href="#manifesto">Manifesto</a>
-    <a href="#features">Features</a>
-    <a href="#team">The Team</a>
-    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
-    <a href="#install" class="btn-neon">Get Started</a>
-  </div>
-</nav>
-
-<!-- Hero -->
 <section class="hero">
-  <div class="hero-bg-line" style="left: 20%;"></div>
-  <div class="hero-bg-line" style="left: 40%;"></div>
-  <div class="hero-bg-line" style="left: 60%;"></div>
-  <div class="hero-bg-line" style="left: 80%;"></div>
-  
-  <div class="hero-text">
-    <div class="mega-text" aria-label="Anyone can build">
-      <div class="line"><span>Anyone</span></div>
-      <div class="line"><span>Can</span></div>
-      <div class="line"><span>Build.</span></div>
-    </div>
-    <div class="hero-meta">
-      <div class="hero-meta-item"><strong>42</strong> AI Agents</div>
-      <div class="hero-meta-item"><strong>0</strong> Code Required</div>
-      <div class="hero-meta-item"><strong>∞</strong> Possibilities</div>
-    </div>
-  </div>
-  
-  <div class="hero-scroll">Scroll to discover</div>
-</section>
-
-<!-- Manifesto -->
-<section class="manifesto" id="manifesto">
-  <div class="manifesto-counter reveal">01</div>
-  <div class="manifesto-text reveal">
-    <strong>You describe it.</strong> <em>42 AI agents build it.</em><br><br>
-    No code. No bootcamp. No technical co-founder.<br>
-    Just <strong>your idea</strong> and an AI team that <em>ships it.</em>
+  <div class="hero-bg"></div><div class="hero-grad"></div>
+  <div class="badge"><span class="tag">v18</span> Free & Open Source</div>
+  <h1>The future of<br><span class="g">building software.</span></h1>
+  <p class="hero-sub">42 AI specialists build your product while you describe it. No code, no team, no limits.</p>
+  <div class="hero-ctas">
+    <button class="bp" onclick="GeniusWizard.open()">Start Building — Free</button>
+    <a href="#story" class="bg">Scroll the story ↓</a>
   </div>
 </section>
 
-<!-- Horizontal Scroll Features -->
-<section class="hscroll-section" id="features">
-  <div class="hscroll-header">
-    <div>
-      <div class="hscroll-label reveal">Features</div>
-      <div class="hscroll-title reveal">What makes it different</div>
-    </div>
-    <div class="hscroll-hint reveal">← Scroll →</div>
-  </div>
-  
+<div id="story">
+<section class="hscroll" id="hscrollWrap">
   <div class="hscroll-track" id="hscrollTrack">
-    <div class="hscroll-card">
-      <div class="card-num">001 — Intelligence</div>
-      <h3>42 Domain Experts</h3>
-      <p>Designer, developer, security expert, SEO — each one a specialist. They collaborate like a real team.</p>
-      <div class="card-tags"><span class="tag">Interviewer</span><span class="tag">Designer</span><span class="tag">Developer</span><span class="tag">Security</span></div>
+    <div class="hpanel p1-bg">
+      <div class="p-num">Chapter 01</div>
+      <div class="p-content">
+        <h2>You have an <span class="accent">idea.</span></h2>
+        <div class="div"></div>
+        <p>Something you wish existed. An app, a tool, a platform. You can see it in your mind — you just can't build it.</p>
+        <div class="eg">"I want an app that lets my customers book appointments"</div>
+      </div>
+      <div class="p-img"><img src="img/hero-brain.jpg" alt=""><div></div></div>
     </div>
-    <div class="hscroll-card">
-      <div class="card-num">002 — Autonomy</div>
-      <h3>Describe, Don't Code</h3>
-      <p>"Build me a booking system for my restaurant." That's it. Genius does the rest.</p>
-      <div class="card-tags"><span class="tag">Natural Language</span><span class="tag">Zero Config</span></div>
+    <div class="hpanel p2-bg">
+      <div class="p-num">Chapter 02</div>
+      <div class="p-content">
+        <h2><span class="accent">AI builds</span> it for you.</h2>
+        <div class="div"></div>
+        <p>42 specialists activate: they interview you, design the UI, write the code, run tests, and handle security — while you watch.</p>
+        <div class="eg">Interviewer → Designer → Dev → QA → Security → Deploy</div>
+      </div>
+      <div class="p-img"><img src="img/workflow-steps.jpg" alt=""><div></div></div>
     </div>
-    <div class="hscroll-card">
-      <div class="card-num">003 — Memory</div>
-      <h3>It Never Forgets</h3>
-      <p>Every decision remembered. Pick up weeks later, right where you stopped.</p>
-      <div class="card-tags"><span class="tag">Persistent</span><span class="tag">File-Based</span><span class="tag">Auto-Briefing</span></div>
-    </div>
-    <div class="hscroll-card">
-      <div class="card-num">004 — Quality</div>
-      <h3>Built-in Quality</h3>
-      <p>Code review, security audit, accessibility check — automatic on every feature.</p>
-      <div class="card-tags"><span class="tag">Code Review</span><span class="tag">Security</span><span class="tag">A11y</span><span class="tag">Perf</span></div>
-    </div>
-    <div class="hscroll-card">
-      <div class="card-num">005 — Flexibility</div>
-      <h3>4 Modes</h3>
-      <p>Terminal, VS Code, multi-provider, or dual-engine. Your style.</p>
-      <div class="card-tags"><span class="tag">CLI</span><span class="tag">IDE</span><span class="tag">Omni</span><span class="tag">Dual</span></div>
-    </div>
-    <div class="hscroll-card">
-      <div class="card-num">006 — Freedom</div>
-      <h3>Open Source. Free.</h3>
-      <p>MIT licensed. No lock-in. No subscription. It's yours.</p>
-      <div class="card-tags"><span class="tag">MIT License</span><span class="tag">GitHub</span><span class="tag">Community</span></div>
+    <div class="hpanel p3-bg">
+      <div class="p-num">Chapter 03</div>
+      <div class="p-content">
+        <h2>You <span class="accent">launch.</span></h2>
+        <div class="div"></div>
+        <p>Your app is live. Tested, documented, optimized, SEO-ready. You share the link with the world.</p>
+        <div class="eg">✅ Your app is live at myapp.com</div>
+      </div>
+      <div class="p-img"><img src="img/app-mockup.jpg" alt=""><div></div></div>
     </div>
   </div>
 </section>
-
-<!-- The Team -->
-<section class="team-grid" id="team">
-  <div class="team-header reveal">
-    <div class="team-count">42</div>
-    <div class="team-subtitle">Specialized AI agents. Each one a domain expert.</div>
-  </div>
-  <div class="agents-grid reveal">
-    <div class="agent-cell"><span class="emoji">🎤</span><span class="name">Interviewer</span></div>
-    <div class="agent-cell"><span class="emoji">📊</span><span class="name">Market Analyst</span></div>
-    <div class="agent-cell"><span class="emoji">📋</span><span class="name">Specs</span></div>
-    <div class="agent-cell"><span class="emoji">🎨</span><span class="name">Designer</span></div>
-    <div class="agent-cell"><span class="emoji">🏗️</span><span class="name">Architect</span></div>
-    <div class="agent-cell"><span class="emoji">🖥️</span><span class="name">Frontend</span></div>
-    <div class="agent-cell"><span class="emoji">⚙️</span><span class="name">Backend</span></div>
-    <div class="agent-cell"><span class="emoji">📱</span><span class="name">Mobile</span></div>
-    <div class="agent-cell"><span class="emoji">🗄️</span><span class="name">Database</span></div>
-    <div class="agent-cell"><span class="emoji">🔌</span><span class="name">API</span></div>
-    <div class="agent-cell"><span class="emoji">🔍</span><span class="name">Code Review</span></div>
-    <div class="agent-cell"><span class="emoji">✅</span><span class="name">QA</span></div>
-    <div class="agent-cell"><span class="emoji">🐛</span><span class="name">Debugger</span></div>
-    <div class="agent-cell"><span class="emoji">👁️</span><span class="name">Reviewer</span></div>
-    <div class="agent-cell"><span class="emoji">🛡️</span><span class="name">Security</span></div>
-    <div class="agent-cell"><span class="emoji">🌐</span><span class="name">SEO</span></div>
-    <div class="agent-cell"><span class="emoji">⚡</span><span class="name">Performance</span></div>
-    <div class="agent-cell"><span class="emoji">♿</span><span class="name">Accessibility</span></div>
-    <div class="agent-cell"><span class="emoji">🌍</span><span class="name">i18n</span></div>
-    <div class="agent-cell"><span class="emoji">📝</span><span class="name">Docs</span></div>
-    <div class="agent-cell"><span class="emoji">📣</span><span class="name">Marketing</span></div>
-    <div class="agent-cell"><span class="emoji">✍️</span><span class="name">Copywriter</span></div>
-    <div class="agent-cell"><span class="emoji">📈</span><span class="name">Content</span></div>
-    <div class="agent-cell"><span class="emoji">🚀</span><span class="name">Deployer</span></div>
-    <div class="agent-cell"><span class="emoji">📊</span><span class="name">Analytics</span></div>
-    <div class="agent-cell"><span class="emoji">🪙</span><span class="name">Crypto</span></div>
-    <div class="agent-cell"><span class="emoji">🔬</span><span class="name">Experiments</span></div>
-    <div class="agent-cell"><span class="emoji">🛠️</span><span class="name">Skill Creator</span></div>
-    <div class="agent-cell"><span class="emoji">📦</span><span class="name">Template</span></div>
-    <div class="agent-cell"><span class="emoji">🎮</span><span class="name">Playground</span></div>
-    <div class="agent-cell"><span class="emoji">🧭</span><span class="name">Orchestrator</span></div>
-    <div class="agent-cell"><span class="emoji">🔀</span><span class="name">Router</span></div>
-    <div class="agent-cell"><span class="emoji">🔄</span><span class="name">Dual Engine</span></div>
-    <div class="agent-cell"><span class="emoji">💡</span><span class="name">Start</span></div>
-    <div class="agent-cell"><span class="emoji">🧠</span><span class="name">Memory</span></div>
-    <div class="agent-cell"><span class="emoji">📐</span><span class="name">Onboarding</span></div>
-    <div class="agent-cell"><span class="emoji">🏷️</span><span class="name">Integration</span></div>
-    <div class="agent-cell"><span class="emoji">🔧</span><span class="name">Updater</span></div>
-    <div class="agent-cell"><span class="emoji">🎯</span><span class="name">Optimizer</span></div>
-    <div class="agent-cell"><span class="emoji">🧪</span><span class="name">Test</span></div>
-    <div class="agent-cell"><span class="emoji">🔮</span><span class="name">Omni Router</span></div>
-    <div class="agent-cell"><span class="emoji">🧠</span><span class="name">Genius Team</span></div>
-  </div>
-</section>
-
-<!-- Install -->
-<section class="install-section" id="install">
-  <div class="install-label reveal">Get Started</div>
-  <div class="install-title reveal">One command.<br>Zero friction.</div>
-  <div class="install-block reveal" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app')">
-    $ bash &lt;(curl -fsSL .../create.sh) my-app<span class="cursor-blink">▌</span>
-  </div>
-  <div class="install-sub reveal">Click to copy · Works on Mac, Linux, WSL</div>
-  <div style="margin-top:2.5rem" class="reveal">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-neon" style="padding:0.8rem 2rem;font-size:0.8rem">★ Star on GitHub</a>
-  </div>
-</section>
-
-<footer>
-  <div class="left">Genius Team v18.0 — MIT License — Open Source</div>
-  <div class="right">
-    <a href="https://github.com/w-3-art/genius-team">GitHub</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a>
-  </div>
-</footer>
-
-<!-- Prop nav -->
-<div class="prop-nav">
-  <a href="/proposition1">1</a>
-  <a href="/proposition2">2</a>
-  <a href="/proposition3" class="active">3</a>
 </div>
 
+<section class="skills">
+  <div class="skills-inner">
+    <div class="sec-label" data-reveal>Your AI team</div>
+    <h2 class="sec-h" data-reveal>42 agents. 6 departments.</h2>
+    <p class="sec-sub" data-reveal>Each specialist knows exactly when to step in.</p>
+    <div class="cat-grid">
+      <div class="cat-card" data-reveal data-delay="0" data-color="#8b5cf6"><div class="cat-hdr"><span class="cat-ico">💡</span><span class="cat-name">Ideation</span><span class="cat-count">5</span></div><p class="cat-desc">Interview users, research markets, write specs</p><div class="cat-tags"><span>Interviewer</span><span>Analyst</span><span>Specs</span><span>Copywriter</span><span>Content</span></div></div>
+      <div class="cat-card" data-reveal data-delay=".1" data-color="#4f6ef7"><div class="cat-hdr"><span class="cat-ico">⚡</span><span class="cat-name">Build</span><span class="cat-count">7</span></div><p class="cat-desc">Architect and build every layer of your product</p><div class="cat-tags"><span>Architect</span><span>Designer</span><span>Frontend</span><span>Backend</span><span>Mobile</span><span>DB</span><span>API</span></div></div>
+      <div class="cat-card" data-reveal data-delay=".2" data-color="#34d399"><div class="cat-hdr"><span class="cat-ico">🛡️</span><span class="cat-name">Quality</span><span class="cat-count">5</span></div><p class="cat-desc">Review, test, audit security and accessibility</p><div class="cat-tags"><span>Code Review</span><span>QA</span><span>Security</span><span>A11y</span><span>Debugger</span></div></div>
+      <div class="cat-card" data-reveal data-delay="0" data-color="#fb923c"><div class="cat-hdr"><span class="cat-ico">📈</span><span class="cat-name">Growth</span><span class="cat-count">5</span></div><p class="cat-desc">SEO, analytics, performance, marketing, i18n</p><div class="cat-tags"><span>SEO</span><span>Analytics</span><span>Perf</span><span>Marketing</span><span>i18n</span></div></div>
+      <div class="cat-card" data-reveal data-delay=".1" data-color="#22d3ee"><div class="cat-hdr"><span class="cat-ico">🚀</span><span class="cat-name">Ops</span><span class="cat-count">4</span></div><p class="cat-desc">Deploy, document, and maintain continuously</p><div class="cat-tags"><span>Deployer</span><span>Docs</span><span>Template</span><span>Updater</span></div></div>
+      <div class="cat-card" data-reveal data-delay=".2" data-color="#e879f9"><div class="cat-hdr"><span class="cat-ico">🧠</span><span class="cat-name">AI Engine</span><span class="cat-count">5</span></div><p class="cat-desc">Orchestrate, route, optimize, remember everything</p><div class="cat-tags"><span>Orchestrator</span><span>Router</span><span>Experiments</span><span>Optimizer</span><span>Memory</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-s">
+  <h2 data-reveal>Your idea.<br>Our team.<br>Your product.</h2>
+  <p data-reveal>One command. Free forever.</p>
+  <div class="cmd" data-reveal onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app');this.querySelector('.h').textContent='✓ copied!'">
+    $ bash &lt;(curl -fsSL .../create.sh) my-app <span class="h">click to copy</span>
+  </div>
+  <div style="margin-top:1.5rem" data-reveal><button class="bp" onclick="GeniusWizard.open()">Get Started — Free →</button></div>
+</section>
+
+<footer><div>🧠 Genius Team v18.0 — MIT</div><div class="footer-links"><a href="https://github.com/w-3-art/genius-team">GitHub</a><a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></div></footer>
+<div class="prop-nav"><a href="/proposition1">1</a><a href="/proposition2">2</a><a href="/proposition3" class="active">3</a><a href="/proposition4">4</a><a href="/proposition5">5</a><a href="/proposition6">6</a><a href="/proposition7">7</a></div>
+
 <script>
-// Scroll progress
-window.addEventListener('scroll', () => {
-  const h = document.documentElement;
-  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-  document.getElementById('scrollFill').style.height = pct + '%';
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);
+gsap.ticker.add(t=>lenis.raf(t*1000));
+gsap.ticker.lagSmoothing(0);
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('solid',window.scrollY>60);
+  document.getElementById('scrollHint').style.opacity=window.scrollY>200?'0':'1';
+});
+GeniusWizard.init();
+
+// Hero entrance
+gsap.from('.badge',{y:20,opacity:0,duration:.7,delay:.2,ease:'expo.out'});
+gsap.from('.hero h1',{y:60,opacity:0,duration:1,delay:.4,ease:'expo.out'});
+gsap.from('.hero-sub',{y:30,opacity:0,duration:.7,delay:.8,ease:'expo.out'});
+gsap.from('.hero-ctas > *',{y:20,opacity:0,stagger:.1,duration:.6,delay:1,ease:'expo.out'});
+
+// Horizontal scroll
+const track=document.getElementById('hscrollTrack');
+const panels=track.querySelectorAll('.hpanel');
+gsap.to(track,{
+  x:()=>-(track.scrollWidth-window.innerWidth),
+  ease:'none',
+  scrollTrigger:{trigger:'#hscrollWrap',pin:true,scrub:1.5,end:()=>'+='+(track.scrollWidth-window.innerWidth),invalidateOnRefresh:true}
 });
 
 // Reveal
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-
-// Horizontal scroll drag
-const track = document.getElementById('hscrollTrack');
-let isDown = false, startX, scrollLeft;
-track.addEventListener('mousedown', e => { isDown = true; track.style.cursor = 'grabbing'; startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft; });
-track.addEventListener('mouseleave', () => { isDown = false; track.style.cursor = 'grab'; });
-track.addEventListener('mouseup', () => { isDown = false; track.style.cursor = 'grab'; });
-track.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - track.offsetLeft; track.scrollLeft = scrollLeft - (x - startX) * 1.5; });
+gsap.utils.toArray('[data-reveal]').forEach(el=>{
+  gsap.from(el,{y:50,opacity:0,duration:.8,ease:'power3.out',delay:+(el.dataset.delay||0),scrollTrigger:{trigger:el,start:'top 80%'}});
+});
+document.querySelectorAll('.cat-card').forEach(c=>{
+  const col=c.dataset.color;
+  c.addEventListener('mouseenter',()=>{c.style.borderColor=col+'44';c.style.boxShadow=`0 15px 40px ${col}18`});
+  c.addEventListener('mouseleave',()=>{c.style.borderColor='';c.style.boxShadow=''});
+});
 </script>
 </body>
 </html>

@@ -3,13 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — Your AI Product Team</title>
-<meta name="description" content="42 AI specialists build your app while you describe it. Zero coding required.">
+<title>Genius Team — Build Anything</title>
+<meta name="description" content="Whatever you imagine, your AI team can build it. 31 specialized skills adapt to any project type.">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- GSAP + ScrollTrigger + SplitText -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
-<!-- Lenis smooth scroll -->
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
 /* ═══ RESET ═══ */
@@ -17,490 +15,777 @@
 html { overflow-x: hidden; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
-body { font-family: 'Sora', sans-serif; background: #050507; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Sora', sans-serif; background: #08080c; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
 :root {
   --blue: #4f6ef7;
   --cyan: #22d3ee;
   --emerald: #34d399;
-  --violet: #8b5cf6;
-  --rose: #fb7185;
-  --orange: #fb923c;
   --dim: rgba(255,255,255,0.4);
   --subtle: rgba(255,255,255,0.06);
+  --surface: rgba(255,255,255,0.03);
 }
 
-/* ═══ SMOOTH CURSOR LIGHT ═══ */
-.cursor-light { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(79, 110, 247, 0.07), transparent 70%); pointer-events: none; z-index: 0; transform: translate(-50%, -50%); will-change: transform; }
-
-/* ═══ NAV ═══ */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.4s; }
-nav.scrolled { background: rgba(5,5,7,0.85); backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid var(--subtle); }
-.nav-logo { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-.nav-logo .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 10px var(--emerald); animation: pulse 2.5s ease infinite; }
-@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
+/* ═══ FIXED NAV ═══ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.2rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: rgba(8,8,12,0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--subtle);
+}
+.nav-logo {
+  font-size: 1.1rem; font-weight: 700;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.nav-logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 12px var(--emerald);
+  animation: pulse 2.5s ease infinite;
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
 .nav-right { display: flex; gap: 2rem; align-items: center; }
-.nav-right a { color: var(--dim); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.nav-right a {
+  color: var(--dim); text-decoration: none;
+  font-size: 0.85rem; font-weight: 500; transition: color 0.2s;
+}
 .nav-right a:hover { color: #fff; }
-.nav-cta { padding: 0.55rem 1.5rem !important; border-radius: 100px; background: var(--blue) !important; color: #fff !important; font-weight: 600 !important; transition: all 0.3s !important; }
-.nav-cta:hover { box-shadow: 0 0 30px rgba(79, 110, 247, 0.4); transform: translateY(-1px); }
+.nav-cta {
+  padding: 0.55rem 1.5rem !important;
+  border-radius: 100px;
+  background: var(--blue) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  transition: all 0.3s !important;
+  cursor: pointer;
+}
+.nav-cta:hover {
+  box-shadow: 0 0 30px rgba(79, 110, 247, 0.4);
+  transform: translateY(-1px);
+}
 
-/* ═══ SECTION 1: HERO ═══ */
-.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 6rem 2rem; position: relative; overflow: hidden; }
-.hero-bg-img { position: absolute; inset: 0; background: url('img/hero-brain.jpg') center/cover no-repeat; opacity: 0.15; }
-.hero-gradient { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(79, 110, 247, 0.12), transparent 70%), radial-gradient(ellipse 50% 40% at 70% 70%, rgba(139, 92, 246, 0.08), transparent 60%), linear-gradient(to bottom, transparent 60%, #050507); }
-.hero-content { position: relative; z-index: 1; max-width: 900px; }
-.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 1rem 0.35rem 0.5rem; border-radius: 100px; background: rgba(79, 110, 247, 0.1); border: 1px solid rgba(79, 110, 247, 0.2); font-size: 0.8rem; color: var(--blue); margin-bottom: 2rem; opacity: 0; }
-.hero-badge .tag { padding: 0.15rem 0.5rem; border-radius: 100px; background: var(--blue); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; }
-.hero h1 { font-size: clamp(3rem, 7.5vw, 5.5rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
-.hero h1 .word { display: inline-block; opacity: 0; transform: translateY(60px) rotateX(40deg); }
-.hero h1 .accent { background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero-sub { font-size: 1.2rem; color: var(--dim); max-width: 480px; margin: 0 auto 3rem; line-height: 1.7; font-weight: 300; opacity: 0; }
-.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; opacity: 0; }
-.btn-primary { padding: 0.9rem 2.5rem; border-radius: 100px; background: var(--blue); color: #fff; font-weight: 600; font-size: 1rem; border: none; cursor: pointer; text-decoration: none; transition: all 0.4s; position: relative; overflow: hidden; }
-.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--violet), var(--blue)); opacity: 0; transition: opacity 0.4s; }
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient mesh background */
+.hero-mesh {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(79,110,247,0.12), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 80% 60%, rgba(34,211,238,0.08), transparent 65%),
+    radial-gradient(ellipse 40% 55% at 50% 80%, rgba(52,211,153,0.06), transparent 60%);
+  animation: meshShift 12s ease-in-out infinite alternate;
+}
+@keyframes meshShift {
+  0% {
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(79,110,247,0.12), transparent 70%),
+      radial-gradient(ellipse 50% 45% at 80% 60%, rgba(34,211,238,0.08), transparent 65%),
+      radial-gradient(ellipse 40% 55% at 50% 80%, rgba(52,211,153,0.06), transparent 60%);
+  }
+  33% {
+    background:
+      radial-gradient(ellipse 55% 55% at 70% 25%, rgba(79,110,247,0.14), transparent 70%),
+      radial-gradient(ellipse 45% 50% at 20% 70%, rgba(34,211,238,0.1), transparent 65%),
+      radial-gradient(ellipse 50% 40% at 60% 90%, rgba(52,211,153,0.05), transparent 60%);
+  }
+  66% {
+    background:
+      radial-gradient(ellipse 50% 60% at 40% 50%, rgba(79,110,247,0.1), transparent 70%),
+      radial-gradient(ellipse 55% 40% at 90% 30%, rgba(34,211,238,0.09), transparent 65%),
+      radial-gradient(ellipse 45% 50% at 30% 80%, rgba(52,211,153,0.07), transparent 60%);
+  }
+  100% {
+    background:
+      radial-gradient(ellipse 65% 45% at 80% 40%, rgba(79,110,247,0.11), transparent 70%),
+      radial-gradient(ellipse 50% 55% at 30% 50%, rgba(34,211,238,0.1), transparent 65%),
+      radial-gradient(ellipse 40% 45% at 70% 85%, rgba(52,211,153,0.06), transparent 60%);
+  }
+}
+.hero-bg-img {
+  position: absolute; inset: 0;
+  background: url('img/hero-brain.jpg') center/cover no-repeat;
+  opacity: 0.1;
+}
+.hero-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, #08080c);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 900px;
+}
+.hero h1 {
+  font-size: clamp(3.2rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.5rem;
+}
+.morph-line {
+  display: block;
+  min-height: 1.2em;
+}
+.morph-word {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity 0.5s, filter 0.5s, transform 0.5s;
+}
+.morph-word.out {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(10px);
+}
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--dim);
+  max-width: 500px;
+  margin: 1.5rem auto 0;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ═══ SECTION SHARED ═══ */
+.section { padding: 6rem 2rem; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--blue);
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.section-sub {
+  color: var(--dim);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 600px;
+}
+
+/* ═══ WORKS FOR EVERYTHING — PROJECT GRID ═══ */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 3.5rem;
+}
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--subtle);
+  border-radius: 16px;
+  padding: 2rem 1.8rem;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+.project-card:hover {
+  border-color: rgba(79,110,247,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 40px rgba(79,110,247,0.06);
+}
+.project-card .card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+.project-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.project-card p {
+  font-size: 0.88rem;
+  color: var(--dim);
+  line-height: 1.55;
+}
+
+/* ═══ YOUR TEAM ADAPTS ═══ */
+.adapts-section {
+  padding: 6rem 2rem;
+  overflow: hidden;
+}
+.adapts-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.adapts-img {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.adapts-img img {
+  width: 100%;
+  display: block;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.adapts-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.adapts-text .section-label { margin-bottom: 0.75rem; }
+.adapts-text .section-title { margin-bottom: 1.25rem; }
+.adapts-text .section-sub { margin-bottom: 1.5rem; }
+.adapts-stat-row {
+  display: flex; gap: 2.5rem; margin-top: 2rem;
+}
+.adapts-stat {
+  display: flex; flex-direction: column;
+}
+.adapts-stat .val {
+  font-size: 2rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.adapts-stat .lbl {
+  font-size: 0.78rem; color: var(--dim); margin-top: 0.2rem;
+}
+
+/* ═══ SKILLS SECTION ═══ */
+.skills-section { padding: 6rem 2rem; }
+.skills-inner { max-width: 1200px; margin: 0 auto; }
+.skills-header { text-align: center; margin-bottom: 4rem; }
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--subtle);
+  border-radius: 16px;
+  padding: 2rem 1.8rem;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.skill-card:hover {
+  border-color: rgba(79,110,247,0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+}
+.skill-card .skill-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+.skill-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+.skill-card .skill-count {
+  font-size: 0.72rem;
+  color: var(--blue);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+.skill-card .skill-list {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+}
+.skill-card .skill-desc {
+  font-size: 0.82rem;
+  color: var(--dim);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ═══ CTA ═══ */
+.cta-section {
+  padding: 8rem 2rem;
+  text-align: center;
+  position: relative;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 60% at 50% 50%, rgba(79,110,247,0.08), transparent);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-size: clamp(2.8rem, 6.5vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  position: relative; z-index: 1;
+}
+.cta-gradient {
+  background: linear-gradient(135deg, var(--blue), var(--cyan), var(--emerald));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s linear infinite;
+}
+@keyframes gradientShift { to { background-position: 200% center; } }
+.cta-sub {
+  color: var(--dim);
+  font-size: 1.05rem;
+  margin-bottom: 2.5rem;
+  position: relative; z-index: 1;
+}
+.cmd-block {
+  display: inline-flex; align-items: center; gap: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--subtle);
+  border-radius: 16px;
+  padding: 1.2rem 2.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: var(--emerald);
+  cursor: pointer;
+  transition: all 0.4s;
+  position: relative; z-index: 1;
+  margin-bottom: 2rem;
+}
+.cmd-block:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 50px rgba(79,110,247,0.12);
+}
+.cmd-block .cmd-hint {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.72rem;
+  color: var(--dim);
+}
+.cta-buttons {
+  display: flex; gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative; z-index: 1;
+  margin-top: 1.5rem;
+}
+.btn-primary {
+  padding: 0.9rem 2.5rem;
+  border-radius: 100px;
+  background: var(--blue);
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  opacity: 0;
+  transition: opacity 0.4s;
+}
 .btn-primary span { position: relative; z-index: 1; }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(79, 110, 247, 0.35); }
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(79, 110, 247, 0.35);
+}
 .btn-primary:hover::after { opacity: 1; }
-.btn-ghost { padding: 0.9rem 2.5rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #fff; font-weight: 500; font-size: 1rem; cursor: pointer; text-decoration: none; transition: all 0.3s; }
-.btn-ghost:hover { border-color: var(--blue); background: rgba(79, 110, 247, 0.05); }
-.hero-mockup { margin-top: 4rem; width: 100%; max-width: 1000px; opacity: 0; position: relative; z-index: 1; }
-.hero-mockup img { width: 100%; border-radius: 20px; box-shadow: 0 40px 80px rgba(0,0,0,0.5); }
-
-/* ═══ SECTION 2: SCROLL TEXT REVEAL ═══ */
-.text-reveal { padding: 15rem 3rem; position: relative; }
-.text-reveal-inner { max-width: 800px; margin: 0 auto; }
-.reveal-text { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 600; line-height: 1.5; letter-spacing: -0.02em; }
-.reveal-text .word { display: inline-block; color: rgba(255,255,255,0.08); transition: color 0.3s; margin-right: 0.3em; }
-.reveal-text .word.active { color: #fff; }
-.reveal-text .word.highlight { color: var(--blue); }
-.reveal-text .word.highlight.active { color: var(--cyan); text-shadow: 0 0 30px rgba(34, 211, 238, 0.3); }
-
-/* ═══ SECTION 3: BEFORE / AFTER ═══ */
-.transform-section { padding: 10rem 2rem; overflow: hidden; }
-.transform-inner { max-width: 1100px; margin: 0 auto; }
-.transform-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: var(--blue); margin-bottom: 1rem; }
-.transform-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4rem; line-height: 1.1; }
-.transform-columns { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 2rem; align-items: start; }
-.col-before, .col-after { display: flex; flex-direction: column; gap: 1.5rem; }
-.pain-item { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-radius: 16px; background: rgba(255,60,60,0.04); border: 1px solid rgba(255,60,60,0.08); font-size: 1rem; color: rgba(255,255,255,0.5); text-decoration: line-through; transition: all 0.5s; }
-.pain-item .icon { font-size: 1.3rem; flex-shrink: 0; }
-.gain-item { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-radius: 16px; background: rgba(34,211,238,0.04); border: 1px solid rgba(34,211,238,0.08); font-size: 1rem; transition: all 0.5s; }
-.gain-item .icon { font-size: 1.3rem; flex-shrink: 0; }
-.col-arrow { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--blue); align-self: center; }
-
-/* ═══ SECTION 4: WORKFLOW ═══ */
-.workflow { padding: 10rem 2rem; position: relative; }
-.workflow-inner { max-width: 1000px; margin: 0 auto; }
-.workflow-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 1rem; }
-.workflow-sub { text-align: center; color: var(--dim); font-size: 1.1rem; margin-bottom: 4rem; }
-.workflow-image { width: 100%; max-width: 800px; margin: 0 auto 4rem; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
-.workflow-image img { width: 100%; display: block; }
-.workflow-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.w-step { text-align: center; padding: 2rem 1.5rem; border-radius: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--subtle); transition: all 0.5s; }
-.w-step:hover { border-color: rgba(79, 110, 247, 0.2); background: rgba(79, 110, 247, 0.03); transform: translateY(-5px); }
-.w-step .num { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 1rem; }
-.w-step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
-.w-step p { color: var(--dim); font-size: 0.9rem; line-height: 1.6; }
-
-/* ═══ SECTION 5: SKILL CATEGORIES ═══ */
-.skills-section { padding: 10rem 2rem; }
-.skills-inner { max-width: 1100px; margin: 0 auto; }
-.skills-heading { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 1rem; }
-.skills-sub { text-align: center; color: var(--dim); font-size: 1.1rem; margin-bottom: 4rem; max-width: 500px; margin-left: auto; margin-right: auto; }
-.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-.cat-card { border-radius: 24px; padding: 2rem; border: 1px solid var(--subtle); background: rgba(255,255,255,0.02); position: relative; overflow: hidden; transition: all 0.5s; cursor: default; }
-.cat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 3px 3px 0 0; opacity: 0; transition: opacity 0.4s; }
-.cat-card:hover { transform: translateY(-6px); border-color: transparent; }
-.cat-card:hover::before { opacity: 1; }
-.cat-card.ideation::before { background: linear-gradient(90deg, var(--violet), var(--rose)); }
-.cat-card.ideation:hover { box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.2); }
-.cat-card.dev::before { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
-.cat-card.dev:hover { box-shadow: 0 20px 50px rgba(79, 110, 247, 0.15); border-color: rgba(79, 110, 247, 0.2); }
-.cat-card.quality::before { background: linear-gradient(90deg, var(--emerald), var(--cyan)); }
-.cat-card.quality:hover { box-shadow: 0 20px 50px rgba(52, 211, 153, 0.15); border-color: rgba(52, 211, 153, 0.2); }
-.cat-card.growth::before { background: linear-gradient(90deg, var(--orange), var(--rose)); }
-.cat-card.growth:hover { box-shadow: 0 20px 50px rgba(251, 146, 60, 0.15); border-color: rgba(251, 146, 60, 0.2); }
-.cat-card.ops::before { background: linear-gradient(90deg, var(--cyan), var(--blue)); }
-.cat-card.ops:hover { box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15); border-color: rgba(34, 211, 238, 0.2); }
-.cat-card.intelligence::before { background: linear-gradient(90deg, var(--violet), var(--blue)); }
-.cat-card.intelligence:hover { box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.2); }
-.cat-card .cat-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
-.cat-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
-.cat-card .cat-desc { font-size: 0.88rem; color: var(--dim); line-height: 1.5; margin-bottom: 1rem; }
-.cat-agents { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.cat-agents .agent { padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.04); font-size: 0.72rem; color: rgba(255,255,255,0.5); }
-
-/* ═══ SECTION 6: CTA ═══ */
-.cta-section { padding: 12rem 2rem; text-align: center; position: relative; overflow: hidden; }
-.cta-glow { position: absolute; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(79, 110, 247, 0.1), transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
-.cta-section h2 { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; position: relative; z-index: 1; }
-.cta-section h2 .glow { color: var(--cyan); text-shadow: 0 0 40px rgba(34, 211, 238, 0.3); }
-.cta-section p { color: var(--dim); font-size: 1.1rem; margin-bottom: 2.5rem; position: relative; z-index: 1; }
-.install-box { display: inline-flex; align-items: center; gap: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--subtle); border-radius: 16px; padding: 1rem 2rem; font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem; color: var(--emerald); cursor: pointer; transition: all 0.4s; position: relative; z-index: 1; }
-.install-box:hover { border-color: var(--blue); box-shadow: 0 0 40px rgba(79, 110, 247, 0.15); background: rgba(79, 110, 247, 0.03); }
-.install-box .hint { font-family: 'Sora', sans-serif; font-size: 0.72rem; color: var(--dim); }
-.cta-github { margin-top: 2rem; position: relative; z-index: 1; }
+.btn-ghost {
+  padding: 0.9rem 2.5rem;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-ghost:hover {
+  border-color: var(--blue);
+  background: rgba(79, 110, 247, 0.05);
+}
 
 /* ═══ FOOTER ═══ */
-footer { padding: 3rem; border-top: 1px solid var(--subtle); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--dim); }
-footer a { color: var(--dim); text-decoration: none; transition: color 0.2s; }
+footer {
+  padding: 3rem;
+  border-top: 1px solid var(--subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.3);
+}
+footer a {
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
 footer a:hover { color: var(--blue); }
-footer .links { display: flex; gap: 1.5rem; }
+.footer-links { display: flex; gap: 1.5rem; }
 
 /* ═══ PROP NAV ═══ */
-.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.35rem; z-index: 100; background: rgba(5,5,7,0.85); backdrop-filter: blur(20px); border: 1px solid var(--subtle); border-radius: 100px; padding: 0.35rem; }
-.prop-nav a { padding: 0.4rem 0.9rem; border-radius: 100px; color: var(--dim); text-decoration: none; font-size: 0.72rem; font-weight: 500; transition: all 0.3s; }
+.prop-nav {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.35rem;
+  z-index: 100;
+  background: rgba(8,8,12,0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--subtle);
+  border-radius: 100px;
+  padding: 0.35rem;
+}
+.prop-nav a {
+  padding: 0.4rem 0.9rem;
+  border-radius: 100px;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
 .prop-nav a:hover { color: #fff; }
 .prop-nav a.active { background: var(--blue); color: #fff; }
 
-/* ═══ RESPONSIVE ═══ */
-@media (max-width: 968px) {
-  .transform-columns { grid-template-columns: 1fr; }
-  .col-arrow { transform: rotate(90deg); padding: 1rem 0; }
-  .workflow-steps { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
-  .cat-grid { grid-template-columns: 1fr 1fr; }
-  .nav-right { display: none; }
-  nav { padding: 1rem 1.5rem; }
+/* ═══ SCROLL REVEAL UTILITY ═══ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
 }
-@media (max-width: 640px) {
-  .hero h1 { font-size: 2.5rem; }
-  .cat-grid { grid-template-columns: 1fr; }
-  .hero-actions { flex-direction: column; align-items: center; }
-  footer { flex-direction: column; gap: 1rem; }
-  .text-reveal { padding: 8rem 1.5rem; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 1024px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .adapts-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .adapts-img { order: -1; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-right .nav-link-text { display: none; }
+  .project-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+  .adapts-stat-row { gap: 1.5rem; }
+  .section { padding: 5rem 1.5rem; }
+  .adapts-section { padding: 5rem 1.5rem; }
+  .skills-section { padding: 5rem 1.5rem; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+}
+@media (max-width: 480px) {
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .cmd-block { flex-direction: column; gap: 0.5rem; padding: 1rem 1.5rem; font-size: 0.85rem; }
+  .prop-nav { bottom: 1rem; }
+  .prop-nav a { padding: 0.35rem 0.65rem; font-size: 0.65rem; }
 }
 </style>
 </head>
 <body>
 
-<div class="cursor-light" id="cursorLight"></div>
-
+<!-- ═══ FIXED NAV ═══ -->
 <nav id="mainNav">
-  <div class="nav-logo"><span class="pulse"></span> Genius Team</div>
+  <div class="nav-logo">
+    <span class="dot"></span>
+    Genius Team
+  </div>
   <div class="nav-right">
-    <a href="#workflow">How it works</a>
-    <a href="#skills">The team</a>
-    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
-    <a href="#cta" class="nav-cta">Get Started Free</a>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="nav-link-text">GitHub</a>
+    <a href="#" class="nav-cta" onclick="GeniusWizard.open(); return false;">Get Started</a>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- ═══ HERO — MORPHING TEXT ═══ -->
 <section class="hero" id="hero">
+  <div class="hero-mesh"></div>
   <div class="hero-bg-img"></div>
-  <div class="hero-gradient"></div>
+  <div class="hero-fade"></div>
   <div class="hero-content">
-    <div class="hero-badge" id="heroBadge">
-      <span class="tag">v18</span> Free & Open Source
-    </div>
-    <h1 id="heroTitle">
-      <span class="word">Your</span>
-      <span class="word">idea,</span>
-      <span class="word accent">built</span>
-      <span class="word accent">by</span>
-      <span class="word accent">AI.</span>
+    <h1>
+      <span>Build your</span>
+      <span class="morph-line">
+        <span class="morph-word" id="morphWord">booking app</span>
+      </span>
     </h1>
-    <p class="hero-sub" id="heroSub">42 AI specialists design, code, test, and deploy your app. You just describe what you want.</p>
-    <div class="hero-actions" id="heroActions">
-      <a href="#cta" class="btn-primary"><span>Start Building — Free</span></a>
-      <a href="#reveal" class="btn-ghost">Discover ↓</a>
-    </div>
-  </div>
-  <div class="hero-mockup" id="heroMockup">
-    <img src="img/app-mockup.jpg" alt="App built with Genius Team" loading="lazy">
+    <p class="hero-sub">Whatever you imagine, your AI team can build it.</p>
   </div>
 </section>
 
-<!-- SCROLL TEXT REVEAL -->
-<section class="text-reveal" id="reveal">
-  <div class="text-reveal-inner">
-    <p class="reveal-text" id="revealText">
-      <span class="word">For</span>
-      <span class="word">decades,</span>
-      <span class="word">building</span>
-      <span class="word">software</span>
-      <span class="word">meant</span>
-      <span class="word">months</span>
-      <span class="word">of</span>
-      <span class="word">learning,</span>
-      <span class="word">expensive</span>
-      <span class="word">teams,</span>
-      <span class="word">and</span>
-      <span class="word">endless</span>
-      <span class="word">debugging.</span>
-      <span class="word highlight">Now</span>
-      <span class="word highlight">you</span>
-      <span class="word highlight">just</span>
-      <span class="word highlight">describe</span>
-      <span class="word highlight">what</span>
-      <span class="word highlight">you</span>
-      <span class="word highlight">want.</span>
-    </p>
-  </div>
-</section>
+<!-- ═══ WORKS FOR EVERYTHING ═══ -->
+<section class="section" id="projects">
+  <div class="section-inner">
+    <div class="section-label reveal">Universal by design</div>
+    <h2 class="section-title reveal">Works for Everything</h2>
+    <p class="section-sub reveal">No matter what you want to build, your AI team adapts its workflow and skill set to deliver exactly what you need.</p>
+    <div class="project-grid">
 
-<!-- BEFORE / AFTER -->
-<section class="transform-section" id="transform">
-  <div class="transform-inner">
-    <div class="transform-label">The shift</div>
-    <h2 class="transform-heading">What used to take months<br>now takes minutes.</h2>
-    <div class="transform-columns">
-      <div class="col-before">
-        <div class="pain-item"><span class="icon">📚</span> Learn to code for months</div>
-        <div class="pain-item"><span class="icon">💸</span> Hire developers ($$$)</div>
-        <div class="pain-item"><span class="icon">🤯</span> Manage a team</div>
-        <div class="pain-item"><span class="icon">🐛</span> Debug until 3am</div>
-        <div class="pain-item"><span class="icon">🤞</span> Ship and pray</div>
+      <div class="project-card reveal">
+        <span class="card-icon">&#x1F3EA;</span>
+        <h3>E-commerce</h3>
+        <p>Online stores with payments, inventory, and shipping built right in.</p>
       </div>
-      <div class="col-arrow">→</div>
-      <div class="col-after">
-        <div class="gain-item"><span class="icon">💬</span> Describe your idea</div>
-        <div class="gain-item"><span class="icon">🤖</span> 42 AI agents build it</div>
-        <div class="gain-item"><span class="icon">✅</span> Auto-tested & reviewed</div>
-        <div class="gain-item"><span class="icon">🚀</span> Deploy in one click</div>
-        <div class="gain-item"><span class="icon">🆓</span> Free & open source</div>
+
+      <div class="project-card reveal">
+        <span class="card-icon">&#x1F4C5;</span>
+        <h3>Booking Platform</h3>
+        <p>Calendars, availability, and scheduling that just works.</p>
       </div>
+
+      <div class="project-card reveal">
+        <span class="card-icon">&#x1F4CA;</span>
+        <h3>SaaS Dashboard</h3>
+        <p>Analytics, user management, and billing from day one.</p>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="card-icon">&#x1F4F1;</span>
+        <h3>Mobile App</h3>
+        <p>iOS and Android with native features included.</p>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="card-icon">&#x1F916;</span>
+        <h3>AI Tool</h3>
+        <p>Machine learning, APIs, and smart features wired up.</p>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="card-icon">&#x1F3AE;</span>
+        <h3>Game</h3>
+        <p>Real-time multiplayer, leaderboards, and more.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- WORKFLOW -->
-<section class="workflow" id="workflow">
-  <div class="workflow-inner">
-    <h2 class="workflow-heading">Three steps. Sixty seconds.</h2>
-    <p class="workflow-sub">No account, no credit card, no experience needed.</p>
-    <div class="workflow-image">
-      <img src="img/workflow-steps.jpg" alt="Genius Team workflow" loading="lazy">
+<!-- ═══ YOUR TEAM ADAPTS ═══ -->
+<section class="adapts-section" id="adapts">
+  <div class="adapts-inner">
+    <div class="adapts-img reveal">
+      <img src="img/agent-constellation.jpg" alt="AI agent constellation adapting to projects" loading="lazy">
     </div>
-    <div class="workflow-steps">
-      <div class="w-step">
-        <div class="num">01</div>
-        <h3>Describe it</h3>
-        <p>"Build me an online store for handmade jewelry with Stripe checkout"</p>
-      </div>
-      <div class="w-step">
-        <div class="num">02</div>
-        <h3>Watch it build</h3>
-        <p>42 specialists collaborate: design → code → test → secure → optimize</p>
-      </div>
-      <div class="w-step">
-        <div class="num">03</div>
-        <h3>Ship it</h3>
-        <p>Production-ready. Tested. Documented. SEO optimized. Live.</p>
+    <div class="adapts-text">
+      <div class="section-label reveal">Intelligent reconfiguration</div>
+      <h2 class="section-title reveal">Your Team Adapts</h2>
+      <p class="section-sub reveal">Every project is different. Your AI team reorganizes itself to match exactly what you need. Building a store? Commerce specialists activate. Launching a SaaS? Analytics and billing agents step up. The right experts, every time.</p>
+      <p class="section-sub reveal" style="margin-top: 1rem;">31 specialized skills across 6 categories reconfigure dynamically so you always have the perfect team composition, no matter what you're building.</p>
+      <div class="adapts-stat-row reveal">
+        <div class="adapts-stat">
+          <span class="val">31</span>
+          <span class="lbl">Specialized skills</span>
+        </div>
+        <div class="adapts-stat">
+          <span class="val">6</span>
+          <span class="lbl">Categories</span>
+        </div>
+        <div class="adapts-stat">
+          <span class="val">&infin;</span>
+          <span class="lbl">Configurations</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SKILL CATEGORIES -->
+<!-- ═══ 31 SKILLS, 6 CATEGORIES ═══ -->
 <section class="skills-section" id="skills">
   <div class="skills-inner">
-    <h2 class="skills-heading">Meet your team.</h2>
-    <p class="skills-sub">42 AI agents organized into 6 departments. Each one a domain expert.</p>
-    <div class="cat-grid">
-      <div class="cat-card ideation">
-        <span class="cat-icon">💡</span>
+    <div class="skills-header">
+      <div class="section-label reveal">The complete team</div>
+      <h2 class="section-title reveal" style="max-width: none;">31 Skills. 6 Categories. One Team.</h2>
+      <p class="section-sub reveal" style="margin: 0.75rem auto 0; text-align: center;">Every skill your project needs, working together seamlessly.</p>
+    </div>
+
+    <div class="skills-grid">
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">&#x1F4A1;</span>
         <h3>Ideation</h3>
-        <p class="cat-desc">Research your market, interview users, write specs, and plan the product.</p>
-        <div class="cat-agents">
-          <span class="agent">Interviewer</span>
-          <span class="agent">Market Analyst</span>
-          <span class="agent">Specs</span>
-          <span class="agent">Copywriter</span>
-          <span class="agent">Content</span>
-        </div>
+        <span class="skill-count">5 skills</span>
+        <div class="skill-list">Interviewer &middot; Market Analyst &middot; Specs Writer &middot; Designer &middot; Integration Guide</div>
+        <div class="skill-desc">From napkin sketch to crystal-clear specifications</div>
       </div>
-      <div class="cat-card dev">
-        <span class="cat-icon">⚡</span>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">&#x26A1;</span>
         <h3>Development</h3>
-        <p class="cat-desc">Design the architecture and build every layer: frontend, backend, mobile, database, API.</p>
-        <div class="cat-agents">
-          <span class="agent">Architect</span>
-          <span class="agent">Designer</span>
-          <span class="agent">Frontend</span>
-          <span class="agent">Backend</span>
-          <span class="agent">Mobile</span>
-          <span class="agent">Database</span>
-          <span class="agent">API</span>
-        </div>
+        <span class="skill-count">7 skills</span>
+        <div class="skill-list">Dev Router &middot; Frontend &middot; Backend &middot; Mobile &middot; Database &middot; API &middot; Orchestrator</div>
+        <div class="skill-desc">Full-stack implementation with specialized agents</div>
       </div>
-      <div class="cat-card quality">
-        <span class="cat-icon">🛡️</span>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">&#x1F6E1;</span>
         <h3>Quality</h3>
-        <p class="cat-desc">Review every line, test every flow, audit security, and ensure accessibility.</p>
-        <div class="cat-agents">
-          <span class="agent">Code Review</span>
-          <span class="agent">QA</span>
-          <span class="agent">Security</span>
-          <span class="agent">Accessibility</span>
-          <span class="agent">Debugger</span>
-        </div>
+        <span class="skill-count">5 skills</span>
+        <div class="skill-list">QA Micro &middot; Full QA &middot; Code Review &middot; Security Audit &middot; Debugger</div>
+        <div class="skill-desc">Every line reviewed, tested, and hardened</div>
       </div>
-      <div class="cat-card growth">
-        <span class="cat-icon">📈</span>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">&#x1F4C8;</span>
         <h3>Growth</h3>
-        <p class="cat-desc">SEO, analytics, marketing strategy, performance optimization, and i18n.</p>
-        <div class="cat-agents">
-          <span class="agent">SEO</span>
-          <span class="agent">Analytics</span>
-          <span class="agent">Performance</span>
-          <span class="agent">Marketing</span>
-          <span class="agent">i18n</span>
-        </div>
+        <span class="skill-count">5 skills</span>
+        <div class="skill-list">SEO &middot; Analytics &middot; Performance &middot; Accessibility &middot; Content</div>
+        <div class="skill-desc">Built-in growth engine from day one</div>
       </div>
-      <div class="cat-card ops">
-        <span class="cat-icon">🚀</span>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">&#x1F680;</span>
         <h3>Operations</h3>
-        <p class="cat-desc">Deploy, document, and maintain. Continuous integration and delivery.</p>
-        <div class="cat-agents">
-          <span class="agent">Deployer</span>
-          <span class="agent">Docs</span>
-          <span class="agent">Template</span>
-          <span class="agent">Updater</span>
-        </div>
+        <span class="skill-count">4 skills</span>
+        <div class="skill-list">Deployer &middot; Experiments &middot; i18n &middot; Onboarding</div>
+        <div class="skill-desc">Ship fast, experiment freely, scale globally</div>
       </div>
-      <div class="cat-card intelligence">
-        <span class="cat-icon">🧠</span>
+
+      <div class="skill-card reveal">
+        <span class="skill-icon">&#x1F9E0;</span>
         <h3>Intelligence</h3>
-        <p class="cat-desc">Orchestrate everything, optimize routing, and self-improve the framework.</p>
-        <div class="cat-agents">
-          <span class="agent">Orchestrator</span>
-          <span class="agent">Router</span>
-          <span class="agent">Experiments</span>
-          <span class="agent">Optimizer</span>
-          <span class="agent">Memory</span>
-        </div>
+        <span class="skill-count">5 skills</span>
+        <div class="skill-list">Memory &middot; Copywriter &middot; Marketer &middot; Team Optimizer &middot; Docs</div>
+        <div class="skill-desc">Your team gets smarter with every project</div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- CTA -->
+<!-- ═══ CTA ═══ -->
 <section class="cta-section" id="cta">
-  <div class="cta-glow"></div>
-  <h2>Start <span class="glow">building.</span></h2>
-  <p>One command. Free forever. No limits.</p>
-  <div class="install-box" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app'); this.querySelector('.hint').textContent='✓ copied!'">
-    $ bash &lt;(curl -fsSL .../create.sh) my-app
-    <span class="hint">click to copy</span>
+  <h2 class="reveal"><span class="cta-gradient">Start Building Today</span></h2>
+  <p class="cta-sub reveal">One command. Your entire AI team, ready to go.</p>
+  <div class="cmd-block reveal" onclick="navigator.clipboard.writeText('npx genius-team')">
+    npx genius-team
+    <span class="cmd-hint">click to copy</span>
   </div>
-  <div class="cta-github">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-primary"><span>⭐ Star on GitHub</span></a>
+  <div class="cta-buttons reveal">
+    <button class="btn-primary" onclick="GeniusWizard.open()"><span>Getting Started</span></button>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-ghost">&#x2B50; Star on GitHub</a>
   </div>
 </section>
 
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div>🧠 Genius Team v18.0 — MIT License</div>
-  <div class="links">
-    <a href="https://github.com/w-3-art/genius-team">GitHub</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/CONTRIBUTING.md">Contribute</a>
+  <div>Genius Team &middot; 2026</div>
+  <div class="footer-links">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
+    <a href="#" onclick="GeniusWizard.open(); return false;">Get Started</a>
   </div>
 </footer>
 
+<!-- ═══ PROP NAV ═══ -->
 <div class="prop-nav">
-  <a href="/proposition1">1</a>
-  <a href="/proposition2">2</a>
-  <a href="/proposition3">3</a>
-  <a href="/proposition4">4</a>
-  <a href="/proposition5">5</a>
-  <a href="/proposition6" class="active">6</a>
-  <a href="/proposition7">7</a>
+  <a href="proposition1.html">P1</a>
+  <a href="proposition2.html">P2</a>
+  <a href="proposition3.html">P3</a>
+  <a href="proposition4.html">P4</a>
+  <a href="proposition5.html">P5</a>
+  <a href="proposition6.html" class="active">P6</a>
+  <a href="proposition7.html">P7</a>
 </div>
 
+<!-- ═══ SCRIPTS ═══ -->
+<script src="wizard.js"></script>
 <script>
-// ═══ LENIS SMOOTH SCROLL ═══
-const lenis = new Lenis({ duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), touchMultiplier: 1.5 });
+GeniusWizard.init();
+
+/* ── Lenis smooth scroll ── */
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+});
 lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+gsap.ticker.add(time => lenis.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
+gsap.registerPlugin(ScrollTrigger);
 
-// ═══ NAV SCROLL ═══
-ScrollTrigger.create({
-  start: 'top -80',
-  onUpdate: (self) => {
-    document.getElementById('mainNav').classList.toggle('scrolled', self.progress > 0);
-  }
+/* ── Nav scroll state ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
 });
 
-// ═══ CURSOR LIGHT ═══
-const light = document.getElementById('cursorLight');
-let mx = 0, my = 0, cx = 0, cy = 0;
-document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
-gsap.ticker.add(() => {
-  cx += (mx - cx) * 0.08;
-  cy += (my - cy) * 0.08;
-  light.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`;
+/* ── Morphing text ── */
+const words = ['booking app', 'online store', 'SaaS dashboard', 'mobile game', 'AI tool', 'marketplace'];
+let idx = 0;
+const morphEl = document.getElementById('morphWord');
+setInterval(() => {
+  morphEl.classList.add('out');
+  setTimeout(() => {
+    idx = (idx + 1) % words.length;
+    morphEl.textContent = words[idx];
+    morphEl.classList.remove('out');
+  }, 500);
+}, 2500);
+
+/* ── GSAP scroll reveals ── */
+gsap.utils.toArray('.reveal').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 40 },
+    {
+      opacity: 1, y: 0,
+      duration: 0.9,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%',
+        toggleActions: 'play none none none'
+      },
+      delay: (i % 3) * 0.08
+    }
+  );
 });
 
-// ═══ HERO ANIMATIONS ═══
-const heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-heroTl
-  .to('#heroBadge', { opacity: 1, y: 0, duration: 0.8 }, 0.2)
-  .to('#heroTitle .word', { opacity: 1, y: 0, rotateX: 0, stagger: 0.08, duration: 1 }, 0.4)
-  .to('#heroSub', { opacity: 1, y: 0, duration: 0.8 }, 0.9)
-  .to('#heroActions', { opacity: 1, y: 0, duration: 0.8 }, 1.1)
-  .to('#heroMockup', { opacity: 1, y: 0, duration: 1.2 }, 1.3);
+/* ── Hero entrance ── */
+gsap.timeline({ delay: 0.3 })
+  .fromTo('.hero-content h1', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+  .fromTo('.hero-sub', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
 
-// ═══ HERO MOCKUP PARALLAX ═══
-gsap.to('#heroMockup', {
-  y: -80,
-  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
-});
-gsap.to('.hero-bg-img', {
-  y: 100,
-  scale: 1.1,
-  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 2 }
+/* ── Project cards stagger ── */
+ScrollTrigger.batch('.project-card', {
+  onEnter: batch => gsap.fromTo(batch,
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out' }
+  ),
+  start: 'top 90%'
 });
 
-// ═══ SCROLL TEXT REVEAL ═══
-const words = document.querySelectorAll('#revealText .word');
-ScrollTrigger.create({
-  trigger: '.text-reveal',
-  start: 'top 80%',
-  end: 'bottom 20%',
-  scrub: 1,
-  onUpdate: (self) => {
-    const progress = self.progress;
-    const totalWords = words.length;
-    words.forEach((word, i) => {
-      const wordProgress = i / totalWords;
-      if (wordProgress < progress) {
-        word.classList.add('active');
-      } else {
-        word.classList.remove('active');
-      }
-    });
-  }
-});
-
-// ═══ TRANSFORM SECTION ═══
-gsap.from('.pain-item', {
-  x: -40, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
-  scrollTrigger: { trigger: '.transform-section', start: 'top 60%' }
-});
-gsap.from('.gain-item', {
-  x: 40, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
-  scrollTrigger: { trigger: '.transform-section', start: 'top 50%' }
-});
-
-// ═══ WORKFLOW STEPS ═══
-gsap.from('.w-step', {
-  y: 50, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power3.out',
-  scrollTrigger: { trigger: '.workflow-steps', start: 'top 70%' }
-});
-
-// ═══ SKILL CATEGORY CARDS ═══
-gsap.from('.cat-card', {
-  y: 60, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out',
-  scrollTrigger: { trigger: '.cat-grid', start: 'top 70%' }
-});
-
-// ═══ CTA ═══
-gsap.from('.cta-section h2, .cta-section p, .install-box, .cta-github', {
-  y: 40, opacity: 0, stagger: 0.12, duration: 0.8, ease: 'power3.out',
-  scrollTrigger: { trigger: '.cta-section', start: 'top 60%' }
+/* ── Skill cards stagger ── */
+ScrollTrigger.batch('.skill-card', {
+  onEnter: batch => gsap.fromTo(batch,
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out' }
+  ),
+  start: 'top 90%'
 });
 </script>
 </body>

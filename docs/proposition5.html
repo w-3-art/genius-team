@@ -3,267 +3,850 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — Proposition 5: The Reveal</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>Genius Team — Layer by Layer</title>
+<meta name="description" content="Watch your product come together, layer by layer. 31 AI specialists, one seamless workflow.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
+/* ═══ RESET ═══ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
-body { font-family: 'DM Sans', -apple-system, sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+html { overflow-x: hidden; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body { font-family: 'Sora', sans-serif; background: #08080c; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 :root {
-  --white: #ffffff;
-  --dim: rgba(255,255,255,0.45);
-  --subtle: rgba(255,255,255,0.08);
-  --glow: #4f8cff;
-  --mint: #34d399;
-  --peach: #fb923c;
+  --blue: #4f6ef7;
+  --cyan: #22d3ee;
+  --emerald: #34d399;
+  --dim: rgba(255,255,255,0.4);
+  --subtle: rgba(255,255,255,0.06);
+  --surface: rgba(255,255,255,0.03);
 }
 
-/* MINIMAL NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; }
-.nav-word { font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
-.nav-btns { display: flex; gap: 1rem; align-items: center; }
-.nav-btns a { font-size: 0.85rem; color: var(--dim); text-decoration: none; transition: color 0.2s; }
-.nav-btns a:hover { color: #fff; }
-.pill-btn { padding: 0.5rem 1.3rem; border-radius: 100px; background: #fff; color: #000; font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: all 0.3s; }
-.pill-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(255,255,255,0.2); }
+/* ═══ CURSOR LIGHT ═══ */
+.cursor-light { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(79,110,247,0.06), transparent 70%); pointer-events: none; z-index: 0; will-change: transform; }
 
-/* FULLSCREEN SECTIONS */
-.section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 2rem; position: relative; overflow: hidden; }
+/* ═══ FIXED NAV ═══ */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.4s; }
+nav.scrolled { background: rgba(8,8,12,0.88); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid var(--subtle); }
+.nav-logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; letter-spacing: -0.02em; }
+.nav-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 12px var(--emerald); animation: pulse 2.5s ease infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
+.nav-right { display: flex; gap: 2rem; align-items: center; }
+.nav-right a { color: var(--dim); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.nav-right a:hover { color: #fff; }
+.nav-cta { padding: 0.55rem 1.5rem !important; border-radius: 100px; background: var(--blue) !important; color: #fff !important; font-weight: 600 !important; transition: all 0.3s !important; }
+.nav-cta:hover { box-shadow: 0 0 30px rgba(79,110,247,0.4); transform: translateY(-1px); }
 
-/* ═══ SECTION 1: THE HOOK ═══ */
-.s1 { background: #000; }
-.s1 h1 { font-size: clamp(3rem, 9vw, 7rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1; margin-bottom: 2rem; }
-.s1 h1 span { display: block; }
-.s1 h1 .fade-word { opacity: 0; animation: wordReveal 0.8s ease forwards; }
-.s1 h1 .fade-word:nth-child(1) { animation-delay: 0.3s; }
-.s1 h1 .fade-word:nth-child(2) { animation-delay: 0.6s; color: var(--glow); text-shadow: 0 0 80px rgba(79, 140, 255, 0.4); }
-.s1 h1 .fade-word:nth-child(3) { animation-delay: 0.9s; }
-@keyframes wordReveal { from { opacity: 0; transform: translateY(30px); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
-.s1-sub { font-size: clamp(1rem, 2vw, 1.4rem); color: var(--dim); max-width: 450px; line-height: 1.6; font-weight: 300; animation: fadeIn 1s 1.3s ease backwards; }
-.s1-arrow { position: absolute; bottom: 3rem; animation: bounce 2s infinite; font-size: 1.5rem; opacity: 0.3; }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* ═══ CARD STACK — CORE ═══ */
+.stack-wrapper { position: relative; }
+.stack-card {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
 
-/* ═══ SECTION 2: THE PROBLEM ═══ */
-.s2 { background: #000; }
-.s2 .big-x { font-size: clamp(5rem, 15vw, 12rem); font-weight: 900; color: rgba(255, 60, 60, 0.15); line-height: 1; margin-bottom: 2rem; }
-.s2 h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; max-width: 600px; }
-.s2 .problems { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
-.s2 .problem { font-size: 1.1rem; color: var(--dim); display: flex; align-items: center; gap: 0.75rem; }
-.s2 .problem .strike { text-decoration: line-through; color: rgba(255,255,255,0.25); }
+/* ═══ CARD 1 — HERO ═══ */
+.card-hero { background: #08080c; }
+.card-hero .card-bg {
+  position: absolute; inset: 0;
+  background: url('img/hero-brain.jpg') center/cover no-repeat;
+  opacity: 0.18;
+}
+.card-hero .card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8,8,12,0.3) 0%, rgba(8,8,12,0.7) 50%, rgba(8,8,12,0.95) 100%);
+}
+.card-hero .card-inner {
+  position: relative; z-index: 2;
+  text-align: center; max-width: 900px; padding: 2rem;
+}
+.card-hero h1 {
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  margin-bottom: 1.5rem;
+}
+.card-hero h1 .line { display: block; overflow: hidden; }
+.card-hero h1 .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+}
+.card-hero .subtitle {
+  font-size: clamp(1rem, 2.2vw, 1.4rem);
+  color: var(--dim);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  opacity: 0;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+}
+.scroll-hint span {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  font-weight: 500;
+}
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--blue), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+@keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.5); } 50% { opacity: 1; transform: scaleY(1); } }
 
-/* ═══ SECTION 3: THE SOLUTION ═══ */
-.s3 { background: linear-gradient(180deg, #000, #050814); }
-.s3 .glow-circle { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(79, 140, 255, 0.15), transparent 70%); pointer-events: none; }
-.s3 h2 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 1.5rem; position: relative; z-index: 1; }
-.s3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 900px; margin-top: 3rem; position: relative; z-index: 1; }
-.s3-card { background: rgba(255,255,255,0.02); border: 1px solid var(--subtle); border-radius: 20px; padding: 2.5rem 1.5rem; transition: all 0.4s; }
-.s3-card:hover { background: rgba(79, 140, 255, 0.05); border-color: rgba(79, 140, 255, 0.2); transform: translateY(-5px); }
-.s3-card .icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
-.s3-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
-.s3-card p { font-size: 0.88rem; color: var(--dim); line-height: 1.5; }
+/* ═══ CARDS 2-5 — CONTENT CARDS ═══ */
+.card-content {
+  padding: 4rem 6rem;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+.card-content .card-text {
+  flex: 1;
+  max-width: 50%;
+}
+.card-content .card-icon {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+.card-content h2 {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+.card-content .accent-line {
+  width: 40px;
+  height: 3px;
+  background: var(--blue);
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+}
+.card-content p {
+  font-size: 1.05rem;
+  color: var(--dim);
+  line-height: 1.75;
+  font-weight: 300;
+  max-width: 480px;
+}
+.card-content .card-visual {
+  flex: 1;
+  max-width: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-content .card-visual img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  object-fit: cover;
+}
 
-/* ═══ SECTION 4: THE DEMO ═══ */
-.s4 { background: #050814; }
-.s4 h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; margin-bottom: 3rem; letter-spacing: -0.02em; }
-.demo-flow { display: flex; flex-direction: column; gap: 0; max-width: 600px; width: 100%; }
-.demo-step { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--subtle); }
-.demo-step:last-child { border-bottom: none; }
-.demo-num { width: 48px; height: 48px; border-radius: 50%; background: rgba(79, 140, 255, 0.1); border: 1px solid rgba(79, 140, 255, 0.2); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--glow); flex-shrink: 0; font-size: 1.1rem; }
-.demo-text { text-align: left; }
-.demo-text h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.2rem; }
-.demo-text p { font-size: 0.88rem; color: var(--dim); }
+/* Card-specific backgrounds */
+.card-imagine { background: #0a0e1e; }
+.card-build { background: #0f0a1a; }
+.card-perfect { background: #0a1518; }
+.card-launch { background: #0a150f; }
 
-/* ═══ SECTION 5: THE TEAM ═══ */
-.s5 { background: linear-gradient(180deg, #050814, #000); padding: 6rem 2rem; }
-.s5 .number { font-size: clamp(8rem, 20vw, 16rem); font-weight: 900; background: linear-gradient(135deg, var(--glow), var(--mint)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 0.85; }
-.s5 .label { font-size: 1.3rem; color: var(--dim); margin-bottom: 3rem; }
-.pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; max-width: 700px; }
-.skill-pill { padding: 0.45rem 1rem; border-radius: 100px; background: rgba(255,255,255,0.04); border: 1px solid var(--subtle); font-size: 0.8rem; color: var(--dim); transition: all 0.3s; }
-.skill-pill:hover { color: #fff; border-color: var(--glow); background: rgba(79, 140, 255, 0.06); transform: scale(1.08); }
+/* Card number label */
+.card-number {
+  position: absolute;
+  top: 2.5rem;
+  right: 3rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.12);
+  z-index: 5;
+}
 
-/* ═══ SECTION 6: CTA ═══ */
-.s6 { background: #000; }
-.s6 h2 { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; letter-spacing: -0.04em; margin-bottom: 1rem; }
-.s6 h2 .glow-word { color: var(--glow); text-shadow: 0 0 60px rgba(79, 140, 255, 0.3); }
-.s6 p { color: var(--dim); font-size: 1.1rem; margin-bottom: 3rem; }
-.install-line { display: inline-flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.03); border: 1px solid var(--subtle); border-radius: 14px; padding: 1rem 2rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.95rem; color: var(--mint); cursor: pointer; transition: all 0.3s; }
-.install-line:hover { border-color: var(--glow); box-shadow: 0 0 30px rgba(79, 140, 255, 0.1); }
-.install-line .hint { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--dim); }
+/* Card gradient overlays for depth */
+.card-imagine::after,
+.card-build::after,
+.card-perfect::after,
+.card-launch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(79,110,247,0.04), transparent 70%);
+  pointer-events: none;
+}
+.card-build::after {
+  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(139,92,246,0.04), transparent 70%);
+}
+.card-perfect::after {
+  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(34,211,238,0.04), transparent 70%);
+}
+.card-launch::after {
+  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,211,153,0.04), transparent 70%);
+}
 
-/* FOOTER */
-footer { padding: 3rem; border-top: 1px solid var(--subtle); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--dim); }
-footer a { color: var(--dim); text-decoration: none; }
-footer a:hover { color: var(--glow); }
-footer .links { display: flex; gap: 1.5rem; }
+/* Card inner content z-index */
+.card-content .card-text,
+.card-content .card-visual { position: relative; z-index: 2; }
 
-/* PROP NAV */
-.prop-nav { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; z-index: 100; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border: 1px solid var(--subtle); border-radius: 100px; padding: 0.4rem; }
-.prop-nav a { padding: 0.45rem 1rem; border-radius: 100px; color: var(--dim); text-decoration: none; font-size: 0.78rem; font-weight: 500; transition: all 0.3s; }
-.prop-nav a:hover { color: #fff; }
-.prop-nav a.active { background: var(--glow); color: #fff; }
+/* Card top border accent */
+.card-top-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--subtle), transparent);
+}
 
-/* REVEAL */
-.reveal { opacity: 0; transform: translateY(40px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.r-delay-1 { transition-delay: 0.15s; }
-.r-delay-2 { transition-delay: 0.3s; }
-.r-delay-3 { transition-delay: 0.45s; }
+/* ═══ SKILLS SECTION ═══ */
+.skills-section {
+  padding: 6rem 3rem;
+  background: #08080c;
+  position: relative;
+  z-index: 10;
+}
+.skills-section .section-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--blue);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.skills-section h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.03em;
+  margin-bottom: 4rem;
+}
+.skills-section h2 .count { color: var(--cyan); }
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.cat-card {
+  padding: 2rem;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--subtle);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.cat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at top left, rgba(79,110,247,0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.cat-card:hover { border-color: rgba(79,110,247,0.2); transform: translateY(-4px); }
+.cat-card:hover::before { opacity: 1; }
+.cat-card .cat-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+.cat-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cat-card h3 .cat-count {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: var(--subtle);
+  color: var(--dim);
+}
+.cat-card .cat-skills {
+  font-size: 0.8rem;
+  color: var(--dim);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+.cat-card .cat-desc {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.25);
+  font-style: italic;
+  line-height: 1.5;
+}
 
-/* RESPONSIVE */
-@media (max-width: 968px) { .s3-grid { grid-template-columns: 1fr; max-width: 400px; } .nav-btns { gap: 0.5rem; } }
-@media (max-width: 640px) { nav { padding: 1rem 1.5rem; } .s1 h1 { font-size: 3rem; } .demo-step { flex-direction: column; text-align: center; } footer { flex-direction: column; gap: 1rem; } }
+/* ═══ CTA SECTION ═══ */
+.cta-section {
+  padding: 6rem 3rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  background: #08080c;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  width: 600px;
+  height: 400px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(79,110,247,0.08), transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+.cta-section h2 .gradient {
+  background: linear-gradient(135deg, var(--blue), var(--cyan), var(--emerald));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cta-section .cta-sub {
+  font-size: 1rem;
+  color: var(--dim);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+.install-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--subtle);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  font-family: 'Sora', monospace;
+  font-size: 0.9rem;
+  color: var(--cyan);
+  margin-bottom: 2rem;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.install-box:hover { border-color: rgba(79,110,247,0.3); background: rgba(79,110,247,0.04); }
+.install-box .prompt { color: var(--dim); user-select: none; }
+.install-box .copy-hint {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.2);
+  font-weight: 500;
+}
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  padding: 0.9rem 2.5rem;
+  border-radius: 100px;
+  background: var(--blue);
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #6366f1, var(--blue));
+  opacity: 0;
+  transition: opacity 0.4s;
+  border-radius: 100px;
+}
+.btn-primary span { position: relative; z-index: 1; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(79,110,247,0.35); }
+.btn-primary:hover::after { opacity: 1; }
+.btn-ghost {
+  padding: 0.9rem 2.5rem;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-ghost:hover { border-color: var(--blue); background: rgba(79,110,247,0.06); }
+
+/* ═══ FOOTER ═══ */
+footer {
+  padding: 2.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--subtle);
+  background: #08080c;
+  position: relative;
+  z-index: 10;
+}
+footer .f-left { font-size: 0.8rem; color: rgba(255,255,255,0.2); font-weight: 400; }
+footer .f-right { display: flex; gap: 1.5rem; }
+footer .f-right a { font-size: 0.8rem; color: var(--dim); text-decoration: none; transition: color 0.2s; }
+footer .f-right a:hover { color: #fff; }
+
+/* ═══ PROP NAV (Fixed Bottom) ═══ */
+.prop-nav {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.4rem;
+  border-radius: 100px;
+  background: rgba(8,8,12,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--subtle);
+  z-index: 100;
+}
+.prop-nav a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dim);
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.prop-nav a:hover { color: #fff; background: var(--subtle); }
+.prop-nav a.active { background: var(--blue); color: #fff; box-shadow: 0 0 20px rgba(79,110,247,0.4); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-right { gap: 1rem; }
+
+  .stack-card { min-height: auto !important; }
+
+  .card-hero { min-height: 100vh !important; }
+  .card-hero h1 { font-size: clamp(2.5rem, 12vw, 4rem); }
+
+  .card-content {
+    flex-direction: column;
+    padding: 5rem 2rem;
+    gap: 2rem;
+    min-height: auto;
+  }
+  .card-content .card-text { max-width: 100%; }
+  .card-content .card-visual { display: none; }
+
+  .cat-grid { grid-template-columns: 1fr; }
+
+  .cta-actions { flex-direction: column; align-items: center; }
+  .install-box { font-size: 0.8rem; }
+
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+
+  .prop-nav { bottom: 1rem; }
+  .prop-nav a { width: 32px; height: 32px; font-size: 0.7rem; }
+
+  .card-number { top: 1.5rem; right: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .card-hero h1 { font-size: 2.5rem; }
+  .card-content h2 { font-size: 2rem; }
+  .skills-section h2 { font-size: 1.8rem; }
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-word">🧠 Genius Team</div>
-  <div class="nav-btns">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
-    <a href="#install" class="pill-btn">Get Started</a>
+<!-- Cursor follower -->
+<div class="cursor-light" id="cursorLight"></div>
+
+<!-- ═══ FIXED NAV ═══ -->
+<nav id="mainNav">
+  <div class="nav-logo"><span class="dot"></span> Genius Team</div>
+  <div class="nav-right">
+    <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a>
+    <a href="#" class="nav-cta" onclick="GeniusWizard.open(); return false;">Get Started</a>
   </div>
 </nav>
 
-<!-- S1: The Hook -->
-<section class="section s1">
-  <h1>
-    <span class="fade-word">Your idea.</span>
-    <span class="fade-word">Built by AI.</span>
-    <span class="fade-word">Shipped.</span>
-  </h1>
-  <p class="s1-sub">42 AI specialists. Zero coding. One command.</p>
-  <div class="s1-arrow">↓</div>
-</section>
+<!-- ═══ CARD STACK WRAPPER ═══ -->
+<div class="stack-wrapper" id="stackWrapper">
 
-<!-- S2: The Problem -->
-<section class="section s2">
-  <div class="big-x reveal">✕</div>
-  <h2 class="reveal">Building software was never meant<br>to be this hard.</h2>
-  <div class="problems">
-    <div class="problem reveal"><span class="strike">Learn to code for months</span></div>
-    <div class="problem reveal"><span class="strike">Hire expensive developers</span></div>
-    <div class="problem reveal"><span class="strike">Manage a team of strangers</span></div>
-    <div class="problem reveal"><span class="strike">Debug until 3am</span></div>
-    <div class="problem reveal"><span class="strike">Ship and pray</span></div>
-  </div>
-</section>
+  <!-- CARD 1 — Hero -->
+  <section class="stack-card card-hero" id="card1">
+    <div class="card-bg"></div>
+    <div class="card-overlay"></div>
+    <div class="card-inner">
+      <h1 id="heroTitle">
+        <span class="line"><span class="word">Layer</span></span>
+        <span class="line"><span class="word">by</span> <span class="word">Layer</span></span>
+      </h1>
+      <p class="subtitle" id="heroSub">Watch your product come together</p>
+    </div>
+    <div class="scroll-hint" id="scrollHint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
 
-<!-- S3: The Solution -->
-<section class="section s3">
-  <div class="glow-circle"></div>
-  <h2 class="reveal">What if you could just<br><span style="color:var(--glow)">describe</span> what you want?</h2>
-  <div class="s3-grid">
-    <div class="s3-card reveal r-delay-1">
-      <span class="icon">💬</span>
-      <h3>You talk</h3>
-      <p>"Build me a booking app for my yoga studio"</p>
-    </div>
-    <div class="s3-card reveal r-delay-2">
-      <span class="icon">⚡</span>
-      <h3>AI builds</h3>
-      <p>42 agents: design, code, test, secure, optimize</p>
-    </div>
-    <div class="s3-card reveal r-delay-3">
-      <span class="icon">🚀</span>
-      <h3>You ship</h3>
-      <p>Production-ready. Tested. Documented. Live.</p>
-    </div>
-  </div>
-</section>
-
-<!-- S4: The Demo -->
-<section class="section s4">
-  <h2 class="reveal">60 seconds to your first app</h2>
-  <div class="demo-flow">
-    <div class="demo-step reveal">
-      <div class="demo-num">1</div>
-      <div class="demo-text">
-        <h3>Paste one command</h3>
-        <p>No account, no signup, no credit card</p>
+  <!-- CARD 2 — Imagine -->
+  <section class="stack-card card-imagine" id="card2">
+    <div class="card-top-line"></div>
+    <span class="card-number">01 / 04</span>
+    <div class="card-content">
+      <div class="card-text">
+        <div class="card-icon">&#x1F4A1;</div>
+        <div class="accent-line"></div>
+        <h2>Imagine</h2>
+        <p>Describe your dream product. Our AI interviewer helps shape your vision into crystal-clear specifications.</p>
+      </div>
+      <div class="card-visual">
+        <img src="img/workflow-steps.jpg" alt="Vision to specifications workflow" loading="lazy">
       </div>
     </div>
-    <div class="demo-step reveal">
-      <div class="demo-num">2</div>
-      <div class="demo-text">
-        <h3>Describe your project</h3>
-        <p>In plain English — "Build me a..."</p>
+  </section>
+
+  <!-- CARD 3 — Build -->
+  <section class="stack-card card-build" id="card3">
+    <div class="card-top-line"></div>
+    <span class="card-number">02 / 04</span>
+    <div class="card-content">
+      <div class="card-text">
+        <div class="card-icon">&#x26A1;</div>
+        <div class="accent-line"></div>
+        <h2>Build</h2>
+        <p>31 specialized agents work in parallel. Frontend, backend, database, API &mdash; all coordinated automatically.</p>
+      </div>
+      <div class="card-visual">
+        <img src="img/app-mockup.jpg" alt="Application being built by AI agents" loading="lazy">
       </div>
     </div>
-    <div class="demo-step reveal">
-      <div class="demo-num">3</div>
-      <div class="demo-text">
-        <h3>Watch it come to life</h3>
-        <p>42 agents collaborate in real-time</p>
+  </section>
+
+  <!-- CARD 4 — Perfect -->
+  <section class="stack-card card-perfect" id="card4">
+    <div class="card-top-line"></div>
+    <span class="card-number">03 / 04</span>
+    <div class="card-content">
+      <div class="card-text">
+        <div class="card-icon">&#x1F6E1;&#xFE0F;</div>
+        <div class="accent-line"></div>
+        <h2>Perfect</h2>
+        <p>Automated QA, security audits, performance optimization. Every line reviewed before you see it.</p>
+      </div>
+      <div class="card-visual">
+        <img src="img/holographic-ui.jpg" alt="Quality assurance and security audit interface" loading="lazy">
       </div>
     </div>
+  </section>
+
+  <!-- CARD 5 — Launch -->
+  <section class="stack-card card-launch" id="card5">
+    <div class="card-top-line"></div>
+    <span class="card-number">04 / 04</span>
+    <div class="card-content">
+      <div class="card-text">
+        <div class="card-icon">&#x1F680;</div>
+        <div class="accent-line"></div>
+        <h2>Launch</h2>
+        <p>One command to deploy. Analytics, SEO, monitoring &mdash; everything from day one.</p>
+      </div>
+      <div class="card-visual">
+        <img src="img/skill-categories.jpg" alt="Deployment and monitoring dashboard" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+</div><!-- /stack-wrapper -->
+
+<!-- ═══ SKILLS SECTION ═══ -->
+<section class="skills-section" id="skillsSection">
+  <div class="section-label">The Full Stack</div>
+  <h2><span class="count">31</span> Skills. <span class="count">6</span> Categories. One Team.</h2>
+  <div class="cat-grid">
+
+    <div class="cat-card">
+      <div class="cat-icon">&#x1F4A1;</div>
+      <h3>Ideation <span class="cat-count">5</span></h3>
+      <div class="cat-skills">Interviewer &middot; Market Analyst &middot; Specs Writer &middot; Designer &middot; Integration Guide</div>
+      <div class="cat-desc">From napkin sketch to crystal-clear specifications</div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-icon">&#x26A1;</div>
+      <h3>Development <span class="cat-count">7</span></h3>
+      <div class="cat-skills">Dev Router &middot; Frontend &middot; Backend &middot; Mobile &middot; Database &middot; API &middot; Orchestrator</div>
+      <div class="cat-desc">Full-stack implementation with specialized agents</div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-icon">&#x1F6E1;&#xFE0F;</div>
+      <h3>Quality <span class="cat-count">5</span></h3>
+      <div class="cat-skills">QA Micro &middot; Full QA &middot; Code Review &middot; Security Audit &middot; Debugger</div>
+      <div class="cat-desc">Every line reviewed, tested, and hardened</div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-icon">&#x1F4C8;</div>
+      <h3>Growth <span class="cat-count">5</span></h3>
+      <div class="cat-skills">SEO &middot; Analytics &middot; Performance &middot; Accessibility &middot; Content</div>
+      <div class="cat-desc">Built-in growth engine from day one</div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-icon">&#x1F680;</div>
+      <h3>Operations <span class="cat-count">4</span></h3>
+      <div class="cat-skills">Deployer &middot; Experiments &middot; i18n &middot; Onboarding</div>
+      <div class="cat-desc">Ship fast, experiment freely, scale globally</div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-icon">&#x1F9E0;</div>
+      <h3>Intelligence <span class="cat-count">5</span></h3>
+      <div class="cat-skills">Memory &middot; Copywriter &middot; Marketer &middot; Team Optimizer &middot; Docs</div>
+      <div class="cat-desc">Your team gets smarter with every project</div>
+    </div>
+
   </div>
 </section>
 
-<!-- S5: The Team -->
-<section class="section s5">
-  <div class="number reveal">42</div>
-  <div class="label reveal">AI agents working for you</div>
-  <div class="pills reveal">
-    <span class="skill-pill">🎤 Interview</span>
-    <span class="skill-pill">📊 Research</span>
-    <span class="skill-pill">🎨 Design</span>
-    <span class="skill-pill">🏗️ Architect</span>
-    <span class="skill-pill">🖥️ Frontend</span>
-    <span class="skill-pill">⚙️ Backend</span>
-    <span class="skill-pill">📱 Mobile</span>
-    <span class="skill-pill">🗄️ Database</span>
-    <span class="skill-pill">🔌 API</span>
-    <span class="skill-pill">🔍 Review</span>
-    <span class="skill-pill">✅ QA</span>
-    <span class="skill-pill">🛡️ Security</span>
-    <span class="skill-pill">🌐 SEO</span>
-    <span class="skill-pill">⚡ Perf</span>
-    <span class="skill-pill">♿ A11y</span>
-    <span class="skill-pill">🌍 i18n</span>
-    <span class="skill-pill">📝 Docs</span>
-    <span class="skill-pill">📣 Marketing</span>
-    <span class="skill-pill">🚀 Deploy</span>
-    <span class="skill-pill">🪙 Web3</span>
-    <span class="skill-pill">✍️ Copy</span>
+<!-- ═══ CTA SECTION ═══ -->
+<section class="cta-section" id="ctaSection">
+  <h2>Start Building <span class="gradient">Today</span></h2>
+  <p class="cta-sub">Your AI product team is one command away.</p>
+  <div class="install-box" onclick="navigator.clipboard.writeText('npx genius-team@latest'); this.querySelector('.copy-hint').textContent = 'Copied!';">
+    <span class="prompt">$</span> npx genius-team@latest
+    <span class="copy-hint">Click to copy</span>
+  </div>
+  <div class="cta-actions">
+    <a href="#" class="btn-primary" onclick="GeniusWizard.open(); return false;"><span>Getting Started</span></a>
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-ghost">&#x2B50; Star on GitHub</a>
   </div>
 </section>
 
-<!-- S6: CTA -->
-<section class="section s6" id="install">
-  <h2 class="reveal">Start <span class="glow-word">building.</span></h2>
-  <p class="reveal">One command. Free forever.</p>
-  <div class="install-line reveal" onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app')">
-    $ bash &lt;(curl -fsSL .../create.sh) my-app
-    <span class="hint">click to copy</span>
-  </div>
-  <div style="margin-top:2rem" class="reveal">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="pill-btn" style="padding:0.7rem 2rem;font-size:1rem">⭐ Star on GitHub</a>
-  </div>
-</section>
-
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div>🧠 Genius Team v18.0 — MIT</div>
-  <div class="links">
-    <a href="https://github.com/w-3-art/genius-team">GitHub</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a>
+  <div class="f-left">Genius Team &middot; 2026</div>
+  <div class="f-right">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
+    <a href="#" onclick="GeniusWizard.open(); return false;">Get Started</a>
+    <a href="#">Docs</a>
   </div>
 </footer>
 
+<!-- ═══ PROP NAV (Fixed Bottom) ═══ -->
 <div class="prop-nav">
-  <a href="/proposition1">1</a>
-  <a href="/proposition2">2</a>
-  <a href="/proposition3">3</a>
-  <a href="/proposition4">4</a>
-  <a href="/proposition5" class="active">5</a>
+  <a href="proposition1.html">1</a>
+  <a href="proposition2.html">2</a>
+  <a href="proposition3.html">3</a>
+  <a href="proposition4.html">4</a>
+  <a href="proposition5.html" class="active">5</a>
+  <a href="proposition6.html">6</a>
+  <a href="proposition7.html">7</a>
 </div>
 
+<!-- ═══ SCRIPTS ═══ -->
+<script src="wizard.js"></script>
 <script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+GeniusWizard.init();
+
+// ═══ LENIS SMOOTH SCROLL ═══
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+gsap.ticker.lagSmoothing(0);
+gsap.registerPlugin(ScrollTrigger);
+
+// ═══ NAV SCROLL STATE ═══
+ScrollTrigger.create({
+  start: 'top -80',
+  onUpdate: (self) => {
+    document.getElementById('mainNav').classList.toggle('scrolled', self.progress > 0);
+  }
+});
+
+// ═══ CURSOR LIGHT ═══
+const light = document.getElementById('cursorLight');
+let mx = 0, my = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
+gsap.ticker.add(() => {
+  cx += (mx - cx) * 0.07;
+  cy += (my - cy) * 0.07;
+  light.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`;
+});
+
+// ═══ HERO ENTRANCE ═══
+const heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+heroTl
+  .to('#heroTitle .word', { opacity: 1, y: 0, stagger: 0.12, duration: 1.2 }, 0.3)
+  .to('#heroSub', { opacity: 1, duration: 1 }, 0.9)
+  .to('#scrollHint', { opacity: 1, duration: 0.8 }, 1.4);
+
+// ═══ CARD STACKING — Desktop ═══
+const mm = gsap.matchMedia();
+
+mm.add('(min-width: 769px)', () => {
+  const cards = gsap.utils.toArray('.stack-card');
+
+  // Pin the first card so it stays visible beneath the stack
+  ScrollTrigger.create({
+    trigger: cards[0],
+    start: 'top top',
+    endTrigger: cards[cards.length - 1],
+    end: 'top top',
+    pin: true,
+    pinSpacing: false
+  });
+
+  cards.forEach((card, i) => {
+    if (i === 0) return; // First card is pinned separately
+
+    // Pin each card once it reaches the top
+    ScrollTrigger.create({
+      trigger: card,
+      start: 'top top',
+      pin: true,
+      pinSpacing: false
+    });
+
+    // Slide each card up from below as you scroll
+    gsap.from(card, {
+      yPercent: 100,
+      scrollTrigger: {
+        trigger: card,
+        start: 'top bottom',
+        end: 'top top',
+        scrub: true
+      }
+    });
+
+    // Fade in card content
+    gsap.from(card.querySelectorAll('.card-text > *'), {
+      y: 40,
+      opacity: 0,
+      stagger: 0.08,
+      duration: 0.6,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 40%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Fade in card image
+    const img = card.querySelector('.card-visual img');
+    if (img) {
+      gsap.from(img, {
+        scale: 0.9,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 35%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    }
+  });
+});
+
+// ═══ CARD STACKING — Mobile (no pin, simple fade-in) ═══
+mm.add('(max-width: 768px)', () => {
+  gsap.utils.toArray('.stack-card').forEach((card, i) => {
+    if (i === 0) return;
+    gsap.from(card.querySelectorAll('.card-text > *'), {
+      y: 30,
+      opacity: 0,
+      stagger: 0.06,
+      duration: 0.6,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 80%'
+      }
+    });
+  });
+});
+
+// ═══ SKILLS SECTION ANIMATIONS ═══
+gsap.from('.skills-section .section-label, .skills-section h2', {
+  y: 30,
+  opacity: 0,
+  stagger: 0.1,
+  duration: 0.8,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.skills-section', start: 'top 70%' }
+});
+
+gsap.from('.cat-card', {
+  y: 50,
+  opacity: 0,
+  stagger: 0.08,
+  duration: 0.7,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.cat-grid', start: 'top 75%' }
+});
+
+// ═══ CTA SECTION ANIMATIONS ═══
+gsap.from('.cta-section h2, .cta-section .cta-sub, .install-box, .cta-actions', {
+  y: 35,
+  opacity: 0,
+  stagger: 0.12,
+  duration: 0.8,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.cta-section', start: 'top 65%' }
+});
 </script>
 </body>
 </html>
