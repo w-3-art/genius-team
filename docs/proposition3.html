@@ -1,151 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Genius Team — Anyone can build</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — Anyone Can Build</title>
+<meta name="description" content="The complete AI toolkit for vibe coders. From first line to production — your AI team has your back.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
+:root{--emerald:#10B981;--lime:#84CC16;--bg:#050A05;--s:rgba(255,255,255,.03);--b:rgba(255,255,255,.07);--dim:rgba(255,255,255,.45);--f:'Space Grotesk',sans-serif}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{overflow-x:hidden}
-body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFA;color:#0A0A0A;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{overflow-x:hidden}html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:var(--f);background:var(--bg);color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+.grad{background:linear-gradient(135deg,var(--emerald),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-/* Light ambient — soft purple radial on top */
-.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(91,92,246,.04),transparent 60%)}
+/* CURSOR GLOW */
+.cursor-glow{position:fixed;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.08),transparent 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:opacity .3s;opacity:0}
+body:hover .cursor-glow{opacity:1}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(250,250,250,.7);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.05)}
-.logo{font-weight:700;font-size:.95rem;color:#0A0A0A;text-decoration:none;letter-spacing:-.02em}
-.nav-link{font-size:.85rem;color:#6B7280;text-decoration:none;transition:color .15s}.nav-link:hover{color:#0A0A0A}
+/* PROGRESS SIDEBAR */
+.progress-bar{position:fixed;top:50%;right:2rem;transform:translateY(-50%);width:2px;height:120px;background:rgba(255,255,255,.06);z-index:200;border-radius:2px}
+.progress-fill{width:100%;height:0%;background:linear-gradient(180deg,var(--emerald),var(--lime));border-radius:2px;transition:height .1s linear}
+.progress-bar::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px var(--emerald);opacity:.6}
+.progress-bar::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(--lime);opacity:.3}
 
-.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 1.5rem 5rem;text-align:center;max-width:720px;margin:0 auto}
-.hero h1{font-size:clamp(48px,8vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:.75rem;color:#0A0A0A}
-.hero-sub{font-size:clamp(16px,2.5vw,20px);color:#6B7280;line-height:1.6;margin-bottom:2.5rem;max-width:480px}
-.hero-input-wrap{width:100%;max-width:560px;position:relative;margin-bottom:1rem}
-.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid #E5E7EB;background:#fff;padding:0 1.25rem;font-size:17px;color:#0A0A0A;font-family:inherit;outline:none;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 0 transparent}
-.hero-input::placeholder{color:#9CA3AF}
-.hero-input:focus{border-color:#5B5CF6;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 3px rgba(91,92,246,.1),0 0 30px rgba(91,92,246,.04)}
-.suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
-.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid #E5E7EB;background:#fff;font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.sug:hover{color:#0A0A0A;border-color:#D1D5DB;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(91,92,246,.2)}
-.hero-cta:hover{background:#4F4DE6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(91,92,246,.25)}
-.trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
-.trust span{font-size:.78rem;color:#6B7280;display:flex;align-items:center;gap:.35rem}
-.trust .ck{color:#5B5CF6}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.9rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:all .4s}
+nav.scrolled{background:rgba(5,10,5,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--b)}
+.logo{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.5rem;letter-spacing:-.02em}
+.logo .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 12px var(--emerald);animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+.nav-cta{padding:.4rem 1.2rem;border-radius:100px;background:var(--emerald);color:#050A05;font-weight:600;font-size:.8rem;cursor:pointer;border:none;font-family:var(--f);transition:all .3s}
+.nav-cta:hover{box-shadow:0 0 30px rgba(16,185,129,.3);transform:translateY(-1px)}
 
-/* Cards with elevation */
-section{position:relative;z-index:1}
-.cards{max-width:720px;margin:0 auto;padding:2rem 1.5rem 5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.fcard{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:1.75rem;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.fcard:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.08);border-color:#D1D5DB}
-.fcard-icon{font-size:1.5rem;margin-bottom:.75rem;display:block}
-.fcard-title{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
-.fcard-desc{font-size:.82rem;color:#6B7280;line-height:1.6}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(16,185,129,.06),transparent 70%)}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,var(--bg),transparent)}
+.hero-inner{position:relative;z-index:2;max-width:720px}
+.badge{display:inline-block;padding:.35rem 1.1rem;border-radius:100px;border:1px solid rgba(16,185,129,.15);background:rgba(16,185,129,.05);font-size:.7rem;font-weight:600;letter-spacing:.08em;color:var(--emerald);margin-bottom:1.5rem;text-transform:uppercase;opacity:0;transform:translateY(20px)}
+.hero h1{font-size:clamp(2.8rem,7.5vw,5rem);font-weight:700;line-height:1.05;letter-spacing:-.05em;margin-bottom:1rem;opacity:0;transform:translateY(30px)}
+.hero-sub{font-size:1.05rem;color:var(--dim);font-weight:300;line-height:1.7;max-width:500px;margin:0 auto 2.5rem;opacity:0;transform:translateY(20px)}
+.hero-cta{padding:.8rem 2.2rem;border-radius:100px;background:var(--emerald);color:#050A05;font-weight:600;font-size:.92rem;border:none;cursor:pointer;font-family:var(--f);transition:all .35s;opacity:0;transform:translateY(20px)}
+.hero-cta:hover{box-shadow:0 12px 40px rgba(16,185,129,.3);transform:translateY(-2px)}
 
-/* Workflow steps */
-.workflow{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
-.wf-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:#5B5CF6;margin-bottom:.5rem}
-.wf-title{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-.03em;margin-bottom:2.5rem}
-.wf-step{display:grid;grid-template-columns:3rem 1fr;gap:1.25rem;margin-bottom:2rem;align-items:start}
-.wf-num{width:2.5rem;height:2.5rem;border-radius:10px;background:rgba(91,92,246,.08);color:#5B5CF6;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
-.wf-step h3{font-size:1rem;font-weight:700;margin-bottom:.2rem}
-.wf-step p{font-size:.85rem;color:#6B7280;line-height:1.6}
+/* PHILOSOPHY */
+.philosophy{max-width:900px;margin:0 auto;padding:4rem 2rem 3rem;text-align:center}
+.philosophy h2{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:700;letter-spacing:-.03em;margin-bottom:1rem;opacity:0;transform:translateY(25px)}
+.philosophy p{color:var(--dim);font-size:.92rem;line-height:1.8;max-width:560px;margin:0 auto;font-weight:300;opacity:0;transform:translateY(20px)}
+.philosophy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.5rem}
+.phil-card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:1.5rem 1.2rem;text-align:left;opacity:0;transform:translateY(25px);transition:all .4s}
+.phil-card:hover{border-color:rgba(16,185,129,.15);transform:translateY(-2px)}
+.phil-card .phi{font-size:1.2rem;margin-bottom:.6rem}
+.phil-card h4{font-size:.88rem;font-weight:600;margin-bottom:.3rem;letter-spacing:-.01em}
+.phil-card p{font-size:.78rem;color:var(--dim);line-height:1.6;font-weight:300}
 
-/* Use cases */
-.cases{max-width:720px;margin:0 auto;padding:4rem 1.5rem}
-.cases-title{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.03em;margin-bottom:.4rem}
-.cases-sub{font-size:.9rem;color:#6B7280;margin-bottom:2rem}
-.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.case{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .3s}
-.case:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.06)}
-.case-who{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#5B5CF6;margin-bottom:.4rem}
-.case-quote{font-size:.88rem;color:#374151;line-height:1.6;margin-bottom:.5rem}
-.case-result{font-size:.75rem;color:#6B7280;font-weight:500}
+/* SPLIT PARALLAX */
+.split{max-width:1100px;margin:0 auto;padding:3rem 2rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+.split-l{display:flex;flex-direction:column;gap:5rem;padding-top:2rem}
+.split-r{display:flex;flex-direction:column;gap:3rem;padding-top:4rem}
+.tb{opacity:0;transform:translateY(40px);filter:blur(6px)}
+.tb .lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;font-weight:600;color:var(--emerald);margin-bottom:.7rem}
+.tb h3{font-size:1.3rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem;line-height:1.3}
+.tb p{font-size:.88rem;color:var(--dim);line-height:1.7;font-weight:300;max-width:400px}
+.iw{border-radius:14px;overflow:hidden;height:280px;position:relative;box-shadow:0 16px 50px rgba(0,0,0,.5),0 0 0 1px var(--b);opacity:0;transform:translateY(40px);filter:blur(6px)}
+.iw img{width:100%;height:130%;object-fit:cover;position:absolute;top:-15%}
 
-.bcta{text-align:center;padding:6rem 1.5rem 7rem;position:relative}
-.bcta p{color:#6B7280;font-size:.9rem;margin-bottom:1.25rem}
+/* SKILLS ACCORDION */
+.skills{max-width:800px;margin:0 auto;padding:3rem 2rem 4rem}
+.skills-hd{text-align:center;margin-bottom:2.5rem}
+.skills-hd h2{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:700;letter-spacing:-.04em;margin-bottom:.5rem}
+.skills-hd p{color:var(--dim);font-size:.9rem;font-weight:300}
+.accordion{display:flex;flex-direction:column;gap:.5rem}
+.acc-item{background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;opacity:0;transform:translateY(20px);transition:all .4s}
+.acc-item:hover{border-color:rgba(16,185,129,.12)}
+.acc-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.3rem;cursor:pointer;user-select:none;transition:background .2s}
+.acc-header:hover{background:rgba(255,255,255,.02)}
+.acc-left{display:flex;align-items:center;gap:.8rem}
+.acc-left .ico{font-size:1.1rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:rgba(16,185,129,.06);flex-shrink:0}
+.acc-left h4{font-size:.9rem;font-weight:600;letter-spacing:-.01em}
+.acc-left .cnt{font-size:.68rem;color:var(--emerald);font-weight:600;margin-left:.6rem;letter-spacing:.03em}
+.acc-arrow{width:20px;height:20px;display:flex;align-items:center;justify-content:center;transition:transform .3s;color:var(--dim);font-size:.75rem}
+.acc-item.open .acc-arrow{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.acc-item.open .acc-body{max-height:200px}
+.acc-content{padding:0 1.3rem 1rem;padding-left:4rem}
+.acc-content .lst{font-size:.78rem;color:rgba(255,255,255,.35);line-height:1.8;margin-bottom:.4rem}
+.acc-content .dsc{font-size:.8rem;color:var(--dim);font-weight:300;line-height:1.5;font-style:italic}
 
-footer{position:relative;z-index:1;padding:2rem;text-align:center;font-size:.75rem;color:#9CA3AF;border-top:1px solid #E5E7EB}
-footer a{color:#9CA3AF;text-decoration:none;margin:0 .5rem}footer a:hover{color:#5B5CF6}
-.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(250,250,250,.85);backdrop-filter:blur(16px);border:1px solid #E5E7EB;border-radius:100px;padding:.25rem}
-.pn a{padding:.3rem .7rem;border-radius:100px;color:#6B7280;text-decoration:none;font-size:.7rem;font-weight:600;transition:all .15s}
-.pn a:hover{color:#0A0A0A}.pn a.on{background:#5B5CF6;color:#fff}
+/* SOCIAL PROOF */
+.proof{max-width:900px;margin:0 auto;padding:3rem 2rem;text-align:center}
+.proof h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.03em;margin-bottom:2rem;opacity:0;transform:translateY(20px)}
+.proof-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.proof-stat{padding:1.5rem 1rem;opacity:0;transform:translateY(20px)}
+.proof-stat .num{font-size:1.8rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.3rem}
+.proof-stat .num .grad{font-size:inherit;font-weight:inherit}
+.proof-stat .label{font-size:.72rem;color:var(--dim);font-weight:300;text-transform:uppercase;letter-spacing:.08em}
 
-@media(max-width:768px){.cards,.case-grid{grid-template-columns:1fr}.suggestions{flex-direction:column;align-items:center}}
+/* CTA */
+.cta{padding:5rem 2rem 3rem;text-align:center;position:relative}
+.cta::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(16,185,129,.05),transparent 70%);pointer-events:none}
+.cta h2{font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:700;letter-spacing:-.04em;margin-bottom:1rem;background:linear-gradient(135deg,#fff,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transform:translateY(25px)}
+.cta .sub{color:var(--dim);font-size:.92rem;max-width:420px;margin:0 auto 2rem;line-height:1.7;font-weight:300;opacity:0;transform:translateY(20px)}
+.install{max-width:480px;margin:0 auto 1.8rem;background:var(--s);border:1px solid var(--b);border-radius:12px;padding:1rem 1.4rem;font-family:'SF Mono','Fira Code',monospace;font-size:.84rem;color:rgba(255,255,255,.7);position:relative;text-align:left;opacity:0;transform:translateY(20px)}
+.install .p{color:var(--emerald)}.install .c{color:#fff}.install .fl{color:var(--lime)}
+.install .cp{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);border:1px solid var(--b);color:var(--dim);padding:.3rem .7rem;border-radius:7px;font-size:.68rem;cursor:pointer;font-family:var(--f);transition:all .25s}
+.install .cp:hover{background:rgba(16,185,129,.12);color:#fff;border-color:rgba(16,185,129,.25)}
+.cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(20px)}
+.btn-p{padding:.7rem 2rem;border-radius:100px;background:var(--emerald);color:#050A05;font-weight:600;font-size:.88rem;border:none;cursor:pointer;font-family:var(--f);transition:all .35s}
+.btn-p:hover{box-shadow:0 10px 35px rgba(16,185,129,.3);transform:translateY(-2px)}
+.btn-g{padding:.7rem 2rem;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:0 0;color:#fff;font-weight:500;font-size:.88rem;cursor:pointer;font-family:var(--f);transition:all .3s}
+.btn-g:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.03)}
+
+/* FOOTER */
+footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--b);max-width:1100px;margin:0 auto}
+footer .fl{font-size:.76rem;color:rgba(255,255,255,.2)}footer .fr{display:flex;gap:1.8rem}
+footer .fr a{font-size:.76rem;color:rgba(255,255,255,.25);transition:color .25s}footer .fr a:hover{color:#fff}
+
+/* PROP NAV */
+.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:200;display:flex;gap:.35rem;background:rgba(5,10,5,.88);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:100px;padding:.35rem}
+.prop-nav a{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-size:.72rem;font-weight:600;color:var(--dim);transition:all .3s}
+.prop-nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.prop-nav a.active{background:var(--emerald);color:#050A05;box-shadow:0 0 18px rgba(16,185,129,.3)}
+
+/* DIVIDER */
+.dv{width:100%;max-width:1100px;margin:0 auto;height:1px;background:linear-gradient(90deg,transparent,var(--b) 20%,rgba(16,185,129,.12) 50%,var(--b) 80%,transparent)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:.9rem 1.5rem}.hero{padding:7rem 1.5rem 3rem}
+  .split{grid-template-columns:1fr;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:2.5rem}
+  .split-l,.split-r{display:contents}.split-l{gap:0}.iw{height:200px}
+  .tb{order:var(--mo)}.iw{order:var(--mo)}
+  .skills{padding:3rem 1.5rem}.cta{padding:4rem 1.5rem}
+  .philosophy-grid{grid-template-columns:1fr}
+  .proof-grid{grid-template-columns:repeat(2,1fr)}
+  .progress-bar{display:none}
+  footer{flex-direction:column;gap:.8rem;text-align:center}
+}
+@media(max-width:480px){.hero h1{font-size:2.5rem}.proof-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="ambient"></div>
-<nav><a class="logo" href="/">🧠 Genius Team</a><a class="nav-link" href="https://github.com/w-3-art/genius-team">GitHub</a></nav>
 
+<!-- CURSOR GLOW -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- PROGRESS SIDEBAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav id="nav"><div class="logo"><span class="dot"></span>Genius Team</div><button class="nav-cta" onclick="GeniusWizard.open()">Get Started</button></nav>
+
+<!-- HERO -->
 <section class="hero">
-  <h1>Anyone can build</h1>
-  <p class="hero-sub">Describe your idea. We turn it into a real app.</p>
-  <div class="hero-input-wrap"><input class="hero-input" id="mainInput" type="text" placeholder="What do you want to build?"></div>
-  <div class="suggestions">
-    <button class="sug" onclick="fill(this)">Booking app for yoga studio</button>
-    <button class="sug" onclick="fill(this)">Marketplace for vintage watches</button>
-    <button class="sug" onclick="fill(this)">Landing page for my brand</button>
-  </div>
-  <button class="hero-cta">Generate my app</button>
-  <div class="trust"><span><span class="ck">✓</span> No code</span><span><span class="ck">✓</span> Ready in minutes</span><span><span class="ck">✓</span> Live on the web</span></div>
-</section>
-
-<section class="cards">
-  <div class="fcard"><span class="fcard-icon">🎨</span><div class="fcard-title">Design</div><p class="fcard-desc">UI, branding, responsive layouts — crafted by AI design specialists.</p></div>
-  <div class="fcard"><span class="fcard-icon">⚡</span><div class="fcard-title">Code</div><p class="fcard-desc">Frontend, backend, database, API — production-grade from day one.</p></div>
-  <div class="fcard"><span class="fcard-icon">🚀</span><div class="fcard-title">Deploy</div><p class="fcard-desc">Tested, documented, secured, and live on the internet.</p></div>
-</section>
-
-<section class="workflow">
-  <div class="wf-label">How it works</div>
-  <h2 class="wf-title">Three steps. That's it.</h2>
-  <div class="wf-step"><div class="wf-num">1</div><div><h3>Describe your idea</h3><p>"Build me a booking app for my yoga studio with online payments."</p></div></div>
-  <div class="wf-step"><div class="wf-num">2</div><div><h3>42 agents build it</h3><p>Design → Code → Test → Secure → Optimize. Fully automated.</p></div></div>
-  <div class="wf-step"><div class="wf-num">3</div><div><h3>Ship it</h3><p>Production-ready. Tested. Documented. One command to deploy.</p></div></div>
-</section>
-
-<section class="cases">
-  <h2 class="cases-title">Built for everyone</h2>
-  <p class="cases-sub">No coding experience needed. Just your idea.</p>
-  <div class="case-grid">
-    <div class="case"><div class="case-who">Freelancer</div><p class="case-quote">"I needed a portfolio with a booking form. Done in 10 minutes."</p><div class="case-result">→ Portfolio + booking system</div></div>
-    <div class="case"><div class="case-who">Startup founder</div><p class="case-quote">"Shipped our MVP before the deadline. No dev team needed."</p><div class="case-result">→ Full-stack SaaS MVP</div></div>
-    <div class="case"><div class="case-who">Student</div><p class="case-quote">"Built my first web app for a school project. Got an A."</p><div class="case-result">→ Interactive web app</div></div>
+  <div class="hero-inner">
+    <div class="badge" id="badge">Your AI team — 42 agents strong</div>
+    <h1 id="h1">Anyone can <span class="grad">build.</span></h1>
+    <p class="hero-sub" id="hsub">The complete AI toolkit for vibe coders. From first line to production — your AI team has your back.</p>
+    <button class="hero-cta" id="hcta" onclick="GeniusWizard.open()">Start Building Free</button>
   </div>
 </section>
 
-<section class="bcta">
-  <p>Free. Open source. One command.</p>
-  <button class="hero-cta">Generate my app</button>
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="phil">
+  <h2 id="phil-h">Agents that <span class="grad">guide</span>, not replace</h2>
+  <p id="phil-p">You stay in control. Our AI agents handle the heavy lifting — architecture, testing, security — while you make the creative decisions that matter.</p>
+  <div class="philosophy-grid" id="phil-grid">
+    <div class="phil-card"><div class="phi">🎯</div><h4>You decide</h4><p>Every checkpoint requires your approval. Agents propose, you choose.</p></div>
+    <div class="phil-card"><div class="phi">🔧</div><h4>They execute</h4><p>42 specialists handle code, tests, deploys — the tedious parts you'd rather skip.</p></div>
+    <div class="phil-card"><div class="phi">🚀</div><h4>Ship together</h4><p>Production-grade code, reviewed and tested. Your vision, professionally built.</p></div>
+  </div>
 </section>
 
-<footer>🧠 Genius Team v18.0 — MIT<a href="https://github.com/w-3-art/genius-team">GitHub</a></footer>
-<div class="pn"><a href="/proposition1">A</a><a href="/proposition2">B</a><a href="/proposition3" class="on">C</a><a href="/proposition4">D</a><a href="/proposition5">E</a></div>
+<div class="dv"></div>
 
+<!-- SPLIT PARALLAX -->
+<section class="split" id="sp">
+  <div class="split-l">
+    <div class="tb" style="--mo:2"><div class="lbl">Describe</div><h3>Talk, don't type code</h3><p>Say what you want in plain English. "I need a booking app with payments." Your AI interviewer turns conversation into a real product spec.</p></div>
+    <div class="tb" style="--mo:4"><div class="lbl">Assemble</div><h3>42 specialists, your team</h3><p>Designer, frontend dev, backend dev, security auditor — each agent is an expert. They organize around your project and wait for your go-ahead.</p></div>
+    <div class="tb" style="--mo:6"><div class="lbl">Build</div><h3>Watch it come together</h3><p>Real code. Real components. Real tests. Every line reviewed, quality-checked, and approved before it reaches your codebase.</p></div>
+    <div class="tb" style="--mo:8"><div class="lbl">Ship</div><h3>One command to production</h3><p>Analytics, SEO, monitoring — already wired up. Security audited. Performance optimized. Your app is production-ready from day one.</p></div>
+  </div>
+  <div class="split-r">
+    <div class="iw" style="--mo:1"><img class="pimg" src="img/workflow-steps.jpg" alt="Workflow steps"></div>
+    <div class="iw" style="--mo:3"><img class="pimg" src="img/agent-constellation.jpg" alt="Agent constellation"></div>
+    <div class="iw" style="--mo:5"><img class="pimg" src="img/app-mockup.jpg" alt="App mockup"></div>
+    <div class="iw" style="--mo:7"><img class="pimg" src="img/before-after.jpg" alt="Before and after"></div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- SKILLS ACCORDION -->
+<section class="skills" id="sk">
+  <div class="skills-hd"><h2>42 Skills. <span class="grad">6 Categories.</span></h2><p>Every agent is a specialist. Click to explore.</p></div>
+  <div class="accordion" id="acc">
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-left"><div class="ico">💡</div><h4>Ideation</h4><span class="cnt">5 agents</span></div>
+        <div class="acc-arrow">▼</div>
+      </div>
+      <div class="acc-body"><div class="acc-content"><div class="lst">Interviewer · Analyst · Specs · Designer · Integration Guide</div><div class="dsc">From rough idea to clear, approved specifications and a full design system.</div></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-left"><div class="ico">⚡</div><h4>Build</h4><span class="cnt">7 agents</span></div>
+        <div class="acc-arrow">▼</div>
+      </div>
+      <div class="acc-body"><div class="acc-content"><div class="lst">Router · Frontend · Backend · Mobile · Database · API · Orchestrator</div><div class="dsc">Full-stack implementation across web, mobile, and API — fully coordinated.</div></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-left"><div class="ico">🛡️</div><h4>Quality</h4><span class="cnt">5 agents</span></div>
+        <div class="acc-arrow">▼</div>
+      </div>
+      <div class="acc-body"><div class="acc-content"><div class="lst">QA Micro · Full QA · Code Review · Security Audit · Debugger</div><div class="dsc">Every line reviewed, tested, and hardened before it ships.</div></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-left"><div class="ico">📈</div><h4>Growth</h4><span class="cnt">5 agents</span></div>
+        <div class="acc-arrow">▼</div>
+      </div>
+      <div class="acc-body"><div class="acc-content"><div class="lst">SEO · Analytics · Performance · Accessibility · Content</div><div class="dsc">Built-in growth engine — optimized for search, speed, and every user.</div></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-left"><div class="ico">🚀</div><h4>Ops</h4><span class="cnt">4 agents</span></div>
+        <div class="acc-arrow">▼</div>
+      </div>
+      <div class="acc-body"><div class="acc-content"><div class="lst">Deployer · Experiments · i18n · Onboarding</div><div class="dsc">Ship fast, experiment freely, scale globally with one-command deploys.</div></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <div class="acc-left"><div class="ico">🧠</div><h4>AI Engine</h4><span class="cnt">5 agents</span></div>
+        <div class="acc-arrow">▼</div>
+      </div>
+      <div class="acc-body"><div class="acc-content"><div class="lst">Memory · Copywriter · Marketer · Team Optimizer · Docs</div><div class="dsc">Gets smarter with every project. Your team learns and adapts.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- SOCIAL PROOF -->
+<section class="proof" id="proof">
+  <h2 id="proof-h">Trusted by <span class="grad">vibe coders</span> worldwide</h2>
+  <div class="proof-grid" id="proof-grid">
+    <div class="proof-stat"><div class="num"><span class="grad">42</span></div><div class="label">AI Agents</div></div>
+    <div class="proof-stat"><div class="num"><span class="grad">6</span></div><div class="label">Skill Categories</div></div>
+    <div class="proof-stat"><div class="num"><span class="grad">1</span></div><div class="label">Command to Ship</div></div>
+    <div class="proof-stat"><div class="num"><span class="grad">∞</span></div><div class="label">Ideas Possible</div></div>
+  </div>
+</section>
+
+<div class="dv"></div>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <h2>Your idea deserves to exist</h2>
+  <p class="sub">One command. 42 agents. From vibe to production.</p>
+  <div class="install" id="inst"><span class="p">$</span> <span class="c">npx</span> <span class="fl">genius-team</span> init<button class="cp" onclick="navigator.clipboard.writeText('npx genius-team init');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button></div>
+  <div class="cta-btns" id="cbtns"><button class="btn-p" onclick="GeniusWizard.open()">Get Started</button><a href="https://github.com/anthropics/claude-code" target="_blank" class="btn-g">GitHub</a></div>
+</section>
+
+<footer><div class="fl">Genius Team · 2026</div><div class="fr"><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a><a href="#" onclick="GeniusWizard.open();return false">Docs</a></div></footer>
+
+<div class="prop-nav"><a href="/proposition1">P1</a><a href="/proposition2">P2</a><a href="/proposition3" class="active">P3</a><a href="/proposition4">P4</a><a href="/proposition5">P5</a></div>
+
+<script src="wizard.js"></script>
 <script>
-gsap.registerPlugin(ScrollTrigger);
-const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
-lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+GeniusWizard.init();
 
-function fill(btn){const i=document.getElementById('mainInput');i.value=btn.textContent;i.focus()}
+/* Lenis smooth scroll */
+const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),smoothWheel:true});
+lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);gsap.registerPlugin(ScrollTrigger);
+
+/* Nav scroll state */
+ScrollTrigger.create({start:'top -80',onUpdate:s=>{document.getElementById('nav').classList.toggle('scrolled',s.scroll()>80)}});
+
+/* Cursor glow follow */
+const glow=document.getElementById('cursorGlow');
+document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+
+/* Progress sidebar fill */
+const progressFill=document.getElementById('progressFill');
+ScrollTrigger.create({start:'top top',end:'bottom bottom',onUpdate:s=>{progressFill.style.height=(s.progress*100)+'%'}});
 
 /* Hero entrance */
-gsap.from('.hero h1',{y:30,opacity:0,duration:1,ease:'expo.out',delay:.3});
-gsap.from('.hero-sub',{y:20,opacity:0,duration:.8,ease:'expo.out',delay:.5});
-gsap.from('.hero-input-wrap',{y:20,opacity:0,duration:.8,ease:'expo.out',delay:.65});
-gsap.from('.suggestions',{y:15,opacity:0,duration:.6,ease:'expo.out',delay:.8});
-gsap.from('.hero-cta',{y:15,opacity:0,duration:.6,ease:'expo.out',delay:.9});
-gsap.from('.trust',{y:10,opacity:0,duration:.5,ease:'expo.out',delay:1});
+const ht=gsap.timeline({defaults:{ease:'power4.out'}});
+ht.to('#badge',{y:0,opacity:1,duration:.8},.2)
+  .to('#h1',{y:0,opacity:1,duration:1},.4)
+  .to('#hsub',{y:0,opacity:1,duration:.8},.7)
+  .to('#hcta',{y:0,opacity:1,duration:.8},.9);
 
-/* Scroll reveals with stagger */
-gsap.utils.toArray('.fcard,.wf-step,.case').forEach((el,i)=>{
-  gsap.from(el,{y:30,opacity:0,duration:.7,delay:i%3*.08,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%'}});
+/* Philosophy reveal with blur-to-sharp */
+const phTl=gsap.timeline({scrollTrigger:{trigger:'#phil',start:'top 75%',toggleActions:'play none none none'}});
+phTl.to('#phil-h',{y:0,opacity:1,filter:'blur(0px)',duration:.8,ease:'power3.out'},0)
+    .to('#phil-p',{y:0,opacity:1,filter:'blur(0px)',duration:.7,ease:'power3.out'},.15);
+gsap.utils.toArray('.phil-card').forEach((c,i)=>{
+  gsap.to(c,{y:0,opacity:1,filter:'blur(0px)',duration:.7,delay:i*.1,ease:'power3.out',scrollTrigger:{trigger:'#phil-grid',start:'top 80%',toggleActions:'play none none none'}});
 });
-gsap.utils.toArray('.wf-label,.wf-title,.cases-title,.cases-sub,.bcta p,.bcta .hero-cta').forEach(el=>{
-  gsap.from(el,{y:20,opacity:0,duration:.7,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+
+/* Split parallax: right images scroll faster */
+if(!window.matchMedia('(max-width:768px)').matches){
+  gsap.utils.toArray('.pimg').forEach(img=>{gsap.to(img,{yPercent:-20,ease:'none',scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:true}})});
+}
+
+/* BLUR-TO-SHARP on scroll — text blocks & images */
+gsap.utils.toArray('.tb,.iw').forEach(el=>{
+  gsap.to(el,{y:0,opacity:1,filter:'blur(0px)',duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',end:'top 50%',scrub:1}});
+});
+
+/* Accordion cards staggered reveal */
+gsap.utils.toArray('.acc-item').forEach((c,i)=>{
+  gsap.to(c,{y:0,opacity:1,duration:.6,delay:i*.06,ease:'power3.out',scrollTrigger:{trigger:'#acc',start:'top 78%',toggleActions:'play none none none'}});
+});
+
+/* Proof stats reveal */
+gsap.to('#proof-h',{y:0,opacity:1,duration:.7,ease:'power3.out',scrollTrigger:{trigger:'#proof',start:'top 75%',toggleActions:'play none none none'}});
+gsap.utils.toArray('.proof-stat').forEach((s,i)=>{
+  gsap.to(s,{y:0,opacity:1,duration:.6,delay:i*.08,ease:'power3.out',scrollTrigger:{trigger:'#proof-grid',start:'top 80%',toggleActions:'play none none none'}});
+});
+
+/* CTA reveal */
+const ct=gsap.timeline({scrollTrigger:{trigger:'#cta',start:'top 70%',toggleActions:'play none none none'}});
+ct.to('#cta h2',{y:0,opacity:1,duration:.7,ease:'power3.out'},0)
+  .to('#cta .sub',{y:0,opacity:1,duration:.7,ease:'power3.out'},.1)
+  .to('#inst',{y:0,opacity:1,duration:.7,ease:'power3.out'},.2)
+  .to('#cbtns',{y:0,opacity:1,duration:.7,ease:'power3.out'},.3);
+
+/* Accordion toggle */
+function toggleAcc(header){
+  const item=header.parentElement;
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.acc-item.open').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+
+/* Accordion hover glow */
+document.querySelectorAll('.acc-item').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.background=`radial-gradient(circle 200px at ${e.clientX-r.left}px ${e.clientY-r.top}px,rgba(16,185,129,.04),var(--s))`});
+  c.addEventListener('mouseleave',()=>{c.style.background='var(--s)'});
 });
 </script>
 </body>
