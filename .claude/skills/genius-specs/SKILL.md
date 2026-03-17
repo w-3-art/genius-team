@@ -2,9 +2,10 @@
 name: genius-specs
 description: >-
   Writes formal product specifications from interview findings. Also suggests genius-skill-creator
-  when recurring project-specific workflows are identified. Use when DISCOVERY.xml exists and user
-  says "write specs", "create specifications", "formalize requirements", "document features".
-  Do NOT use before the interview phase is complete.
+  when recurring project-specific workflows are identified. Use when user says "write specs",
+  "create specifications", "formalize requirements", "document features", "based on what we discussed".
+  Do NOT use for market/competitor analysis (genius-product-market-analyst) or design (genius-designer).
+  Do NOT use before the interview phase is complete unless user explicitly requests specs.
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

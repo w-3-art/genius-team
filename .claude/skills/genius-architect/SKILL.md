@@ -2,9 +2,11 @@
 name: genius-architect
 description: >-
   Designs technical architecture and stack decisions. Routes to specialized genius-dev-* sub-skills
-  based on project type. Use when SPECIFICATIONS.xml exists and user says "plan architecture",
-  "choose the stack", "technical design", "system design", "what tech should we use".
-  Do NOT use before specs are written.
+  based on project type. Use when user says "plan architecture", "choose the stack",
+  "technical design", "system design", "what tech should we use", "define the architecture",
+  "stack, database schema, API structure", "database schema", "API structure", "technical stack".
+  SPECIFICATIONS.xml is preferred but not required — if user explicitly requests architecture, proceed.
+  Do NOT use for building code (genius-dev-backend/frontend) or writing feature specs (genius-specs).
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

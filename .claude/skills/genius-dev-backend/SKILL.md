@@ -4,8 +4,10 @@ description: >-
   Specialized backend implementation skill. Builds APIs, auth systems, middleware,
   and server-side logic. Handles REST, GraphQL, Node.js, Express, Fastify, Hono.
   Use when task involves "API endpoint", "server", "authentication", "middleware",
-  "REST API", "GraphQL", "Node.js", "backend", "server-side".
-  Do NOT use for UI components (genius-dev-frontend) or database schema (genius-dev-database).
+  "REST API", "GraphQL", "Node.js", "backend", "server-side",
+  "subscription billing", "Stripe subscription", "payment backend", "billing system".
+  Do NOT use for UI components (genius-dev-frontend), database schema (genius-dev-database),
+  or basic third-party API wrapping (genius-dev-api).
 context: fork
 agent: genius-dev-backend
 user-invocable: false

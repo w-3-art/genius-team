@@ -177,7 +177,10 @@ When the user's request is ambiguous or could match multiple skills:
 4. **Common confusions**:
    - "review" without "PR" → genius-reviewer (single-agent). "review PR" / "review pull request" → genius-code-review (multi-agent)
    - "copy" for landing page → genius-copywriter. "blog post" / "article" → genius-content
-   - "integrate Stripe" / "add [service]" → genius-dev-api (implementation). "how to setup [service]" → genius-integration-guide (guide only)
+   - "integrate Stripe" / "add [service]" → genius-dev-api (wrapping external APIs). BUT "Stripe billing" / "subscription billing" / "payment backend" → genius-dev-backend (building server-side billing logic). "how to setup [service]" → genius-integration-guide (guide only)
+   - "analyze the market" / "who are the competitors" / "market landscape" → genius-product-market-analyst (NOT genius-specs). "write specs" / "specifications" / "requirements" → genius-specs
+   - "define the architecture" / "stack, database schema, API structure" / "technical architecture" → genius-architect (NOT no-skill — even without SPECIFICATIONS.xml if user explicitly asks for architecture)
+   - "write specs based on what we discussed" / "formalize what we said" / "specs from our conversation" → genius-specs (NOT genius-designer)
    - "test" / "QA" after full build → genius-qa. "quick check" / after single task → genius-qa-micro
    - "build login page" → genius-dev-frontend. "build auth system" → genius-dev-backend. "build login with auth" → genius-dev (dispatcher, splits the task)
 

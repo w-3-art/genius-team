@@ -4,8 +4,9 @@ description: >-
   Third-party API integration skill. Wraps external APIs (Stripe, Supabase, Resend,
   Twilio, OpenAI, etc.) into clean SDK wrappers, generates OpenAPI clients, handles
   webhooks and rate limiting. Use when task involves "integrate [service]",
-  "Stripe integration", "OpenAI API", "webhook handler", "API client", "SDK wrapper".
-  Do NOT use for building your own API (genius-dev-backend) or UI (genius-dev-frontend).
+  "Stripe integration" (basic), "OpenAI API", "webhook handler", "API client", "SDK wrapper".
+  Do NOT use for building your own API (genius-dev-backend), UI (genius-dev-frontend),
+  or subscription billing logic / payment backend / "Stripe subscription billing" (genius-dev-backend).
 context: fork
 agent: genius-dev-api
 user-invocable: false
