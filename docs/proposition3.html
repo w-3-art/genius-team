@@ -19,6 +19,24 @@ a{color:inherit;text-decoration:none}
 /* Vignette depth */
 body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 55%,rgba(0,0,0,.35));pointer-events:none;z-index:9996}
 
+/* Cursor glow */
+.cursor-glow{position:fixed;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(212,165,116,.055),transparent 65%);pointer-events:none;z-index:9995;transform:translate(-50%,-50%);transition:opacity .3s}
+
+/* Ticker */
+.ticker{overflow:hidden;padding:.55rem 0;background:var(--surface);border-top:1px solid rgba(212,165,116,.04);border-bottom:1px solid rgba(212,165,116,.04)}
+.ticker-track{display:flex;gap:2.5rem;animation:tickerScroll 40s linear infinite;width:max-content}
+.ticker-item{font-size:.65rem;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:.4rem;font-weight:500;letter-spacing:.02em}
+.ticker-item .dot{width:3px;height:3px;border-radius:50%;background:var(--gold)}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Parallax interstitial */
+.parallax-quote{position:relative;height:55vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface)}
+.pq-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;pointer-events:none}
+.pq-orb-1{width:280px;height:280px;background:var(--gold);top:15%;left:12%}
+.pq-orb-2{width:220px;height:220px;background:#C4956A;bottom:15%;right:12%}
+.pq-text{position:relative;z-index:2;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;text-align:center;max-width:620px;padding:0 2rem;line-height:1.35;letter-spacing:-.015em}
+.pq-text em{font-style:normal;color:var(--gold)}
+
 /* Loader */
 .loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
 .loader-bar{width:120px;height:2px;background:rgba(212,165,116,.15);border-radius:1px;overflow:hidden}
@@ -64,7 +82,9 @@ section{padding:5rem 2rem;position:relative}
 
 /* Editorial cards — Design/Code/Deploy */
 .editorial-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.5rem}
-.editorial-card{background:rgba(255,255,255,.02);border:1px solid rgba(212,165,116,.06);border-radius:16px;padding:1.8rem 1.4rem;transition:all .3s}
+.editorial-card{background:rgba(255,255,255,.02);border:1px solid rgba(212,165,116,.06);border-radius:16px;padding:1.8rem 1.4rem;transition:all .3s;position:relative;overflow:hidden}
+.editorial-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.editorial-card:hover::before{opacity:.5}
 .editorial-card:hover{border-color:rgba(212,165,116,.15);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.25)}
 .editorial-card-icon{font-size:1.8rem;margin-bottom:.9rem}
 .editorial-card h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem;letter-spacing:.01em}
@@ -159,10 +179,15 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
   .hero{padding:6rem 1.5rem 3rem}
   .stats{gap:2rem}
   .timeline-node{padding-left:2rem}
+  .cursor-glow{display:none}
+  .parallax-quote{height:40vh}
 }
 </style>
 </head>
 <body>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- Loader -->
 <div class="loader" id="loader"><div class="loader-bar"><div class="loader-bar-fill"></div></div></div>
@@ -198,6 +223,36 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
     <span>&#10003; Learn as you build</span>
   </div>
 </section>
+
+<!-- Ticker -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="dot"></span> Interviewer</div>
+    <div class="ticker-item"><span class="dot"></span> Market Analyst</div>
+    <div class="ticker-item"><span class="dot"></span> Spec Writer</div>
+    <div class="ticker-item"><span class="dot"></span> Designer</div>
+    <div class="ticker-item"><span class="dot"></span> Architect</div>
+    <div class="ticker-item"><span class="dot"></span> Frontend Dev</div>
+    <div class="ticker-item"><span class="dot"></span> Backend Dev</div>
+    <div class="ticker-item"><span class="dot"></span> QA Tester</div>
+    <div class="ticker-item"><span class="dot"></span> Security</div>
+    <div class="ticker-item"><span class="dot"></span> Deployer</div>
+    <div class="ticker-item"><span class="dot"></span> SEO Expert</div>
+    <div class="ticker-item"><span class="dot"></span> Copywriter</div>
+    <div class="ticker-item"><span class="dot"></span> Interviewer</div>
+    <div class="ticker-item"><span class="dot"></span> Market Analyst</div>
+    <div class="ticker-item"><span class="dot"></span> Spec Writer</div>
+    <div class="ticker-item"><span class="dot"></span> Designer</div>
+    <div class="ticker-item"><span class="dot"></span> Architect</div>
+    <div class="ticker-item"><span class="dot"></span> Frontend Dev</div>
+    <div class="ticker-item"><span class="dot"></span> Backend Dev</div>
+    <div class="ticker-item"><span class="dot"></span> QA Tester</div>
+    <div class="ticker-item"><span class="dot"></span> Security</div>
+    <div class="ticker-item"><span class="dot"></span> Deployer</div>
+    <div class="ticker-item"><span class="dot"></span> SEO Expert</div>
+    <div class="ticker-item"><span class="dot"></span> Copywriter</div>
+  </div>
+</div>
 
 <!-- Design / Code / Deploy -->
 <section style="padding:3rem 2rem 5rem">
@@ -301,6 +356,13 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
       </div>
     </div>
   </div>
+</section>
+
+<!-- Parallax Quote -->
+<section class="parallax-quote">
+  <div class="pq-orb pq-orb-1" id="pqOrb1"></div>
+  <div class="pq-orb pq-orb-2" id="pqOrb2"></div>
+  <div class="pq-text" id="pqText">Not a magic wand. <em>A real toolkit</em> that teaches you to build — with AI at your side, not in your way.</div>
 </section>
 
 <!-- 6 Skill Categories with progress bars -->
@@ -475,6 +537,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Loader
   gsap.to('#loader', { opacity: 0, duration: .5, delay: .6, onComplete() { document.getElementById('loader').style.display = 'none'; } });
 
+  // Cursor glow
+  const glow = document.getElementById('cursorGlow');
+  if (glow && window.innerWidth > 768) {
+    document.addEventListener('mousemove', e => { gsap.to(glow, { x: e.clientX, y: e.clientY, duration: .5 }); });
+  }
+
   // Suggestions
   document.querySelectorAll('.hero-suggestion').forEach(s => {
     s.addEventListener('click', () => {
@@ -564,6 +632,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Parallax quote orbs
+  gsap.to('#pqOrb1', { scrollTrigger: { trigger: '.parallax-quote', start: 'top bottom', end: 'bottom top', scrub: 1 }, y: -80 });
+  gsap.to('#pqOrb2', { scrollTrigger: { trigger: '.parallax-quote', start: 'top bottom', end: 'bottom top', scrub: 1 }, y: 60 });
+  gsap.from('#pqText', { scrollTrigger: { trigger: '.parallax-quote', start: 'top 65%' }, opacity: 0, scale: .92, duration: .9, ease: 'power2.out' });
 
   // CTA
   gsap.from('.cta-content', {

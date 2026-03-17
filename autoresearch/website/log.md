@@ -109,3 +109,8 @@ Warm grain texture + softer vignette fits editorial tone. Richer hero mesh with 
 - Consider: P1 needs a unique signature beyond iris reveal to push Unique from 7→8
 
 --- End iteration 2 ---
+
+--- End iteration 2 ---
+
+=== Iteration 3 / 25 — Wed Mar 18 00:54:28 CET 2026 ===
+Running claude for iteration 3...
