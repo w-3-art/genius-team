@@ -1,208 +1,1087 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — P3: The Story</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team — Your Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-<script src="wizard.js"></script>
 <style>
-:root{--blue:#4f6ef7;--cyan:#22d3ee;--green:#34d399;--dim:rgba(255,255,255,.4);--font:'Sora',sans-serif}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}
-body{font-family:var(--font);background:#050510;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 2.5rem;display:flex;justify-content:space-between;align-items:center}
-nav.solid{background:rgba(5,5,16,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
-.logo{font-weight:700;font-size:1.1rem;text-decoration:none;color:#fff}
-.btn-cta{padding:.55rem 1.4rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:.88rem;border:none;cursor:pointer;font-family:var(--font);transition:all .3s}
-.btn-cta:hover{box-shadow:0 0 25px rgba(79,110,247,.4);transform:translateY(-2px)}
+/* ============================================
+   GENIUS TEAM — PROPOSITION 3
+   Horizontal Scroll Storytelling
+   ============================================ */
 
-/* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url(img/holographic-ui.jpg) center/cover;opacity:.08}
-.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(79,110,247,.15),transparent 70%),linear-gradient(to bottom,transparent 40%,#050510)}
-.badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem 1rem .35rem .5rem;border-radius:100px;background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.2);font-size:.78rem;color:var(--blue);margin-bottom:2rem;position:relative;z-index:1}
-.badge .tag{padding:.12rem .45rem;border-radius:100px;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700}
-.hero h1{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:800;line-height:1.07;letter-spacing:-.04em;margin-bottom:1.5rem;position:relative;z-index:1}
-.hero h1 .g{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:1.15rem;color:var(--dim);max-width:450px;line-height:1.7;font-weight:300;margin-bottom:2.5rem;position:relative;z-index:1}
-.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
-.bp{padding:.85rem 2.5rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;text-decoration:none;transition:all .4s;font-family:var(--font)}
-.bp:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(79,110,247,.35)}
-.bg{padding:.85rem 2.5rem;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#fff;font-weight:500;font-size:1rem;cursor:pointer;text-decoration:none;transition:all .3s;font-family:var(--font)}
-.bg:hover{border-color:var(--blue)}
+:root {
+  --blue: #4f6ef7;
+  --cyan: #22d3ee;
+  --emerald: #34d399;
+  --bg: #08080c;
+  --font: 'Sora', sans-serif;
+  --dim: rgba(255,255,255,.45);
+  --subtle: rgba(255,255,255,.07);
+}
 
-/* PROGRESS BAR */
-.scroll-hint{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);font-size:.75rem;color:rgba(255,255,255,.3);z-index:50;text-align:center;pointer-events:none}
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-/* HORIZONTAL SCROLL */
-.hscroll{overflow:hidden}
-.hscroll-track{display:flex;will-change:transform}
-.hpanel{width:100vw;min-height:100vh;display:flex;align-items:center;padding:5rem;flex-shrink:0;position:relative;overflow:hidden}
-.hpanel .p-num{position:absolute;top:2rem;left:5rem;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.2)}
-.hpanel .p-content{max-width:480px;position:relative;z-index:1}
-.hpanel .p-img{position:absolute;right:0;top:0;bottom:0;width:50%;overflow:hidden;opacity:.4}
-.hpanel .p-img img{width:100%;height:100%;object-fit:cover}
-.hpanel .p-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--bg-color),transparent 60%)}
-.hpanel h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;line-height:1.1}
-.hpanel .accent{color:var(--cyan)}
-.hpanel .div{width:40px;height:3px;background:var(--blue);border-radius:2px;margin:1.5rem 0}
-.hpanel p{color:var(--dim);font-size:1.05rem;line-height:1.6;margin-bottom:1.5rem}
-.hpanel .eg{display:inline-block;padding:.5rem 1rem;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:.85rem;color:rgba(255,255,255,.6);font-style:italic}
-.p1-bg{--bg-color:#050510;background:linear-gradient(135deg,#050510,#0c0c25)}
-.p2-bg{--bg-color:#05100a;background:linear-gradient(135deg,#050510,#0a1a0f)}
-.p3-bg{--bg-color:#100510;background:linear-gradient(135deg,#050510,#1a0520)}
+html {
+  overflow-x: hidden;
+  scroll-behavior: auto;
+}
 
-/* SKILLS */
-.skills{padding:8rem 2rem}
-.skills-inner{max-width:1100px;margin:0 auto}
-.sec-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--blue);margin-bottom:.75rem}
-.sec-h{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.75rem}
-.sec-sub{color:var(--dim);font-size:1rem;margin-bottom:3rem;max-width:500px}
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.cat-card{border-radius:20px;padding:1.75rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);transition:all .4s}
-.cat-card:hover{transform:translateY(-5px)}
-.cat-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem}
-.cat-ico{font-size:1.4rem}.cat-name{font-size:1rem;font-weight:700;flex:1}
-.cat-count{font-size:.72rem;color:rgba(255,255,255,.3);background:rgba(255,255,255,.06);padding:.2rem .55rem;border-radius:100px}
-.cat-desc{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.5;margin-bottom:.9rem}
-.cat-tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.cat-tags span{padding:.2rem .55rem;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.68rem;color:rgba(255,255,255,.45)}
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: #fff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-/* CTA */
-.cta-s{padding:10rem 2rem;text-align:center;position:relative;overflow:hidden}
-.cta-s::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(79,110,247,.08),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
-.cta-s h2{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;position:relative;z-index:1}
-.cta-s p{color:var(--dim);font-size:1.05rem;margin-bottom:2.5rem;position:relative;z-index:1}
-.cmd{display:inline-flex;align-items:center;gap:1.5rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1rem 2rem;font-family:monospace;font-size:.9rem;color:var(--green);cursor:pointer;transition:all .4s;position:relative;z-index:1}
-.cmd:hover{border-color:var(--blue);box-shadow:0 0 40px rgba(79,110,247,.12)}
-.cmd .h{font-family:var(--font);font-size:.7rem;color:rgba(255,255,255,.3)}
-footer{padding:2.5rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.3)}
-footer a{color:rgba(255,255,255,.3);text-decoration:none}footer a:hover{color:var(--blue)}
-.footer-links{display:flex;gap:1.5rem}
-.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.35rem;z-index:200;background:rgba(0,0,0,.8);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:100px;padding:.35rem}
-.prop-nav a{padding:.4rem .9rem;border-radius:100px;color:rgba(255,255,255,.35);text-decoration:none;font-size:.72rem;font-weight:600;transition:all .3s}
-.prop-nav a:hover{color:#fff}.prop-nav a.active{background:var(--blue);color:#fff}
-@media(max-width:768px){.hpanel{padding:3rem 1.5rem}.hpanel .p-img{display:none}.cat-grid{grid-template-columns:1fr 1fr}nav{padding:1rem 1.5rem}footer{flex-direction:column;gap:1rem}}
-@media(max-width:480px){.cat-grid{grid-template-columns:1fr}}
+a { text-decoration: none; color: inherit; }
+button { font-family: var(--font); cursor: pointer; }
+
+/* ============================================
+   FIXED NAV
+   ============================================ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(8,8,12,.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  transition: background .4s, border-color .4s;
+}
+
+.nav.scrolled {
+  background: rgba(8,8,12,.92);
+  border-bottom-color: rgba(255,255,255,.08);
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -.02em;
+  color: #fff;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.nav-link {
+  font-size: .85rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.5);
+  transition: color .3s;
+}
+
+.nav-link:hover { color: #fff; }
+
+.nav-cta {
+  padding: .55rem 1.5rem;
+  border-radius: 100px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+  font-size: .85rem;
+  border: none;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(79,110,247,.35);
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.progress-bar.visible { opacity: 1; }
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  border-radius: 0 2px 2px 0;
+  transition: none;
+}
+
+/* ============================================
+   HORIZONTAL SCROLL
+   ============================================ */
+
+.hscroll-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.hscroll-container {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.panel {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- Panel 1: Hero --- */
+
+.panel-hero {
+  justify-content: center;
+  text-align: center;
+}
+
+.panel-hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url(img/hero-brain.jpg) center/cover no-repeat;
+  opacity: .12;
+}
+
+.panel-hero .hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, rgba(79,110,247,.12), transparent 70%),
+    linear-gradient(to right, rgba(8,8,12,.7), rgba(8,8,12,.4), rgba(8,8,12,.7));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  padding: 2rem;
+}
+
+.hero-content h1 {
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-content h1 .grad {
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--dim);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.scroll-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: .85rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.35);
+  animation: pulseArrow 2s ease-in-out infinite;
+}
+
+@keyframes pulseArrow {
+  0%, 100% { opacity: .35; transform: translateX(0); }
+  50% { opacity: .7; transform: translateX(8px); }
+}
+
+/* --- Panels 2-5: Story Steps --- */
+
+.panel-step {
+  padding: 5rem 6rem;
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+}
+
+.panel-step .step-text {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+  z-index: 2;
+}
+
+.panel-step .step-visual {
+  flex: 1;
+  max-width: 520px;
+  position: relative;
+  z-index: 2;
+}
+
+.panel-step .step-visual img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+  display: block;
+}
+
+.step-label {
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--cyan);
+  margin-bottom: 1rem;
+}
+
+.step-text h2 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.035em;
+  margin-bottom: 0;
+}
+
+.step-accent-bar {
+  width: 40px;
+  height: 3px;
+  background: var(--blue);
+  border-radius: 2px;
+  margin: 1.5rem 0;
+}
+
+.step-text p {
+  font-size: 1.05rem;
+  color: var(--dim);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.step-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.03);
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Panel gradients */
+.panel-imagine { background: linear-gradient(135deg, #08080c, #0a0c1a); }
+.panel-build   { background: linear-gradient(135deg, #08080c, #080f14); }
+.panel-perfect { background: linear-gradient(135deg, #08080c, #0f081a); }
+.panel-launch  { background: linear-gradient(135deg, #08080c, #08140e); }
+
+/* ============================================
+   SKILLS SECTION (vertical)
+   ============================================ */
+
+.skills-section {
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+.skills-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--blue);
+  margin-bottom: .6rem;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.1;
+  margin-bottom: .6rem;
+}
+
+.section-sub {
+  font-size: 1rem;
+  color: var(--dim);
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.skill-card {
+  border-radius: 18px;
+  padding: 1.75rem;
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.06);
+  transition: transform .4s cubic-bezier(.2,1,.3,1), border-color .4s, box-shadow .4s;
+}
+
+.skill-card:hover {
+  transform: translateY(-6px);
+}
+
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .75rem;
+}
+
+.skill-icon { font-size: 1.35rem; }
+
+.skill-name {
+  font-size: .95rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.skill-count {
+  font-size: .7rem;
+  color: rgba(255,255,255,.3);
+  background: rgba(255,255,255,.06);
+  padding: .18rem .55rem;
+  border-radius: 100px;
+  font-weight: 600;
+}
+
+.skill-desc {
+  font-size: .82rem;
+  color: rgba(255,255,255,.4);
+  line-height: 1.55;
+  margin-bottom: .9rem;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.skill-tags span {
+  padding: .2rem .55rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  font-size: .68rem;
+  color: rgba(255,255,255,.4);
+  font-weight: 400;
+}
+
+/* Hover colors per card */
+.skill-card[data-color]:hover {
+  border-color: var(--hover-color);
+  box-shadow: 0 20px 50px var(--hover-glow);
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+
+.cta-section {
+  padding: 6rem 2rem 5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,110,247,.07), transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.cta-section h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-section h2 .grad {
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cta-sub {
+  font-size: 1.05rem;
+  color: var(--dim);
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+  font-weight: 300;
+}
+
+.cmd-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 1rem 2rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: .88rem;
+  color: var(--emerald);
+  cursor: pointer;
+  transition: border-color .4s, box-shadow .4s;
+  position: relative;
+  z-index: 1;
+}
+
+.cmd-block:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 40px rgba(79,110,247,.1);
+}
+
+.cmd-block .cmd-hint {
+  font-family: var(--font);
+  font-size: .7rem;
+  color: rgba(255,255,255,.3);
+  font-weight: 400;
+}
+
+.cta-buttons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary {
+  padding: .85rem 2.5rem;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--blue), #6b5ce7);
+  color: #fff;
+  font-weight: 600;
+  font-size: .95rem;
+  border: none;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(79,110,247,.35);
+}
+
+.btn-secondary {
+  padding: .85rem 2.5rem;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: transparent;
+  color: #fff;
+  font-weight: 500;
+  font-size: .95rem;
+  transition: border-color .3s;
+}
+
+.btn-secondary:hover { border-color: var(--blue); }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.footer {
+  padding: 2.5rem;
+  border-top: 1px solid rgba(255,255,255,.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .78rem;
+  color: rgba(255,255,255,.25);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: rgba(255,255,255,.25);
+  transition: color .3s;
+}
+
+.footer-links a:hover { color: var(--blue); }
+
+/* ============================================
+   PROP NAV (fixed bottom)
+   ============================================ */
+
+.prop-nav {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: .3rem;
+  z-index: 200;
+  background: rgba(8,8,12,.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 100px;
+  padding: .3rem;
+}
+
+.prop-nav a {
+  padding: .4rem .9rem;
+  border-radius: 100px;
+  color: rgba(255,255,255,.3);
+  font-size: .72rem;
+  font-weight: 600;
+  transition: all .3s;
+}
+
+.prop-nav a:hover { color: #fff; }
+
+.prop-nav a.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ============================================
+   REVEAL ANIMATIONS
+   ============================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .nav {
+    padding: .9rem 1.5rem;
+  }
+
+  .nav-link { display: none; }
+
+  .panel-hero .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .panel-step {
+    padding: 3rem 1.75rem;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .panel-step .step-visual {
+    display: none;
+  }
+
+  .panel-step .step-text {
+    max-width: 100%;
+  }
+
+  .step-text h2 {
+    font-size: 2rem;
+  }
+
+  .step-text p {
+    font-size: .95rem;
+  }
+
+  .step-number {
+    font-size: 5rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-section h2 {
+    font-size: 2.2rem;
+  }
+
+  .cmd-block {
+    font-size: .78rem;
+    padding: .8rem 1.2rem;
+    gap: .8rem;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .panel-step {
+    padding: 4rem;
+    gap: 3rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 </style>
 </head>
 <body>
-<nav id="nav"><a class="logo" href="#">🧠 Genius Team</a><button class="btn-cta" onclick="GeniusWizard.open()">Get Started</button></nav>
-<div class="scroll-hint" id="scrollHint">SCROLL THE STORY →</div>
 
-<section class="hero">
-  <div class="hero-bg"></div><div class="hero-grad"></div>
-  <div class="badge"><span class="tag">v18</span> Free & Open Source</div>
-  <h1>The future of<br><span class="g">building software.</span></h1>
-  <p class="hero-sub">42 AI specialists build your product while you describe it. No code, no team, no limits.</p>
-  <div class="hero-ctas">
-    <button class="bp" onclick="GeniusWizard.open()">Start Building — Free</button>
-    <a href="#story" class="bg">Scroll the story ↓</a>
+<!-- ============================================
+     FIXED NAV
+     ============================================ -->
+<nav class="nav" id="mainNav">
+  <a class="nav-logo" href="#">Genius Team</a>
+  <div class="nav-right">
+    <a class="nav-link" href="https://github.com/w-3-art/genius-team" target="_blank" rel="noopener">GitHub</a>
+    <button class="nav-cta" onclick="GeniusWizard.open()">Get Started</button>
   </div>
-</section>
+</nav>
 
-<div id="story">
-<section class="hscroll" id="hscrollWrap">
-  <div class="hscroll-track" id="hscrollTrack">
-    <div class="hpanel p1-bg">
-      <div class="p-num">Chapter 01</div>
-      <div class="p-content">
-        <h2>You have an <span class="accent">idea.</span></h2>
-        <div class="div"></div>
-        <p>Something you wish existed. An app, a tool, a platform. You can see it in your mind — you just can't build it.</p>
-        <div class="eg">"I want an app that lets my customers book appointments"</div>
-      </div>
-      <div class="p-img"><img src="img/hero-brain.jpg" alt=""><div></div></div>
-    </div>
-    <div class="hpanel p2-bg">
-      <div class="p-num">Chapter 02</div>
-      <div class="p-content">
-        <h2><span class="accent">AI builds</span> it for you.</h2>
-        <div class="div"></div>
-        <p>42 specialists activate: they interview you, design the UI, write the code, run tests, and handle security — while you watch.</p>
-        <div class="eg">Interviewer → Designer → Dev → QA → Security → Deploy</div>
-      </div>
-      <div class="p-img"><img src="img/workflow-steps.jpg" alt=""><div></div></div>
-    </div>
-    <div class="hpanel p3-bg">
-      <div class="p-num">Chapter 03</div>
-      <div class="p-content">
-        <h2>You <span class="accent">launch.</span></h2>
-        <div class="div"></div>
-        <p>Your app is live. Tested, documented, optimized, SEO-ready. You share the link with the world.</p>
-        <div class="eg">✅ Your app is live at myapp.com</div>
-      </div>
-      <div class="p-img"><img src="img/app-mockup.jpg" alt=""><div></div></div>
-    </div>
-  </div>
-</section>
+<!-- ============================================
+     PROGRESS BAR
+     ============================================ -->
+<div class="progress-bar" id="progressBar">
+  <div class="progress-fill" id="progressFill"></div>
 </div>
 
-<section class="skills">
+<!-- ============================================
+     HORIZONTAL SCROLL SECTION
+     ============================================ -->
+<section class="hscroll-wrap" id="hscrollWrap">
+  <div class="hscroll-container" id="hscrollContainer">
+
+    <!-- Panel 1 — Hero -->
+    <div class="panel panel-hero">
+      <div class="hero-bg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Your Idea.<br><span class="grad">Our Team.</span></h1>
+        <p class="hero-sub">Describe what you want to build. 31 AI specialists handle everything else — design, code, testing, deployment.</p>
+        <div class="scroll-arrow">Scroll to explore <span>&rarr;</span></div>
+      </div>
+    </div>
+
+    <!-- Panel 2 — 01 Imagine -->
+    <div class="panel panel-step panel-imagine">
+      <div class="step-number">01</div>
+      <div class="step-text">
+        <div class="step-label">Step One</div>
+        <h2>Imagine</h2>
+        <div class="step-accent-bar"></div>
+        <p>Describe what you want to build. Our AI interviews you, researches the market, analyzes competitors, and writes detailed specifications — all from a single conversation.</p>
+      </div>
+      <div class="step-visual">
+        <img src="img/workflow-steps.jpg" alt="Workflow steps visualization" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Panel 3 — 02 Build -->
+    <div class="panel panel-step panel-build">
+      <div class="step-number">02</div>
+      <div class="step-text">
+        <div class="step-label">Step Two</div>
+        <h2>Build</h2>
+        <div class="step-accent-bar"></div>
+        <p>31 specialized agents activate in parallel. Frontend, backend, database, API — each one an expert in its domain. They architect, implement, and integrate while you watch it come together.</p>
+      </div>
+      <div class="step-visual">
+        <img src="img/app-mockup.jpg" alt="Application mockup" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Panel 4 — 03 Perfect -->
+    <div class="panel panel-step panel-perfect">
+      <div class="step-number">03</div>
+      <div class="step-text">
+        <div class="step-label">Step Three</div>
+        <h2>Perfect</h2>
+        <div class="step-accent-bar"></div>
+        <p>Quality is not optional. Automated QA runs after every task. Security audits catch vulnerabilities. Performance agents optimize load times. Accessibility checks ensure everyone can use your product.</p>
+      </div>
+      <div class="step-visual">
+        <img src="img/holographic-ui.jpg" alt="Holographic UI visualization" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Panel 5 — 04 Launch -->
+    <div class="panel panel-step panel-launch">
+      <div class="step-number">04</div>
+      <div class="step-text">
+        <div class="step-label">Step Four</div>
+        <h2>Launch</h2>
+        <div class="step-accent-bar"></div>
+        <p>One command deploys everything. Your product goes live with SEO optimization, analytics tracking, documentation, and monitoring — ready for the world from day one.</p>
+      </div>
+      <div class="step-visual">
+        <img src="img/skill-categories.jpg" alt="Skill categories overview" loading="lazy">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================
+     SKILLS SECTION (vertical scroll)
+     ============================================ -->
+<section class="skills-section">
   <div class="skills-inner">
-    <div class="sec-label" data-reveal>Your AI team</div>
-    <h2 class="sec-h" data-reveal>42 agents. 6 departments.</h2>
-    <p class="sec-sub" data-reveal>Each specialist knows exactly when to step in.</p>
-    <div class="cat-grid">
-      <div class="cat-card" data-reveal data-delay="0" data-color="#8b5cf6"><div class="cat-hdr"><span class="cat-ico">💡</span><span class="cat-name">Ideation</span><span class="cat-count">5</span></div><p class="cat-desc">Interview users, research markets, write specs</p><div class="cat-tags"><span>Interviewer</span><span>Analyst</span><span>Specs</span><span>Copywriter</span><span>Content</span></div></div>
-      <div class="cat-card" data-reveal data-delay=".1" data-color="#4f6ef7"><div class="cat-hdr"><span class="cat-ico">⚡</span><span class="cat-name">Build</span><span class="cat-count">7</span></div><p class="cat-desc">Architect and build every layer of your product</p><div class="cat-tags"><span>Architect</span><span>Designer</span><span>Frontend</span><span>Backend</span><span>Mobile</span><span>DB</span><span>API</span></div></div>
-      <div class="cat-card" data-reveal data-delay=".2" data-color="#34d399"><div class="cat-hdr"><span class="cat-ico">🛡️</span><span class="cat-name">Quality</span><span class="cat-count">5</span></div><p class="cat-desc">Review, test, audit security and accessibility</p><div class="cat-tags"><span>Code Review</span><span>QA</span><span>Security</span><span>A11y</span><span>Debugger</span></div></div>
-      <div class="cat-card" data-reveal data-delay="0" data-color="#fb923c"><div class="cat-hdr"><span class="cat-ico">📈</span><span class="cat-name">Growth</span><span class="cat-count">5</span></div><p class="cat-desc">SEO, analytics, performance, marketing, i18n</p><div class="cat-tags"><span>SEO</span><span>Analytics</span><span>Perf</span><span>Marketing</span><span>i18n</span></div></div>
-      <div class="cat-card" data-reveal data-delay=".1" data-color="#22d3ee"><div class="cat-hdr"><span class="cat-ico">🚀</span><span class="cat-name">Ops</span><span class="cat-count">4</span></div><p class="cat-desc">Deploy, document, and maintain continuously</p><div class="cat-tags"><span>Deployer</span><span>Docs</span><span>Template</span><span>Updater</span></div></div>
-      <div class="cat-card" data-reveal data-delay=".2" data-color="#e879f9"><div class="cat-hdr"><span class="cat-ico">🧠</span><span class="cat-name">AI Engine</span><span class="cat-count">5</span></div><p class="cat-desc">Orchestrate, route, optimize, remember everything</p><div class="cat-tags"><span>Orchestrator</span><span>Router</span><span>Experiments</span><span>Optimizer</span><span>Memory</span></div></div>
+    <div class="section-label" data-reveal>Your AI Team</div>
+    <h2 class="section-title" data-reveal>31 Skills. 6 Categories. One Team.</h2>
+    <p class="section-sub" data-reveal>Every specialist knows exactly when to step in and what to do.</p>
+
+    <div class="skills-grid">
+
+      <div class="skill-card" data-reveal data-delay="0" data-color="#a78bfa" style="--hover-color:rgba(167,139,250,.3);--hover-glow:rgba(167,139,250,.08);">
+        <div class="skill-header">
+          <span class="skill-icon">&#x1F4A1;</span>
+          <span class="skill-name">Ideation</span>
+          <span class="skill-count">5</span>
+        </div>
+        <p class="skill-desc">Interview users, research markets, define specs, design systems, and plan integrations.</p>
+        <div class="skill-tags">
+          <span>Interviewer</span>
+          <span>Market Analyst</span>
+          <span>Specs Writer</span>
+          <span>Designer</span>
+          <span>Integration Guide</span>
+        </div>
+      </div>
+
+      <div class="skill-card" data-reveal data-delay=".08" data-color="#4f6ef7" style="--hover-color:rgba(79,110,247,.3);--hover-glow:rgba(79,110,247,.08);">
+        <div class="skill-header">
+          <span class="skill-icon">&#x26A1;</span>
+          <span class="skill-name">Development</span>
+          <span class="skill-count">7</span>
+        </div>
+        <p class="skill-desc">Route, architect, and build every layer of your product across all platforms.</p>
+        <div class="skill-tags">
+          <span>Dev Router</span>
+          <span>Frontend</span>
+          <span>Backend</span>
+          <span>Mobile</span>
+          <span>Database</span>
+          <span>API</span>
+          <span>Orchestrator</span>
+        </div>
+      </div>
+
+      <div class="skill-card" data-reveal data-delay=".16" data-color="#34d399" style="--hover-color:rgba(52,211,153,.3);--hover-glow:rgba(52,211,153,.08);">
+        <div class="skill-header">
+          <span class="skill-icon">&#x1F6E1;&#xFE0F;</span>
+          <span class="skill-name">Quality</span>
+          <span class="skill-count">5</span>
+        </div>
+        <p class="skill-desc">Review code, run tests, audit security, check accessibility, and debug issues.</p>
+        <div class="skill-tags">
+          <span>QA Micro</span>
+          <span>Full QA</span>
+          <span>Code Review</span>
+          <span>Security Audit</span>
+          <span>Debugger</span>
+        </div>
+      </div>
+
+      <div class="skill-card" data-reveal data-delay=".0" data-color="#fb923c" style="--hover-color:rgba(251,146,60,.3);--hover-glow:rgba(251,146,60,.08);">
+        <div class="skill-header">
+          <span class="skill-icon">&#x1F4C8;</span>
+          <span class="skill-name">Growth</span>
+          <span class="skill-count">5</span>
+        </div>
+        <p class="skill-desc">Optimize for search engines, track analytics, improve performance, and manage content.</p>
+        <div class="skill-tags">
+          <span>SEO</span>
+          <span>Analytics</span>
+          <span>Performance</span>
+          <span>Accessibility</span>
+          <span>Content</span>
+        </div>
+      </div>
+
+      <div class="skill-card" data-reveal data-delay=".08" data-color="#22d3ee" style="--hover-color:rgba(34,211,238,.3);--hover-glow:rgba(34,211,238,.08);">
+        <div class="skill-header">
+          <span class="skill-icon">&#x1F680;</span>
+          <span class="skill-name">Operations</span>
+          <span class="skill-count">4</span>
+        </div>
+        <p class="skill-desc">Deploy, experiment, translate, and onboard — keep your product running smoothly.</p>
+        <div class="skill-tags">
+          <span>Deployer</span>
+          <span>Experiments</span>
+          <span>i18n</span>
+          <span>Onboarding</span>
+        </div>
+      </div>
+
+      <div class="skill-card" data-reveal data-delay=".16" data-color="#e879f9" style="--hover-color:rgba(232,121,249,.3);--hover-glow:rgba(232,121,249,.08);">
+        <div class="skill-header">
+          <span class="skill-icon">&#x1F9E0;</span>
+          <span class="skill-name">Intelligence</span>
+          <span class="skill-count">5</span>
+        </div>
+        <p class="skill-desc">Orchestrate the team, write copy, plan marketing, optimize workflows, and document everything.</p>
+        <div class="skill-tags">
+          <span>Memory</span>
+          <span>Copywriter</span>
+          <span>Marketer</span>
+          <span>Team Optimizer</span>
+          <span>Docs</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<section class="cta-s">
-  <h2 data-reveal>Your idea.<br>Our team.<br>Your product.</h2>
-  <p data-reveal>One command. Free forever.</p>
-  <div class="cmd" data-reveal onclick="navigator.clipboard.writeText('bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app');this.querySelector('.h').textContent='✓ copied!'">
-    $ bash &lt;(curl -fsSL .../create.sh) my-app <span class="h">click to copy</span>
+<!-- ============================================
+     CTA SECTION
+     ============================================ -->
+<section class="cta-section">
+  <h2 data-reveal><span class="grad">Start Building</span> Today</h2>
+  <p class="cta-sub" data-reveal>One command. Free and open source. No account required.</p>
+  <div class="cmd-block" data-reveal onclick="navigator.clipboard.writeText('npx create-genius-app my-project');this.querySelector('.cmd-hint').textContent='Copied!'">
+    $ npx create-genius-app my-project
+    <span class="cmd-hint">click to copy</span>
   </div>
-  <div style="margin-top:1.5rem" data-reveal><button class="bp" onclick="GeniusWizard.open()">Get Started — Free →</button></div>
+  <div class="cta-buttons" data-reveal>
+    <button class="btn-primary" onclick="GeniusWizard.open()">Get Started Free</button>
+    <a class="btn-secondary" href="https://github.com/w-3-art/genius-team" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
 </section>
 
-<footer><div>🧠 Genius Team v18.0 — MIT</div><div class="footer-links"><a href="https://github.com/w-3-art/genius-team">GitHub</a><a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></div></footer>
-<div class="prop-nav"><a href="/proposition1">1</a><a href="/proposition2">2</a><a href="/proposition3" class="active">3</a><a href="/proposition4">4</a><a href="/proposition5">5</a><a href="/proposition6">6</a><a href="/proposition7">7</a></div>
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div>Genius Team &middot; 2026</div>
+  <div class="footer-links">
+    <a href="https://github.com/w-3-art/genius-team" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+    <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+  </div>
+</footer>
 
+<!-- ============================================
+     PROP NAV
+     ============================================ -->
+<div class="prop-nav">
+  <a href="proposition1.html">P1</a>
+  <a href="proposition2.html">P2</a>
+  <a href="proposition3.html" class="active">P3</a>
+  <a href="proposition4.html">P4</a>
+  <a href="proposition5.html">P5</a>
+  <a href="proposition6.html">P6</a>
+  <a href="proposition7.html">P7</a>
+</div>
+
+<!-- ============================================
+     SCRIPTS
+     ============================================ -->
+<script src="wizard.js"></script>
 <script>
-gsap.registerPlugin(ScrollTrigger);
-const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
-lenis.on('scroll',ScrollTrigger.update);
-gsap.ticker.add(t=>lenis.raf(t*1000));
-gsap.ticker.lagSmoothing(0);
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('solid',window.scrollY>60);
-  document.getElementById('scrollHint').style.opacity=window.scrollY>200?'0':'1';
-});
 GeniusWizard.init();
 
-// Hero entrance
-gsap.from('.badge',{y:20,opacity:0,duration:.7,delay:.2,ease:'expo.out'});
-gsap.from('.hero h1',{y:60,opacity:0,duration:1,delay:.4,ease:'expo.out'});
-gsap.from('.hero-sub',{y:30,opacity:0,duration:.7,delay:.8,ease:'expo.out'});
-gsap.from('.hero-ctas > *',{y:20,opacity:0,stagger:.1,duration:.6,delay:1,ease:'expo.out'});
+/* ---- Lenis smooth scroll ---- */
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(time => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
 
-// Horizontal scroll
-const track=document.getElementById('hscrollTrack');
-const panels=track.querySelectorAll('.hpanel');
-gsap.to(track,{
-  x:()=>-(track.scrollWidth-window.innerWidth),
-  ease:'none',
-  scrollTrigger:{trigger:'#hscrollWrap',pin:true,scrub:1.5,end:()=>'+='+(track.scrollWidth-window.innerWidth),invalidateOnRefresh:true}
+/* ---- Register GSAP plugins ---- */
+gsap.registerPlugin(ScrollTrigger);
+
+/* ---- Nav scroll state ---- */
+const mainNav = document.getElementById('mainNav');
+const progressBar = document.getElementById('progressBar');
+
+window.addEventListener('scroll', () => {
+  mainNav.classList.toggle('scrolled', window.scrollY > 60);
 });
 
-// Reveal
-gsap.utils.toArray('[data-reveal]').forEach(el=>{
-  gsap.from(el,{y:50,opacity:0,duration:.8,ease:'power3.out',delay:+(el.dataset.delay||0),scrollTrigger:{trigger:el,start:'top 80%'}});
+/* ---- Hero entrance animations ---- */
+const heroContent = document.querySelector('.hero-content');
+if (heroContent) {
+  gsap.from(heroContent.querySelector('h1'), {
+    y: 60, opacity: 0, duration: 1, delay: .3, ease: 'expo.out'
+  });
+  gsap.from(heroContent.querySelector('.hero-sub'), {
+    y: 30, opacity: 0, duration: .8, delay: .6, ease: 'expo.out'
+  });
+  gsap.from(heroContent.querySelector('.scroll-arrow'), {
+    y: 20, opacity: 0, duration: .6, delay: .9, ease: 'expo.out'
+  });
+}
+
+/* ---- Horizontal Scroll ---- */
+const container = document.querySelector('.hscroll-container');
+const wrap = document.querySelector('.hscroll-wrap');
+
+if (container && wrap) {
+  const scrollTween = gsap.to(container, {
+    x: () => -(container.scrollWidth - window.innerWidth),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: wrap,
+      pin: true,
+      scrub: 1,
+      end: () => '+=' + container.scrollWidth,
+      invalidateOnRefresh: true,
+      onUpdate: self => {
+        const progress = self.progress;
+        document.getElementById('progressFill').style.width = (progress * 100) + '%';
+      },
+      onEnter: () => progressBar.classList.add('visible'),
+      onLeave: () => progressBar.classList.remove('visible'),
+      onEnterBack: () => progressBar.classList.add('visible'),
+      onLeaveBack: () => progressBar.classList.remove('visible')
+    }
+  });
+
+  /* ---- Panel content animations (triggered by horizontal position) ---- */
+  const panels = gsap.utils.toArray('.panel-step');
+  panels.forEach(panel => {
+    const text = panel.querySelector('.step-text');
+    const visual = panel.querySelector('.step-visual');
+    const num = panel.querySelector('.step-number');
+
+    gsap.from(text, {
+      x: 80,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: panel,
+        containerAnimation: scrollTween,
+        start: 'left 70%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    if (visual) {
+      gsap.from(visual, {
+        x: 120,
+        opacity: 0,
+        duration: 1.1,
+        delay: .15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: panel,
+          containerAnimation: scrollTween,
+          start: 'left 70%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    }
+
+    if (num) {
+      gsap.from(num, {
+        scale: .6,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: panel,
+          containerAnimation: scrollTween,
+          start: 'left 80%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    }
+  });
+}
+
+/* ---- Vertical reveal animations (skills, CTA, etc.) ---- */
+gsap.utils.toArray('[data-reveal]').forEach(el => {
+  gsap.to(el, {
+    y: 0,
+    opacity: 1,
+    duration: .8,
+    ease: 'power3.out',
+    delay: +(el.dataset.delay || 0),
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 85%',
+      toggleActions: 'play none none none'
+    }
+  });
 });
-document.querySelectorAll('.cat-card').forEach(c=>{
-  const col=c.dataset.color;
-  c.addEventListener('mouseenter',()=>{c.style.borderColor=col+'44';c.style.boxShadow=`0 15px 40px ${col}18`});
-  c.addEventListener('mouseleave',()=>{c.style.borderColor='';c.style.boxShadow=''});
+
+/* ---- Skill card hover colors ---- */
+document.querySelectorAll('.skill-card[data-color]').forEach(card => {
+  const color = card.dataset.color;
+  card.addEventListener('mouseenter', () => {
+    card.style.borderColor = color + '44';
+    card.style.boxShadow = '0 20px 50px ' + color + '14';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.borderColor = '';
+    card.style.boxShadow = '';
+  });
 });
 </script>
 </body>

@@ -4,23 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genius Team — From Idea to Launch</title>
-<meta name="description" content="Follow the journey of building a real product with 42 AI agents. From first spark to launch day — no coding required.">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="description" content="Follow the journey from idea to launch with 31 AI agents. A timeline narrative of building something real — no coding required.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{overflow-x:hidden}html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
-body{font-family:'Sora',sans-serif;background:#050510;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-:root{--blue:#4f6ef7;--cyan:#22d3ee;--green:#34d399;--dim:rgba(255,255,255,.4);--subtle:rgba(255,255,255,.06);--surface:rgba(255,255,255,.03)}
+html{overflow-x:hidden}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:'Sora',sans-serif;background:#08080c;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+:root{--blue:#4f6ef7;--cyan:#22d3ee;--emerald:#34d399;--dim:rgba(255,255,255,.4);--subtle:rgba(255,255,255,.06);--surface:rgba(255,255,255,.03)}
 ::selection{background:rgba(79,110,247,.3);color:#fff}
 
-/* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,16,.6);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--subtle);transition:all .4s}
-.nav.scrolled{background:rgba(5,5,16,.92)}
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,12,.55);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--subtle);transition:all .4s}
+.nav.scrolled{background:rgba(8,8,12,.92)}
 .nav-logo{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.6rem;color:#fff;text-decoration:none}
-.nav-logo .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2.5s ease infinite}
+.nav-logo .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px var(--emerald);animation:pulse 2.5s ease infinite}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.4}}
 .nav-right{display:flex;align-items:center;gap:1.8rem}
 .nav-right a{color:var(--dim);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .25s}
@@ -28,69 +30,82 @@ body{font-family:'Sora',sans-serif;background:#050510;color:#fff;overflow-x:hidd
 .nav-btn{padding:.5rem 1.4rem!important;border-radius:100px;background:var(--blue)!important;color:#fff!important;font-weight:600!important;font-size:.82rem!important;border:none;cursor:pointer;transition:all .3s!important;font-family:'Sora',sans-serif}
 .nav-btn:hover{box-shadow:0 0 28px rgba(79,110,247,.4);transform:translateY(-1px)}
 
-/* HERO */
-.hero{height:70vh;min-height:440px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;padding:6rem 2rem 4rem}
-.hero-bg{position:absolute;inset:0;background:url('img/hero-brain.jpg') center/cover no-repeat;opacity:.15}
-.hero-overlay{position:absolute;inset:0;background:rgba(5,5,16,.7)}
-.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(79,110,247,.1),transparent 70%),linear-gradient(to bottom,transparent 50%,#050510)}
-.hero-content{position:relative;z-index:2;max-width:800px}
-.hero h1{font-size:clamp(2.8rem,7vw,5rem);font-weight:800;line-height:1.08;letter-spacing:-.04em;margin-bottom:1.2rem}
+/* ===== HERO ===== */
+.hero{height:70vh;min-height:460px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;padding:6rem 2rem 4rem}
+.hero-bg{position:absolute;inset:0;background:url('img/hero-brain.jpg') center/cover no-repeat;opacity:.18}
+.hero-overlay{position:absolute;inset:0;background:rgba(8,8,12,.65)}
+.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(79,110,247,.1),transparent 70%),linear-gradient(to bottom,transparent 50%,#08080c)}
+.hero-content{position:relative;z-index:2;max-width:820px}
+.hero h1{font-size:clamp(2.8rem,7vw,5.2rem);font-weight:800;line-height:1.06;letter-spacing:-.04em;margin-bottom:1.3rem}
 .hero h1 .w{display:inline-block;opacity:0;transform:translateY(50px)}
-.hero-sub{font-size:clamp(1rem,2vw,1.15rem);color:var(--dim);max-width:520px;margin:0 auto;line-height:1.7;font-weight:300;opacity:0}
+.hero-sub{font-size:clamp(1rem,2vw,1.18rem);color:var(--dim);max-width:540px;margin:0 auto;line-height:1.7;font-weight:300;opacity:0}
 
-/* TIMELINE */
-.tl-section{padding:5rem 2rem 6rem;position:relative}
-.tl-heading{text-align:center;margin-bottom:4rem}
-.tl-heading .label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--blue);margin-bottom:.8rem}
+/* ===== TIMELINE SECTION ===== */
+.tl-section{padding:6rem 2rem 7rem;position:relative}
+.tl-heading{text-align:center;margin-bottom:5rem}
+.tl-heading .label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.22em;color:var(--blue);margin-bottom:.8rem}
 .tl-heading h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
-.timeline{position:relative;max-width:1000px;margin:0 auto;padding:2rem 0}
-.tl-track{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(79,110,247,.12);transform:translateX(-50%)}
-.tl-fill{position:absolute;left:50%;top:0;width:2px;height:0;background:linear-gradient(to bottom,var(--blue),var(--cyan),var(--green));transform:translateX(-50%);box-shadow:0 0 12px rgba(79,110,247,.25)}
-.tl-node{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-bottom:4rem;position:relative}
-.tl-node:last-child{margin-bottom:0}
-.tl-node::after{content:'';position:absolute;left:50%;top:50%;width:14px;height:14px;background:var(--blue);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px rgba(79,110,247,.4);z-index:2}
-.tl-node::before{content:'';position:absolute;left:50%;top:50%;width:28px;height:28px;border-radius:50%;border:1px solid rgba(79,110,247,.2);transform:translate(-50%,-50%);z-index:1}
-.tl-text{padding:0 1rem}
-.tl-text .step{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
-.tl-text .ico{font-size:1.1rem}
-.tl-text h3{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.2}
-.tl-text p{font-size:.95rem;color:var(--dim);line-height:1.7;font-weight:300}
-.tl-node:nth-child(odd) .tl-text{text-align:right}
-.tl-node:nth-child(odd) .tl-text .step{justify-content:flex-end}
-.tl-node:nth-child(even) .tl-text{order:2;text-align:left}
-.tl-node:nth-child(even) .tl-img{order:1}
-.tl-img{border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4);border:1px solid var(--subtle)}
-.tl-img img{width:100%;height:260px;object-fit:cover;display:block;will-change:transform}
+.timeline{position:relative;max-width:1060px;margin:0 auto;padding:2rem 0}
+.tl-track{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(79,110,247,.1);transform:translateX(-50%)}
+.tl-fill{position:absolute;left:50%;top:0;width:2px;height:0;background:linear-gradient(to bottom,var(--blue),var(--cyan),var(--emerald));transform:translateX(-50%);box-shadow:0 0 14px rgba(79,110,247,.3)}
 
-/* SKILLS */
-.skills{padding:6rem 2rem;position:relative}
+/* Timeline node */
+.tl-node{display:grid;grid-template-columns:1fr 1fr;gap:3.2rem;align-items:center;margin-bottom:5rem;position:relative}
+.tl-node:last-child{margin-bottom:0}
+
+/* Glowing dot at center */
+.tl-node::after{content:'';position:absolute;left:50%;top:50%;width:14px;height:14px;background:var(--blue);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 16px rgba(79,110,247,.5),0 0 40px rgba(79,110,247,.15);z-index:2;transition:box-shadow .3s}
+.tl-node::before{content:'';position:absolute;left:50%;top:50%;width:30px;height:30px;border-radius:50%;border:1px solid rgba(79,110,247,.18);transform:translate(-50%,-50%);z-index:1}
+
+/* Text */
+.tl-text{padding:0 1.2rem}
+.tl-text .step{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.16em;color:var(--cyan);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.tl-text .ico{font-size:1.15rem}
+.tl-text h3{font-size:1.65rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.65rem;line-height:1.2}
+.tl-text p{font-size:.95rem;color:var(--dim);line-height:1.75;font-weight:300}
+
+/* Alternating layout: odd = text-left img-right, even = img-left text-right */
+.tl-node:nth-child(odd) .tl-text{text-align:right;order:1}
+.tl-node:nth-child(odd) .tl-text .step{justify-content:flex-end}
+.tl-node:nth-child(odd) .tl-img{order:2}
+.tl-node:nth-child(even) .tl-text{text-align:left;order:2}
+.tl-node:nth-child(even) .tl-text .step{justify-content:flex-start}
+.tl-node:nth-child(even) .tl-img{order:1}
+
+/* Image container */
+.tl-img{border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);border:1px solid var(--subtle)}
+.tl-img img{width:100%;height:270px;object-fit:cover;display:block;will-change:transform}
+
+/* ===== SKILLS ===== */
+.skills{padding:7rem 2rem;position:relative}
 .skills::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 20%,rgba(79,110,247,.05),transparent);pointer-events:none}
-.skills-inner{max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.skills-inner{max-width:1060px;margin:0 auto;position:relative;z-index:1}
 .skills-head{text-align:center;margin-bottom:3.5rem}
-.skills-head .label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--blue);margin-bottom:.8rem}
+.skills-head .label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.22em;color:var(--blue);margin-bottom:.8rem}
 .skills-head h2{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
-.skills-head h2 .accent{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.skills-head h2 .accent{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
 .sk{padding:1.8rem;border-radius:16px;background:var(--surface);border:1px solid var(--subtle);transition:all .45s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
 .sk::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,110,247,.06),transparent 60%);opacity:0;transition:opacity .45s}
 .sk:hover{border-color:rgba(79,110,247,.2);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
 .sk:hover::before{opacity:1}
-.sk-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;position:relative;z-index:1}
-.sk-top .e{font-size:1.3rem}.sk-top h3{font-size:1rem;font-weight:700}
-.sk-top .ct{margin-left:auto;font-size:.7rem;font-weight:600;color:var(--blue);background:rgba(79,110,247,.1);padding:.15rem .5rem;border-radius:100px}
+.sk-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;position:relative;z-index:1}
+.sk-top .e{font-size:1.3rem}
+.sk-top h3{font-size:1rem;font-weight:700}
+.sk-top .ct{margin-left:auto;font-size:.7rem;font-weight:600;color:var(--blue);background:rgba(79,110,247,.1);padding:.15rem .55rem;border-radius:100px}
 .sk .pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem;position:relative;z-index:1}
-.sk .pill{padding:.18rem .55rem;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.68rem;color:rgba(255,255,255,.45)}
-.sk .desc{font-size:.82rem;color:var(--dim);line-height:1.5;font-weight:300;position:relative;z-index:1}
+.sk .pill{padding:.2rem .55rem;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.68rem;color:rgba(255,255,255,.45)}
+.sk .desc{font-size:.82rem;color:var(--dim);line-height:1.55;font-weight:300;position:relative;z-index:1}
 
-/* CTA */
-.cta{padding:6rem 2rem;text-align:center;position:relative}
+/* ===== CTA ===== */
+.cta{padding:7rem 2rem;text-align:center;position:relative}
 .cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 55% at 50% 50%,rgba(79,110,247,.07),transparent);pointer-events:none}
 .cta-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
 .cta-inner h2{font-size:clamp(2.5rem,6vw,4.2rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:1.2rem}
-.cta-inner h2 .grad{background:linear-gradient(135deg,var(--blue),var(--cyan),var(--green));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gShift 4s ease infinite}
+.cta-inner h2 .grad{background:linear-gradient(135deg,var(--blue),var(--cyan),var(--emerald));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gShift 4s ease infinite}
 @keyframes gShift{0%,100%{background-position:0% center}50%{background-position:200% center}}
 .cta-sub{font-size:1.05rem;color:var(--dim);margin-bottom:2.2rem;font-weight:300;line-height:1.6}
-.cmd{display:inline-flex;align-items:center;gap:1.5rem;background:var(--surface);border:1px solid var(--subtle);border-radius:14px;padding:1.1rem 2rem;font-family:'SFMono-Regular','Consolas',monospace;font-size:.92rem;color:var(--green);cursor:pointer;transition:all .4s;margin-bottom:1.5rem}
+.cmd{display:inline-flex;align-items:center;gap:1.5rem;background:var(--surface);border:1px solid var(--subtle);border-radius:14px;padding:1.1rem 2rem;font-family:'SFMono-Regular','Consolas',monospace;font-size:.92rem;color:var(--emerald);cursor:pointer;transition:all .4s;margin-bottom:1.5rem}
 .cmd:hover{border-color:var(--blue);box-shadow:0 0 40px rgba(79,110,247,.1)}
 .cmd .hint{font-family:'Sora',sans-serif;font-size:.7rem;color:var(--dim)}
 .cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
@@ -99,35 +114,59 @@ body{font-family:'Sora',sans-serif;background:#050510;color:#fff;overflow-x:hidd
 .btn-o{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 2rem;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#fff;font-weight:500;font-size:.9rem;cursor:pointer;text-decoration:none;transition:all .35s;font-family:'Sora',sans-serif}
 .btn-o:hover{border-color:var(--blue);background:rgba(79,110,247,.06)}
 
-/* FOOTER */
+/* ===== FOOTER ===== */
 footer{padding:2.5rem;border-top:1px solid var(--subtle);display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:rgba(255,255,255,.25)}
-footer a{color:rgba(255,255,255,.25);text-decoration:none;transition:color .2s}footer a:hover{color:var(--blue)}
+footer a{color:rgba(255,255,255,.25);text-decoration:none;transition:color .2s}
+footer a:hover{color:var(--blue)}
 .foot-links{display:flex;gap:1.5rem}
 
-/* PROP NAV */
-.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.3rem;z-index:100;background:rgba(5,5,16,.88);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--subtle);border-radius:100px;padding:.3rem}
+/* ===== PROP NAV ===== */
+.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.3rem;z-index:100;background:rgba(8,8,12,.88);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--subtle);border-radius:100px;padding:.3rem}
 .prop-nav a{padding:.38rem .85rem;border-radius:100px;color:rgba(255,255,255,.3);text-decoration:none;font-size:.72rem;font-weight:500;transition:all .3s}
-.prop-nav a:hover{color:#fff}.prop-nav a.active{background:var(--blue);color:#fff}
+.prop-nav a:hover{color:#fff}
+.prop-nav a.active{background:var(--blue);color:#fff}
 
-/* MOBILE */
+/* ===== RESPONSIVE ===== */
 @media(max-width:768px){
-.nav{padding:.9rem 1.2rem}.nav-right .hide-m{display:none}.nav-right{gap:.8rem}
-.hero{height:60vh;min-height:380px;padding:5rem 1.5rem 3rem}.hero h1{font-size:2.4rem}
-.timeline::before,.tl-track,.tl-fill{left:10%!important}
-.tl-node{grid-template-columns:1fr;gap:1.2rem;margin-bottom:3rem;padding-left:calc(10% + 24px)}
-.tl-node::after,.tl-node::before{left:10%;top:0;transform:translate(-50%,0)}
-.tl-node:nth-child(odd) .tl-text,.tl-node:nth-child(even) .tl-text{text-align:left;order:2}
-.tl-node:nth-child(odd) .tl-text .step,.tl-node:nth-child(even) .tl-text .step{justify-content:flex-start}
-.tl-node .tl-img{order:1}.tl-node .tl-text{order:2}.tl-img img{height:200px}
-.skills-grid{grid-template-columns:1fr;gap:.8rem}
-footer{flex-direction:column;gap:.8rem;text-align:center}
-.cmd{flex-direction:column;gap:.6rem;font-size:.78rem;padding:1rem 1.2rem}
+  .nav{padding:.9rem 1.2rem}
+  .nav-right .hide-m{display:none}
+  .nav-right{gap:.8rem}
+  .hero{height:60vh;min-height:380px;padding:5rem 1.5rem 3rem}
+  .hero h1{font-size:2.4rem}
+
+  /* Timeline mobile: line moves left, all stacks */
+  .tl-section{padding:3rem 1.2rem 4rem}
+  .tl-heading{margin-bottom:3rem}
+  .timeline{padding:1rem 0}
+  .tl-track,.tl-fill{left:10%!important}
+  .tl-node{grid-template-columns:1fr;gap:1rem;margin-bottom:3.5rem;padding-left:calc(10% + 26px)}
+  .tl-node::after,.tl-node::before{left:10%;top:0;transform:translate(-50%,0)}
+  .tl-node:nth-child(odd) .tl-text,
+  .tl-node:nth-child(even) .tl-text{text-align:left;order:2}
+  .tl-node:nth-child(odd) .tl-text .step,
+  .tl-node:nth-child(even) .tl-text .step{justify-content:flex-start}
+  .tl-node:nth-child(odd) .tl-img,
+  .tl-node:nth-child(even) .tl-img{order:1}
+  .tl-img img{height:200px}
+
+  .skills{padding:4rem 1.2rem}
+  .skills-grid{grid-template-columns:1fr;gap:.8rem}
+  .cta{padding:4rem 1.2rem}
+  footer{flex-direction:column;gap:.8rem;text-align:center}
+  .cmd{flex-direction:column;gap:.6rem;font-size:.78rem;padding:1rem 1.2rem}
 }
-@media(max-width:480px){.hero h1{font-size:2rem}.tl-text h3{font-size:1.3rem}.cta-inner h2{font-size:2rem}.cta-btns{flex-direction:column;align-items:center}}
+@media(max-width:480px){
+  .hero h1{font-size:2rem}
+  .tl-text h3{font-size:1.3rem}
+  .tl-node{margin-bottom:3rem}
+  .cta-inner h2{font-size:2rem}
+  .cta-btns{flex-direction:column;align-items:center}
+}
 </style>
 </head>
 <body>
 
+<!-- ===== NAV ===== -->
 <nav class="nav" id="mainNav">
   <a href="#" class="nav-logo"><span class="dot"></span> Genius Team</a>
   <div class="nav-right">
@@ -136,47 +175,133 @@ footer{flex-direction:column;gap:.8rem;text-align:center}
   </div>
 </nav>
 
+<!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="hero-bg"></div><div class="hero-overlay"></div><div class="hero-grad"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grad"></div>
   <div class="hero-content">
     <h1><span class="w">From</span> <span class="w">Idea</span> <span class="w">to</span> <span class="w">Launch</span></h1>
-    <p class="hero-sub">The story of building something real — with 42 AI agents and zero coding.</p>
+    <p class="hero-sub">The story of building something real — with zero coding.</p>
   </div>
 </section>
 
+<!-- ===== TIMELINE ===== -->
 <section class="tl-section" id="timeline">
-  <div class="tl-heading"><div class="label">The Journey</div><h2>Six steps. One product. Zero code.</h2></div>
+  <div class="tl-heading">
+    <div class="label">The Journey</div>
+    <h2>Six steps. One product. Zero code.</h2>
+  </div>
   <div class="timeline">
-    <div class="tl-track"></div><div class="tl-fill" id="tlFill"></div>
+    <div class="tl-track"></div>
+    <div class="tl-fill" id="tlFill"></div>
 
-    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128161;</span> Step 01</div><h3>The Spark</h3><p>It starts with a conversation. Tell your AI team what you want to build — no technical knowledge needed.</p></div><div class="tl-img"><img src="img/hero-brain.jpg" alt="Brainstorm" loading="lazy"></div></div>
+    <!-- Node 1: The Spark — text LEFT, image RIGHT -->
+    <div class="tl-node">
+      <div class="tl-text">
+        <div class="step"><span class="ico">&#128161;</span> Step 01</div>
+        <h3>The Spark</h3>
+        <p>It starts with a conversation. Tell your AI team what you want to build — describe your vision in plain words, and watch understanding form in real time.</p>
+      </div>
+      <div class="tl-img"><img src="img/workflow-steps.jpg" alt="The Spark — conversation with your AI team" loading="lazy"></div>
+    </div>
 
-    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128269;</span> Step 02</div><h3>Research</h3><p>Your market analyst investigates competitors, validates the idea, and finds your unique angle.</p></div><div class="tl-img"><img src="img/workflow-steps.jpg" alt="Research flow" loading="lazy"></div></div>
+    <!-- Node 2: Research — image LEFT, text RIGHT -->
+    <div class="tl-node">
+      <div class="tl-img"><img src="img/before-after.jpg" alt="Research — market analysis" loading="lazy"></div>
+      <div class="tl-text">
+        <div class="step"><span class="ico">&#128269;</span> Step 02</div>
+        <h3>Research</h3>
+        <p>Your market analyst investigates competitors, validates the opportunity, and maps the landscape. Every decision backed by data, not guesswork.</p>
+      </div>
+    </div>
 
-    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128208;</span> Step 03</div><h3>Design</h3><p>Brand, layout, and user flows — all crafted and presented for your approval before a single line is written.</p></div><div class="tl-img"><img src="img/app-mockup.jpg" alt="Design preview" loading="lazy"></div></div>
+    <!-- Node 3: Blueprint — text LEFT, image RIGHT -->
+    <div class="tl-node">
+      <div class="tl-text">
+        <div class="step"><span class="ico">&#128208;</span> Step 03</div>
+        <h3>Blueprint</h3>
+        <p>Detailed specifications and design systems emerge. Brand identity, user flows, component architecture — all crafted and presented for your approval.</p>
+      </div>
+      <div class="tl-img"><img src="img/holographic-ui.jpg" alt="Blueprint — specifications and design" loading="lazy"></div>
+    </div>
 
-    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#9889;</span> Step 04</div><h3>Build</h3><p>42 agents work in parallel. Frontend, backend, API, database — all coordinated automatically.</p></div><div class="tl-img"><img src="img/skill-categories.jpg" alt="Build process" loading="lazy"></div></div>
+    <!-- Node 4: Build — image LEFT, text RIGHT -->
+    <div class="tl-node">
+      <div class="tl-img"><img src="img/app-mockup.jpg" alt="Build — agents working in parallel" loading="lazy"></div>
+      <div class="tl-text">
+        <div class="step"><span class="ico">&#9889;</span> Step 04</div>
+        <h3>Build</h3>
+        <p>31 agents work in parallel. Frontend, backend, API, database, mobile — all coordinated by an orchestrator that never sleeps.</p>
+      </div>
+    </div>
 
-    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128737;&#65039;</span> Step 05</div><h3>Test</h3><p>Every line reviewed. Security audited. Performance optimized. Nothing ships until it passes every check.</p></div><div class="tl-img"><img src="img/workflow-steps.jpg" alt="QA testing" loading="lazy"></div></div>
+    <!-- Node 5: Polish — text LEFT, image RIGHT -->
+    <div class="tl-node">
+      <div class="tl-text">
+        <div class="step"><span class="ico">&#128737;&#65039;</span> Step 05</div>
+        <h3>Polish</h3>
+        <p>Every line reviewed. Security audited. Performance optimized. Accessibility checked. Nothing ships until it passes every single quality gate.</p>
+      </div>
+      <div class="tl-img"><img src="img/skill-categories.jpg" alt="Polish — quality assurance" loading="lazy"></div>
+    </div>
 
-    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128640;</span> Step 06</div><h3>Launch</h3><p>Deploy with one command. Analytics, SEO, monitoring — your product goes live fully equipped.</p></div><div class="tl-img"><img src="img/hero-brain.jpg" alt="Launch" loading="lazy"></div></div>
+    <!-- Node 6: Launch — image LEFT, text RIGHT -->
+    <div class="tl-node">
+      <div class="tl-img"><img src="img/agent-constellation.jpg" alt="Launch — deployment" loading="lazy"></div>
+      <div class="tl-text">
+        <div class="step"><span class="ico">&#128640;</span> Step 06</div>
+        <h3>Launch</h3>
+        <p>Deploy with one command. Analytics wired. SEO configured. Monitoring active. Your product goes live fully equipped for the real world.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
+<!-- ===== SKILLS ===== -->
 <section class="skills" id="skills">
   <div class="skills-inner">
-    <div class="skills-head"><div class="label">The Team</div><h2>42 Skills. 6 Categories. <span class="accent">One Team.</span></h2></div>
+    <div class="skills-head">
+      <div class="label">The Team</div>
+      <h2>31 Skills. 6 Categories. <span class="accent">One Team.</span></h2>
+    </div>
     <div class="skills-grid">
-      <div class="sk"><div class="sk-top"><span class="e">&#128161;</span><h3>Ideation</h3><span class="ct">7</span></div><div class="pills"><span class="pill">Interviewer</span><span class="pill">Market Analyst</span><span class="pill">Specs</span><span class="pill">Designer</span><span class="pill">Marketer</span><span class="pill">Copywriter</span><span class="pill">Integration Guide</span></div><div class="desc">From napkin sketch to crystal-clear specifications</div></div>
-      <div class="sk"><div class="sk-top"><span class="e">&#9889;</span><h3>Development</h3><span class="ct">7</span></div><div class="pills"><span class="pill">Dev Router</span><span class="pill">Frontend</span><span class="pill">Backend</span><span class="pill">Mobile</span><span class="pill">Database</span><span class="pill">API</span><span class="pill">Orchestrator</span></div><div class="desc">Full-stack implementation with specialized agents</div></div>
-      <div class="sk"><div class="sk-top"><span class="e">&#128737;&#65039;</span><h3>Quality</h3><span class="ct">5</span></div><div class="pills"><span class="pill">QA Micro</span><span class="pill">Full QA</span><span class="pill">Code Review</span><span class="pill">Security</span><span class="pill">Debugger</span></div><div class="desc">Every line reviewed, tested, and hardened</div></div>
-      <div class="sk"><div class="sk-top"><span class="e">&#128200;</span><h3>Growth</h3><span class="ct">6</span></div><div class="pills"><span class="pill">SEO</span><span class="pill">Analytics</span><span class="pill">Performance</span><span class="pill">Accessibility</span><span class="pill">Content</span><span class="pill">Experiments</span></div><div class="desc">Built-in growth engine from day one</div></div>
-      <div class="sk"><div class="sk-top"><span class="e">&#128640;</span><h3>Operations</h3><span class="ct">5</span></div><div class="pills"><span class="pill">Deployer</span><span class="pill">i18n</span><span class="pill">Onboarding</span><span class="pill">Docs</span><span class="pill">Templates</span></div><div class="desc">Ship fast, scale globally, document everything</div></div>
-      <div class="sk"><div class="sk-top"><span class="e">&#129504;</span><h3>Intelligence</h3><span class="ct">12</span></div><div class="pills"><span class="pill">Memory</span><span class="pill">Architect</span><span class="pill">Reviewer</span><span class="pill">Team Optimizer</span><span class="pill">Dual Engine</span><span class="pill">Skill Creator</span></div><div class="desc">Your team gets smarter with every project</div></div>
+      <div class="sk">
+        <div class="sk-top"><span class="e">&#128161;</span><h3>Ideation</h3><span class="ct">5</span></div>
+        <div class="pills"><span class="pill">Interviewer</span><span class="pill">Market Analyst</span><span class="pill">Specs Writer</span><span class="pill">Designer</span><span class="pill">Integration Guide</span></div>
+        <div class="desc">From napkin sketch to crystal-clear specifications and polished design systems</div>
+      </div>
+      <div class="sk">
+        <div class="sk-top"><span class="e">&#9889;</span><h3>Development</h3><span class="ct">7</span></div>
+        <div class="pills"><span class="pill">Dev Router</span><span class="pill">Frontend</span><span class="pill">Backend</span><span class="pill">Mobile</span><span class="pill">Database</span><span class="pill">API</span><span class="pill">Orchestrator</span></div>
+        <div class="desc">Full-stack implementation with specialized agents for every layer</div>
+      </div>
+      <div class="sk">
+        <div class="sk-top"><span class="e">&#128737;&#65039;</span><h3>Quality</h3><span class="ct">5</span></div>
+        <div class="pills"><span class="pill">QA Micro</span><span class="pill">Full QA</span><span class="pill">Code Review</span><span class="pill">Security Audit</span><span class="pill">Debugger</span></div>
+        <div class="desc">Every line reviewed, tested, and hardened before it ships</div>
+      </div>
+      <div class="sk">
+        <div class="sk-top"><span class="e">&#128200;</span><h3>Growth</h3><span class="ct">5</span></div>
+        <div class="pills"><span class="pill">SEO</span><span class="pill">Analytics</span><span class="pill">Performance</span><span class="pill">Accessibility</span><span class="pill">Content</span></div>
+        <div class="desc">Built-in growth engine from day one — visibility, speed, and reach</div>
+      </div>
+      <div class="sk">
+        <div class="sk-top"><span class="e">&#128640;</span><h3>Operations</h3><span class="ct">4</span></div>
+        <div class="pills"><span class="pill">Deployer</span><span class="pill">Experiments</span><span class="pill">i18n</span><span class="pill">Onboarding</span></div>
+        <div class="desc">Ship fast, scale globally, experiment confidently</div>
+      </div>
+      <div class="sk">
+        <div class="sk-top"><span class="e">&#129504;</span><h3>Intelligence</h3><span class="ct">5</span></div>
+        <div class="pills"><span class="pill">Memory</span><span class="pill">Copywriter</span><span class="pill">Marketer</span><span class="pill">Team Optimizer</span><span class="pill">Docs</span></div>
+        <div class="desc">Your team gets smarter with every project — learning, adapting, improving</div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ===== CTA ===== -->
 <section class="cta" id="cta">
   <div class="cta-inner">
     <h2>Start Building <span class="grad">Today</span></h2>
@@ -185,47 +310,142 @@ footer{flex-direction:column;gap:.8rem;text-align:center}
       <span>$ npx create-genius-app my-project</span><span class="hint">click to copy</span>
     </div>
     <div class="cta-btns">
-      <button class="btn-p" onclick="GeniusWizard.open()">Getting Started</button>
+      <button class="btn-p" onclick="GeniusWizard.open()">Get Started</button>
       <a href="https://github.com/anthropics/claude-code" target="_blank" class="btn-o">Star on GitHub</a>
     </div>
   </div>
 </section>
 
-<footer><div>Genius Team &middot; 2026</div><div class="foot-links"><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a><a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md" target="_blank">Changelog</a><a href="https://github.com/anthropics/claude-code/blob/main/LICENSE" target="_blank">MIT License</a></div></footer>
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div>Genius Team &middot; 2026</div>
+  <div class="foot-links">
+    <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a>
+    <a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md" target="_blank">Changelog</a>
+    <a href="https://github.com/anthropics/claude-code/blob/main/LICENSE" target="_blank">MIT License</a>
+  </div>
+</footer>
 
-<div class="prop-nav"><a href="proposition1.html">P1</a><a href="proposition2.html">P2</a><a href="proposition3.html">P3</a><a href="proposition4.html">P4</a><a href="proposition5.html">P5</a><a href="proposition6.html">P6</a><a href="proposition7.html" class="active">P7</a></div>
+<!-- ===== PROP NAV ===== -->
+<div class="prop-nav">
+  <a href="proposition1.html">P1</a>
+  <a href="proposition2.html">P2</a>
+  <a href="proposition3.html">P3</a>
+  <a href="proposition4.html">P4</a>
+  <a href="proposition5.html">P5</a>
+  <a href="proposition6.html">P6</a>
+  <a href="proposition7.html" class="active">P7</a>
+</div>
 
+<!-- ===== SCRIPTS ===== -->
 <script src="wizard.js"></script>
 <script>
 GeniusWizard.init();
-const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
-lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+
+/* Lenis smooth scroll */
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
 gsap.registerPlugin(ScrollTrigger);
 
-window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>60));
-
-/* Hero word reveal */
-const hTl=gsap.timeline({delay:.3});
-hTl.to('.hero .w',{opacity:1,y:0,duration:.9,stagger:.12,ease:'power3.out'}).to('.hero-sub',{opacity:1,duration:.8,ease:'power2.out'},'-=.3');
-
-/* Timeline fill on scroll */
-const fill=document.getElementById('tlFill'),tl=document.querySelector('.timeline');
-ScrollTrigger.create({trigger:tl,start:'top 70%',end:'bottom 30%',scrub:true,onUpdate:self=>{fill.style.height=(self.progress*100)+'%'}});
-
-/* Timeline nodes — slide in from sides + parallax images */
-gsap.utils.toArray('.tl-node').forEach((n,i)=>{
-  const even=i%2===1,txt=n.querySelector('.tl-text'),img=n.querySelector('.tl-img img');
-  gsap.from(txt,{x:even?60:-60,opacity:0,scrollTrigger:{trigger:n,start:'top 80%',end:'top 40%',scrub:true}});
-  gsap.from(n.querySelector('.tl-img'),{x:even?-40:40,opacity:0,scrollTrigger:{trigger:n,start:'top 82%',end:'top 45%',scrub:true}});
-  gsap.to(img,{yPercent:-15,ease:'none',scrollTrigger:{trigger:n,start:'top bottom',end:'bottom top',scrub:true}});
+/* Nav scroll state */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* Skill cards stagger */
-gsap.from('.sk',{y:50,opacity:0,duration:.7,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:'.skills-grid',start:'top 75%'}});
+/* Hero word reveal */
+const heroTl = gsap.timeline({ delay: .3 });
+heroTl
+  .to('.hero .w', { opacity: 1, y: 0, duration: .9, stagger: .12, ease: 'power3.out' })
+  .to('.hero-sub', { opacity: 1, duration: .8, ease: 'power2.out' }, '-=.3');
+
+/* Timeline fill on scroll — gradient line grows as you scroll */
+const fill = document.getElementById('tlFill');
+const tlContainer = document.querySelector('.timeline');
+ScrollTrigger.create({
+  trigger: tlContainer,
+  start: 'top 70%',
+  end: 'bottom 30%',
+  scrub: true,
+  onUpdate: self => {
+    fill.style.height = (self.progress * 100) + '%';
+  }
+});
+
+/* Timeline nodes — text slides in from its side, images parallax */
+gsap.utils.toArray('.tl-node').forEach((node, i) => {
+  const isEven = i % 2 === 1;
+  const txt = node.querySelector('.tl-text');
+  const imgWrap = node.querySelector('.tl-img');
+  const img = node.querySelector('.tl-img img');
+
+  /* Text slides from its respective side */
+  gsap.from(txt, {
+    x: isEven ? 70 : -70,
+    opacity: 0,
+    scrollTrigger: {
+      trigger: node,
+      start: 'top 82%',
+      end: 'top 42%',
+      scrub: true
+    }
+  });
+
+  /* Image slides from opposite side */
+  gsap.from(imgWrap, {
+    x: isEven ? -50 : 50,
+    opacity: 0,
+    scrollTrigger: {
+      trigger: node,
+      start: 'top 84%',
+      end: 'top 46%',
+      scrub: true
+    }
+  });
+
+  /* Parallax on the image */
+  gsap.to(img, {
+    yPercent: -15,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: node,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+});
+
+/* Skill cards stagger reveal */
+gsap.from('.sk', {
+  y: 50,
+  opacity: 0,
+  duration: .7,
+  stagger: .09,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '.skills-grid',
+    start: 'top 78%'
+  }
+});
 
 /* CTA reveal */
-const cTl=gsap.timeline({scrollTrigger:{trigger:'.cta',start:'top 65%'}});
-cTl.from('.cta-inner h2',{y:40,opacity:0,duration:.7,ease:'power3.out'}).from('.cta-sub',{y:30,opacity:0,duration:.6,ease:'power3.out'},'-=.3').from('.cmd',{y:25,opacity:0,duration:.6,ease:'power3.out'},'-=.2').from('.cta-btns',{y:20,opacity:0,duration:.5,ease:'power3.out'},'-=.2');
+const ctaTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: '.cta',
+    start: 'top 65%'
+  }
+});
+ctaTl
+  .from('.cta-inner h2', { y: 40, opacity: 0, duration: .7, ease: 'power3.out' })
+  .from('.cta-sub', { y: 30, opacity: 0, duration: .6, ease: 'power3.out' }, '-=.3')
+  .from('.cmd', { y: 25, opacity: 0, duration: .6, ease: 'power3.out' }, '-=.2')
+  .from('.cta-btns', { y: 20, opacity: 0, duration: .5, ease: 'power3.out' }, '-=.2');
 </script>
 </body>
 </html>
