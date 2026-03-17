@@ -4,1009 +4,391 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genius Team — Anyone Can Build</title>
-<meta name="description" content="The AI toolkit that turns anyone into a builder. 31 specialized skills guide you from idea to production — learn to vibe code with your AI team.">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<meta name="description" content="The AI toolkit that turns anyone into a builder. 42 specialists guide every step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ───────────────────────────────────────────────
-   DESIGN TOKENS
-   ─────────────────────────────────────────────── */
-:root {
-  --blue: #F59E0B;
-  --cyan: #F97316;
-  --emerald: #FBBF24;
-  --bg: #0A0A0A;
-  --surface: rgba(255,255,255,0.03);
-  --border: rgba(255,255,255,0.07);
-  --dim: rgba(255,255,255,0.45);
-  --font: 'Sora', sans-serif;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ───────────────────────────────────────────────
-   RESET & BASE
-   ─────────────────────────────────────────────── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { overflow-x: hidden; scroll-behavior: smooth; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: #fff;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-img { display: block; max-width: 100%; }
-a { text-decoration: none; color: inherit; }
-
-/* ───────────────────────────────────────────────
-   UTILITIES
-   ─────────────────────────────────────────────── */
-.container { max-width: 1180px; margin: 0 auto; padding: 0 2rem; }
-.gradient-text {
-  background: linear-gradient(135deg, var(--blue), var(--cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ───────────────────────────────────────────────
-   FIXED NAV
-   ─────────────────────────────────────────────── */
-.nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 1rem 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.4s, border-color 0.4s;
-  border-bottom: 1px solid transparent;
-}
-.nav.scrolled {
-  background: rgba(10,10,10,0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom-color: var(--border);
-}
-.nav-logo {
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: -0.02em;
-}
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-.nav-link {
-  font-size: 0.85rem;
-  color: var(--dim);
-  font-weight: 500;
-  transition: color 0.3s;
-}
-.nav-link:hover { color: #fff; }
-.btn-pill {
-  padding: 0.5rem 1.4rem;
-  border-radius: 100px;
-  background: var(--blue);
-  color: #0A0A0A;
-  font-weight: 600;
-  font-size: 0.85rem;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: transform 0.3s var(--ease), box-shadow 0.3s;
-}
-.btn-pill:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(245,158,11,0.35);
-}
-
-/* ───────────────────────────────────────────────
-   HERO
-   ─────────────────────────────────────────────── */
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 7rem 2rem 4rem;
-  overflow: hidden;
-}
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: url(img/hero-brain.jpg) center/cover no-repeat;
-  z-index: 0;
-}
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(10,10,10,0.7);
-  z-index: 1;
-}
-.hero-vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(245,158,11,0.06) 0%, transparent 70%),
-              linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
-  z-index: 2;
-}
-.hero-content {
-  position: relative;
-  z-index: 3;
-  max-width: 800px;
-}
-.hero-title {
-  font-size: clamp(3.2rem, 9vw, 7rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.045em;
-  margin-bottom: 1.5rem;
-}
-.hero-word {
-  display: inline-block;
-  margin-right: 0.2em;
-}
-
-/* CSS Scroll-Driven Animation for hero words */
-@supports (animation-timeline: view()) {
-  .hero-word {
-    animation: clipReveal linear both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 40%;
-  }
-  .hero-word:nth-child(2) {
-    animation-range: entry 10% cover 50%;
-  }
-  .hero-word:nth-child(3) {
-    animation-range: entry 20% cover 60%;
-  }
-}
-
-@keyframes clipReveal {
-  from {
-    clip-path: inset(0 100% 0 0);
-    opacity: 0;
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-  }
-}
-
-/* Fallback for browsers without animation-timeline support */
-@supports not (animation-timeline: view()) {
-  .hero-word {
-    opacity: 1;
-    clip-path: none;
-  }
-}
-
-.hero-subtitle {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  color: var(--dim);
-  font-weight: 300;
-  line-height: 1.7;
-  max-width: 540px;
-  margin: 0 auto 2.5rem;
-}
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.btn-primary {
-  padding: 0.85rem 2.5rem;
-  border-radius: 100px;
-  background: var(--blue);
-  color: #0A0A0A;
-  font-weight: 600;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: transform 0.4s var(--ease), box-shadow 0.4s;
-}
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(245,158,11,0.3);
-}
-.btn-ghost {
-  padding: 0.85rem 2.5rem;
-  border-radius: 100px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: transparent;
-  color: #fff;
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: border-color 0.3s, background 0.3s;
-}
-.btn-ghost:hover {
-  border-color: var(--blue);
-  background: rgba(245,158,11,0.06);
-}
-
-/* ───────────────────────────────────────────────
-   HOW IT WORKS
-   ─────────────────────────────────────────────── */
-.how-it-works {
-  padding: 4.5rem 0;
-}
-.section-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--blue);
-  margin-bottom: 0.6rem;
-}
-.section-title {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.6rem;
-}
-.section-subtitle {
-  color: var(--dim);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 3rem;
-  max-width: 480px;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-  margin-bottom: 4rem;
-}
-.step:last-child { margin-bottom: 0; }
-.step.reverse .step-image { order: 2; }
-.step.reverse .step-text { order: 1; }
-
-.step-image {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  aspect-ratio: 16/10;
-}
-.step-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.step-image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  pointer-events: none;
-}
-
-/* CSS Scroll-Driven Animation for step cards */
-.step-card-anim {
-  opacity: 1;
-}
-
-@supports (animation-timeline: view()) {
-  .step-card-anim {
-    animation: stepFadeSlide linear both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 35%;
-  }
-}
-
-@keyframes stepFadeSlide {
-  from {
-    opacity: 0;
-    transform: translateY(60px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@supports not (animation-timeline: view()) {
-  .step-card-anim {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.step-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(245,158,11,0.1);
-  border: 1px solid rgba(245,158,11,0.2);
-  color: var(--blue);
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 1.2rem;
-}
-.step-heading {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.8rem;
-  line-height: 1.2;
-}
-.step-desc {
-  font-size: 0.95rem;
-  color: var(--dim);
-  line-height: 1.7;
-  max-width: 420px;
-}
-
-/* ───────────────────────────────────────────────
-   STATS
-   ─────────────────────────────────────────────── */
-.stats {
-  padding: 4rem 0;
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-.stat-card {
-  padding: 2.5rem 2rem;
-  border-radius: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  text-align: center;
-  transition: transform 0.4s var(--ease), border-color 0.4s;
-}
-.stat-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(245,158,11,0.2);
-}
-.stat-value {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.4rem;
-  line-height: 1.1;
-}
-.stat-value .highlight { color: var(--cyan); }
-.stat-label {
-  font-size: 0.9rem;
-  color: var(--dim);
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-/* ───────────────────────────────────────────────
-   SKILLS
-   ─────────────────────────────────────────────── */
-.skills {
-  padding: 4.5rem 0;
-}
-.skills-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-.skills-header .section-subtitle {
-  margin-left: auto;
-  margin-right: auto;
-}
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-}
-.skill-card {
-  border-radius: 18px;
-  padding: 1.75rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  transition: transform 0.4s var(--ease), border-color 0.4s, box-shadow 0.4s;
-}
-.skill-card:hover {
-  transform: translateY(-5px);
-}
-.skill-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.75rem;
-}
-.skill-icon { font-size: 1.4rem; }
-.skill-name {
-  font-size: 1rem;
-  font-weight: 700;
-  flex: 1;
-}
-.skill-count {
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.06);
-  padding: 0.18rem 0.55rem;
-  border-radius: 100px;
-  font-weight: 600;
-}
-.skill-desc {
-  font-size: 0.82rem;
-  color: rgba(255,255,255,0.45);
-  line-height: 1.55;
-  margin-bottom: 0.9rem;
-  font-style: italic;
-}
-.skill-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-.skill-tags span {
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  font-size: 0.68rem;
-  color: rgba(255,255,255,0.5);
-  transition: border-color 0.3s, color 0.3s;
-}
-.skill-card:hover .skill-tags span {
-  border-color: rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.65);
-}
-
-/* Skill card accent colors on hover */
-.skill-card[data-accent="ideation"]:hover { border-color: rgba(139,92,246,0.35); box-shadow: 0 15px 40px rgba(139,92,246,0.08); }
-.skill-card[data-accent="dev"]:hover { border-color: rgba(245,158,11,0.35); box-shadow: 0 15px 40px rgba(245,158,11,0.08); }
-.skill-card[data-accent="quality"]:hover { border-color: rgba(251,191,36,0.35); box-shadow: 0 15px 40px rgba(251,191,36,0.08); }
-.skill-card[data-accent="growth"]:hover { border-color: rgba(251,146,60,0.35); box-shadow: 0 15px 40px rgba(251,146,60,0.08); }
-.skill-card[data-accent="ops"]:hover { border-color: rgba(249,115,22,0.35); box-shadow: 0 15px 40px rgba(249,115,22,0.08); }
-.skill-card[data-accent="intel"]:hover { border-color: rgba(232,121,249,0.35); box-shadow: 0 15px 40px rgba(232,121,249,0.08); }
-
-/* ───────────────────────────────────────────────
-   CTA
-   ─────────────────────────────────────────────── */
-.cta {
-  padding: 5rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.cta::before {
-  content: '';
-  position: absolute;
-  width: 700px;
-  height: 700px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-.cta-title {
-  font-size: clamp(2.5rem, 5.5vw, 4.2rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 1;
-}
-.cta-subtitle {
-  color: var(--dim);
-  font-size: 1.05rem;
-  margin-bottom: 2.5rem;
-  position: relative;
-  z-index: 1;
-  line-height: 1.6;
-}
-.cmd-block {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.5rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1rem 2rem;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.88rem;
-  color: var(--emerald);
-  cursor: pointer;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  position: relative;
-  z-index: 1;
-}
-.cmd-block:hover {
-  border-color: rgba(245,158,11,0.3);
-  box-shadow: 0 0 40px rgba(245,158,11,0.08);
-}
-.cmd-hint {
-  font-family: var(--font);
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.3);
-}
-.cta-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-  position: relative;
-  z-index: 1;
-}
-
-/* ───────────────────────────────────────────────
-   FOOTER
-   ─────────────────────────────────────────────── */
-.footer {
-  padding: 2.5rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.3);
-}
-.footer a {
-  color: rgba(255,255,255,0.3);
-  transition: color 0.3s;
-}
-.footer a:hover { color: var(--blue); }
-.footer-links {
-  display: flex;
-  gap: 1.5rem;
-}
-
-/* ───────────────────────────────────────────────
-   PROP NAV (Fixed Bottom)
-   ─────────────────────────────────────────────── */
-.prop-nav {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.3rem;
-  z-index: 200;
-  background: rgba(10,10,10,0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 0.35rem;
-}
-.prop-nav a {
-  padding: 0.4rem 0.9rem;
-  border-radius: 100px;
-  color: rgba(255,255,255,0.35);
-  font-size: 0.72rem;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-.prop-nav a:hover { color: #fff; }
-.prop-nav a.active {
-  background: var(--blue);
-  color: #0A0A0A;
-}
-
-/* ───────────────────────────────────────────────
-   RESPONSIVE
-   ─────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .step { grid-template-columns: 1fr; gap: 2rem; }
-  .step.reverse .step-image { order: 0; }
-  .step.reverse .step-text { order: 0; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .skills-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  .nav { padding: 0.9rem 1.5rem; }
-  .nav-link { display: none; }
-  .hero { padding: 6rem 1.5rem 3.5rem; }
-  .hero-title { font-size: clamp(2.6rem, 10vw, 4rem); }
-  .hero-actions { flex-direction: column; align-items: center; }
-  .section-title { font-size: clamp(1.7rem, 5vw, 2.4rem); }
-  .cta-title { font-size: clamp(2rem, 6vw, 3rem); }
-  .cmd-block { font-size: 0.75rem; padding: 0.85rem 1.2rem; gap: 0.8rem; }
-  .footer { flex-direction: column; gap: 1rem; text-align: center; }
-  .cta-buttons { flex-direction: column; align-items: center; }
-}
-@media (max-width: 480px) {
-  .skills-grid { grid-template-columns: 1fr; }
-}
-
-/* ───────────────────────────────────────────────
-   GSAP INITIAL STATES (prevent flash)
-   ─────────────────────────────────────────────── */
-.stat-card, .skill-card, .cta-title, .cta-subtitle, .cmd-block, .cta-buttons {
-  visibility: hidden;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--amber:#F59E0B;--coral:#F97316;--bg:#0A0A0A;--surface:#111;--surface2:#1a1a1a;--text:#F5F5F5;--text2:rgba(245,245,245,.55);--glow:rgba(245,158,11,.15)}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
+a{color:inherit;text-decoration:none}
+.cursor-dot{position:fixed;top:0;left:0;width:8px;height:8px;background:var(--amber);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+.cursor-glow{position:fixed;top:0;left:0;width:40px;height:40px;background:radial-gradient(circle,rgba(245,158,11,.25),transparent 70%);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);background:rgba(10,10,10,.7);border-bottom:1px solid rgba(245,158,11,.08)}
+.nav-logo{font-weight:700;font-size:1.1rem;letter-spacing:-.02em;background:linear-gradient(135deg,var(--amber),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;font-size:.85rem;color:var(--text2)}
+.nav-links a:hover{color:var(--amber);transition:color .2s}
+.nav-cta{padding:.5rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:600;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(245,158,11,.3)}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+.hero-bg .orb-1{width:600px;height:600px;top:30%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.18),transparent 65%);animation:orbFloat 8s ease-in-out infinite}
+.hero-bg .orb-2{width:350px;height:350px;top:60%;right:5%;background:radial-gradient(circle,rgba(249,115,22,.12),transparent 65%);animation:orbFloat 10s ease-in-out infinite reverse}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15px,-20px) scale(1.1)}}
+.hero-content{position:relative;z-index:1;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:100px;font-size:.75rem;font-weight:500;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);color:var(--amber);margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:1rem}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--amber),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--text2);max-width:540px;margin:0 auto 2.5rem;line-height:1.6;font-weight:300}
+.hero-input-wrap{position:relative;width:100%;max-width:560px;margin:0 auto 1rem}
+.hero-input{width:100%;padding:1.1rem 9rem 1.1rem 1.5rem;border-radius:16px;border:2px solid rgba(245,158,11,.15);background:rgba(255,255,255,.04);color:var(--text);font-family:'Sora',sans-serif;font-size:1rem;transition:border-color .2s,box-shadow .2s}
+.hero-input:focus{outline:none;border-color:var(--amber);box-shadow:0 0 30px rgba(245,158,11,.15)}
+.hero-input::placeholder{color:rgba(255,255,255,.3)}
+.hero-input-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:.75rem 1.5rem;border-radius:12px;border:none;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;font-family:'Sora',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.hero-input-btn:hover{transform:translateY(-50%) translateY(-2px);box-shadow:0 8px 25px rgba(245,158,11,.3)}
+.hero-suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.hero-sug{padding:.45rem 1rem;border-radius:100px;font-size:.78rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:all .2s;color:var(--text2)}
+.hero-sug:hover{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.06)}
+.hero-trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:.8rem;color:var(--text2)}
+.hero-trust span::before{content:'✔ ';color:var(--amber)}
+/* FLOATING CARDS */
+.floating-cards{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden}
+.float-card{position:absolute;padding:.8rem 1.2rem;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px);font-size:.75rem;font-weight:500;color:var(--text2);display:flex;align-items:center;gap:.5rem;opacity:0}
+.float-card span{font-size:1rem}
+/* SECTIONS */
+section{padding:6rem 2rem;position:relative}
+.container{max-width:1100px;margin:0 auto}
+.section-label{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:.12em;margin-bottom:1rem}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.section-desc{font-size:1rem;color:var(--text2);max-width:600px;line-height:1.7}
+/* HOW — Sticky Workflow */
+.workflow{position:relative;background:linear-gradient(180deg,var(--bg),var(--surface),var(--bg))}
+.workflow-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.workflow-left{position:sticky;top:30vh}
+.workflow-steps{display:flex;flex-direction:column;gap:1.5rem;padding:3rem 0}
+.workflow-step{padding:1.5rem;border-radius:16px;background:rgba(255,255,255,.02);border-left:3px solid rgba(255,255,255,.06);transition:all .5s;opacity:.35;transform:translateX(20px)}
+.workflow-step.active{opacity:1;transform:translateX(0);border-left-color:var(--amber);background:rgba(245,158,11,.04)}
+.workflow-step-num{font-size:.7rem;font-weight:700;color:var(--amber);margin-bottom:.5rem;letter-spacing:.1em}
+.workflow-step h4{font-size:1.05rem;font-weight:600;margin-bottom:.3rem}
+.workflow-step p{font-size:.82rem;color:var(--text2);line-height:1.6}
+/* AGENTS */
+.agents{background:var(--surface)}
+.agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem}
+.agent-card{padding:1.5rem;border-radius:16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);transition:all .4s;position:relative;overflow:hidden}
+.agent-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,158,11,.06),transparent 60%);opacity:0;transition:opacity .4s}
+.agent-card:hover{border-color:rgba(245,158,11,.15);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.agent-card:hover::after{opacity:1}
+.agent-card>*{position:relative;z-index:1}
+.agent-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1rem;background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(249,115,22,.06))}
+.agent-card h4{font-size:.95rem;font-weight:600;margin-bottom:.35rem}
+.agent-card p{font-size:.78rem;color:var(--text2);line-height:1.6}
+.agent-count{font-size:.7rem;color:var(--amber);font-weight:500;margin-top:.5rem}
+/* FEATURES — Glassmorphism */
+.features{position:relative}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem}
+.feature-card{padding:1.5rem;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(10px);transition:all .4s}
+.feature-card:hover{transform:translateY(-4px);border-color:rgba(245,158,11,.15)}
+.feature-card h4{font-size:.95rem;font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
+.feature-card p{font-size:.82rem;color:var(--text2);line-height:1.6}
+/* COMPARISON */
+.comparison{background:linear-gradient(180deg,var(--bg),var(--surface))}
+.comp-grid{display:grid;grid-template-columns:1fr 50px 1fr;gap:1.5rem;align-items:center;margin-top:2.5rem}
+.comp-card{padding:1.8rem;border-radius:16px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+.comp-card.before{border-color:rgba(255,100,100,.12)}
+.comp-card.after{border-color:rgba(245,158,11,.2);background:rgba(245,158,11,.03)}
+.comp-card h4{font-size:.88rem;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.comp-item{display:flex;align-items:baseline;gap:.5rem;font-size:.82rem;color:var(--text2);padding:.35rem 0;line-height:1.5}
+.comp-arrow{font-size:2rem;color:var(--amber);font-weight:300;text-align:center}
+/* CTA */
+.cta-section{text-align:center;padding:8rem 2rem;position:relative}
+.cta-section::before{content:'';position:absolute;top:50%;left:50%;width:600px;height:600px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,158,11,.08),transparent 60%);pointer-events:none}
+.cta-btn{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 2.5rem;border-radius:14px;font-size:1.05rem;font-weight:600;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;border:none;cursor:pointer;transition:all .25s;font-family:'Sora',sans-serif}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(245,158,11,.3)}
+/* PROP NAV */
+.prop-nav{padding:2rem;background:var(--surface);border-top:1px solid rgba(255,255,255,.05)}
+.prop-nav-inner{max-width:700px;margin:0 auto;display:flex;justify-content:center;gap:1rem}
+.prop-nav a{padding:.55rem 1.3rem;border-radius:10px;font-size:.82rem;font-weight:500;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:all .2s}
+.prop-nav a:hover,.prop-nav a.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.06)}
+footer{padding:2rem;text-align:center;font-size:.75rem;color:var(--text2);border-top:1px solid rgba(255,255,255,.04)}
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .workflow-inner{grid-template-columns:1fr}
+  .workflow-left{position:relative;top:0}
+  .agents-grid,.features-grid{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr;text-align:center}
+  .comp-arrow{transform:rotate(90deg)}
+  .hero h1{font-size:2.2rem}
+  body{cursor:auto}
+  .cursor-dot,.cursor-glow{display:none}
+  .float-card{display:none}
+  section{padding:4rem 1.5rem}
+}
+@media(min-width:769px) and (max-width:1024px){
+  .agents-grid,.features-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     FIXED NAV
-     ═══════════════════════════════════════════ -->
-<nav class="nav" id="mainNav">
-  <a class="nav-logo" href="#">Genius Team</a>
-  <div class="nav-right">
-    <a class="nav-link" href="https://github.com/w-3-art/genius-team" target="_blank" rel="noopener">GitHub</a>
-    <button class="btn-pill" onclick="GeniusWizard.open();return false">Get Started</button>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav class="nav">
+  <div class="nav-logo">Genius Team</div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#agents">Agents</a>
+    <a href="#features">Features</a>
   </div>
+  <button class="nav-cta" onclick="GeniusWizard.open()">Get Started</button>
 </nav>
 
-<!-- ═══════════════════════════════════════════
-     HERO — 100vh, scroll-driven word reveal
-     ═══════════════════════════════════════════ -->
 <section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-vignette"></div>
+  <div class="hero-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="floating-cards">
+    <div class="float-card" style="top:18%;left:8%"><span>🎨</span> Design</div>
+    <div class="float-card" style="top:25%;right:6%"><span>⚡</span> Code</div>
+    <div class="float-card" style="bottom:22%;left:12%"><span>🚀</span> Deploy</div>
+  </div>
   <div class="hero-content">
-    <h1 class="hero-title">
-      <span class="hero-word">Anyone</span>
-      <span class="hero-word">Can</span>
-      <span class="hero-word gradient-text">Build</span>
-    </h1>
-    <p class="hero-subtitle">The AI toolkit that turns anyone into a builder. Learn to vibe code — your AI team guides every step.</p>
-    <div class="hero-actions">
-      <button class="btn-primary" onclick="GeniusWizard.open();return false">Start Building Free</button>
-      <a href="#how" class="btn-ghost">See How It Works</a>
+    <div class="hero-badge">Open Source — 42 AI Specialists</div>
+    <h1>Anyone can <span class="gradient">build.</span></h1>
+    <p class="hero-sub">The AI toolkit that turns you into a builder. 42 specialists guide every step — from idea to production. You stay in control.</p>
+    <div class="hero-input-wrap">
+      <input type="text" class="hero-input" placeholder="What do you want to build?" id="heroInput">
+      <button class="hero-input-btn" onclick="GeniusWizard.open()">Start Building</button>
+    </div>
+    <div class="hero-suggestions">
+      <button class="hero-sug" data-text="Booking app for yoga studio">Booking app for yoga studio</button>
+      <button class="hero-sug" data-text="Marketplace for vintage watches">Marketplace for vintage watches</button>
+      <button class="hero-sug" data-text="Landing page for my brand">Landing page for my brand</button>
+    </div>
+    <div class="hero-trust">
+      <span>No code needed</span>
+      <span>Free &amp; open source</span>
+      <span>Learn as you build</span>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     HOW IT WORKS — 3 Steps
-     ═══════════════════════════════════════════ -->
-<section class="how-it-works" id="how">
+<section class="workflow" id="how">
   <div class="container">
-    <div class="section-label">How It Works</div>
-    <h2 class="section-title">Three steps. You lead, AI assists.</h2>
-    <p class="section-subtitle">You stay in control. Your AI teammates guide you through every decision — from architecture to deployment.</p>
-
-    <!-- Step 1 -->
-    <div class="step step-card-anim">
-      <div class="step-image">
-        <img src="img/workflow-steps.jpg" alt="Share your idea with Genius Team" loading="lazy">
+    <div class="workflow-inner">
+      <div class="workflow-left">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Your AI crew<br>walks you through<br>every step.</h2>
+        <p class="section-desc">Describe your idea. Genius Team assigns the right specialists to guide you — design, code, test, deploy. You learn and build at the same time.</p>
       </div>
-      <div class="step-text">
-        <div class="step-number">1</div>
-        <h3 class="step-heading">Share your vision</h3>
-        <p class="step-desc">Tell Genius Team what you want to build. Your AI interviewer helps you clarify your idea, research the market, and shape it into solid specifications — together.</p>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="step reverse step-card-anim">
-      <div class="step-image">
-        <img src="img/agent-constellation.jpg" alt="AI skills guiding your build" loading="lazy">
-      </div>
-      <div class="step-text">
-        <div class="step-number">2</div>
-        <h3 class="step-heading">Build with AI guidance</h3>
-        <p class="step-desc">31 specialized skills accompany you through design, architecture, and code. You make every key decision — your AI team handles the heavy lifting and teaches you along the way.</p>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="step step-card-anim">
-      <div class="step-image">
-        <img src="img/app-mockup.jpg" alt="Your application ready to ship" loading="lazy">
-      </div>
-      <div class="step-text">
-        <div class="step-number">3</div>
-        <h3 class="step-heading">Ship with confidence</h3>
-        <p class="step-desc">QA, security audits, and deployment — your AI team walks you through it all. You learn real production skills while shipping a real product.</p>
+      <div class="workflow-steps">
+        <div class="workflow-step active" data-step="1">
+          <div class="workflow-step-num">STEP 01</div>
+          <h4>Describe your idea</h4>
+          <p>Tell the interviewer what you want to build. It asks smart questions to understand your vision — no technical knowledge required.</p>
+        </div>
+        <div class="workflow-step" data-step="2">
+          <div class="workflow-step-num">STEP 02</div>
+          <h4>Get your blueprint</h4>
+          <p>Specs, market analysis, and architecture — your AI crew researches and plans everything alongside you.</p>
+        </div>
+        <div class="workflow-step" data-step="3">
+          <div class="workflow-step-num">STEP 03</div>
+          <h4>Build together</h4>
+          <p>Specialized agents write code while you review every decision. Frontend, backend, database — each has its own expert.</p>
+        </div>
+        <div class="workflow-step" data-step="4">
+          <div class="workflow-step-num">STEP 04</div>
+          <h4>Ship with confidence</h4>
+          <p>QA testing, security audit, and deployment — automated checks ensure quality before you go live.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     STATS — 3 Cards
-     ═══════════════════════════════════════════ -->
-<section class="stats" id="stats">
+<section class="agents" id="agents">
   <div class="container">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value"><span class="highlight">You</span> build</div>
-        <div class="stat-label">AI guides, you learn & ship</div>
+    <div class="section-label">Your AI Crew</div>
+    <h2 class="section-title">42 specialists,<br>6 teams.</h2>
+    <p class="section-desc">Each agent has a role. They collaborate like a real team — no AI jargon, just clear guidance at every step.</p>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-icon">💡</div>
+        <h4>Ideation</h4>
+        <p>Discovery interviews, market research, specifications, design systems, and content strategy.</p>
+        <div class="agent-count">5 agents</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value"><span class="highlight">31</span> skills</div>
-        <div class="stat-label">helping you at every step</div>
+      <div class="agent-card">
+        <div class="agent-icon">🔨</div>
+        <h4>Build</h4>
+        <p>Frontend, backend, mobile, database, and API integration — each with a dedicated specialist.</p>
+        <div class="agent-count">7 agents</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">Idea to <span class="highlight">launch</span></div>
-        <div class="stat-label">in days, not months</div>
+      <div class="agent-card">
+        <div class="agent-icon">🔍</div>
+        <h4>Quality</h4>
+        <p>Automated testing, code review, security audits, debugging, and performance optimization.</p>
+        <div class="agent-count">5 agents</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📈</div>
+        <h4>Growth</h4>
+        <p>SEO optimization, analytics setup, marketing strategy, copywriting, and accessibility compliance.</p>
+        <div class="agent-count">5 agents</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">⚙️</div>
+        <h4>Ops</h4>
+        <p>Deployment pipelines, CI/CD, internationalization, documentation, and onboarding flows.</p>
+        <div class="agent-count">4 agents</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">🧠</div>
+        <h4>AI Engine</h4>
+        <p>Memory persistence, orchestration, experimentation loops, optimization, and multi-model routing.</p>
+        <div class="agent-count">5 agents</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SKILLS — 6 Categories
-     ═══════════════════════════════════════════ -->
-<section class="skills" id="skills">
+<section class="features" id="features">
   <div class="container">
-    <div class="skills-header">
-      <div class="section-label">Your AI Toolkit</div>
-      <h2 class="section-title">31 Skills. 6 Categories. One Team.</h2>
-      <p class="section-subtitle">Each skill knows when to step in and guide you. They collaborate like a world-class product team — with you at the helm.</p>
-    </div>
-
-    <div class="skills-grid">
-      <!-- Ideation -->
-      <div class="skill-card" data-accent="ideation">
-        <div class="skill-header">
-          <span class="skill-icon">&#x1F4A1;</span>
-          <span class="skill-name">Ideation</span>
-          <span class="skill-count">5</span>
-        </div>
-        <p class="skill-desc">Helps you go from rough idea to crystal-clear specifications</p>
-        <div class="skill-tags">
-          <span>Interviewer</span>
-          <span>Market Analyst</span>
-          <span>Specs Writer</span>
-          <span>Designer</span>
-          <span>Integration Guide</span>
-        </div>
-      </div>
-
-      <!-- Build -->
-      <div class="skill-card" data-accent="dev">
-        <div class="skill-header">
-          <span class="skill-icon">&#x26A1;</span>
-          <span class="skill-name">Build</span>
-          <span class="skill-count">7</span>
-        </div>
-        <p class="skill-desc">Full-stack implementation guided by specialized AI skills</p>
-        <div class="skill-tags">
-          <span>Dev Router</span>
-          <span>Frontend</span>
-          <span>Backend</span>
-          <span>Mobile</span>
-          <span>Database</span>
-          <span>API</span>
-          <span>Orchestrator</span>
-        </div>
-      </div>
-
-      <!-- Quality -->
-      <div class="skill-card" data-accent="quality">
-        <div class="skill-header">
-          <span class="skill-icon">&#x1F6E1;&#xFE0F;</span>
-          <span class="skill-name">Quality</span>
-          <span class="skill-count">5</span>
-        </div>
-        <p class="skill-desc">Every line reviewed, tested, and hardened — with your approval</p>
-        <div class="skill-tags">
-          <span>QA Micro</span>
-          <span>Full QA</span>
-          <span>Code Review</span>
-          <span>Security Audit</span>
-          <span>Debugger</span>
-        </div>
-      </div>
-
-      <!-- Growth -->
-      <div class="skill-card" data-accent="growth">
-        <div class="skill-header">
-          <span class="skill-icon">&#x1F4C8;</span>
-          <span class="skill-name">Growth</span>
-          <span class="skill-count">5</span>
-        </div>
-        <p class="skill-desc">Guides you through SEO, analytics, and performance optimization</p>
-        <div class="skill-tags">
-          <span>SEO</span>
-          <span>Analytics</span>
-          <span>Performance</span>
-          <span>Accessibility</span>
-          <span>Content</span>
-        </div>
-      </div>
-
-      <!-- Operations -->
-      <div class="skill-card" data-accent="ops">
-        <div class="skill-header">
-          <span class="skill-icon">&#x1F680;</span>
-          <span class="skill-name">Ops</span>
-          <span class="skill-count">4</span>
-        </div>
-        <p class="skill-desc">Helps you ship fast, experiment freely, scale globally</p>
-        <div class="skill-tags">
-          <span>Deployer</span>
-          <span>Experiments</span>
-          <span>i18n</span>
-          <span>Onboarding</span>
-        </div>
-      </div>
-
-      <!-- AI Engine -->
-      <div class="skill-card" data-accent="intel">
-        <div class="skill-header">
-          <span class="skill-icon">&#x1F9E0;</span>
-          <span class="skill-name">AI Engine</span>
-          <span class="skill-count">5</span>
-        </div>
-        <p class="skill-desc">Your team learns from every project and gets smarter over time</p>
-        <div class="skill-tags">
-          <span>Memory</span>
-          <span>Copywriter</span>
-          <span>Marketer</span>
-          <span>Team Optimizer</span>
-          <span>Docs</span>
-        </div>
-      </div>
+    <div class="section-label">Why Genius Team</div>
+    <h2 class="section-title">Vibe coding,<br>not magic promises.</h2>
+    <p class="section-desc">You stay in the loop. The AI guides — you decide. Every line of code is yours to understand.</p>
+    <div class="features-grid">
+      <div class="feature-card"><h4>🎯 You stay in control</h4><p>Agents suggest, you approve. Review every decision, learn every pattern. It's your project.</p></div>
+      <div class="feature-card"><h4>🔓 Fully open source</h4><p>MIT licensed. No vendor lock-in, no hidden costs. Fork it, extend it, make it yours.</p></div>
+      <div class="feature-card"><h4>🧩 Works with your stack</h4><p>React, Vue, Svelte, Node, Python — Genius Team adapts to your preferred tools and frameworks.</p></div>
+      <div class="feature-card"><h4>📚 Learn as you build</h4><p>Agents explain why, not just what. Every session makes you a better developer.</p></div>
+      <div class="feature-card"><h4>🤝 Real team workflow</h4><p>Sprint planning, code review, QA — the same process used by professional dev teams.</p></div>
+      <div class="feature-card"><h4>⚡ Idea to production</h4><p>From the first interview to deployment. No gaps, no manual handoffs between tools.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     CTA
-     ═══════════════════════════════════════════ -->
-<section class="cta" id="cta">
+<section class="comparison">
   <div class="container">
-    <h2 class="cta-title">Start Building <span class="gradient-text">Today</span></h2>
-    <p class="cta-subtitle">One command. Free and open source. Your journey to vibe coding starts here.</p>
-    <div class="cmd-block" onclick="navigator.clipboard.writeText('npx create-genius-app my-app');this.querySelector('.cmd-hint').textContent='Copied!'">
-      <span>$ npx create-genius-app my-app</span>
-      <span class="cmd-hint">click to copy</span>
-    </div>
-    <div class="cta-buttons">
-      <button class="btn-primary" onclick="GeniusWizard.open();return false">Getting Started</button>
-      <a href="https://github.com/w-3-art/genius-team" class="btn-ghost" target="_blank" rel="noopener">Star on GitHub</a>
+    <div class="section-label">The difference</div>
+    <h2 class="section-title">Building alone vs.<br>building with a crew.</h2>
+    <div class="comp-grid">
+      <div class="comp-card before">
+        <h4>❌ Without Genius Team</h4>
+        <div class="comp-item">Staring at a blank editor for hours</div>
+        <div class="comp-item">Googling every error message</div>
+        <div class="comp-item">No architecture, no plan</div>
+        <div class="comp-item">Skipping tests and security</div>
+        <div class="comp-item">Deploying and praying</div>
+      </div>
+      <div class="comp-arrow">→</div>
+      <div class="comp-card after">
+        <h4>✦ With Genius Team</h4>
+        <div class="comp-item">Guided discovery and clear specs</div>
+        <div class="comp-item">AI debugger finds root causes</div>
+        <div class="comp-item">Architecture planned before coding</div>
+        <div class="comp-item">Automated QA and security audits</div>
+        <div class="comp-item">One-command deployment</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════ -->
-<footer class="footer">
-  <div>Genius Team &middot; 2026</div>
-  <div class="footer-links">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" rel="noopener">GitHub</a>
-    <a href="#">Docs</a>
-    <a href="#">Discord</a>
+<section class="cta-section">
+  <div class="container">
+    <div class="section-label">Ready to start?</div>
+    <h2 class="section-title">Your next project<br>starts <span style="color:var(--amber)">now.</span></h2>
+    <p class="section-desc" style="margin:0 auto 2rem;text-align:center">Describe what you want to build. Your AI crew is ready.</p>
+    <button class="cta-btn" onclick="GeniusWizard.open()">Get Started — It's Free</button>
   </div>
-</footer>
+</section>
 
-<!-- ═══════════════════════════════════════════
-     PROP NAV (Fixed Bottom)
-     ═══════════════════════════════════════════ -->
 <div class="prop-nav">
-  <a href="proposition1.html" class="active">P1</a>
-  <a href="proposition2.html">P2</a>
-  <a href="proposition3.html">P3</a>
-  <a href="proposition4.html">P4</a>
-  <a href="proposition5.html">P5</a>
+  <div class="prop-nav-inner">
+    <a href="/proposition1" class="active">Proposition 1</a>
+    <a href="/proposition2">Proposition 2</a>
+    <a href="/proposition3">Proposition 3</a>
+  </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCRIPTS
-     ═══════════════════════════════════════════ -->
+<footer>
+  <p>Genius Team — Open source AI toolkit · <a href="https://github.com/w-3-art/genius-team" style="color:var(--amber)">GitHub</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
 <script src="wizard.js"></script>
 <script>
-(function() {
-  'use strict';
-
-  // ── Init Wizard ──
-  if (typeof GeniusWizard !== 'undefined') {
-    GeniusWizard.init();
-  }
-
-  // ── Lenis Smooth Scroll ──
-  var lenis = new Lenis({
-    duration: 1.2,
-    easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }
-  });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+document.addEventListener('DOMContentLoaded',()=>{
+  GeniusWizard.init();
+  // Lenis
+  const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+  function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+  requestAnimationFrame(raf);
+  lenis.on('scroll',ScrollTrigger.update);
+  gsap.ticker.add(time=>lenis.raf(time*1000));
   gsap.ticker.lagSmoothing(0);
-
-  // ── GSAP ──
-  gsap.registerPlugin(ScrollTrigger);
-
-  // ── Nav scroll state ──
-  var nav = document.getElementById('mainNav');
-  window.addEventListener('scroll', function() {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-  });
-
-  // ── Hero Entrance ──
-  var heroTL = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  heroTL
-    .from('.hero-word', { y: 70, opacity: 0, stagger: 0.12, duration: 1.2 }, 0.3)
-    .from('.hero-subtitle', { y: 30, opacity: 0, duration: 0.8 }, 0.8)
-    .from('.hero-actions > *', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6 }, 1.0);
-
-  // ── Parallax hero background ──
-  gsap.to('.hero-bg', {
-    yPercent: 20,
-    scale: 1.08,
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: 1.5
-    }
-  });
-
-  // ── Stats stagger animation ──
-  gsap.set('.stat-card', { visibility: 'visible' });
-  gsap.from('.stat-card', {
-    y: 50,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.stats-grid',
-      start: 'top 80%'
-    }
-  });
-
-  // ── Skills stagger animation ──
-  gsap.set('.skill-card', { visibility: 'visible' });
-  gsap.from('.skill-card', {
-    y: 40,
-    opacity: 0,
-    duration: 0.7,
-    stagger: 0.1,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.skills-grid',
-      start: 'top 80%'
-    }
-  });
-
-  // ── CTA animation ──
-  gsap.set(['.cta-title', '.cta-subtitle', '.cmd-block', '.cta-buttons'], { visibility: 'visible' });
-  var ctaTL = gsap.timeline({
-    scrollTrigger: {
-      trigger: '.cta',
-      start: 'top 75%'
-    }
-  });
-  ctaTL
-    .from('.cta-title', { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out' })
-    .from('.cta-subtitle', { y: 30, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.5')
-    .from('.cmd-block', { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3')
-    .from('.cta-buttons', { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3');
-
-  // ── "How It Works" GSAP fallback for browsers without animation-timeline ──
-  if (!CSS.supports('animation-timeline: view()')) {
-    gsap.utils.toArray('.step-card-anim').forEach(function(step) {
-      gsap.from(step, {
-        y: 60,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: step,
-          start: 'top 82%'
-        }
-      });
+  // Cursor
+  const dot=document.getElementById('cursorDot'),glow=document.getElementById('cursorGlow');
+  if(window.innerWidth>768){
+    let mx=0,my=0,dx=0,dy=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+    gsap.ticker.add(()=>{
+      dx+=(mx-dx)*.15;dy+=(my-dy)*.15;
+      dot.style.left=mx+'px';dot.style.top=my+'px';
+      glow.style.left=dx+'px';glow.style.top=dy+'px';
+    });
+    document.querySelectorAll('button,a,.hero-sug,.agent-card,.feature-card').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{dot.style.width='16px';dot.style.height='16px';dot.style.background='var(--coral)';glow.style.width='80px';glow.style.height='80px'});
+      el.addEventListener('mouseleave',()=>{dot.style.width='8px';dot.style.height='8px';dot.style.background='var(--amber)';glow.style.width='40px';glow.style.height='40px'});
     });
   }
-
-})();
+  // Suggestions
+  document.querySelectorAll('.hero-sug').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const input=document.getElementById('heroInput');
+      input.value=btn.dataset.text;input.focus();
+      input.style.borderColor='var(--amber)';input.style.boxShadow='0 0 30px rgba(245,158,11,.15)';
+    });
+  });
+  // GSAP
+  gsap.registerPlugin(ScrollTrigger);
+  // Hero entrance
+  const tl=gsap.timeline({defaults:{ease:'power3.out'}});
+  tl.from('.hero-badge',{y:30,opacity:0,duration:.8})
+    .from('.hero h1',{y:40,opacity:0,duration:1},'-=.5')
+    .from('.hero-sub',{y:30,opacity:0,duration:.8},'-=.6')
+    .from('.hero-input-wrap',{y:30,opacity:0,duration:.8},'-=.5')
+    .from('.hero-suggestions',{y:20,opacity:0,duration:.6},'-=.4')
+    .from('.hero-trust',{y:20,opacity:0,duration:.6},'-=.3');
+  // Floating cards
+  gsap.utils.toArray('.float-card').forEach((card,i)=>{
+    gsap.to(card,{opacity:.7,delay:1.5+i*.3,duration:.8});
+    gsap.to(card,{y:'+=20',duration:3+i,repeat:-1,yoyo:true,ease:'sine.inOut'});
+  });
+  // Iris clip-path reveal for major sections
+  gsap.utils.toArray('.agents,.features,.comparison').forEach(sec=>{
+    gsap.fromTo(sec,{clipPath:'circle(0% at 50% 50%)'},{clipPath:'circle(80% at 50% 50%)',duration:1.5,ease:'power2.out',scrollTrigger:{trigger:sec,start:'top 85%',end:'top 20%',scrub:1}});
+  });
+  // Workflow steps
+  gsap.utils.toArray('.workflow-step').forEach((step,i)=>{
+    ScrollTrigger.create({trigger:step,start:'top 60%',onEnter:()=>{document.querySelectorAll('.workflow-step').forEach(s=>s.classList.remove('active'));step.classList.add('active')}});
+    gsap.from(step,{x:60,opacity:0,duration:.7,scrollTrigger:{trigger:step,start:'top 78%'}});
+  });
+  // Agent cards stagger
+  gsap.from('.agent-card',{y:40,opacity:0,stagger:.1,duration:.6,scrollTrigger:{trigger:'.agents-grid',start:'top 75%'}});
+  // Feature cards parallax
+  gsap.utils.toArray('.feature-card').forEach((card,i)=>{
+    gsap.from(card,{y:50+(i%3)*20,opacity:0,duration:.7,scrollTrigger:{trigger:card,start:'top 82%'}});
+    gsap.to(card,{y:-(i%3)*15,scrollTrigger:{trigger:card,start:'top bottom',end:'bottom top',scrub:1}});
+  });
+  // Comparison
+  gsap.from('.comp-card.before',{x:-60,opacity:0,duration:.8,scrollTrigger:{trigger:'.comp-grid',start:'top 72%'}});
+  gsap.from('.comp-arrow',{scale:0,opacity:0,duration:.5,scrollTrigger:{trigger:'.comp-grid',start:'top 72%'}});
+  gsap.from('.comp-card.after',{x:60,opacity:0,duration:.8,delay:.15,scrollTrigger:{trigger:'.comp-grid',start:'top 72%'}});
+  // CTA blur-to-sharp
+  gsap.fromTo('.cta-section .section-title',{filter:'blur(8px)',y:30,opacity:0},{filter:'blur(0px)',y:0,opacity:1,duration:1,scrollTrigger:{trigger:'.cta-section',start:'top 75%'}});
+  // Nav scroll
+  ScrollTrigger.create({start:100,onUpdate:self=>{document.querySelector('.nav').style.background=self.progress>0?'rgba(10,10,10,.92)':'rgba(10,10,10,.7)'}});
+});
 </script>
 </body>
 </html>
