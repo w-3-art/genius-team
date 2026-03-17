@@ -14,10 +14,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 ::selection{background:var(--violet);color:#fff}
 a{color:inherit;text-decoration:none}
 
+/* Noise grain overlay */
+.noise{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.03;mix-blend-mode:overlay}
+/* Vignette depth */
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 50%,rgba(0,0,0,.5));pointer-events:none;z-index:9996}
+
 /* Animated orbs */
 .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;opacity:.25}
-.orb-1{width:400px;height:400px;background:var(--magenta);top:-100px;left:-100px;animation:orbFloat1 12s ease-in-out infinite}
-.orb-2{width:350px;height:350px;background:var(--violet);bottom:-80px;right:-80px;animation:orbFloat2 15s ease-in-out infinite}
+.orb-1{width:500px;height:500px;background:linear-gradient(135deg,var(--magenta),rgba(236,72,153,.6));top:-120px;left:-120px;animation:orbFloat1 12s ease-in-out infinite}
+.orb-2{width:450px;height:450px;background:linear-gradient(135deg,var(--violet),rgba(139,92,246,.5));bottom:-100px;right:-100px;animation:orbFloat2 15s ease-in-out infinite}
 .orb-3{width:250px;height:250px;background:linear-gradient(135deg,var(--magenta),var(--violet));top:40%;left:50%;animation:orbFloat3 18s ease-in-out infinite}
 @keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
 @keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,-50px)}}
@@ -39,6 +44,7 @@ a{color:inherit;text-decoration:none}
 
 /* Hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;z-index:1}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 30% 30%,rgba(236,72,153,.08),transparent 50%),radial-gradient(ellipse 50% 40% at 70% 50%,rgba(139,92,246,.08),transparent 45%),radial-gradient(ellipse 40% 35% at 50% 80%,rgba(236,72,153,.04),transparent);pointer-events:none;z-index:0}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.06);font-size:.72rem;font-weight:600;color:var(--violet);margin-bottom:2rem;letter-spacing:.06em;text-transform:uppercase}
 .hero h1{font-size:clamp(3rem,7vw,5rem);font-weight:800;line-height:1;letter-spacing:-.05em;margin-bottom:1.2rem}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -75,7 +81,7 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .neon-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
 
 /* Card Stack section */
-.card-stack-section{padding:8rem 2rem;background:var(--surface);position:relative;overflow:hidden;z-index:1}
+.card-stack-section{padding:8rem 2rem;background:var(--surface);position:relative;overflow:hidden;z-index:1}.card-stack-section::before{content:'';position:absolute;top:10%;right:10%;width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.06),transparent 60%);pointer-events:none}
 .card-stack-wrap{max-width:700px;margin:3rem auto 0;position:relative;min-height:380px}
 .stack-card{position:absolute;left:0;right:0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2.5rem;backdrop-filter:blur(12px);transition:transform .5s ease,opacity .5s ease}
 .stack-card h3{font-size:1.3rem;font-weight:700;margin-bottom:.6rem}
@@ -95,7 +101,7 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .skill-pill:hover{background:linear-gradient(135deg,rgba(236,72,153,.1),rgba(139,92,246,.1));border-color:rgba(139,92,246,.2);color:var(--violet)}
 
 /* Philosophy split */
-.philosophy{padding:6rem 2rem;background:var(--surface);z-index:1;position:relative}
+.philosophy{padding:6rem 2rem;background:var(--surface);z-index:1;position:relative}.philosophy::before{content:'';position:absolute;bottom:0;left:20%;width:500px;height:200px;background:radial-gradient(ellipse,rgba(236,72,153,.04),transparent 65%);pointer-events:none}
 .philosophy-inner{max-width:900px;margin:0 auto}
 .philosophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 .phil-card{border-radius:16px;padding:2rem;position:relative}
@@ -419,6 +425,9 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 <footer>
   <p>Genius Team — Open source AI toolkit. Built with care.</p>
 </footer>
+
+<svg style="position:absolute;width:0;height:0"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
+<div class="noise" style="filter:url(#noiseFilter)"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

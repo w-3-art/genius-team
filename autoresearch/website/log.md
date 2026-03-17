@@ -56,3 +56,56 @@ Weaknesses: Fewer flashy interactions than P1/P2. Could add cursor effect or mor
 - P3: Add cursor-based effect or more flashy interactions to match P1/P2
 - All: Push responsive from 7 to 8 — test and fix mobile timeline/workflow
 - All: Add micro-interactions on skill tag hover (scale, color shift)
+
+--- End iteration 1 ---
+
+---
+
+## Iteration 2 — Visual Depth: Noise Grain + Gradient Mesh + Vignette
+
+**Target:** Visual impact 7→8 (lowest criterion across all 3 pages)
+
+**Changes applied to ALL 3 pages:**
+- SVG feTurbulence noise grain overlay (fixed, mix-blend-mode:overlay, low opacity) — adds tactile depth
+- Vignette effect via body::after (radial-gradient darkening edges) — cinematic focus
+- Multi-layer gradient mesh on hero backgrounds (5 stacked radial-gradients on P1, 3+ on P2/P3) — organic, non-flat depth
+- Ambient glow bleeds between sections (radial-gradient accents on iris, messaging, card-stack, philosophy, timeline, skills sections)
+- Enriched CTA backgrounds with dual-gradient composition
+- P1: Larger parallax orbs (300→400px, blur 80→100px, opacity .3→.35)
+- P2: Enlarged orbs (400→500px, 350→450px) with gradient fills instead of flat color; hero::before gradient mesh added
+- P3: Richer hero gradient mesh (3-layer radial); ambient glow on timeline + skills sections
+
+**What stayed the same:** All content, layout, interactions, messaging, responsive CSS unchanged.
+
+### P1 Cinematic Amber: 7.9 avg
+Visual 8 | Clarity 8 | Density 7 | Unique 7 | Messaging 8 | Interactions 8 | Responsive 7 | Technical 8
+
+Grain + vignette + 5-layer hero mesh adds real depth. Parallax orbs bigger + blurrier = more atmospheric. Section glow bleeds create visual continuity. Density and unique still need work.
+
+### P2 Neon Violet: 8.0 avg
+Visual 8 | Clarity 8 | Density 7 | Unique 8 | Messaging 8 | Interactions 8 | Responsive 7 | Technical 8
+
+Gradient-filled orbs are richer than flat color. Hero gradient mesh adds purple/magenta depth behind content. Grain overlay suits the dark purple surface well. Card-stack glow accent adds atmosphere.
+
+### P3 Premium Gold: 7.9 avg
+Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 7 | Responsive 7 | Technical 8
+
+Warm grain texture + softer vignette fits editorial tone. Richer hero mesh with 3 gold radials. Timeline and skills section ambient glows add depth without competing with content.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 8      | 8       | 7       | 7      | 8         | 8        | 7          | 8         | 7.9 |
+| P2   | 8      | 8       | 7       | 8      | 8         | 8        | 7          | 8         | 8.0 |
+| P3   | 8      | 8       | 8       | 8      | 8         | 7        | 7          | 8         | 7.9 |
+
+### Key improvements for next iteration:
+- P1: Density 7 + Unique 7 are now the weakest — parallax section still wastes space, card layouts standard
+- P2: Density 7 — space between major sections could carry more content
+- P3: Interactions 7 — still lacks cursor effect or flashy hover states compared to P1/P2
+- All: Responsive 7 — mobile layout needs testing/fixing for timeline, card stack, workflow steps
+- Consider: P1 needs a unique signature beyond iris reveal to push Unique from 7→8
+
+--- End iteration 2 ---

@@ -14,6 +14,11 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);overfl
 ::selection{background:var(--amber);color:#000}
 a{color:inherit;text-decoration:none}
 
+/* Noise grain overlay */
+.noise{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.04;mix-blend-mode:overlay}
+/* Vignette depth */
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 50%,rgba(0,0,0,.4));pointer-events:none;z-index:9996}
+
 /* Custom cursor */
 .cursor{position:fixed;width:24px;height:24px;border:2px solid var(--amber);border-radius:50%;pointer-events:none;z-index:10000;mix-blend-mode:difference;transition:transform .15s ease}
 .cursor-dot{background:var(--amber);width:6px;height:6px;border-radius:50%;position:fixed;pointer-events:none;z-index:10001;transition:transform .1s ease}
@@ -36,7 +41,7 @@ a{color:inherit;text-decoration:none}
 
 /* Hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(245,158,11,.07),transparent),radial-gradient(ellipse 40% 30% at 70% 60%,rgba(249,115,22,.05),transparent)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 25% 20%,rgba(245,158,11,.1),transparent 50%),radial-gradient(ellipse 50% 40% at 75% 35%,rgba(249,115,22,.08),transparent 45%),radial-gradient(ellipse 60% 50% at 50% 80%,rgba(245,158,11,.05),transparent 50%),radial-gradient(ellipse 30% 25% at 15% 70%,rgba(249,115,22,.06),transparent 40%),radial-gradient(ellipse 40% 30% at 85% 75%,rgba(245,158,11,.04),transparent)}
 .hero-content{position:relative;z-index:2;max-width:720px}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.06);font-size:.75rem;font-weight:500;color:var(--amber);margin-bottom:2rem;letter-spacing:.04em;text-transform:uppercase}
 .hero h1{font-size:clamp(2.8rem,6vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:1rem}
@@ -74,7 +79,7 @@ section{padding:6rem 2rem;position:relative}
 .floating-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
 
 /* How it works — iris reveal */
-.iris-section{position:relative;padding:8rem 2rem;background:var(--surface)}
+.iris-section{position:relative;padding:8rem 2rem;background:var(--surface)}.iris-section::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:200px;background:radial-gradient(ellipse,rgba(245,158,11,.04),transparent 70%);pointer-events:none}
 .iris-content{clip-path:circle(0% at 50% 50%);transition:clip-path 0s}
 .iris-inner{max-width:1000px;margin:0 auto}
 .workflow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
@@ -103,12 +108,12 @@ section{padding:6rem 2rem;position:relative}
 .parallax-layer-3{z-index:3}
 .parallax-text{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;text-align:center;letter-spacing:-.03em;line-height:1.2;max-width:700px;padding:0 2rem}
 .parallax-text em{font-style:normal;background:linear-gradient(135deg,var(--amber),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.parallax-orb{width:300px;height:300px;border-radius:50%;filter:blur(80px);opacity:.3;position:absolute}
+.parallax-orb{width:400px;height:400px;border-radius:50%;filter:blur(100px);opacity:.35;position:absolute}
 .parallax-orb-1{background:var(--amber);top:20%;left:10%}
 .parallax-orb-2{background:var(--coral);bottom:20%;right:10%}
 
 /* Before/After messaging */
-.messaging{padding:6rem 2rem;background:var(--surface)}
+.messaging{padding:6rem 2rem;background:var(--surface);position:relative}.messaging::before{content:'';position:absolute;bottom:-40px;left:30%;width:400px;height:150px;background:radial-gradient(ellipse,rgba(245,158,11,.03),transparent 70%);pointer-events:none}
 .messaging-inner{max-width:900px;margin:0 auto}
 .messaging-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 .msg-card{border-radius:16px;padding:2rem;position:relative;overflow:hidden}
@@ -138,7 +143,7 @@ section{padding:6rem 2rem;position:relative}
 
 /* CTA */
 .cta-section{padding:6rem 2rem;text-align:center;position:relative}
-.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(245,158,11,.06),transparent)}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(245,158,11,.1),transparent),radial-gradient(ellipse 30% 30% at 40% 60%,rgba(249,115,22,.06),transparent)}
 .cta-content{position:relative;z-index:2;max-width:600px;margin:0 auto}
 .cta-content h2{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;margin-bottom:1rem;letter-spacing:-.03em}
 .cta-content p{color:var(--muted);margin-bottom:2rem;font-size:.95rem}
@@ -467,6 +472,9 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 <footer>
   <p>Genius Team — Open source AI toolkit. Built with care.</p>
 </footer>
+
+<svg style="position:absolute;width:0;height:0"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
+<div class="noise" style="filter:url(#noiseFilter)"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
