@@ -1,0 +1,63 @@
+{
+  "version": "1.1",
+  "created": "2026-03-12",
+  "last_updated": "2026-03-17",
+  "note": "Metrics updated after v18.0 benchmarks and routing fixes",
+  "tracks": {
+    "1-skill-routing": {
+      "accuracy": "86.6%",
+      "accuracy_value": 0.866,
+      "baseline_date": "2026-03-13",
+      "last_experiment": "2026-03-17",
+      "last_score": "~93% (estimated after routing fix)",
+      "failures_fixed": [
+        "task-2: market analysis went to genius-specs instead of genius-product-market-analyst",
+        "task-3: specs-from-discussion went to genius-designer instead of genius-specs",
+        "task-5: architecture definition had no-skill match (fixed architect description)",
+        "task-21: Stripe subscription billing went to genius-dev-api instead of genius-dev-backend"
+      ],
+      "experiments": [
+        {
+          "id": "fix-routing-4-failures",
+          "date": "2026-03-17",
+          "commit": "c438633",
+          "description": "Added disambiguation rules for 4 common confusion pairs. Updated architect/dev-backend/dev-api/specs descriptions with precise triggers and negative examples.",
+          "estimated_gain": "+6.7% (4/30 tasks fixed)",
+          "result": "merged"
+        }
+      ]
+    },
+    "2-playground-content": {
+      "content_accuracy": null,
+      "orphan_files": null,
+      "baseline_date": null
+    },
+    "3-playground-design": {
+      "lighthouse_avg": null,
+      "design_coherence": null,
+      "baseline_date": "2026-03-13",
+      "notes": "design-tokens.css migrated all 18+ templates in v18.0"
+    },
+    "4-orchestration": {
+      "chain_completion": null,
+      "manual_interventions": null,
+      "baseline_date": null
+    },
+    "5-skill-quality": {
+      "build_success_rate": null,
+      "specificity_avg": null,
+      "baseline_date": null
+    },
+    "6-context-efficiency": {
+      "avg_tokens_per_task": null,
+      "baseline_date": "2026-03-13",
+      "notes": "Context reduced ~30KB in v18.0 (0 files over 10KB, was 10)"
+    }
+  },
+  "endurance": {
+    "phase1_accuracy": null,
+    "phase2_accuracy": null,
+    "phase3_accuracy": "0% pre-fix (postCompactionSections broken) → ~80% post-fix (v18.0)",
+    "compaction_triggered_at_task": null
+  }
+}

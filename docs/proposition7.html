@@ -4,1074 +4,228 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genius Team — From Idea to Launch</title>
-<meta name="description" content="The story of building something real with zero coding. 31 AI agents take you from idea to launch.">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="description" content="Follow the journey of building a real product with 42 AI agents. From first spark to launch day — no coding required.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
-/* ═══════════════════════════════════════════════════════════
-   RESET & FOUNDATION
-   ═══════════════════════════════════════════════════════════ */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { overflow-x: hidden; scroll-behavior: auto; }
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-body {
-  font-family: 'Sora', sans-serif;
-  background: #08080c;
-  color: #fff;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:'Sora',sans-serif;background:#050510;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+:root{--blue:#4f6ef7;--cyan:#22d3ee;--green:#34d399;--dim:rgba(255,255,255,.4);--subtle:rgba(255,255,255,.06);--surface:rgba(255,255,255,.03)}
+::selection{background:rgba(79,110,247,.3);color:#fff}
 
-:root {
-  --blue: #4f6ef7;
-  --cyan: #22d3ee;
-  --emerald: #34d399;
-  --dim: rgba(255,255,255,0.4);
-  --subtle: rgba(255,255,255,0.06);
-  --surface: rgba(255,255,255,0.03);
-}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,16,.6);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--subtle);transition:all .4s}
+.nav.scrolled{background:rgba(5,5,16,.92)}
+.nav-logo{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.6rem;color:#fff;text-decoration:none}
+.nav-logo .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.4}}
+.nav-right{display:flex;align-items:center;gap:1.8rem}
+.nav-right a{color:var(--dim);text-decoration:none;font-size:.82rem;font-weight:500;transition:color .25s}
+.nav-right a:hover{color:#fff}
+.nav-btn{padding:.5rem 1.4rem!important;border-radius:100px;background:var(--blue)!important;color:#fff!important;font-weight:600!important;font-size:.82rem!important;border:none;cursor:pointer;transition:all .3s!important;font-family:'Sora',sans-serif}
+.nav-btn:hover{box-shadow:0 0 28px rgba(79,110,247,.4);transform:translateY(-1px)}
 
-::selection { background: rgba(79,110,247,0.3); color: #fff; }
+/* HERO */
+.hero{height:70vh;min-height:440px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;padding:6rem 2rem 4rem}
+.hero-bg{position:absolute;inset:0;background:url('img/hero-brain.jpg') center/cover no-repeat;opacity:.15}
+.hero-overlay{position:absolute;inset:0;background:rgba(5,5,16,.7)}
+.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(79,110,247,.1),transparent 70%),linear-gradient(to bottom,transparent 50%,#050510)}
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero h1{font-size:clamp(2.8rem,7vw,5rem);font-weight:800;line-height:1.08;letter-spacing:-.04em;margin-bottom:1.2rem}
+.hero h1 .w{display:inline-block;opacity:0;transform:translateY(50px)}
+.hero-sub{font-size:clamp(1rem,2vw,1.15rem);color:var(--dim);max-width:520px;margin:0 auto;line-height:1.7;font-weight:300;opacity:0}
 
-/* ═══════════════════════════════════════════════════════════
-   FIXED NAV — TOP
-   ═══════════════════════════════════════════════════════════ */
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 1rem 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(8,8,12,0.6);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid var(--subtle);
-  transition: all 0.4s ease;
-}
-.nav.scrolled { background: rgba(8,8,12,0.92); }
-.nav-logo {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #fff;
-  text-decoration: none;
-}
-.nav-logo .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--emerald);
-  box-shadow: 0 0 8px var(--emerald);
-  animation: navPulse 2.5s ease infinite;
-}
-@keyframes navPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.4; }
-}
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1.8rem;
-}
-.nav-right a {
-  color: var(--dim);
-  text-decoration: none;
-  font-size: 0.82rem;
-  font-weight: 500;
-  transition: color 0.25s ease;
-}
-.nav-right a:hover { color: #fff; }
-.nav-btn {
-  padding: 0.5rem 1.4rem !important;
-  border-radius: 100px;
-  background: var(--blue) !important;
-  color: #fff !important;
-  font-weight: 600 !important;
-  font-size: 0.82rem !important;
-  transition: all 0.3s ease !important;
-  border: none;
-  cursor: pointer;
-}
-.nav-btn:hover {
-  box-shadow: 0 0 28px rgba(79,110,247,0.4);
-  transform: translateY(-1px);
-}
+/* TIMELINE */
+.tl-section{padding:5rem 2rem 6rem;position:relative}
+.tl-heading{text-align:center;margin-bottom:4rem}
+.tl-heading .label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--blue);margin-bottom:.8rem}
+.tl-heading h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.timeline{position:relative;max-width:1000px;margin:0 auto;padding:2rem 0}
+.tl-track{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(79,110,247,.12);transform:translateX(-50%)}
+.tl-fill{position:absolute;left:50%;top:0;width:2px;height:0;background:linear-gradient(to bottom,var(--blue),var(--cyan),var(--green));transform:translateX(-50%);box-shadow:0 0 12px rgba(79,110,247,.25)}
+.tl-node{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-bottom:4rem;position:relative}
+.tl-node:last-child{margin-bottom:0}
+.tl-node::after{content:'';position:absolute;left:50%;top:50%;width:14px;height:14px;background:var(--blue);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px rgba(79,110,247,.4);z-index:2}
+.tl-node::before{content:'';position:absolute;left:50%;top:50%;width:28px;height:28px;border-radius:50%;border:1px solid rgba(79,110,247,.2);transform:translate(-50%,-50%);z-index:1}
+.tl-text{padding:0 1rem}
+.tl-text .step{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.tl-text .ico{font-size:1.1rem}
+.tl-text h3{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.2}
+.tl-text p{font-size:.95rem;color:var(--dim);line-height:1.7;font-weight:300}
+.tl-node:nth-child(odd) .tl-text{text-align:right}
+.tl-node:nth-child(odd) .tl-text .step{justify-content:flex-end}
+.tl-node:nth-child(even) .tl-text{order:2;text-align:left}
+.tl-node:nth-child(even) .tl-img{order:1}
+.tl-img{border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4);border:1px solid var(--subtle)}
+.tl-img img{width:100%;height:260px;object-fit:cover;display:block;will-change:transform}
 
-/* ═══════════════════════════════════════════════════════════
-   HERO — 70vh, COMPACT
-   ═══════════════════════════════════════════════════════════ */
-.hero {
-  height: 70vh;
-  min-height: 440px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  padding: 6rem 2rem 4rem;
-}
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: url('img/hero-brain.jpg') center/cover no-repeat;
-  opacity: 0.18;
-}
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(8,8,12,0.75);
-}
-.hero-gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 40%, rgba(79,110,247,0.1), transparent 70%),
-    linear-gradient(to bottom, transparent 50%, #08080c);
-}
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 800px;
-}
-.hero h1 {
-  font-size: clamp(2.8rem, 7vw, 5rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-  margin-bottom: 1.2rem;
-}
-.hero h1 .word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(50px);
-}
-.hero-sub {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  color: var(--dim);
-  max-width: 520px;
-  margin: 0 auto;
-  line-height: 1.7;
-  font-weight: 300;
-  opacity: 0;
-}
+/* SKILLS */
+.skills{padding:6rem 2rem;position:relative}
+.skills::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 20%,rgba(79,110,247,.05),transparent);pointer-events:none}
+.skills-inner{max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.skills-head{text-align:center;margin-bottom:3.5rem}
+.skills-head .label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--blue);margin-bottom:.8rem}
+.skills-head h2{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.skills-head h2 .accent{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.sk{padding:1.8rem;border-radius:16px;background:var(--surface);border:1px solid var(--subtle);transition:all .45s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
+.sk::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,110,247,.06),transparent 60%);opacity:0;transition:opacity .45s}
+.sk:hover{border-color:rgba(79,110,247,.2);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.sk:hover::before{opacity:1}
+.sk-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;position:relative;z-index:1}
+.sk-top .e{font-size:1.3rem}.sk-top h3{font-size:1rem;font-weight:700}
+.sk-top .ct{margin-left:auto;font-size:.7rem;font-weight:600;color:var(--blue);background:rgba(79,110,247,.1);padding:.15rem .5rem;border-radius:100px}
+.sk .pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem;position:relative;z-index:1}
+.sk .pill{padding:.18rem .55rem;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:.68rem;color:rgba(255,255,255,.45)}
+.sk .desc{font-size:.82rem;color:var(--dim);line-height:1.5;font-weight:300;position:relative;z-index:1}
 
-/* ═══════════════════════════════════════════════════════════
-   TIMELINE SECTION
-   ═══════════════════════════════════════════════════════════ */
-.timeline-section {
-  padding: 5rem 2rem 6rem;
-  position: relative;
-}
-.timeline-section-heading {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-.timeline-section-heading .label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--blue);
-  margin-bottom: 0.8rem;
-}
-.timeline-section-heading h2 {
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-.timeline {
-  position: relative;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 4rem 0;
-}
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, transparent, var(--blue) 15%, var(--cyan) 50%, var(--blue) 85%, transparent);
-  transform: translateX(-50%);
-  opacity: 0.6;
-  box-shadow: 0 0 12px rgba(79,110,247,0.15);
-}
+/* CTA */
+.cta{padding:6rem 2rem;text-align:center;position:relative}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 55% at 50% 50%,rgba(79,110,247,.07),transparent);pointer-events:none}
+.cta-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+.cta-inner h2{font-size:clamp(2.5rem,6vw,4.2rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:1.2rem}
+.cta-inner h2 .grad{background:linear-gradient(135deg,var(--blue),var(--cyan),var(--green));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gShift 4s ease infinite}
+@keyframes gShift{0%,100%{background-position:0% center}50%{background-position:200% center}}
+.cta-sub{font-size:1.05rem;color:var(--dim);margin-bottom:2.2rem;font-weight:300;line-height:1.6}
+.cmd{display:inline-flex;align-items:center;gap:1.5rem;background:var(--surface);border:1px solid var(--subtle);border-radius:14px;padding:1.1rem 2rem;font-family:'SFMono-Regular','Consolas',monospace;font-size:.92rem;color:var(--green);cursor:pointer;transition:all .4s;margin-bottom:1.5rem}
+.cmd:hover{border-color:var(--blue);box-shadow:0 0 40px rgba(79,110,247,.1)}
+.cmd .hint{font-family:'Sora',sans-serif;font-size:.7rem;color:var(--dim)}
+.cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+.btn-p{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 2rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:.9rem;border:none;cursor:pointer;text-decoration:none;transition:all .35s;font-family:'Sora',sans-serif}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(79,110,247,.35)}
+.btn-o{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 2rem;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#fff;font-weight:500;font-size:.9rem;cursor:pointer;text-decoration:none;transition:all .35s;font-family:'Sora',sans-serif}
+.btn-o:hover{border-color:var(--blue);background:rgba(79,110,247,.06)}
 
-/* Timeline Nodes */
-.tl-node {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-  margin-bottom: 4rem;
-  position: relative;
-}
-.tl-node:last-child { margin-bottom: 0; }
-.tl-node::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  background: var(--blue);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 15px rgba(79,110,247,0.4), 0 0 40px rgba(79,110,247,0.15);
-  z-index: 2;
-}
-.tl-node::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid rgba(79,110,247,0.2);
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
+/* FOOTER */
+footer{padding:2.5rem;border-top:1px solid var(--subtle);display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:rgba(255,255,255,.25)}
+footer a{color:rgba(255,255,255,.25);text-decoration:none;transition:color .2s}footer a:hover{color:var(--blue)}
+.foot-links{display:flex;gap:1.5rem}
 
-/* Text blocks */
-.tl-text {
-  padding: 0 1rem;
-}
-.tl-text .node-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--cyan);
-  margin-bottom: 0.6rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.tl-text .node-emoji {
-  font-size: 1.1rem;
-}
-.tl-text h3 {
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.6rem;
-  line-height: 1.2;
-}
-.tl-text p {
-  font-size: 0.95rem;
-  color: var(--dim);
-  line-height: 1.7;
-  font-weight: 300;
-}
+/* PROP NAV */
+.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.3rem;z-index:100;background:rgba(5,5,16,.88);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--subtle);border-radius:100px;padding:.3rem}
+.prop-nav a{padding:.38rem .85rem;border-radius:100px;color:rgba(255,255,255,.3);text-decoration:none;font-size:.72rem;font-weight:500;transition:all .3s}
+.prop-nav a:hover{color:#fff}.prop-nav a.active{background:var(--blue);color:#fff}
 
-/* Odd nodes: text RIGHT-aligned on left, image on right */
-.tl-node:nth-child(odd) .tl-text {
-  text-align: right;
+/* MOBILE */
+@media(max-width:768px){
+.nav{padding:.9rem 1.2rem}.nav-right .hide-m{display:none}.nav-right{gap:.8rem}
+.hero{height:60vh;min-height:380px;padding:5rem 1.5rem 3rem}.hero h1{font-size:2.4rem}
+.timeline::before,.tl-track,.tl-fill{left:10%!important}
+.tl-node{grid-template-columns:1fr;gap:1.2rem;margin-bottom:3rem;padding-left:calc(10% + 24px)}
+.tl-node::after,.tl-node::before{left:10%;top:0;transform:translate(-50%,0)}
+.tl-node:nth-child(odd) .tl-text,.tl-node:nth-child(even) .tl-text{text-align:left;order:2}
+.tl-node:nth-child(odd) .tl-text .step,.tl-node:nth-child(even) .tl-text .step{justify-content:flex-start}
+.tl-node .tl-img{order:1}.tl-node .tl-text{order:2}.tl-img img{height:200px}
+.skills-grid{grid-template-columns:1fr;gap:.8rem}
+footer{flex-direction:column;gap:.8rem;text-align:center}
+.cmd{flex-direction:column;gap:.6rem;font-size:.78rem;padding:1rem 1.2rem}
 }
-.tl-node:nth-child(odd) .tl-text .node-label {
-  justify-content: flex-end;
-}
-
-/* Even nodes: image on left, text LEFT-aligned on right */
-.tl-node:nth-child(even) .tl-text {
-  order: 2;
-  text-align: left;
-}
-.tl-node:nth-child(even) .tl-img {
-  order: 1;
-}
-
-/* Image blocks */
-.tl-img {
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  border: 1px solid var(--subtle);
-}
-.tl-img img {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  display: block;
-  will-change: transform;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   SKILLS SECTION
-   ═══════════════════════════════════════════════════════════ */
-.skills-section {
-  padding: 6rem 2rem;
-  position: relative;
-}
-.skills-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 50% 40% at 50% 20%, rgba(79,110,247,0.05), transparent);
-  pointer-events: none;
-}
-.skills-inner {
-  max-width: 1000px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-.skills-heading {
-  text-align: center;
-  margin-bottom: 3.5rem;
-}
-.skills-heading .label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--blue);
-  margin-bottom: 0.8rem;
-}
-.skills-heading h2 {
-  font-size: clamp(2rem, 4.5vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-.skills-heading h2 .accent {
-  background: linear-gradient(135deg, var(--blue), var(--cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.2rem;
-}
-.skill-card {
-  padding: 1.8rem;
-  border-radius: 16px;
-  background: var(--surface);
-  border: 1px solid var(--subtle);
-  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-}
-.skill-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(79,110,247,0.06), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.45s ease;
-}
-.skill-card:hover {
-  border-color: rgba(79,110,247,0.2);
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-}
-.skill-card:hover::before { opacity: 1; }
-.skill-card-head {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 1;
-}
-.skill-card-head .emoji { font-size: 1.3rem; }
-.skill-card-head h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-.skill-card-head .count {
-  margin-left: auto;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--blue);
-  background: rgba(79,110,247,0.1);
-  padding: 0.15rem 0.5rem;
-  border-radius: 100px;
-}
-.skill-card .pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-bottom: 0.8rem;
-  position: relative;
-  z-index: 1;
-}
-.skill-card .pill {
-  padding: 0.18rem 0.55rem;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  font-size: 0.68rem;
-  color: rgba(255,255,255,0.45);
-  font-weight: 400;
-}
-.skill-card .desc {
-  font-size: 0.82rem;
-  color: var(--dim);
-  line-height: 1.5;
-  font-weight: 300;
-  position: relative;
-  z-index: 1;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   CTA SECTION
-   ═══════════════════════════════════════════════════════════ */
-.cta-section {
-  padding: 6rem 2rem;
-  text-align: center;
-  position: relative;
-}
-.cta-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 45% 55% at 50% 50%, rgba(79,110,247,0.07), transparent);
-  pointer-events: none;
-}
-.cta-content {
-  position: relative;
-  z-index: 1;
-  max-width: 700px;
-  margin: 0 auto;
-}
-.cta-content h2 {
-  font-size: clamp(2.5rem, 6vw, 4.2rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  margin-bottom: 1.2rem;
-}
-.cta-content h2 .gradient-text {
-  background: linear-gradient(135deg, var(--blue), var(--cyan), var(--emerald));
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientShift 4s ease infinite;
-}
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% center; }
-  50% { background-position: 200% center; }
-}
-.cta-content .cta-sub {
-  font-size: 1.05rem;
-  color: var(--dim);
-  margin-bottom: 2.2rem;
-  font-weight: 300;
-  line-height: 1.6;
-}
-.cmd-block {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--subtle);
-  border-radius: 14px;
-  padding: 1.1rem 2rem;
-  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
-  font-size: 0.92rem;
-  color: var(--emerald);
-  cursor: pointer;
-  transition: all 0.4s ease;
-  margin-bottom: 1.5rem;
-}
-.cmd-block:hover {
-  border-color: var(--blue);
-  box-shadow: 0 0 40px rgba(79,110,247,0.1);
-}
-.cmd-block .hint {
-  font-family: 'Sora', sans-serif;
-  font-size: 0.7rem;
-  color: var(--dim);
-}
-.cta-buttons {
-  display: flex;
-  gap: 0.8rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-}
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 2rem;
-  border-radius: 100px;
-  background: var(--blue);
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.35s ease;
-  font-family: 'Sora', sans-serif;
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 35px rgba(79,110,247,0.35);
-}
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 2rem;
-  border-radius: 100px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: transparent;
-  color: #fff;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.35s ease;
-  font-family: 'Sora', sans-serif;
-}
-.btn-outline:hover {
-  border-color: var(--blue);
-  background: rgba(79,110,247,0.06);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════════════════════ */
-footer {
-  padding: 2.5rem 2.5rem;
-  border-top: 1px solid var(--subtle);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.25);
-}
-footer a {
-  color: rgba(255,255,255,0.25);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-footer a:hover { color: var(--blue); }
-.footer-links {
-  display: flex;
-  gap: 1.5rem;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   FIXED PROP NAV — BOTTOM
-   ═══════════════════════════════════════════════════════════ */
-.prop-nav {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.3rem;
-  z-index: 100;
-  background: rgba(8,8,12,0.88);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--subtle);
-  border-radius: 100px;
-  padding: 0.3rem;
-}
-.prop-nav a {
-  padding: 0.38rem 0.85rem;
-  border-radius: 100px;
-  color: rgba(255,255,255,0.3);
-  text-decoration: none;
-  font-size: 0.72rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-.prop-nav a:hover { color: #fff; }
-.prop-nav a.active {
-  background: var(--blue);
-  color: #fff;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   RESPONSIVE — MOBILE (<768px)
-   ═══════════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .nav { padding: 0.9rem 1.2rem; }
-  .nav-right .nav-link-text { display: none; }
-  .nav-right { gap: 0.8rem; }
-
-  .hero { height: 60vh; min-height: 380px; padding: 5rem 1.5rem 3rem; }
-  .hero h1 { font-size: 2.4rem; }
-
-  /* Timeline: line moves to left, all content stacks */
-  .timeline::before {
-    left: 10%;
-  }
-  .tl-node {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-    margin-bottom: 3rem;
-    padding-left: calc(10% + 24px);
-  }
-  .tl-node::after {
-    left: 10%;
-    top: 0;
-    transform: translate(-50%, 0);
-  }
-  .tl-node::before {
-    left: 10%;
-    top: 0;
-    transform: translate(-50%, 0);
-  }
-  .tl-node:nth-child(odd) .tl-text,
-  .tl-node:nth-child(even) .tl-text {
-    text-align: left;
-    order: 2;
-  }
-  .tl-node:nth-child(odd) .tl-text .node-label,
-  .tl-node:nth-child(even) .tl-text .node-label {
-    justify-content: flex-start;
-  }
-  .tl-node:nth-child(even) .tl-img {
-    order: 1;
-  }
-  .tl-node .tl-img {
-    order: 1;
-  }
-  .tl-node .tl-text {
-    order: 2;
-  }
-  .tl-img img { height: 200px; }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-
-  footer { flex-direction: column; gap: 0.8rem; text-align: center; }
-
-  .cmd-block {
-    flex-direction: column;
-    gap: 0.6rem;
-    font-size: 0.78rem;
-    padding: 1rem 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero h1 { font-size: 2rem; }
-  .tl-text h3 { font-size: 1.3rem; }
-  .cta-content h2 { font-size: 2rem; }
-  .cta-buttons { flex-direction: column; align-items: center; }
-}
+@media(max-width:480px){.hero h1{font-size:2rem}.tl-text h3{font-size:1.3rem}.cta-inner h2{font-size:2rem}.cta-btns{flex-direction:column;align-items:center}}
 </style>
 </head>
 <body>
 
-<!-- ═══ FIXED NAV — TOP ═══ -->
 <nav class="nav" id="mainNav">
   <a href="#" class="nav-logo"><span class="dot"></span> Genius Team</a>
   <div class="nav-right">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="nav-link-text">GitHub</a>
+    <a href="https://github.com/anthropics/claude-code" target="_blank" class="hide-m">GitHub</a>
     <button class="nav-btn" onclick="GeniusWizard.open()">Get Started</button>
   </div>
 </nav>
 
-<!-- ═══ HERO — 70vh, COMPACT ═══ -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-gradient"></div>
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-overlay"></div><div class="hero-grad"></div>
   <div class="hero-content">
-    <h1 id="heroTitle">
-      <span class="word">From</span>
-      <span class="word">Idea</span>
-      <span class="word">to</span>
-      <span class="word">Launch</span>
-    </h1>
-    <p class="hero-sub" id="heroSub">The story of building something real — with zero coding.</p>
+    <h1><span class="w">From</span> <span class="w">Idea</span> <span class="w">to</span> <span class="w">Launch</span></h1>
+    <p class="hero-sub">The story of building something real — with 42 AI agents and zero coding.</p>
   </div>
 </section>
 
-<!-- ═══ TIMELINE SECTION ═══ -->
-<section class="timeline-section" id="timeline">
-  <div class="timeline-section-heading">
-    <div class="label">The Journey</div>
-    <h2>Six steps. One product. Zero code.</h2>
-  </div>
-
+<section class="tl-section" id="timeline">
+  <div class="tl-heading"><div class="label">The Journey</div><h2>Six steps. One product. Zero code.</h2></div>
   <div class="timeline">
+    <div class="tl-track"></div><div class="tl-fill" id="tlFill"></div>
 
-    <!-- Node 1 — The Spark -->
-    <div class="tl-node">
-      <div class="tl-text">
-        <div class="node-label"><span class="node-emoji">&#128161;</span> Step 01</div>
-        <h3>The Spark</h3>
-        <p>It starts with a conversation. Tell your AI team what you want to build — no technical knowledge needed.</p>
-      </div>
-      <div class="tl-img">
-        <img src="img/workflow-steps.jpg" alt="Workflow visualization" loading="lazy">
-      </div>
-    </div>
+    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128161;</span> Step 01</div><h3>The Spark</h3><p>It starts with a conversation. Tell your AI team what you want to build — no technical knowledge needed.</p></div><div class="tl-img"><img src="img/hero-brain.jpg" alt="Brainstorm" loading="lazy"></div></div>
 
-    <!-- Node 2 — Research -->
-    <div class="tl-node">
-      <div class="tl-text">
-        <div class="node-label"><span class="node-emoji">&#128269;</span> Step 02</div>
-        <h3>Research</h3>
-        <p>Your market analyst investigates competitors, validates the idea, and finds your unique angle.</p>
-      </div>
-      <div class="tl-img">
-        <img src="img/before-after.jpg" alt="Before and after comparison" loading="lazy">
-      </div>
-    </div>
+    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128269;</span> Step 02</div><h3>Research</h3><p>Your market analyst investigates competitors, validates the idea, and finds your unique angle.</p></div><div class="tl-img"><img src="img/workflow-steps.jpg" alt="Research flow" loading="lazy"></div></div>
 
-    <!-- Node 3 — Blueprint -->
-    <div class="tl-node">
-      <div class="tl-text">
-        <div class="node-label"><span class="node-emoji">&#128208;</span> Step 03</div>
-        <h3>Blueprint</h3>
-        <p>Detailed specifications, design system, and architecture — exactly how you want it, reviewed and approved.</p>
-      </div>
-      <div class="tl-img">
-        <img src="img/holographic-ui.jpg" alt="Holographic UI design" loading="lazy">
-      </div>
-    </div>
+    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128208;</span> Step 03</div><h3>Design</h3><p>Brand, layout, and user flows — all crafted and presented for your approval before a single line is written.</p></div><div class="tl-img"><img src="img/app-mockup.jpg" alt="Design preview" loading="lazy"></div></div>
 
-    <!-- Node 4 — Build -->
-    <div class="tl-node">
-      <div class="tl-text">
-        <div class="node-label"><span class="node-emoji">&#9889;</span> Step 04</div>
-        <h3>Build</h3>
-        <p>31 agents work in parallel. Frontend, backend, API, database — all coordinated automatically.</p>
-      </div>
-      <div class="tl-img">
-        <img src="img/app-mockup.jpg" alt="Application mockup" loading="lazy">
-      </div>
-    </div>
+    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#9889;</span> Step 04</div><h3>Build</h3><p>42 agents work in parallel. Frontend, backend, API, database — all coordinated automatically.</p></div><div class="tl-img"><img src="img/skill-categories.jpg" alt="Build process" loading="lazy"></div></div>
 
-    <!-- Node 5 — Polish -->
-    <div class="tl-node">
-      <div class="tl-text">
-        <div class="node-label"><span class="node-emoji">&#128737;&#65039;</span> Step 05</div>
-        <h3>Polish</h3>
-        <p>Every line reviewed. Security audited. Performance optimized. Nothing ships until it's perfect.</p>
-      </div>
-      <div class="tl-img">
-        <img src="img/skill-categories.jpg" alt="Skill categories overview" loading="lazy">
-      </div>
-    </div>
+    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128737;&#65039;</span> Step 05</div><h3>Test</h3><p>Every line reviewed. Security audited. Performance optimized. Nothing ships until it passes every check.</p></div><div class="tl-img"><img src="img/workflow-steps.jpg" alt="QA testing" loading="lazy"></div></div>
 
-    <!-- Node 6 — Launch -->
-    <div class="tl-node">
-      <div class="tl-text">
-        <div class="node-label"><span class="node-emoji">&#128640;</span> Step 06</div>
-        <h3>Launch</h3>
-        <p>Deploy with one command. Analytics, SEO, monitoring — your product goes live fully equipped.</p>
-      </div>
-      <div class="tl-img">
-        <img src="img/agent-constellation.jpg" alt="Agent constellation" loading="lazy">
-      </div>
-    </div>
-
+    <div class="tl-node"><div class="tl-text"><div class="step"><span class="ico">&#128640;</span> Step 06</div><h3>Launch</h3><p>Deploy with one command. Analytics, SEO, monitoring — your product goes live fully equipped.</p></div><div class="tl-img"><img src="img/hero-brain.jpg" alt="Launch" loading="lazy"></div></div>
   </div>
 </section>
 
-<!-- ═══ SKILLS SECTION ═══ -->
-<section class="skills-section" id="skills">
+<section class="skills" id="skills">
   <div class="skills-inner">
-    <div class="skills-heading">
-      <div class="label">The Team</div>
-      <h2>31 Skills. 6 Categories. <span class="accent">One Team.</span></h2>
-    </div>
-
+    <div class="skills-head"><div class="label">The Team</div><h2>42 Skills. 6 Categories. <span class="accent">One Team.</span></h2></div>
     <div class="skills-grid">
-
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <span class="emoji">&#128161;</span>
-          <h3>Ideation</h3>
-          <span class="count">5</span>
-        </div>
-        <div class="pills">
-          <span class="pill">Interviewer</span>
-          <span class="pill">Market Analyst</span>
-          <span class="pill">Specs Writer</span>
-          <span class="pill">Designer</span>
-          <span class="pill">Integration Guide</span>
-        </div>
-        <div class="desc">From napkin sketch to crystal-clear specifications</div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <span class="emoji">&#9889;</span>
-          <h3>Development</h3>
-          <span class="count">7</span>
-        </div>
-        <div class="pills">
-          <span class="pill">Dev Router</span>
-          <span class="pill">Frontend</span>
-          <span class="pill">Backend</span>
-          <span class="pill">Mobile</span>
-          <span class="pill">Database</span>
-          <span class="pill">API</span>
-          <span class="pill">Orchestrator</span>
-        </div>
-        <div class="desc">Full-stack implementation with specialized agents</div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <span class="emoji">&#128737;&#65039;</span>
-          <h3>Quality</h3>
-          <span class="count">5</span>
-        </div>
-        <div class="pills">
-          <span class="pill">QA Micro</span>
-          <span class="pill">Full QA</span>
-          <span class="pill">Code Review</span>
-          <span class="pill">Security Audit</span>
-          <span class="pill">Debugger</span>
-        </div>
-        <div class="desc">Every line reviewed, tested, and hardened</div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <span class="emoji">&#128200;</span>
-          <h3>Growth</h3>
-          <span class="count">5</span>
-        </div>
-        <div class="pills">
-          <span class="pill">SEO</span>
-          <span class="pill">Analytics</span>
-          <span class="pill">Performance</span>
-          <span class="pill">Accessibility</span>
-          <span class="pill">Content</span>
-        </div>
-        <div class="desc">Built-in growth engine from day one</div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <span class="emoji">&#128640;</span>
-          <h3>Operations</h3>
-          <span class="count">4</span>
-        </div>
-        <div class="pills">
-          <span class="pill">Deployer</span>
-          <span class="pill">Experiments</span>
-          <span class="pill">i18n</span>
-          <span class="pill">Onboarding</span>
-        </div>
-        <div class="desc">Ship fast, experiment freely, scale globally</div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <span class="emoji">&#129504;</span>
-          <h3>Intelligence</h3>
-          <span class="count">5</span>
-        </div>
-        <div class="pills">
-          <span class="pill">Memory</span>
-          <span class="pill">Copywriter</span>
-          <span class="pill">Marketer</span>
-          <span class="pill">Team Optimizer</span>
-          <span class="pill">Docs</span>
-        </div>
-        <div class="desc">Your team gets smarter with every project</div>
-      </div>
-
+      <div class="sk"><div class="sk-top"><span class="e">&#128161;</span><h3>Ideation</h3><span class="ct">7</span></div><div class="pills"><span class="pill">Interviewer</span><span class="pill">Market Analyst</span><span class="pill">Specs</span><span class="pill">Designer</span><span class="pill">Marketer</span><span class="pill">Copywriter</span><span class="pill">Integration Guide</span></div><div class="desc">From napkin sketch to crystal-clear specifications</div></div>
+      <div class="sk"><div class="sk-top"><span class="e">&#9889;</span><h3>Development</h3><span class="ct">7</span></div><div class="pills"><span class="pill">Dev Router</span><span class="pill">Frontend</span><span class="pill">Backend</span><span class="pill">Mobile</span><span class="pill">Database</span><span class="pill">API</span><span class="pill">Orchestrator</span></div><div class="desc">Full-stack implementation with specialized agents</div></div>
+      <div class="sk"><div class="sk-top"><span class="e">&#128737;&#65039;</span><h3>Quality</h3><span class="ct">5</span></div><div class="pills"><span class="pill">QA Micro</span><span class="pill">Full QA</span><span class="pill">Code Review</span><span class="pill">Security</span><span class="pill">Debugger</span></div><div class="desc">Every line reviewed, tested, and hardened</div></div>
+      <div class="sk"><div class="sk-top"><span class="e">&#128200;</span><h3>Growth</h3><span class="ct">6</span></div><div class="pills"><span class="pill">SEO</span><span class="pill">Analytics</span><span class="pill">Performance</span><span class="pill">Accessibility</span><span class="pill">Content</span><span class="pill">Experiments</span></div><div class="desc">Built-in growth engine from day one</div></div>
+      <div class="sk"><div class="sk-top"><span class="e">&#128640;</span><h3>Operations</h3><span class="ct">5</span></div><div class="pills"><span class="pill">Deployer</span><span class="pill">i18n</span><span class="pill">Onboarding</span><span class="pill">Docs</span><span class="pill">Templates</span></div><div class="desc">Ship fast, scale globally, document everything</div></div>
+      <div class="sk"><div class="sk-top"><span class="e">&#129504;</span><h3>Intelligence</h3><span class="ct">12</span></div><div class="pills"><span class="pill">Memory</span><span class="pill">Architect</span><span class="pill">Reviewer</span><span class="pill">Team Optimizer</span><span class="pill">Dual Engine</span><span class="pill">Skill Creator</span></div><div class="desc">Your team gets smarter with every project</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ CTA SECTION ═══ -->
-<section class="cta-section" id="cta">
-  <div class="cta-content">
-    <h2>Start Building <span class="gradient-text">Today</span></h2>
+<section class="cta" id="cta">
+  <div class="cta-inner">
+    <h2>Start Building <span class="grad">Today</span></h2>
     <p class="cta-sub">One command away from your next product.</p>
-    <div class="cmd-block" onclick="navigator.clipboard.writeText('npx create-genius-app my-project'); this.querySelector('.hint').textContent='Copied!'">
-      <span>$ npx create-genius-app my-project</span>
-      <span class="hint">click to copy</span>
+    <div class="cmd" onclick="navigator.clipboard.writeText('npx create-genius-app my-project');this.querySelector('.hint').textContent='Copied!'">
+      <span>$ npx create-genius-app my-project</span><span class="hint">click to copy</span>
     </div>
-    <div class="cta-buttons">
-      <button class="btn-primary" onclick="GeniusWizard.open()">Getting Started</button>
-      <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-outline">Star on GitHub</a>
+    <div class="cta-btns">
+      <button class="btn-p" onclick="GeniusWizard.open()">Getting Started</button>
+      <a href="https://github.com/anthropics/claude-code" target="_blank" class="btn-o">Star on GitHub</a>
     </div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
-<footer>
-  <div>Genius Team &middot; 2026</div>
-  <div class="footer-links">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md" target="_blank">Changelog</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
-  </div>
-</footer>
+<footer><div>Genius Team &middot; 2026</div><div class="foot-links"><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a><a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md" target="_blank">Changelog</a><a href="https://github.com/anthropics/claude-code/blob/main/LICENSE" target="_blank">MIT License</a></div></footer>
 
-<!-- ═══ FIXED PROP NAV — BOTTOM ═══ -->
-<div class="prop-nav">
-  <a href="proposition1.html">P1</a>
-  <a href="proposition2.html">P2</a>
-  <a href="proposition3.html">P3</a>
-  <a href="proposition4.html">P4</a>
-  <a href="proposition5.html">P5</a>
-  <a href="proposition6.html">P6</a>
-  <a href="proposition7.html" class="active">P7</a>
-</div>
+<div class="prop-nav"><a href="proposition1.html">P1</a><a href="proposition2.html">P2</a><a href="proposition3.html">P3</a><a href="proposition4.html">P4</a><a href="proposition5.html">P5</a><a href="proposition6.html">P6</a><a href="proposition7.html" class="active">P7</a></div>
 
-<!-- ═══ SCRIPTS ═══ -->
 <script src="wizard.js"></script>
 <script>
 GeniusWizard.init();
-
-/* ═══ LENIS SMOOTH SCROLL ═══ */
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-});
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add(time => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
+const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
 gsap.registerPlugin(ScrollTrigger);
 
-/* ═══ NAV SCROLL STATE ═══ */
-window.addEventListener('scroll', () => {
-  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>60));
+
+/* Hero word reveal */
+const hTl=gsap.timeline({delay:.3});
+hTl.to('.hero .w',{opacity:1,y:0,duration:.9,stagger:.12,ease:'power3.out'}).to('.hero-sub',{opacity:1,duration:.8,ease:'power2.out'},'-=.3');
+
+/* Timeline fill on scroll */
+const fill=document.getElementById('tlFill'),tl=document.querySelector('.timeline');
+ScrollTrigger.create({trigger:tl,start:'top 70%',end:'bottom 30%',scrub:true,onUpdate:self=>{fill.style.height=(self.progress*100)+'%'}});
+
+/* Timeline nodes — slide in from sides + parallax images */
+gsap.utils.toArray('.tl-node').forEach((n,i)=>{
+  const even=i%2===1,txt=n.querySelector('.tl-text'),img=n.querySelector('.tl-img img');
+  gsap.from(txt,{x:even?60:-60,opacity:0,scrollTrigger:{trigger:n,start:'top 80%',end:'top 40%',scrub:true}});
+  gsap.from(n.querySelector('.tl-img'),{x:even?-40:40,opacity:0,scrollTrigger:{trigger:n,start:'top 82%',end:'top 45%',scrub:true}});
+  gsap.to(img,{yPercent:-15,ease:'none',scrollTrigger:{trigger:n,start:'top bottom',end:'bottom top',scrub:true}});
 });
 
-/* ═══ HERO ANIMATIONS ═══ */
-const heroTl = gsap.timeline({ delay: 0.3 });
-heroTl.to('.hero .word', {
-  opacity: 1,
-  y: 0,
-  duration: 0.9,
-  stagger: 0.12,
-  ease: 'power3.out'
-}).to('#heroSub', {
-  opacity: 1,
-  duration: 0.8,
-  ease: 'power2.out'
-}, '-=0.3');
+/* Skill cards stagger */
+gsap.from('.sk',{y:50,opacity:0,duration:.7,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:'.skills-grid',start:'top 75%'}});
 
-/* ═══ TIMELINE: FADE IN FROM SIDES + PARALLAX IMAGES ═══ */
-gsap.utils.toArray('.tl-node').forEach((node, i) => {
-  const isEven = i % 2 === 1;
-  const textEl = node.querySelector('.tl-text');
-  const imgEl = node.querySelector('.tl-img img');
-
-  // Text slides in from its side
-  gsap.from(textEl, {
-    x: isEven ? 60 : -60,
-    opacity: 0,
-    scrollTrigger: {
-      trigger: node,
-      start: 'top 80%',
-      end: 'top 40%',
-      scrub: true
-    }
-  });
-
-  // Image fades in with slight scale
-  gsap.from(node.querySelector('.tl-img'), {
-    x: isEven ? -40 : 40,
-    opacity: 0,
-    scrollTrigger: {
-      trigger: node,
-      start: 'top 82%',
-      end: 'top 45%',
-      scrub: true
-    }
-  });
-
-  // Parallax on images
-  gsap.to(imgEl, {
-    yPercent: -15,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: node,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true
-    }
-  });
-});
-
-// Timeline center dot glow pulse on scroll
-gsap.utils.toArray('.tl-node').forEach(node => {
-  gsap.fromTo(node, {
-    '--dot-glow': 0
-  }, {
-    '--dot-glow': 1,
-    scrollTrigger: {
-      trigger: node,
-      start: 'top 70%',
-      end: 'top 40%',
-      scrub: true
-    }
-  });
-});
-
-/* ═══ SKILL CARDS — STAGGER REVEAL ═══ */
-gsap.from('.skill-card', {
-  y: 50,
-  opacity: 0,
-  duration: 0.7,
-  stagger: 0.08,
-  ease: 'power3.out',
-  scrollTrigger: {
-    trigger: '.skills-grid',
-    start: 'top 75%'
-  }
-});
-
-/* ═══ CTA — REVEAL ═══ */
-const ctaTl = gsap.timeline({
-  scrollTrigger: {
-    trigger: '.cta-section',
-    start: 'top 65%'
-  }
-});
-ctaTl
-  .from('.cta-content h2', { y: 40, opacity: 0, duration: 0.7, ease: 'power3.out' })
-  .from('.cta-content .cta-sub', { y: 30, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3')
-  .from('.cmd-block', { y: 25, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.2')
-  .from('.cta-buttons', { y: 20, opacity: 0, duration: 0.5, ease: 'power3.out' }, '-=0.2');
-
-/* ═══ TIMELINE LINE DRAW ON SCROLL ═══ */
-gsap.fromTo('.timeline::before', {
-  scaleY: 0,
-  transformOrigin: 'top center'
-}, {
-  scaleY: 1,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '.timeline',
-    start: 'top 70%',
-    end: 'bottom 30%',
-    scrub: true
-  }
-});
+/* CTA reveal */
+const cTl=gsap.timeline({scrollTrigger:{trigger:'.cta',start:'top 65%'}});
+cTl.from('.cta-inner h2',{y:40,opacity:0,duration:.7,ease:'power3.out'}).from('.cta-sub',{y:30,opacity:0,duration:.6,ease:'power3.out'},'-=.3').from('.cmd',{y:25,opacity:0,duration:.6,ease:'power3.out'},'-=.2').from('.cta-btns',{y:20,opacity:0,duration:.5,ease:'power3.out'},'-=.2');
 </script>
 </body>
 </html>

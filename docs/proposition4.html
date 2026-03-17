@@ -3,781 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — Build Different</title>
-<meta name="description" content="Two perspectives. One powerful team. 31 AI specialists build your app while you describe it.">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Genius Team — Anyone Can Build</title>
+<meta name="description" content="42 AI agents. One command. Your idea, shipped. No code required.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
-/* ═══ RESET ═══ */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { overflow-x: hidden; }
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-body { font-family: 'Sora', sans-serif; background: #08080c; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+:root{--blue:#4f6ef7;--cyan:#22d3ee;--green:#34d399;--bg:#030308;--s:rgba(255,255,255,.03);--b:rgba(255,255,255,.07);--dim:rgba(255,255,255,.4);--f:'Sora',sans-serif}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:var(--f);background:var(--bg);color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+.grad{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-:root {
-  --blue: #4f6ef7;
-  --cyan: #22d3ee;
-  --emerald: #34d399;
-  --dim: rgba(255,255,255,0.4);
-  --subtle: rgba(255,255,255,0.06);
-  --surface: rgba(255,255,255,0.03);
-}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:all .4s}
+nav.scrolled{background:rgba(3,3,8,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--b)}
+.logo{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+.logo .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+.nav-cta{padding:.45rem 1.3rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:.82rem;cursor:pointer;border:none;font-family:var(--f);transition:all .3s}
+.nav-cta:hover{box-shadow:0 0 30px rgba(79,110,247,.35);transform:translateY(-1px)}
 
-a { text-decoration: none; color: inherit; }
-img { display: block; max-width: 100%; }
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url('img/hero-brain.jpg') center/cover;opacity:.12;filter:blur(1px)}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,var(--bg),transparent)}
+.hero-inner{position:relative;z-index:2;max-width:720px}
+.badge{display:inline-block;padding:.35rem 1.1rem;border-radius:100px;border:1px solid var(--b);background:var(--s);font-size:.72rem;font-weight:600;letter-spacing:.08em;color:var(--cyan);margin-bottom:1.5rem;text-transform:uppercase;opacity:0;transform:translateY(20px)}
+.hero h1{font-size:clamp(3rem,8vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.05em;margin-bottom:1.2rem;opacity:0;transform:translateY(30px)}
+.hero-sub{font-size:1.1rem;color:var(--dim);font-weight:300;line-height:1.7;max-width:480px;margin:0 auto 2rem;opacity:0;transform:translateY(20px)}
+.hero-cta{padding:.85rem 2.2rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:.95rem;border:none;cursor:pointer;font-family:var(--f);transition:all .35s;opacity:0;transform:translateY(20px)}
+.hero-cta:hover{box-shadow:0 12px 40px rgba(79,110,247,.35);transform:translateY(-2px)}
 
-/* ═══ FIXED NAV ═══ */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 1.1rem 3rem;
-  display: flex; justify-content: space-between; align-items: center;
-  transition: all 0.4s ease;
-}
-nav.scrolled {
-  background: rgba(8,8,12,0.82);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid var(--subtle);
-}
-.nav-logo {
-  font-size: 1.1rem; font-weight: 700;
-  display: flex; align-items: center; gap: 0.5rem;
-}
-.nav-logo .dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--emerald);
-  box-shadow: 0 0 12px var(--emerald);
-  animation: pulse 2.5s ease infinite;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
-}
-.nav-right { display: flex; gap: 1.8rem; align-items: center; }
-.nav-right a {
-  color: var(--dim); font-size: 0.85rem; font-weight: 500;
-  transition: color 0.25s;
-}
-.nav-right a:hover { color: #fff; }
-.nav-cta {
-  padding: 0.5rem 1.4rem !important;
-  border-radius: 100px;
-  background: var(--blue) !important;
-  color: #fff !important;
-  font-weight: 600 !important;
-  font-size: 0.85rem !important;
-  transition: all 0.3s !important;
-  cursor: pointer;
-}
-.nav-cta:hover {
-  box-shadow: 0 0 30px rgba(79,110,247,0.35);
-  transform: translateY(-1px);
-}
+/* SPLIT PARALLAX */
+.split{max-width:1140px;margin:0 auto;padding:3rem 2rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+.split-l{display:flex;flex-direction:column;gap:6rem;padding-top:2rem}
+.split-r{display:flex;flex-direction:column;gap:3rem;padding-top:4rem}
+.tb{opacity:0;transform:translateY(40px)}
+.tb .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;font-weight:600;color:var(--cyan);margin-bottom:.8rem}
+.tb h3{font-size:1.4rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.3}
+.tb p{font-size:.9rem;color:var(--dim);line-height:1.7;font-weight:300;max-width:400px}
+.iw{border-radius:14px;overflow:hidden;height:300px;position:relative;box-shadow:0 16px 50px rgba(0,0,0,.4),0 0 0 1px var(--b);opacity:0;transform:translateY(40px)}
+.iw img{width:100%;height:130%;object-fit:cover;position:absolute;top:-15%}
 
-/* ═══ HERO: SPLIT SCREEN ═══ */
-.hero {
-  min-height: 100vh; display: grid;
-  grid-template-columns: 1fr 1fr;
-  position: relative; overflow: hidden;
-}
-.hero-left {
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 8rem 5rem 6rem 6rem;
-  position: relative; z-index: 2;
-}
-.hero-title {
-  font-size: clamp(4rem, 8vw, 7.5rem);
-  font-weight: 800; line-height: 0.95;
-  letter-spacing: -0.05em;
-}
-.hero-title .line {
-  display: block; overflow: hidden;
-}
-.hero-title .line span {
-  display: inline-block;
-  opacity: 0; transform: translateY(100%);
-}
-.hero-title .line:nth-child(2) span {
-  background: linear-gradient(135deg, var(--blue), var(--cyan));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero-subtitle {
-  margin-top: 2rem;
-  font-size: 1.15rem; color: var(--dim);
-  font-weight: 300; line-height: 1.7;
-  max-width: 380px;
-  opacity: 0; transform: translateY(30px);
-}
-.hero-right {
-  position: relative; overflow: hidden;
-}
-.hero-right img {
-  width: 100%; height: 100%; object-fit: cover;
-  position: absolute; inset: 0;
-}
-.hero-right::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(79,110,247,0.3) 0%, rgba(34,211,238,0.12) 60%, transparent 100%);
-  z-index: 1;
-}
-.hero-right::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 120px; z-index: 2;
-  background: linear-gradient(to right, #08080c, transparent);
-}
-.hero-scroll-hint {
-  position: absolute; bottom: 2.5rem; left: 6rem;
-  display: flex; align-items: center; gap: 0.8rem;
-  color: var(--dim); font-size: 0.75rem;
-  font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-  opacity: 0; z-index: 3;
-}
-.hero-scroll-hint .line-anim {
-  width: 32px; height: 1px; background: var(--dim);
-  position: relative; overflow: hidden;
-}
-.hero-scroll-hint .line-anim::after {
-  content: ''; position: absolute; left: -100%; top: 0; width: 100%; height: 100%;
-  background: #fff;
-  animation: scrollLine 2s ease infinite;
-}
-@keyframes scrollLine {
-  0% { left: -100%; }
-  50% { left: 0; }
-  100% { left: 100%; }
-}
+/* SKILLS */
+.skills{max-width:1140px;margin:0 auto;padding:3rem 2rem 4rem}
+.skills-hd{text-align:center;margin-bottom:3rem}
+.skills-hd h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.04em;margin-bottom:.6rem}
+.skills-hd p{color:var(--dim);font-size:.95rem;font-weight:300}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.sc{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:1.5rem;transition:all .4s;position:relative;overflow:hidden;opacity:0;transform:translateY(30px)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,110,247,.3),transparent);opacity:0;transition:opacity .4s}
+.sc:hover{border-color:rgba(79,110,247,.2);background:rgba(79,110,247,.03);transform:translateY(-3px)}.sc:hover::before{opacity:1}
+.sc .ico{font-size:1.4rem;margin-bottom:.7rem;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,.04)}
+.sc h4{font-size:.95rem;font-weight:700;margin-bottom:.2rem}.sc .cnt{font-size:.68rem;color:var(--cyan);font-weight:600;margin-bottom:.5rem;letter-spacing:.05em}
+.sc .lst{font-size:.75rem;color:rgba(255,255,255,.3);line-height:1.6;margin-bottom:.6rem}
+.sc .dsc{font-size:.78rem;color:var(--dim);font-weight:300;line-height:1.5;font-style:italic}
 
-/* ═══ SPLIT PARALLAX SECTION ═══ */
-.split-parallax {
-  max-width: 1200px; margin: 0 auto;
-  padding: 6rem 2rem;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  position: relative;
-}
-.split-left { display: flex; flex-direction: column; gap: 8rem; padding-top: 2rem; }
-.split-right { display: flex; flex-direction: column; gap: 4rem; padding-top: 4rem; }
+/* CTA */
+.cta{padding:4rem 2rem 3rem;text-align:center;position:relative}
+.cta::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(79,110,247,.06),transparent 70%);pointer-events:none}
+.cta h2{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.04em;margin-bottom:1rem;background:linear-gradient(135deg,#fff,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transform:translateY(25px)}
+.cta .sub{color:var(--dim);font-size:.95rem;max-width:400px;margin:0 auto 2rem;line-height:1.7;font-weight:300;opacity:0;transform:translateY(20px)}
+.install{max-width:480px;margin:0 auto 1.8rem;background:var(--s);border:1px solid var(--b);border-radius:12px;padding:1.1rem 1.5rem;font-family:'SF Mono','Fira Code',monospace;font-size:.85rem;color:rgba(255,255,255,.7);position:relative;text-align:left;opacity:0;transform:translateY(20px)}
+.install .p{color:var(--green)}.install .c{color:#fff}.install .fl{color:var(--blue)}
+.install .cp{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);border:1px solid var(--b);color:var(--dim);padding:.3rem .7rem;border-radius:7px;font-size:.7rem;cursor:pointer;font-family:var(--f);transition:all .25s}
+.install .cp:hover{background:rgba(79,110,247,.15);color:#fff;border-color:rgba(79,110,247,.3)}
+.cta-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(20px)}
+.btn-p{padding:.75rem 2rem;border-radius:100px;background:var(--blue);color:#fff;font-weight:600;font-size:.9rem;border:none;cursor:pointer;font-family:var(--f);transition:all .35s}
+.btn-p:hover{box-shadow:0 10px 35px rgba(79,110,247,.35);transform:translateY(-2px)}
+.btn-g{padding:.75rem 2rem;border-radius:100px;border:1px solid rgba(255,255,255,.1);background:0 0;color:#fff;font-weight:500;font-size:.9rem;cursor:pointer;font-family:var(--f);transition:all .3s}
+.btn-g:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.03)}
 
-/* Text blocks */
-.text-block { opacity: 0; transform: translateY(40px); }
-.text-block .label {
-  font-size: 0.7rem; text-transform: uppercase;
-  letter-spacing: 0.15em; font-weight: 600;
-  color: var(--cyan); margin-bottom: 1rem;
-}
-.text-block h3 {
-  font-size: 1.5rem; font-weight: 700;
-  letter-spacing: -0.02em; margin-bottom: 1rem;
-  line-height: 1.3;
-}
-.text-block p {
-  font-size: 0.95rem; color: var(--dim);
-  line-height: 1.8; font-weight: 300;
-  max-width: 440px;
-}
+/* FOOTER */
+footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--b);max-width:1140px;margin:0 auto}
+footer .fl{font-size:.78rem;color:rgba(255,255,255,.2)}footer .fr{display:flex;gap:1.8rem}
+footer .fr a{font-size:.78rem;color:rgba(255,255,255,.25);transition:color .25s}footer .fr a:hover{color:#fff}
 
-/* Image containers with overflow hidden for parallax */
-.img-wrap {
-  border-radius: 16px; overflow: hidden;
-  height: 350px; position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px var(--subtle);
-  opacity: 0; transform: translateY(40px);
-}
-.img-wrap img {
-  width: 100%; height: 130%; object-fit: cover;
-  position: absolute; top: -15%;
-  transition: none;
-}
+/* PROP NAV */
+.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:200;display:flex;gap:.35rem;background:rgba(3,3,8,.85);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:100px;padding:.35rem}
+.prop-nav a{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-size:.72rem;font-weight:600;color:var(--dim);transition:all .3s}
+.prop-nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.prop-nav a.active{background:var(--blue);color:#fff;box-shadow:0 0 18px rgba(79,110,247,.3)}
 
-/* ═══ DIVIDER ═══ */
-.section-divider {
-  width: 100%; max-width: 1200px; margin: 0 auto;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--subtle) 20%, rgba(79,110,247,0.15) 50%, var(--subtle) 80%, transparent);
-}
+/* DIVIDER */
+.dv{width:100%;max-width:1140px;margin:0 auto;height:1px;background:linear-gradient(90deg,transparent,var(--b) 20%,rgba(79,110,247,.15) 50%,var(--b) 80%,transparent)}
 
-/* ═══ SKILLS SECTION ═══ */
-.skills-section {
-  padding: 6rem 2rem;
-  max-width: 1200px; margin: 0 auto;
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}.hero{padding:7rem 1.5rem 3rem}
+  .split{grid-template-columns:1fr;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:2.5rem}
+  .split-l,.split-r{display:contents}.split-l{gap:0}.iw{height:220px}
+  .tb{order:var(--mo)}.iw{order:var(--mo)}
+  .sg{grid-template-columns:1fr}.skills,.cta{padding:3rem 1.5rem}
+  footer{flex-direction:column;gap:.8rem;text-align:center}
 }
-.skills-header {
-  text-align: center; margin-bottom: 4rem;
-}
-.skills-header h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800; letter-spacing: -0.04em;
-  margin-bottom: 1rem;
-}
-.skills-header h2 .accent {
-  background: linear-gradient(135deg, var(--blue), var(--cyan));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.skills-header p {
-  color: var(--dim); font-size: 1rem;
-  font-weight: 300; max-width: 500px; margin: 0 auto;
-}
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-.skill-card {
-  background: var(--surface);
-  border: 1px solid var(--subtle);
-  border-radius: 16px;
-  padding: 2rem;
-  transition: all 0.4s ease;
-  position: relative; overflow: hidden;
-  opacity: 0; transform: translateY(40px);
-}
-.skill-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(79,110,247,0.3), transparent);
-  opacity: 0; transition: opacity 0.4s;
-}
-.skill-card:hover {
-  border-color: rgba(79,110,247,0.2);
-  background: rgba(79,110,247,0.03);
-  transform: translateY(-4px);
-}
-.skill-card:hover::before { opacity: 1; }
-.skill-icon {
-  font-size: 1.6rem; margin-bottom: 1rem;
-  width: 48px; height: 48px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 12px;
-  background: var(--subtle);
-}
-.skill-card h4 {
-  font-size: 1.05rem; font-weight: 700;
-  margin-bottom: 0.3rem; letter-spacing: -0.01em;
-}
-.skill-count {
-  font-size: 0.72rem; color: var(--cyan);
-  font-weight: 600; margin-bottom: 0.8rem;
-  letter-spacing: 0.05em;
-}
-.skill-list {
-  font-size: 0.8rem; color: rgba(255,255,255,0.35);
-  line-height: 1.7; margin-bottom: 1rem;
-  font-weight: 400;
-}
-.skill-desc {
-  font-size: 0.82rem; color: var(--dim);
-  font-weight: 300; line-height: 1.6;
-  font-style: italic;
-}
-
-/* ═══ CTA SECTION ═══ */
-.cta-section {
-  padding: 6rem 2rem;
-  text-align: center;
-  position: relative;
-}
-.cta-section::before {
-  content: '';
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(79,110,247,0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-.cta-section h2 {
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
-  font-weight: 800; letter-spacing: -0.04em;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #fff, var(--blue));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0; transform: translateY(30px);
-}
-.cta-section .cta-sub {
-  color: var(--dim); font-size: 1rem;
-  max-width: 440px; margin: 0 auto 2.5rem;
-  line-height: 1.7; font-weight: 300;
-  opacity: 0; transform: translateY(30px);
-}
-.install-box {
-  max-width: 540px; margin: 0 auto 2rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--subtle);
-  border-radius: 14px;
-  padding: 1.3rem 1.8rem;
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 0.9rem;
-  color: rgba(255,255,255,0.7);
-  position: relative;
-  opacity: 0; transform: translateY(30px);
-  text-align: left;
-}
-.install-box .prompt { color: var(--emerald); }
-.install-box .cmd { color: #fff; }
-.install-box .flag { color: var(--blue); }
-.install-box .copy-btn {
-  position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
-  background: rgba(255,255,255,0.06); border: 1px solid var(--subtle);
-  color: var(--dim); padding: 0.35rem 0.8rem; border-radius: 8px;
-  font-size: 0.72rem; cursor: pointer; font-family: 'Sora', sans-serif;
-  transition: all 0.25s;
-}
-.install-box .copy-btn:hover { background: rgba(79,110,247,0.15); color: #fff; border-color: rgba(79,110,247,0.3); }
-.cta-buttons {
-  display: flex; gap: 1rem;
-  justify-content: center; flex-wrap: wrap;
-  opacity: 0; transform: translateY(30px);
-}
-.btn-primary {
-  padding: 0.85rem 2.4rem; border-radius: 100px;
-  background: var(--blue); color: #fff;
-  font-weight: 600; font-size: 0.95rem;
-  border: none; cursor: pointer;
-  transition: all 0.35s; position: relative; overflow: hidden;
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: 'Sora', sans-serif;
-}
-.btn-primary::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, var(--cyan), var(--blue));
-  opacity: 0; transition: opacity 0.35s;
-}
-.btn-primary span { position: relative; z-index: 1; }
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(79,110,247,0.35);
-}
-.btn-primary:hover::after { opacity: 1; }
-.btn-ghost {
-  padding: 0.85rem 2.4rem; border-radius: 100px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: transparent; color: #fff;
-  font-weight: 500; font-size: 0.95rem;
-  cursor: pointer; transition: all 0.3s;
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: 'Sora', sans-serif;
-}
-.btn-ghost:hover {
-  border-color: rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.03);
-}
-
-/* ═══ FOOTER ═══ */
-footer {
-  padding: 2.5rem 3rem;
-  display: flex; justify-content: space-between; align-items: center;
-  border-top: 1px solid var(--subtle);
-  max-width: 1200px; margin: 0 auto;
-}
-footer .foot-left {
-  font-size: 0.8rem; color: rgba(255,255,255,0.25);
-  font-weight: 400;
-}
-footer .foot-right {
-  display: flex; gap: 2rem;
-}
-footer .foot-right a {
-  font-size: 0.8rem; color: rgba(255,255,255,0.3);
-  transition: color 0.25s;
-}
-footer .foot-right a:hover { color: #fff; }
-
-/* ═══ FIXED PROP NAV (bottom) ═══ */
-.prop-nav {
-  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-  z-index: 100;
-  display: flex; gap: 0.4rem;
-  background: rgba(8,8,12,0.85);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--subtle);
-  border-radius: 100px;
-  padding: 0.4rem;
-}
-.prop-nav a {
-  display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  font-size: 0.75rem; font-weight: 600;
-  color: var(--dim);
-  transition: all 0.3s;
-}
-.prop-nav a:hover {
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-}
-.prop-nav a.active {
-  background: var(--blue);
-  color: #fff;
-  box-shadow: 0 0 20px rgba(79,110,247,0.3);
-}
-
-/* ═══ RESPONSIVE ═══ */
-@media (max-width: 1024px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero-left { padding: 8rem 3rem 3rem; }
-  .hero-right { height: 50vh; position: relative; }
-  .hero-right img { position: relative; height: 100%; }
-  .hero-scroll-hint { left: 3rem; }
-  .skills-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 768px) {
-  nav { padding: 1rem 1.5rem; }
-  .hero-left { padding: 7rem 2rem 2rem; }
-  .hero-title { font-size: clamp(3rem, 12vw, 5rem); }
-  .hero-right { height: 40vh; }
-  .hero-right::before { width: 60px; }
-  .hero-scroll-hint { left: 2rem; }
-
-  .split-parallax {
-    grid-template-columns: 1fr;
-    gap: 3rem; padding: 4rem 1.5rem;
-  }
-  .split-left { gap: 0; order: 2; }
-  .split-right { gap: 2rem; order: 1; padding-top: 0; }
-  .split-right .img-wrap { height: 240px; }
-
-  /* On mobile, interleave: img then text */
-  .split-parallax { display: flex; flex-direction: column; gap: 3rem; }
-  .split-left, .split-right { display: contents; }
-  .text-block { order: var(--mobile-order); }
-  .img-wrap { order: var(--mobile-order); }
-
-  .text-block { margin-bottom: 0; }
-
-  .skills-grid { grid-template-columns: 1fr; }
-  .skills-section { padding: 4rem 1.5rem; }
-  .cta-section { padding: 4rem 1.5rem; }
-
-  footer { flex-direction: column; gap: 1rem; text-align: center; }
-  footer .foot-right { gap: 1.5rem; }
-}
-
-@media (max-width: 480px) {
-  .hero-title { font-size: 3rem; }
-  .hero-subtitle { font-size: 1rem; }
-  .nav-right a:not(.nav-cta) { display: none; }
-}
+@media(max-width:480px){.hero h1{font-size:2.8rem}.sg{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ═══ FIXED NAV ═══ -->
-<nav id="mainNav">
-  <div class="nav-logo">
-    <span class="dot"></span>
-    Genius Team
-  </div>
-  <div class="nav-right">
-    <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a>
-    <a href="#" class="nav-cta" onclick="GeniusWizard.open(); return false;">Get Started</a>
-  </div>
-</nav>
+<nav id="nav"><div class="logo"><span class="dot"></span>Genius Team</div><button class="nav-cta" onclick="GeniusWizard.open()">Get Started</button></nav>
 
-<!-- ═══ HERO: SPLIT SCREEN ═══ -->
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-left">
-    <h1 class="hero-title" id="heroTitle">
-      <span class="line"><span>Build</span></span>
-      <span class="line"><span>Different</span></span>
-    </h1>
-    <p class="hero-subtitle" id="heroSub">Two perspectives. One powerful team. Describe your idea and watch 31 AI specialists bring it to life.</p>
-    <div class="hero-scroll-hint" id="heroScroll">
-      <span class="line-anim"></span>
-      Scroll to explore
-    </div>
-  </div>
-  <div class="hero-right">
-    <img src="img/hero-brain.jpg" alt="AI Neural Network Visualization">
+  <div class="hero-inner">
+    <div class="badge" id="badge">42 AI Agents — One Team</div>
+    <h1 id="h1">Anyone Can <span class="grad">Build.</span></h1>
+    <p class="hero-sub" id="hsub">Describe your idea. 42 specialized agents handle the rest — design, code, test, deploy. No experience needed.</p>
+    <button class="hero-cta" id="hcta" onclick="GeniusWizard.open()">Start Building Free</button>
   </div>
 </section>
 
-<!-- ═══ SPLIT PARALLAX CONTENT ═══ -->
-<section class="split-parallax" id="splitSection">
-  <!-- LEFT COLUMN: Text blocks (normal scroll) -->
-  <div class="split-left">
-    <div class="text-block" style="--mobile-order: 2">
-      <div class="label">Step 01</div>
-      <h3>Start with an idea</h3>
-      <p>You don't need a business plan. Just describe what you want — a booking app, an online store, anything. Your AI interviewer shapes it into something real.</p>
-    </div>
-    <div class="text-block" style="--mobile-order: 4">
-      <div class="label">Step 02</div>
-      <h3>Your team assembles</h3>
-      <p>31 specialized agents organize themselves. Market analyst, designer, frontend dev, backend dev — each one an expert in their domain.</p>
-    </div>
-    <div class="text-block" style="--mobile-order: 6">
-      <div class="label">Step 03</div>
-      <h3>Quality is automatic</h3>
-      <p>Every line of code gets reviewed. Security audited. Performance optimized. You don't lift a finger.</p>
-    </div>
-    <div class="text-block" style="--mobile-order: 8">
-      <div class="label">Step 04</div>
-      <h3>Ship with confidence</h3>
-      <p>One command deploys everything. Analytics, SEO, monitoring — it's all set up from the start.</p>
-    </div>
+<!-- SPLIT PARALLAX -->
+<section class="split" id="sp">
+  <div class="split-l">
+    <div class="tb" style="--mo:2"><div class="lbl">Describe</div><h3>Talk, don't type code</h3><p>Say what you want in plain English. "I need a booking app with payments." Your AI interviewer turns that into a real plan.</p></div>
+    <div class="tb" style="--mo:4"><div class="lbl">Assemble</div><h3>42 specialists, instantly</h3><p>Designer, frontend dev, backend dev, security auditor — each agent is an expert. They organize themselves around your project.</p></div>
+    <div class="tb" style="--mo:6"><div class="lbl">Build</div><h3>Watch it come together</h3><p>Real code. Real components. Real tests. Every line reviewed and quality-checked before it reaches you.</p></div>
+    <div class="tb" style="--mo:8"><div class="lbl">Ship</div><h3>One command to go live</h3><p>Analytics, SEO, monitoring — already wired up. Your app is production-ready from day one.</p></div>
   </div>
-
-  <!-- RIGHT COLUMN: Images (parallax, scrolls slower) -->
-  <div class="split-right">
-    <div class="img-wrap" style="--mobile-order: 1">
-      <img class="parallax-img" src="img/workflow-steps.jpg" alt="Workflow visualization">
-    </div>
-    <div class="img-wrap" style="--mobile-order: 3">
-      <img class="parallax-img" src="img/agent-constellation.jpg" alt="AI agent constellation">
-    </div>
-    <div class="img-wrap" style="--mobile-order: 5">
-      <img class="parallax-img" src="img/app-mockup.jpg" alt="Application mockup">
-    </div>
-    <div class="img-wrap" style="--mobile-order: 7">
-      <img class="parallax-img" src="img/holographic-ui.jpg" alt="Holographic interface">
-    </div>
+  <div class="split-r">
+    <div class="iw" style="--mo:1"><img class="pimg" src="img/workflow-steps.jpg" alt="Workflow"></div>
+    <div class="iw" style="--mo:3"><img class="pimg" src="img/agent-constellation.jpg" alt="Agent constellation"></div>
+    <div class="iw" style="--mo:5"><img class="pimg" src="img/app-mockup.jpg" alt="App mockup"></div>
+    <div class="iw" style="--mo:7"><img class="pimg" src="img/before-after.jpg" alt="Before and after"></div>
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="dv"></div>
 
-<!-- ═══ SKILLS SECTION ═══ -->
-<section class="skills-section" id="skillsSection">
-  <div class="skills-header">
-    <h2>31 Skills. <span class="accent">6 Categories.</span> One Team.</h2>
-    <p>Every agent is a specialist. Together, they cover every dimension of building a product.</p>
-  </div>
-  <div class="skills-grid" id="skillsGrid">
-    <div class="skill-card">
-      <div class="skill-icon">💡</div>
-      <h4>Ideation</h4>
-      <div class="skill-count">5 agents</div>
-      <div class="skill-list">Interviewer · Market Analyst · Specs Writer · Designer · Integration Guide</div>
-      <div class="skill-desc">From napkin sketch to crystal-clear specifications</div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-icon">⚡</div>
-      <h4>Development</h4>
-      <div class="skill-count">7 agents</div>
-      <div class="skill-list">Dev Router · Frontend · Backend · Mobile · Database · API · Orchestrator</div>
-      <div class="skill-desc">Full-stack implementation with specialized agents</div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-icon">🛡️</div>
-      <h4>Quality</h4>
-      <div class="skill-count">5 agents</div>
-      <div class="skill-list">QA Micro · Full QA · Code Review · Security Audit · Debugger</div>
-      <div class="skill-desc">Every line reviewed, tested, and hardened</div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-icon">📈</div>
-      <h4>Growth</h4>
-      <div class="skill-count">5 agents</div>
-      <div class="skill-list">SEO · Analytics · Performance · Accessibility · Content</div>
-      <div class="skill-desc">Built-in growth engine from day one</div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-icon">🚀</div>
-      <h4>Operations</h4>
-      <div class="skill-count">4 agents</div>
-      <div class="skill-list">Deployer · Experiments · i18n · Onboarding</div>
-      <div class="skill-desc">Ship fast, experiment freely, scale globally</div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-icon">🧠</div>
-      <h4>Intelligence</h4>
-      <div class="skill-count">5 agents</div>
-      <div class="skill-list">Memory · Copywriter · Marketer · Team Optimizer · Docs</div>
-      <div class="skill-desc">Your team gets smarter with every project</div>
-    </div>
+<!-- SKILLS -->
+<section class="skills" id="sk">
+  <div class="skills-hd"><h2>42 Skills. <span class="grad">6 Categories.</span></h2><p>Every agent is a specialist. Together, they cover everything.</p></div>
+  <div class="sg" id="sgrid">
+    <div class="sc"><div class="ico">💡</div><h4>Ideation</h4><div class="cnt">5 agents</div><div class="lst">Interviewer · Analyst · Specs · Designer · Integration</div><div class="dsc">From rough idea to clear specifications</div></div>
+    <div class="sc"><div class="ico">⚡</div><h4>Build</h4><div class="cnt">7 agents</div><div class="lst">Router · Frontend · Backend · Mobile · Database · API · Orchestrator</div><div class="dsc">Full-stack implementation, fully automated</div></div>
+    <div class="sc"><div class="ico">🛡️</div><h4>Quality</h4><div class="cnt">5 agents</div><div class="lst">QA Micro · Full QA · Code Review · Security · Debugger</div><div class="dsc">Every line reviewed, tested, and hardened</div></div>
+    <div class="sc"><div class="ico">📈</div><h4>Growth</h4><div class="cnt">5 agents</div><div class="lst">SEO · Analytics · Performance · Accessibility · Content</div><div class="dsc">Built-in growth engine from day one</div></div>
+    <div class="sc"><div class="ico">🚀</div><h4>Ops</h4><div class="cnt">4 agents</div><div class="lst">Deployer · Experiments · i18n · Onboarding</div><div class="dsc">Ship fast, experiment freely, scale globally</div></div>
+    <div class="sc"><div class="ico">🧠</div><h4>AI Engine</h4><div class="cnt">5 agents</div><div class="lst">Memory · Copywriter · Marketer · Optimizer · Docs</div><div class="dsc">Gets smarter with every project you build</div></div>
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="dv"></div>
 
-<!-- ═══ CTA SECTION ═══ -->
-<section class="cta-section" id="ctaSection">
+<!-- CTA -->
+<section class="cta" id="cta">
   <h2>Start Building Today</h2>
-  <p class="cta-sub">One command. 31 specialists. Your idea, shipped.</p>
-  <div class="install-box" id="installBox">
-    <span class="prompt">$</span> <span class="cmd">npx</span> <span class="flag">genius-team</span> init
-    <button class="copy-btn" onclick="navigator.clipboard.writeText('npx genius-team init');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
-  </div>
-  <div class="cta-buttons" id="ctaButtons">
-    <button class="btn-primary" onclick="GeniusWizard.open()"><span>Getting Started</span></button>
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-ghost">Star on GitHub</a>
-  </div>
+  <p class="sub">One command. 42 agents. Your idea, shipped.</p>
+  <div class="install" id="inst"><span class="p">$</span> <span class="c">npx</span> <span class="fl">genius-team</span> init<button class="cp" onclick="navigator.clipboard.writeText('npx genius-team init');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button></div>
+  <div class="cta-btns" id="cbtns"><button class="btn-p" onclick="GeniusWizard.open()">Get Started</button><a href="https://github.com/anthropics/claude-code" target="_blank" class="btn-g">GitHub</a></div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
-<footer>
-  <div class="foot-left">Genius Team &middot; 2026</div>
-  <div class="foot-right">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
-    <a href="#" onclick="GeniusWizard.open(); return false;">Get Started</a>
-    <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
-  </div>
-</footer>
+<footer><div class="fl">Genius Team · 2026</div><div class="fr"><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a><a href="#" onclick="GeniusWizard.open();return false">Docs</a></div></footer>
 
-<!-- ═══ FIXED PROP NAV (bottom) ═══ -->
-<div class="prop-nav">
-  <a href="proposition1.html">P1</a>
-  <a href="proposition2.html">P2</a>
-  <a href="proposition3.html">P3</a>
-  <a href="proposition4.html" class="active">P4</a>
-  <a href="proposition5.html">P5</a>
-  <a href="proposition6.html">P6</a>
-  <a href="proposition7.html">P7</a>
-</div>
+<div class="prop-nav"><a href="/proposition1">P1</a><a href="/proposition2">P2</a><a href="/proposition3">P3</a><a href="/proposition4" class="active">P4</a><a href="/proposition5">P5</a><a href="/proposition6">P6</a><a href="/proposition7">P7</a></div>
 
-<!-- ═══ SCRIPTS ═══ -->
 <script src="wizard.js"></script>
 <script>
 GeniusWizard.init();
+const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),smoothWheel:true});
+lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);gsap.registerPlugin(ScrollTrigger);
 
-// ═══ LENIS SMOOTH SCROLL ═══
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  smoothWheel: true
-});
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add(time => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
-gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.create({start:'top -80',onUpdate:s=>{document.getElementById('nav').classList.toggle('scrolled',s.scroll()>80)}});
 
-// ═══ NAV SCROLL EFFECT ═══
-const nav = document.getElementById('mainNav');
-ScrollTrigger.create({
-  start: 'top -80',
-  onUpdate: (self) => {
-    if (self.scroll() > 80) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-  }
-});
+// Hero entrance
+const ht=gsap.timeline({defaults:{ease:'power4.out'}});
+ht.to('#badge',{y:0,opacity:1,duration:.8},.2).to('#h1',{y:0,opacity:1,duration:1},.4).to('#hsub',{y:0,opacity:1,duration:.8},.7).to('#hcta',{y:0,opacity:1,duration:.8},.9);
 
-// ═══ HERO ENTRANCE ═══
-const heroTl = gsap.timeline({ defaults: { ease: 'power4.out' }});
-heroTl
-  .to('#heroTitle .line span', {
-    y: 0, opacity: 1,
-    duration: 1.2,
-    stagger: 0.15
-  }, 0.3)
-  .to('#heroSub', {
-    y: 0, opacity: 1,
-    duration: 0.9
-  }, 0.9)
-  .to('#heroScroll', {
-    opacity: 1,
-    duration: 0.8
-  }, 1.4);
-
-// ═══ HERO IMAGE PARALLAX ═══
-gsap.to('.hero-right img', {
-  yPercent: 15,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '.hero',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: 1.5
-  }
-});
-
-// ═══ SPLIT PARALLAX: Right column images scroll slower ═══
-const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-if (!isMobile) {
-  gsap.utils.toArray('.parallax-img').forEach(img => {
-    gsap.to(img, {
-      yPercent: -20,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: img.parentElement,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
-  });
+// Split parallax: right images scroll faster
+if(!window.matchMedia('(max-width:768px)').matches){
+  gsap.utils.toArray('.pimg').forEach(img=>{gsap.to(img,{yPercent:-20,ease:'none',scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:true}})});
 }
 
-// ═══ TEXT BLOCKS: Staggered reveal ═══
-gsap.utils.toArray('.text-block').forEach((block, i) => {
-  gsap.to(block, {
-    y: 0, opacity: 1,
-    duration: 0.9,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: block,
-      start: 'top 85%',
-      toggleActions: 'play none none none'
-    }
-  });
-});
+// Reveal text blocks & images
+gsap.utils.toArray('.tb,.iw').forEach(el=>{gsap.to(el,{y:0,opacity:1,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}})});
 
-// ═══ IMAGE WRAPS: Staggered reveal ═══
-gsap.utils.toArray('.img-wrap').forEach((wrap, i) => {
-  gsap.to(wrap, {
-    y: 0, opacity: 1,
-    duration: 1,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: wrap,
-      start: 'top 85%',
-      toggleActions: 'play none none none'
-    }
-  });
-});
+// Skill cards staggered reveal
+gsap.utils.toArray('.sc').forEach((c,i)=>{gsap.to(c,{y:0,opacity:1,duration:.7,delay:i*.07,ease:'power3.out',scrollTrigger:{trigger:'#sgrid',start:'top 75%',toggleActions:'play none none none'}})});
 
-// ═══ SKILL CARDS: Staggered reveal ═══
-gsap.utils.toArray('.skill-card').forEach((card, i) => {
-  gsap.to(card, {
-    y: 0, opacity: 1,
-    duration: 0.8,
-    delay: i * 0.08,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '#skillsGrid',
-      start: 'top 75%',
-      toggleActions: 'play none none none'
-    }
-  });
-});
+// CTA reveal
+const ct=gsap.timeline({scrollTrigger:{trigger:'#cta',start:'top 70%',toggleActions:'play none none none'}});
+ct.to('#cta h2',{y:0,opacity:1,duration:.7,ease:'power3.out'},0).to('#cta .sub',{y:0,opacity:1,duration:.7,ease:'power3.out'},.1).to('#inst',{y:0,opacity:1,duration:.7,ease:'power3.out'},.2).to('#cbtns',{y:0,opacity:1,duration:.7,ease:'power3.out'},.3);
 
-// ═══ CTA SECTION REVEAL ═══
-const ctaTl = gsap.timeline({
-  scrollTrigger: {
-    trigger: '#ctaSection',
-    start: 'top 70%',
-    toggleActions: 'play none none none'
-  }
-});
-ctaTl
-  .to('#ctaSection h2', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0)
-  .to('#ctaSection .cta-sub', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.1)
-  .to('#installBox', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.2)
-  .to('#ctaButtons', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, 0.35);
-
-// ═══ SKILL CARD HOVER GLOW ═══
-document.querySelectorAll('.skill-card').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(79,110,247,0.06), var(--surface))`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.background = 'var(--surface)';
-  });
-});
+// Card hover glow
+document.querySelectorAll('.sc').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.background=`radial-gradient(circle 180px at ${e.clientX-r.left}px ${e.clientY-r.top}px,rgba(79,110,247,.06),var(--s))`});c.addEventListener('mouseleave',()=>{c.style.background='var(--s)'})});
 </script>
 </body>
 </html>

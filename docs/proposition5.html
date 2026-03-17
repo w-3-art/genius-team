@@ -3,850 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — Layer by Layer</title>
-<meta name="description" content="Watch your product come together, layer by layer. 31 AI specialists, one seamless workflow.">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Genius Team — Card by Card</title>
+<meta name="description" content="Your AI product team. 42 agents that design, build, test and ship your app — revealed card by card.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
-/* ═══ RESET ═══ */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { overflow-x: hidden; }
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-body { font-family: 'Sora', sans-serif; background: #08080c; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:'Sora',sans-serif;background:#000;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+:root{--blue:#4f6ef7;--cyan:#22d3ee;--green:#34d399;--dim:rgba(255,255,255,.4);--sub:rgba(255,255,255,.06);--surf:rgba(255,255,255,.03)}
 
-:root {
-  --blue: #4f6ef7;
-  --cyan: #22d3ee;
-  --emerald: #34d399;
-  --dim: rgba(255,255,255,0.4);
-  --subtle: rgba(255,255,255,0.06);
-  --surface: rgba(255,255,255,0.03);
-}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:all .4s}
+nav.scrolled{background:rgba(0,0,0,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--sub)}
+.logo{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:.5rem;letter-spacing:-.02em}
+.logo .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+.nav-r{display:flex;gap:2rem;align-items:center}
+.nav-r a{color:var(--dim);font-size:.85rem;font-weight:500;transition:color .2s}.nav-r a:hover{color:#fff}
+.nav-cta{padding:.55rem 1.5rem!important;border-radius:100px;background:var(--blue)!important;color:#fff!important;font-weight:600!important;transition:all .3s!important}
+.nav-cta:hover{box-shadow:0 0 30px rgba(79,110,247,.4);transform:translateY(-1px)}
 
-/* ═══ CURSOR LIGHT ═══ */
-.cursor-light { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(79,110,247,0.06), transparent 70%); pointer-events: none; z-index: 0; will-change: transform; }
+/* STACK CARDS */
+.stack-card{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.card-inner{position:relative;z-index:2;text-align:center;max-width:860px;padding:2rem}
 
-/* ═══ FIXED NAV ═══ */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.4s; }
-nav.scrolled { background: rgba(8,8,12,0.88); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid var(--subtle); }
-.nav-logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; letter-spacing: -0.02em; }
-.nav-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 12px var(--emerald); animation: pulse 2.5s ease infinite; }
-@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } }
-.nav-right { display: flex; gap: 2rem; align-items: center; }
-.nav-right a { color: var(--dim); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-.nav-right a:hover { color: #fff; }
-.nav-cta { padding: 0.55rem 1.5rem !important; border-radius: 100px; background: var(--blue) !important; color: #fff !important; font-weight: 600 !important; transition: all 0.3s !important; }
-.nav-cta:hover { box-shadow: 0 0 30px rgba(79,110,247,0.4); transform: translateY(-1px); }
+/* HERO */
+.c-hero{background:#000}
+.c-hero .bg{position:absolute;inset:0;background:url('img/hero-brain.jpg') center/cover;opacity:.15}
+.c-hero .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.7) 50%,rgba(0,0,0,.95))}
+.c-hero h1{font-size:clamp(3.2rem,10vw,7.5rem);font-weight:800;line-height:1;letter-spacing:-.05em;margin-bottom:1.5rem}
+.c-hero h1 .ln{display:block;overflow:hidden}.c-hero h1 .w{display:inline-block;opacity:0;transform:translateY(100%)}
+.c-hero .sub{font-size:clamp(1rem,2.2vw,1.35rem);color:var(--dim);font-weight:300;opacity:0}
+.scroll-hint{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.7rem;opacity:0}
+.scroll-hint span{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);font-weight:500}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--blue),transparent);animation:sp 2s ease infinite}
+@keyframes sp{0%,100%{opacity:.3;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
 
-/* ═══ CARD STACK — CORE ═══ */
-.stack-wrapper { position: relative; }
-.stack-card {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  will-change: transform;
-}
+/* CONTENT CARDS */
+.c-problem{background:#0a0e1e}.c-solution{background:#0f0a1a}.c-skills{background:#0a1518}.c-cta-card{background:#0c0f08}
+.card-body{padding:4rem 6rem;display:flex;align-items:center;gap:4rem;position:relative;z-index:2;width:100%}
+.card-body .txt{flex:1;max-width:55%}
+.card-body h2{font-size:clamp(2.2rem,4vw,3.8rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:1.2rem}
+.card-body .bar{width:40px;height:3px;border-radius:2px;margin-bottom:1.2rem}
+.card-body p{font-size:1.05rem;color:var(--dim);line-height:1.75;font-weight:300;max-width:480px}
+.card-body .vis{flex:1;max-width:40%;display:flex;align-items:center;justify-content:center}
+.card-body .vis img{width:100%;max-width:460px;border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);object-fit:cover}
+.tag{position:absolute;top:2.5rem;right:3rem;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.12);z-index:5}
+.top-ln{position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--sub),transparent)}
+.grad{background:linear-gradient(135deg,var(--blue),var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-/* ═══ CARD 1 — HERO ═══ */
-.card-hero { background: #08080c; }
-.card-hero .card-bg {
-  position: absolute; inset: 0;
-  background: url('img/hero-brain.jpg') center/cover no-repeat;
-  opacity: 0.18;
-}
-.card-hero .card-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8,8,12,0.3) 0%, rgba(8,8,12,0.7) 50%, rgba(8,8,12,0.95) 100%);
-}
-.card-hero .card-inner {
-  position: relative; z-index: 2;
-  text-align: center; max-width: 900px; padding: 2rem;
-}
-.card-hero h1 {
-  font-size: clamp(3.5rem, 10vw, 8rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.05em;
-  margin-bottom: 1.5rem;
-}
-.card-hero h1 .line { display: block; overflow: hidden; }
-.card-hero h1 .word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(100%);
-}
-.card-hero .subtitle {
-  font-size: clamp(1rem, 2.2vw, 1.4rem);
-  color: var(--dim);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  opacity: 0;
-}
-.scroll-hint {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  opacity: 0;
-}
-.scroll-hint span {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--dim);
-  font-weight: 500;
-}
-.scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--blue), transparent);
-  animation: scrollPulse 2s ease infinite;
-}
-@keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.5); } 50% { opacity: 1; transform: scaleY(1); } }
+/* SKILLS GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem;max-width:780px}
+.cat{padding:1.4rem;border-radius:14px;background:var(--surf);border:1px solid var(--sub);transition:all .4s}
+.cat:hover{border-color:rgba(79,110,247,.2);transform:translateY(-3px)}
+.cat h3{font-size:.95rem;font-weight:700;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.cat .cnt{font-size:.6rem;font-weight:600;padding:.1rem .4rem;border-radius:5px;background:var(--sub);color:var(--dim)}
+.cat .sk{font-size:.75rem;color:var(--dim);line-height:1.6}
 
-/* ═══ CARDS 2-5 — CONTENT CARDS ═══ */
-.card-content {
-  padding: 4rem 6rem;
-  display: flex;
-  align-items: center;
-  gap: 4rem;
-}
-.card-content .card-text {
-  flex: 1;
-  max-width: 50%;
-}
-.card-content .card-icon {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  display: inline-block;
-}
-.card-content h2 {
-  font-size: clamp(2.5rem, 4vw, 4rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-}
-.card-content .accent-line {
-  width: 40px;
-  height: 3px;
-  background: var(--blue);
-  border-radius: 2px;
-  margin-bottom: 1.5rem;
-}
-.card-content p {
-  font-size: 1.05rem;
-  color: var(--dim);
-  line-height: 1.75;
-  font-weight: 300;
-  max-width: 480px;
-}
-.card-content .card-visual {
-  flex: 1;
-  max-width: 45%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.card-content .card-visual img {
-  width: 100%;
-  max-width: 500px;
-  border-radius: 20px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-  object-fit: cover;
-}
+/* CTA INNER */
+.cta-inner{text-align:center;max-width:700px;position:relative;z-index:2}
+.cta-inner h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem}
+.cta-inner .cta-sub{font-size:1rem;color:var(--dim);margin-bottom:2rem;font-weight:300}
+.install{display:inline-flex;align-items:center;gap:.7rem;background:rgba(255,255,255,.04);border:1px solid var(--sub);border-radius:12px;padding:.9rem 1.4rem;font-family:'Sora',monospace;font-size:.9rem;color:var(--cyan);cursor:pointer;transition:all .3s;margin-bottom:2rem}
+.install:hover{border-color:rgba(79,110,247,.3);background:rgba(79,110,247,.04)}
+.install .pr{color:var(--dim);user-select:none}
+.install .cp{font-size:.65rem;color:rgba(255,255,255,.2);font-weight:500}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-p{padding:.9rem 2.4rem;border-radius:100px;background:var(--blue);color:#fff;font-family:'Sora',sans-serif;font-weight:600;font-size:.95rem;border:none;cursor:pointer;transition:all .4s}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(79,110,247,.35)}
+.btn-g{padding:.9rem 2.4rem;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#fff;font-family:'Sora',sans-serif;font-weight:500;font-size:.95rem;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-g:hover{border-color:var(--blue);background:rgba(79,110,247,.06)}
 
-/* Card-specific backgrounds */
-.card-imagine { background: #0a0e1e; }
-.card-build { background: #0f0a1a; }
-.card-perfect { background: #0a1518; }
-.card-launch { background: #0a150f; }
+/* FOOTER */
+footer{padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--sub);position:relative;z-index:10}
+footer .fl{font-size:.8rem;color:rgba(255,255,255,.2)}
+footer .fr{display:flex;gap:1.5rem}footer .fr a{font-size:.8rem;color:var(--dim);transition:color .2s}footer .fr a:hover{color:#fff}
 
-/* Card number label */
-.card-number {
-  position: absolute;
-  top: 2.5rem;
-  right: 3rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: rgba(255,255,255,0.12);
-  z-index: 5;
-}
+/* PROP NAV */
+.prop-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;padding:.4rem;border-radius:100px;background:rgba(0,0,0,.85);backdrop-filter:blur(20px);border:1px solid var(--sub);z-index:100}
+.prop-nav a{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--dim);transition:all .3s}
+.prop-nav a:hover{color:#fff;background:var(--sub)}.prop-nav a.active{background:var(--blue);color:#fff;box-shadow:0 0 20px rgba(79,110,247,.4)}
 
-/* Card gradient overlays for depth */
-.card-imagine::after,
-.card-build::after,
-.card-perfect::after,
-.card-launch::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(79,110,247,0.04), transparent 70%);
-  pointer-events: none;
-}
-.card-build::after {
-  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(139,92,246,0.04), transparent 70%);
-}
-.card-perfect::after {
-  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(34,211,238,0.04), transparent 70%);
-}
-.card-launch::after {
-  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,211,153,0.04), transparent 70%);
-}
-
-/* Card inner content z-index */
-.card-content .card-text,
-.card-content .card-visual { position: relative; z-index: 2; }
-
-/* Card top border accent */
-.card-top-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--subtle), transparent);
-}
-
-/* ═══ SKILLS SECTION ═══ */
-.skills-section {
-  padding: 6rem 3rem;
-  background: #08080c;
-  position: relative;
-  z-index: 10;
-}
-.skills-section .section-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--blue);
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-.skills-section h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  text-align: center;
-  letter-spacing: -0.03em;
-  margin-bottom: 4rem;
-}
-.skills-section h2 .count { color: var(--cyan); }
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.cat-card {
-  padding: 2rem;
-  border-radius: 16px;
-  background: var(--surface);
-  border: 1px solid var(--subtle);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-.cat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  background: radial-gradient(ellipse at top left, rgba(79,110,247,0.06), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-.cat-card:hover { border-color: rgba(79,110,247,0.2); transform: translateY(-4px); }
-.cat-card:hover::before { opacity: 1; }
-.cat-card .cat-icon { font-size: 1.5rem; margin-bottom: 1rem; }
-.cat-card h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.cat-card h3 .cat-count {
-  font-size: 0.65rem;
-  font-weight: 600;
-  padding: 0.15rem 0.45rem;
-  border-radius: 6px;
-  background: var(--subtle);
-  color: var(--dim);
-}
-.cat-card .cat-skills {
-  font-size: 0.8rem;
-  color: var(--dim);
-  line-height: 1.6;
-  margin-bottom: 0.75rem;
-}
-.cat-card .cat-desc {
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.25);
-  font-style: italic;
-  line-height: 1.5;
-}
-
-/* ═══ CTA SECTION ═══ */
-.cta-section {
-  padding: 6rem 3rem;
-  text-align: center;
-  position: relative;
-  z-index: 10;
-  background: #08080c;
-}
-.cta-section::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  left: 50%;
-  width: 600px;
-  height: 400px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse, rgba(79,110,247,0.08), transparent 70%);
-  pointer-events: none;
-}
-.cta-section h2 {
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.2rem;
-  position: relative;
-}
-.cta-section h2 .gradient {
-  background: linear-gradient(135deg, var(--blue), var(--cyan), var(--emerald));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.cta-section .cta-sub {
-  font-size: 1rem;
-  color: var(--dim);
-  margin-bottom: 2.5rem;
-  font-weight: 300;
-}
-.install-box {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--subtle);
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-  font-family: 'Sora', monospace;
-  font-size: 0.9rem;
-  color: var(--cyan);
-  margin-bottom: 2rem;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.install-box:hover { border-color: rgba(79,110,247,0.3); background: rgba(79,110,247,0.04); }
-.install-box .prompt { color: var(--dim); user-select: none; }
-.install-box .copy-hint {
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.2);
-  font-weight: 500;
-}
-.cta-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.btn-primary {
-  padding: 0.9rem 2.5rem;
-  border-radius: 100px;
-  background: var(--blue);
-  color: #fff;
-  font-family: 'Sora', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.4s;
-  position: relative;
-  overflow: hidden;
-}
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #6366f1, var(--blue));
-  opacity: 0;
-  transition: opacity 0.4s;
-  border-radius: 100px;
-}
-.btn-primary span { position: relative; z-index: 1; }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(79,110,247,0.35); }
-.btn-primary:hover::after { opacity: 1; }
-.btn-ghost {
-  padding: 0.9rem 2.5rem;
-  border-radius: 100px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: transparent;
-  color: #fff;
-  font-family: 'Sora', sans-serif;
-  font-weight: 500;
-  font-size: 0.95rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.btn-ghost:hover { border-color: var(--blue); background: rgba(79,110,247,0.06); }
-
-/* ═══ FOOTER ═══ */
-footer {
-  padding: 2.5rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid var(--subtle);
-  background: #08080c;
-  position: relative;
-  z-index: 10;
-}
-footer .f-left { font-size: 0.8rem; color: rgba(255,255,255,0.2); font-weight: 400; }
-footer .f-right { display: flex; gap: 1.5rem; }
-footer .f-right a { font-size: 0.8rem; color: var(--dim); text-decoration: none; transition: color 0.2s; }
-footer .f-right a:hover { color: #fff; }
-
-/* ═══ PROP NAV (Fixed Bottom) ═══ */
-.prop-nav {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.4rem;
-  padding: 0.4rem;
-  border-radius: 100px;
-  background: rgba(8,8,12,0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--subtle);
-  z-index: 100;
-}
-.prop-nav a {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--dim);
-  text-decoration: none;
-  transition: all 0.3s;
-}
-.prop-nav a:hover { color: #fff; background: var(--subtle); }
-.prop-nav a.active { background: var(--blue); color: #fff; box-shadow: 0 0 20px rgba(79,110,247,0.4); }
-
-/* ═══ RESPONSIVE ═══ */
-@media (max-width: 768px) {
-  nav { padding: 1rem 1.5rem; }
-  .nav-right { gap: 1rem; }
-
-  .stack-card { min-height: auto !important; }
-
-  .card-hero { min-height: 100vh !important; }
-  .card-hero h1 { font-size: clamp(2.5rem, 12vw, 4rem); }
-
-  .card-content {
-    flex-direction: column;
-    padding: 5rem 2rem;
-    gap: 2rem;
-    min-height: auto;
-  }
-  .card-content .card-text { max-width: 100%; }
-  .card-content .card-visual { display: none; }
-
-  .cat-grid { grid-template-columns: 1fr; }
-
-  .cta-actions { flex-direction: column; align-items: center; }
-  .install-box { font-size: 0.8rem; }
-
-  footer { flex-direction: column; gap: 1rem; text-align: center; }
-
-  .prop-nav { bottom: 1rem; }
-  .prop-nav a { width: 32px; height: 32px; font-size: 0.7rem; }
-
-  .card-number { top: 1.5rem; right: 1.5rem; }
-}
-
-@media (max-width: 480px) {
-  .card-hero h1 { font-size: 2.5rem; }
-  .card-content h2 { font-size: 2rem; }
-  .skills-section h2 { font-size: 1.8rem; }
-}
+/* RESPONSIVE */
+@media(max-width:768px){
+nav{padding:1rem 1.5rem}.c-hero h1{font-size:clamp(2.5rem,12vw,4rem)}
+.card-body{flex-direction:column;padding:5rem 2rem;gap:2rem}.card-body .txt{max-width:100%}.card-body .vis{display:none}
+.cat-grid{grid-template-columns:1fr}.cta-btns{flex-direction:column;align-items:center}
+footer{flex-direction:column;gap:1rem;text-align:center}.prop-nav{bottom:1rem}.prop-nav a{width:32px;height:32px;font-size:.7rem}
+.tag{top:1.5rem;right:1.5rem}.stack-card{min-height:auto!important}.c-hero{min-height:100vh!important}}
 </style>
 </head>
 <body>
 
-<!-- Cursor follower -->
-<div class="cursor-light" id="cursorLight"></div>
-
-<!-- ═══ FIXED NAV ═══ -->
 <nav id="mainNav">
-  <div class="nav-logo"><span class="dot"></span> Genius Team</div>
-  <div class="nav-right">
+  <div class="logo"><span class="dot"></span> Genius Team</div>
+  <div class="nav-r">
     <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a>
-    <a href="#" class="nav-cta" onclick="GeniusWizard.open(); return false;">Get Started</a>
+    <a href="#" class="nav-cta" onclick="GeniusWizard.open();return false">Get Started</a>
   </div>
 </nav>
 
-<!-- ═══ CARD STACK WRAPPER ═══ -->
-<div class="stack-wrapper" id="stackWrapper">
-
+<div class="stack-wrapper" id="sw">
   <!-- CARD 1 — Hero -->
-  <section class="stack-card card-hero" id="card1">
-    <div class="card-bg"></div>
-    <div class="card-overlay"></div>
+  <section class="stack-card c-hero" id="c1">
+    <div class="bg"></div><div class="ov"></div>
     <div class="card-inner">
-      <h1 id="heroTitle">
-        <span class="line"><span class="word">Layer</span></span>
-        <span class="line"><span class="word">by</span> <span class="word">Layer</span></span>
-      </h1>
-      <p class="subtitle" id="heroSub">Watch your product come together</p>
+      <h1 id="ht"><span class="ln"><span class="w">Card</span></span><span class="ln"><span class="w">by</span> <span class="w">Card</span></span></h1>
+      <p class="sub" id="hs">Your product, revealed one layer at a time</p>
     </div>
-    <div class="scroll-hint" id="scrollHint">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
+    <div class="scroll-hint" id="sh"><span>Scroll</span><div class="scroll-line"></div></div>
+  </section>
+
+  <!-- CARD 2 — Problem -->
+  <section class="stack-card c-problem" id="c2">
+    <div class="top-ln"></div><span class="tag">01 / 04</span>
+    <div class="card-body">
+      <div class="txt">
+        <div class="bar" style="background:var(--blue)"></div>
+        <h2>Building software is <span class="grad">broken</span></h2>
+        <p>Hiring takes months. Managing a team takes years of experience. Coordinating designers, developers, and testers costs a fortune. Most ideas never ship because the process defeats the people.</p>
+      </div>
+      <div class="vis"><img src="img/holographic-ui.jpg" alt="Complex software process" loading="lazy"></div>
     </div>
   </section>
 
-  <!-- CARD 2 — Imagine -->
-  <section class="stack-card card-imagine" id="card2">
-    <div class="card-top-line"></div>
-    <span class="card-number">01 / 04</span>
-    <div class="card-content">
-      <div class="card-text">
-        <div class="card-icon">&#x1F4A1;</div>
-        <div class="accent-line"></div>
-        <h2>Imagine</h2>
-        <p>Describe your dream product. Our AI interviewer helps shape your vision into crystal-clear specifications.</p>
+  <!-- CARD 3 — Solution -->
+  <section class="stack-card c-solution" id="c3">
+    <div class="top-ln"></div><span class="tag">02 / 04</span>
+    <div class="card-body">
+      <div class="txt">
+        <div class="bar" style="background:var(--cyan)"></div>
+        <h2>Meet your <span class="grad">AI team</span></h2>
+        <p>42 specialized agents that interview you, design the brand, write the code, test every feature, and deploy to production. You describe, they deliver. No hiring. No handoffs. No headaches.</p>
       </div>
-      <div class="card-visual">
-        <img src="img/workflow-steps.jpg" alt="Vision to specifications workflow" loading="lazy">
-      </div>
+      <div class="vis"><img src="img/hero-brain.jpg" alt="AI team at work" loading="lazy"></div>
     </div>
   </section>
 
-  <!-- CARD 3 — Build -->
-  <section class="stack-card card-build" id="card3">
-    <div class="card-top-line"></div>
-    <span class="card-number">02 / 04</span>
-    <div class="card-content">
-      <div class="card-text">
-        <div class="card-icon">&#x26A1;</div>
-        <div class="accent-line"></div>
-        <h2>Build</h2>
-        <p>31 specialized agents work in parallel. Frontend, backend, database, API &mdash; all coordinated automatically.</p>
+  <!-- CARD 4 — Skills -->
+  <section class="stack-card c-skills" id="c4">
+    <div class="top-ln"></div><span class="tag">03 / 04</span>
+    <div class="card-body" style="flex-direction:column;text-align:center">
+      <div class="txt" style="max-width:100%">
+        <div class="bar" style="background:var(--green);margin:0 auto 1.2rem"></div>
+        <h2><span class="grad">42</span> skills. 6 departments.</h2>
+        <p style="max-width:560px;margin:0 auto">Every discipline you need, working together around the clock.</p>
       </div>
-      <div class="card-visual">
-        <img src="img/app-mockup.jpg" alt="Application being built by AI agents" loading="lazy">
-      </div>
-    </div>
-  </section>
-
-  <!-- CARD 4 — Perfect -->
-  <section class="stack-card card-perfect" id="card4">
-    <div class="card-top-line"></div>
-    <span class="card-number">03 / 04</span>
-    <div class="card-content">
-      <div class="card-text">
-        <div class="card-icon">&#x1F6E1;&#xFE0F;</div>
-        <div class="accent-line"></div>
-        <h2>Perfect</h2>
-        <p>Automated QA, security audits, performance optimization. Every line reviewed before you see it.</p>
-      </div>
-      <div class="card-visual">
-        <img src="img/holographic-ui.jpg" alt="Quality assurance and security audit interface" loading="lazy">
+      <div class="cat-grid">
+        <div class="cat"><h3>Ideation <span class="cnt">7</span></h3><div class="sk">Interviewer, Market Analyst, Specs, Designer, Marketer, Copywriter, Integrations</div></div>
+        <div class="cat"><h3>Development <span class="cnt">7</span></h3><div class="sk">Dev Router, Frontend, Backend, Mobile, Database, API, Orchestrator</div></div>
+        <div class="cat"><h3>Quality <span class="cnt">6</span></h3><div class="sk">QA Micro, Full QA, Code Review, Security, Debugger, Test Assistant</div></div>
+        <div class="cat"><h3>Growth <span class="cnt">7</span></h3><div class="sk">SEO, Analytics, Performance, Accessibility, Content, Copywriter, Marketer</div></div>
+        <div class="cat"><h3>Operations <span class="cnt">6</span></h3><div class="sk">Deployer, Experiments, i18n, Onboarding, Docs, Skill Creator</div></div>
+        <div class="cat"><h3>Intelligence <span class="cnt">9</span></h3><div class="sk">Memory, Architect, Team Optimizer, Dual Engine, Omni Router, Dashboard, Reviewer, Start, Updater</div></div>
       </div>
     </div>
   </section>
 
-  <!-- CARD 5 — Launch -->
-  <section class="stack-card card-launch" id="card5">
-    <div class="card-top-line"></div>
-    <span class="card-number">04 / 04</span>
-    <div class="card-content">
-      <div class="card-text">
-        <div class="card-icon">&#x1F680;</div>
-        <div class="accent-line"></div>
-        <h2>Launch</h2>
-        <p>One command to deploy. Analytics, SEO, monitoring &mdash; everything from day one.</p>
+  <!-- CARD 5 — CTA -->
+  <section class="stack-card c-cta-card" id="c5">
+    <div class="top-ln"></div><span class="tag">04 / 04</span>
+    <div class="cta-inner">
+      <h2>Start building <span class="grad">today</span></h2>
+      <p class="cta-sub">One command. Your full AI product team. Ready to go.</p>
+      <div class="install" onclick="navigator.clipboard.writeText('npx genius-team@latest');this.querySelector('.cp').textContent='Copied!'">
+        <span class="pr">$</span> npx genius-team@latest <span class="cp">Click to copy</span>
       </div>
-      <div class="card-visual">
-        <img src="img/skill-categories.jpg" alt="Deployment and monitoring dashboard" loading="lazy">
+      <div class="cta-btns">
+        <button class="btn-p" onclick="GeniusWizard.open()">Get Started</button>
+        <a href="https://github.com/anthropics/claude-code" target="_blank" class="btn-g">Star on GitHub</a>
       </div>
     </div>
   </section>
+</div>
 
-</div><!-- /stack-wrapper -->
-
-<!-- ═══ SKILLS SECTION ═══ -->
-<section class="skills-section" id="skillsSection">
-  <div class="section-label">The Full Stack</div>
-  <h2><span class="count">31</span> Skills. <span class="count">6</span> Categories. One Team.</h2>
-  <div class="cat-grid">
-
-    <div class="cat-card">
-      <div class="cat-icon">&#x1F4A1;</div>
-      <h3>Ideation <span class="cat-count">5</span></h3>
-      <div class="cat-skills">Interviewer &middot; Market Analyst &middot; Specs Writer &middot; Designer &middot; Integration Guide</div>
-      <div class="cat-desc">From napkin sketch to crystal-clear specifications</div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-icon">&#x26A1;</div>
-      <h3>Development <span class="cat-count">7</span></h3>
-      <div class="cat-skills">Dev Router &middot; Frontend &middot; Backend &middot; Mobile &middot; Database &middot; API &middot; Orchestrator</div>
-      <div class="cat-desc">Full-stack implementation with specialized agents</div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-icon">&#x1F6E1;&#xFE0F;</div>
-      <h3>Quality <span class="cat-count">5</span></h3>
-      <div class="cat-skills">QA Micro &middot; Full QA &middot; Code Review &middot; Security Audit &middot; Debugger</div>
-      <div class="cat-desc">Every line reviewed, tested, and hardened</div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-icon">&#x1F4C8;</div>
-      <h3>Growth <span class="cat-count">5</span></h3>
-      <div class="cat-skills">SEO &middot; Analytics &middot; Performance &middot; Accessibility &middot; Content</div>
-      <div class="cat-desc">Built-in growth engine from day one</div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-icon">&#x1F680;</div>
-      <h3>Operations <span class="cat-count">4</span></h3>
-      <div class="cat-skills">Deployer &middot; Experiments &middot; i18n &middot; Onboarding</div>
-      <div class="cat-desc">Ship fast, experiment freely, scale globally</div>
-    </div>
-
-    <div class="cat-card">
-      <div class="cat-icon">&#x1F9E0;</div>
-      <h3>Intelligence <span class="cat-count">5</span></h3>
-      <div class="cat-skills">Memory &middot; Copywriter &middot; Marketer &middot; Team Optimizer &middot; Docs</div>
-      <div class="cat-desc">Your team gets smarter with every project</div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══ CTA SECTION ═══ -->
-<section class="cta-section" id="ctaSection">
-  <h2>Start Building <span class="gradient">Today</span></h2>
-  <p class="cta-sub">Your AI product team is one command away.</p>
-  <div class="install-box" onclick="navigator.clipboard.writeText('npx genius-team@latest'); this.querySelector('.copy-hint').textContent = 'Copied!';">
-    <span class="prompt">$</span> npx genius-team@latest
-    <span class="copy-hint">Click to copy</span>
-  </div>
-  <div class="cta-actions">
-    <a href="#" class="btn-primary" onclick="GeniusWizard.open(); return false;"><span>Getting Started</span></a>
-    <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn-ghost">&#x2B50; Star on GitHub</a>
-  </div>
-</section>
-
-<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="f-left">Genius Team &middot; 2026</div>
-  <div class="f-right">
-    <a href="https://github.com/w-3-art/genius-team" target="_blank">GitHub</a>
-    <a href="#" onclick="GeniusWizard.open(); return false;">Get Started</a>
-    <a href="#">Docs</a>
+  <div class="fl">Genius Team &middot; 2026</div>
+  <div class="fr">
+    <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a>
+    <a href="#" onclick="GeniusWizard.open();return false">Get Started</a>
   </div>
 </footer>
 
-<!-- ═══ PROP NAV (Fixed Bottom) ═══ -->
 <div class="prop-nav">
-  <a href="proposition1.html">1</a>
-  <a href="proposition2.html">2</a>
-  <a href="proposition3.html">3</a>
-  <a href="proposition4.html">4</a>
-  <a href="proposition5.html" class="active">5</a>
-  <a href="proposition6.html">6</a>
-  <a href="proposition7.html">7</a>
+  <a href="proposition1.html">1</a><a href="proposition2.html">2</a><a href="proposition3.html">3</a><a href="proposition4.html">4</a>
+  <a href="proposition5.html" class="active">5</a><a href="proposition6.html">6</a><a href="proposition7.html">7</a>
 </div>
 
-<!-- ═══ SCRIPTS ═══ -->
 <script src="wizard.js"></script>
 <script>
 GeniusWizard.init();
 
-// ═══ LENIS SMOOTH SCROLL ═══
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-});
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);
+gsap.ticker.add(t=>{lenis.raf(t*1000)});
 gsap.ticker.lagSmoothing(0);
 gsap.registerPlugin(ScrollTrigger);
 
-// ═══ NAV SCROLL STATE ═══
-ScrollTrigger.create({
-  start: 'top -80',
-  onUpdate: (self) => {
-    document.getElementById('mainNav').classList.toggle('scrolled', self.progress > 0);
-  }
-});
+ScrollTrigger.create({start:'top -80',onUpdate:s=>{document.getElementById('mainNav').classList.toggle('scrolled',s.progress>0)}});
 
-// ═══ CURSOR LIGHT ═══
-const light = document.getElementById('cursorLight');
-let mx = 0, my = 0, cx = 0, cy = 0;
-document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
-gsap.ticker.add(() => {
-  cx += (mx - cx) * 0.07;
-  cy += (my - cy) * 0.07;
-  light.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`;
-});
+// Hero entrance
+const htl=gsap.timeline({defaults:{ease:'expo.out'}});
+htl.to('#ht .w',{opacity:1,y:0,stagger:.12,duration:1.2},.3).to('#hs',{opacity:1,duration:1},.9).to('#sh',{opacity:1,duration:.8},1.4);
 
-// ═══ HERO ENTRANCE ═══
-const heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-heroTl
-  .to('#heroTitle .word', { opacity: 1, y: 0, stagger: 0.12, duration: 1.2 }, 0.3)
-  .to('#heroSub', { opacity: 1, duration: 1 }, 0.9)
-  .to('#scrollHint', { opacity: 1, duration: 0.8 }, 1.4);
-
-// ═══ CARD STACKING — Desktop ═══
-const mm = gsap.matchMedia();
-
-mm.add('(min-width: 769px)', () => {
-  const cards = gsap.utils.toArray('.stack-card');
-
-  // Pin the first card so it stays visible beneath the stack
-  ScrollTrigger.create({
-    trigger: cards[0],
-    start: 'top top',
-    endTrigger: cards[cards.length - 1],
-    end: 'top top',
-    pin: true,
-    pinSpacing: false
-  });
-
-  cards.forEach((card, i) => {
-    if (i === 0) return; // First card is pinned separately
-
-    // Pin each card once it reaches the top
-    ScrollTrigger.create({
-      trigger: card,
-      start: 'top top',
-      pin: true,
-      pinSpacing: false
-    });
-
-    // Slide each card up from below as you scroll
-    gsap.from(card, {
-      yPercent: 100,
-      scrollTrigger: {
-        trigger: card,
-        start: 'top bottom',
-        end: 'top top',
-        scrub: true
-      }
-    });
-
-    // Fade in card content
-    gsap.from(card.querySelectorAll('.card-text > *'), {
-      y: 40,
-      opacity: 0,
-      stagger: 0.08,
-      duration: 0.6,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 40%',
-        toggleActions: 'play none none reverse'
-      }
-    });
-
-    // Fade in card image
-    const img = card.querySelector('.card-visual img');
-    if (img) {
-      gsap.from(img, {
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 35%',
-          toggleActions: 'play none none reverse'
-        }
-      });
-    }
+// Card stacking — desktop
+const mm=gsap.matchMedia();
+mm.add('(min-width:769px)',()=>{
+  const cards=gsap.utils.toArray('.stack-card');
+  ScrollTrigger.create({trigger:cards[0],start:'top top',endTrigger:cards[cards.length-1],end:'top top',pin:true,pinSpacing:false});
+  cards.forEach((c,i)=>{
+    if(!i)return;
+    ScrollTrigger.create({trigger:c,start:'top top',pin:true,pinSpacing:false});
+    gsap.from(c,{yPercent:100,scrollTrigger:{trigger:c,start:'top bottom',end:'top top',scrub:true}});
+    gsap.from(c.querySelectorAll('.txt>*,.cta-inner>*'),{y:40,opacity:0,stagger:.08,duration:.6,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 40%',toggleActions:'play none none reverse'}});
+    const img=c.querySelector('.vis img');
+    if(img)gsap.from(img,{scale:.9,opacity:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 35%',toggleActions:'play none none reverse'}});
   });
 });
 
-// ═══ CARD STACKING — Mobile (no pin, simple fade-in) ═══
-mm.add('(max-width: 768px)', () => {
-  gsap.utils.toArray('.stack-card').forEach((card, i) => {
-    if (i === 0) return;
-    gsap.from(card.querySelectorAll('.card-text > *'), {
-      y: 30,
-      opacity: 0,
-      stagger: 0.06,
-      duration: 0.6,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 80%'
-      }
-    });
+// Mobile — simple fade-in
+mm.add('(max-width:768px)',()=>{
+  gsap.utils.toArray('.stack-card').forEach((c,i)=>{
+    if(!i)return;
+    gsap.from(c.querySelectorAll('.txt>*,.cta-inner>*'),{y:30,opacity:0,stagger:.06,duration:.6,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 80%'}});
   });
 });
 
-// ═══ SKILLS SECTION ANIMATIONS ═══
-gsap.from('.skills-section .section-label, .skills-section h2', {
-  y: 30,
-  opacity: 0,
-  stagger: 0.1,
-  duration: 0.8,
-  ease: 'power3.out',
-  scrollTrigger: { trigger: '.skills-section', start: 'top 70%' }
-});
-
-gsap.from('.cat-card', {
-  y: 50,
-  opacity: 0,
-  stagger: 0.08,
-  duration: 0.7,
-  ease: 'power3.out',
-  scrollTrigger: { trigger: '.cat-grid', start: 'top 75%' }
-});
-
-// ═══ CTA SECTION ANIMATIONS ═══
-gsap.from('.cta-section h2, .cta-section .cta-sub, .install-box, .cta-actions', {
-  y: 35,
-  opacity: 0,
-  stagger: 0.12,
-  duration: 0.8,
-  ease: 'power3.out',
-  scrollTrigger: { trigger: '.cta-section', start: 'top 65%' }
-});
+// Skills grid fade
+gsap.from('.cat',{y:40,opacity:0,stagger:.07,duration:.6,ease:'power3.out',scrollTrigger:{trigger:'.cat-grid',start:'top 75%'}});
 </script>
 </body>
 </html>
