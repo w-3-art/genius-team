@@ -4,105 +4,208 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Genius Team — Anyone can build</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
+@property --glow-x{syntax:'<percentage>';initial-value:50%;inherits:false}
+@property --glow-y{syntax:'<percentage>';initial-value:30%;inherits:false}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:#0A0A0A;color:#FAFAFA;-webkit-font-smoothing:antialiased}
+html{overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:#0A0A0A;color:#FAFAFA;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-/* === NAV === */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,10,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+/* Ambient glow — single color, not multicolor gradient */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 50% 40% at var(--glow-x) var(--glow-y),rgba(91,92,246,.07),transparent 70%)}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,10,.6);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.04)}
 .logo{font-weight:700;font-size:.95rem;color:#FAFAFA;text-decoration:none;letter-spacing:-.02em}
-.nav-link{font-size:.85rem;color:#6B7280;text-decoration:none;transition:color .15s}
-.nav-link:hover{color:#FAFAFA}
+.nav-link{font-size:.85rem;color:#6B7280;text-decoration:none;transition:color .15s}.nav-link:hover{color:#FAFAFA}
 
-/* === HERO === */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8rem 1.5rem 4rem;text-align:center;max-width:720px;margin:0 auto}
-.hero h1{font-size:clamp(48px,8vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:.75rem}
-.hero-sub{font-size:clamp(16px,2.5vw,20px);color:#6B7280;line-height:1.6;margin-bottom:2.5rem;max-width:480px}
+/* === HERO — audit-strict + premium depth === */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 1.5rem 5rem;text-align:center;max-width:720px;margin:0 auto}
+.hero h1{font-size:clamp(48px,8vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:.75rem;opacity:0}
+.hero-sub{font-size:clamp(16px,2.5vw,20px);color:#6B7280;line-height:1.6;margin-bottom:2.5rem;max-width:480px;opacity:0}
 
 /* Input */
-.hero-input-wrap{width:100%;max-width:560px;position:relative;margin-bottom:1rem}
-.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid #E5E7EB;background:rgba(255,255,255,.04);padding:0 1.25rem;font-size:17px;color:#FAFAFA;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.hero-input-wrap{width:100%;max-width:560px;position:relative;margin-bottom:1rem;opacity:0}
+.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid rgba(229,231,235,.15);background:rgba(255,255,255,.03);padding:0 1.25rem;font-size:17px;color:#FAFAFA;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s,background .2s}
 .hero-input::placeholder{color:#6B7280}
-.hero-input:focus{border-color:#5B5CF6;box-shadow:0 0 0 3px rgba(91,92,246,.15)}
+.hero-input:focus{border-color:#5B5CF6;box-shadow:0 0 0 3px rgba(91,92,246,.12),0 0 40px rgba(91,92,246,.06);background:rgba(255,255,255,.05)}
 
 /* Suggestions */
-.suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
-.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .15s;font-family:inherit}
-.sug:hover{color:#FAFAFA;border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06)}
+.suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem;opacity:0}
+.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .2s;font-family:inherit}
+.sug:hover{color:#FAFAFA;border-color:rgba(91,92,246,.25);background:rgba(91,92,246,.06);transform:translateY(-1px)}
 
 /* CTA */
-.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:1.5rem}
-.hero-cta:hover{background:#6B6CF8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(91,92,246,.3)}
+.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:1.5rem;opacity:0;box-shadow:0 2px 20px rgba(91,92,246,.2)}
+.hero-cta:hover{background:#6B6CF8;transform:translateY(-2px);box-shadow:0 8px 30px rgba(91,92,246,.35)}
 
 /* Trust */
-.trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;opacity:0}
 .trust span{font-size:.78rem;color:#6B7280;display:flex;align-items:center;gap:.35rem}
-.trust .ck{color:#5B5CF6;font-size:.9rem}
+.trust .ck{color:#5B5CF6}
 
-/* === VERSION A: Conversion — hero-only, minimal below === */
-.steps-row{max-width:720px;margin:0 auto;padding:2rem 1.5rem 6rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;text-align:center}
-.step-num{font-size:.65rem;font-weight:600;color:#5B5CF6;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.4rem}
-.step-title{font-size:1rem;font-weight:700;margin-bottom:.25rem}
-.step-desc{font-size:.85rem;color:#6B7280;line-height:1.5}
-.divider{width:100%;max-width:720px;margin:0 auto;height:1px;background:rgba(255,255,255,.06)}
-.bottom-cta{text-align:center;padding:4rem 1.5rem 6rem}
-.bottom-cta p{color:#6B7280;font-size:.9rem;margin-bottom:1rem}
+/* === VERSION A: "Iris" — clip-path circle reveal on hero image === */
+.hero-bg-wrap{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.hero-bg-iris{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(91,92,246,.08),transparent 60%);clip-path:circle(0% at 50% 45%);will-change:clip-path}
+
+/* === BELOW FOLD — premium but disciplined === */
+section{position:relative;z-index:1}
+
+/* Floating cards */
+.cards{max-width:720px;margin:0 auto;padding:0 1.5rem 5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.fcard{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:1.75rem;transition:all .3s;position:relative;overflow:hidden}
+.fcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,92,246,.3),transparent);opacity:0;transition:opacity .3s}
+.fcard:hover{transform:translateY(-4px);border-color:rgba(91,92,246,.12);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.fcard:hover::before{opacity:1}
+.fcard-icon{font-size:1.5rem;margin-bottom:.75rem;display:block}
+.fcard-title{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
+.fcard-desc{font-size:.82rem;color:#6B7280;line-height:1.6}
+
+/* Workflow */
+.workflow{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
+.wf-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:#5B5CF6;margin-bottom:.5rem}
+.wf-title{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-.03em;margin-bottom:2.5rem}
+.wf-step{display:grid;grid-template-columns:3rem 1fr;gap:1.25rem;margin-bottom:2rem;align-items:start}
+.wf-num{width:2.5rem;height:2.5rem;border-radius:10px;background:rgba(91,92,246,.08);color:#5B5CF6;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+.wf-step h3{font-size:1rem;font-weight:700;margin-bottom:.2rem}
+.wf-step p{font-size:.85rem;color:#6B7280;line-height:1.6}
+
+/* Skills */
+.skills{max-width:720px;margin:0 auto;padding:4rem 1.5rem}
+.sk-title{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.03em;margin-bottom:.4rem}
+.sk-sub{font-size:.9rem;color:#6B7280;margin-bottom:2rem}
+.sk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.sk-item{padding:1.25rem;border-radius:14px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);transition:all .3s;position:relative;overflow:hidden}
+.sk-item::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(91,92,246,.04),transparent 60%);opacity:0;transition:opacity .3s}
+.sk-item:hover{border-color:rgba(91,92,246,.12);transform:translateY(-2px)}.sk-item:hover::after{opacity:1}
+.sk-emoji{font-size:1.2rem;margin-bottom:.4rem}
+.sk-name{font-size:.85rem;font-weight:700;margin-bottom:.15rem}
+.sk-count{font-size:.7rem;color:#6B7280}
+.sk-tags{display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.5rem}
+.sk-tags span{font-size:.58rem;padding:.15rem .4rem;border-radius:4px;background:rgba(255,255,255,.03);color:rgba(255,255,255,.3)}
+
+/* CTA bottom */
+.bcta{text-align:center;padding:6rem 1.5rem 7rem;position:relative}
+.bcta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(91,92,246,.04),transparent 70%);pointer-events:none}
+.bcta p{color:#6B7280;font-size:.9rem;margin-bottom:1.25rem;position:relative}
+.bcta .hero-cta{opacity:1;position:relative}
+
+/* Cursor follow */
+.cursor-glow{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(91,92,246,.04),transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);will-change:transform,left,top}
 
 /* Footer */
-footer{padding:2rem;text-align:center;font-size:.75rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.05)}
-footer a{color:rgba(255,255,255,.25);text-decoration:none}footer a:hover{color:#5B5CF6}
+footer{position:relative;z-index:1;padding:2rem;text-align:center;font-size:.75rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.04)}
+footer a{color:rgba(255,255,255,.25);text-decoration:none;margin:0 .5rem}footer a:hover{color:#5B5CF6}
 
 /* Prop nav */
-.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:100px;padding:.25rem}
+.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(10,10,10,.8);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.05);border-radius:100px;padding:.25rem}
 .pn a{padding:.3rem .7rem;border-radius:100px;color:#6B7280;text-decoration:none;font-size:.7rem;font-weight:600;transition:all .15s}
 .pn a:hover{color:#FAFAFA}.pn a.on{background:#5B5CF6;color:#fff}
 
-@media(max-width:640px){.steps-row{grid-template-columns:1fr;gap:2rem}.suggestions{flex-direction:column;align-items:center}}
+@media(max-width:768px){.cards,.sk-grid{grid-template-columns:1fr}.wf-step{grid-template-columns:2.5rem 1fr}.suggestions{flex-direction:column;align-items:center}nav{padding:.75rem 1.25rem}}
+@media(max-width:480px){.hero h1{font-size:40px}.trust{flex-direction:column;align-items:center;gap:.5rem}}
 </style>
 </head>
 <body>
+<div class="ambient" id="ambient"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
 <nav><a class="logo" href="/">🧠 Genius Team</a><a class="nav-link" href="https://github.com/w-3-art/genius-team">GitHub</a></nav>
 
+<!-- HERO -->
 <section class="hero">
-  <h1>Anyone can build</h1>
-  <p class="hero-sub">Describe your idea. We turn it into a real app.</p>
-  <div class="hero-input-wrap">
-    <input class="hero-input" id="mainInput" type="text" placeholder="What do you want to build?">
-  </div>
-  <div class="suggestions">
+  <div class="hero-bg-wrap"><div class="hero-bg-iris" id="heroIris"></div></div>
+  <h1 id="h1">Anyone can build</h1>
+  <p class="hero-sub" id="hsub">Describe your idea. We turn it into a real app.</p>
+  <div class="hero-input-wrap" id="hinput"><input class="hero-input" id="mainInput" type="text" placeholder="What do you want to build?"></div>
+  <div class="suggestions" id="hsugs">
     <button class="sug" onclick="fill(this)">Booking app for yoga studio</button>
     <button class="sug" onclick="fill(this)">Marketplace for vintage watches</button>
     <button class="sug" onclick="fill(this)">Landing page for my brand</button>
   </div>
-  <button class="hero-cta">Generate my app</button>
-  <div class="trust">
-    <span><span class="ck">✓</span> No code</span>
-    <span><span class="ck">✓</span> Ready in minutes</span>
-    <span><span class="ck">✓</span> Live on the web</span>
+  <button class="hero-cta" id="hcta">Generate my app</button>
+  <div class="trust" id="htrust"><span><span class="ck">✓</span> No code</span><span><span class="ck">✓</span> Ready in minutes</span><span><span class="ck">✓</span> Live on the web</span></div>
+</section>
+
+<!-- Floating cards -->
+<section class="cards">
+  <div class="fcard"><span class="fcard-icon">🎨</span><div class="fcard-title">Design</div><p class="fcard-desc">UI, branding, responsive layouts — crafted by AI design specialists.</p></div>
+  <div class="fcard"><span class="fcard-icon">⚡</span><div class="fcard-title">Code</div><p class="fcard-desc">Frontend, backend, database, API — production-grade from day one.</p></div>
+  <div class="fcard"><span class="fcard-icon">🚀</span><div class="fcard-title">Deploy</div><p class="fcard-desc">Tested, documented, secured, and live on the internet.</p></div>
+</section>
+
+<!-- Workflow -->
+<section class="workflow">
+  <div class="wf-label">How it works</div>
+  <h2 class="wf-title">Three steps. That's it.</h2>
+  <div class="wf-step"><div class="wf-num">1</div><div><h3>Describe your idea</h3><p>"Build me a booking app for my yoga studio with online payments."</p></div></div>
+  <div class="wf-step"><div class="wf-num">2</div><div><h3>42 agents build it</h3><p>Design → Code → Test → Secure → Optimize. Fully automated.</p></div></div>
+  <div class="wf-step"><div class="wf-num">3</div><div><h3>Ship it</h3><p>Production-ready. Tested. Documented. One command to deploy.</p></div></div>
+</section>
+
+<!-- Skills -->
+<section class="skills">
+  <h2 class="sk-title">Your AI team</h2>
+  <p class="sk-sub">42 agents. 6 departments. They collaborate like a real product team.</p>
+  <div class="sk-grid">
+    <div class="sk-item"><div class="sk-emoji">💡</div><div class="sk-name">Ideation</div><div class="sk-count">5 agents</div><div class="sk-tags"><span>Interviewer</span><span>Analyst</span><span>Specs</span><span>Copy</span><span>Content</span></div></div>
+    <div class="sk-item"><div class="sk-emoji">⚡</div><div class="sk-name">Build</div><div class="sk-count">7 agents</div><div class="sk-tags"><span>Architect</span><span>Designer</span><span>Front</span><span>Back</span><span>Mobile</span><span>DB</span><span>API</span></div></div>
+    <div class="sk-item"><div class="sk-emoji">🛡️</div><div class="sk-name">Quality</div><div class="sk-count">5 agents</div><div class="sk-tags"><span>Review</span><span>QA</span><span>Security</span><span>A11y</span><span>Debug</span></div></div>
+    <div class="sk-item"><div class="sk-emoji">📈</div><div class="sk-name">Growth</div><div class="sk-count">5 agents</div><div class="sk-tags"><span>SEO</span><span>Analytics</span><span>Perf</span><span>Marketing</span><span>i18n</span></div></div>
+    <div class="sk-item"><div class="sk-emoji">🚀</div><div class="sk-name">Ops</div><div class="sk-count">4 agents</div><div class="sk-tags"><span>Deploy</span><span>Docs</span><span>Template</span><span>Update</span></div></div>
+    <div class="sk-item"><div class="sk-emoji">🧠</div><div class="sk-name">AI Engine</div><div class="sk-count">5 agents</div><div class="sk-tags"><span>Orchestrator</span><span>Router</span><span>Experiments</span><span>Optimizer</span><span>Memory</span></div></div>
   </div>
 </section>
 
-<div class="divider"></div>
-
-<div class="steps-row">
-  <div><div class="step-num">Step 1</div><div class="step-title">Describe it</div><p class="step-desc">Tell us what you want in plain words.</p></div>
-  <div><div class="step-num">Step 2</div><div class="step-title">We build it</div><p class="step-desc">42 AI agents design, code, and test.</p></div>
-  <div><div class="step-num">Step 3</div><div class="step-title">It's live</div><p class="step-desc">Production-ready, on the internet.</p></div>
-</div>
-
-<div class="divider"></div>
-
-<div class="bottom-cta">
+<!-- Bottom CTA -->
+<section class="bcta">
   <p>Free. Open source. One command.</p>
   <button class="hero-cta">Generate my app</button>
-</div>
+</section>
 
-<footer>🧠 Genius Team v18.0 — MIT · <a href="https://github.com/w-3-art/genius-team">GitHub</a></footer>
+<footer>🧠 Genius Team v18.0 — MIT<a href="https://github.com/w-3-art/genius-team">GitHub</a><a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></footer>
 <div class="pn"><a href="/proposition1" class="on">A</a><a href="/proposition2">B</a><a href="/proposition3">C</a><a href="/proposition4">D</a><a href="/proposition5">E</a></div>
 
 <script>
-function fill(btn){document.getElementById('mainInput').value=btn.textContent;document.getElementById('mainInput').focus()}
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+
+function fill(btn){const i=document.getElementById('mainInput');i.value=btn.textContent;i.focus()}
+
+/* Hero entrance — staggered */
+const htl=gsap.timeline({defaults:{ease:'expo.out'}});
+htl.to('#h1',{opacity:1,y:0,duration:1,delay:.3})
+   .to('#hsub',{opacity:1,y:0,duration:.8},'<.2')
+   .to('#hinput',{opacity:1,y:0,duration:.8},'<.15')
+   .to('#hsugs',{opacity:1,y:0,duration:.6},'<.1')
+   .to('#hcta',{opacity:1,y:0,duration:.6},'<.1')
+   .to('#htrust',{opacity:1,y:0,duration:.5},'<.1');
+gsap.set(['#h1','#hsub','#hinput','#hsugs','#hcta','#htrust'],{y:20});
+
+/* Iris reveal — ambient glow expands on scroll */
+gsap.to('#heroIris',{clipPath:'circle(80% at 50% 45%)',scrollTrigger:{trigger:'.hero',start:'top top',end:'80% top',scrub:1.5}});
+
+/* Scroll reveals */
+gsap.utils.toArray('.fcard,.wf-step,.sk-item').forEach((el,i)=>{
+  gsap.from(el,{y:30,opacity:0,duration:.7,ease:'power3.out',delay:i%3*.08,scrollTrigger:{trigger:el,start:'top 85%'}});
+});
+gsap.utils.toArray('.wf-label,.wf-title,.sk-title,.sk-sub,.bcta p,.bcta .hero-cta').forEach(el=>{
+  gsap.from(el,{y:20,opacity:0,duration:.7,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+
+/* Cursor glow */
+const glow=document.getElementById('cursorGlow');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+gsap.ticker.add(()=>{cx+=(mx-cx)*.07;cy+=(my-cy)*.07;glow.style.left=cx+'px';glow.style.top=cy+'px'});
+
+/* Ambient follows mouse loosely */
+document.addEventListener('mousemove',e=>{
+  gsap.to('#ambient',{'--glow-x':(e.clientX/window.innerWidth*100)+'%','--glow-y':(e.clientY/window.innerHeight*100)+'%',duration:2,ease:'power2.out'});
+});
 </script>
 </body>
 </html>

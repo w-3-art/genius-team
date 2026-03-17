@@ -4,72 +4,80 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Genius Team — Anyone can build</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFA;color:#0A0A0A;-webkit-font-smoothing:antialiased}
+html{overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFA;color:#0A0A0A;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(250,250,250,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06)}
+/* Light ambient — soft purple radial on top */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(91,92,246,.04),transparent 60%)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(250,250,250,.7);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.05)}
 .logo{font-weight:700;font-size:.95rem;color:#0A0A0A;text-decoration:none;letter-spacing:-.02em}
 .nav-link{font-size:.85rem;color:#6B7280;text-decoration:none;transition:color .15s}.nav-link:hover{color:#0A0A0A}
 
-/* HERO — light version */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8rem 1.5rem 4rem;text-align:center;max-width:720px;margin:0 auto}
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 1.5rem 5rem;text-align:center;max-width:720px;margin:0 auto}
 .hero h1{font-size:clamp(48px,8vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:.75rem;color:#0A0A0A}
 .hero-sub{font-size:clamp(16px,2.5vw,20px);color:#6B7280;line-height:1.6;margin-bottom:2.5rem;max-width:480px}
 .hero-input-wrap{width:100%;max-width:560px;position:relative;margin-bottom:1rem}
-.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid #E5E7EB;background:#fff;padding:0 1.25rem;font-size:17px;color:#0A0A0A;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid #E5E7EB;background:#fff;padding:0 1.25rem;font-size:17px;color:#0A0A0A;font-family:inherit;outline:none;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 0 transparent}
 .hero-input::placeholder{color:#9CA3AF}
-.hero-input:focus{border-color:#5B5CF6;box-shadow:0 0 0 3px rgba(91,92,246,.1),0 1px 3px rgba(0,0,0,.04)}
+.hero-input:focus{border-color:#5B5CF6;box-shadow:0 1px 3px rgba(0,0,0,.04),0 0 0 3px rgba(91,92,246,.1),0 0 30px rgba(91,92,246,.04)}
 .suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
-.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid #E5E7EB;background:#fff;font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .15s;font-family:inherit}
-.sug:hover{color:#0A0A0A;border-color:#D1D5DB;background:#F9FAFB}
-.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:1.5rem}
-.hero-cta:hover{background:#4F4DE6;transform:translateY(-1px);box-shadow:0 4px 12px rgba(91,92,246,.25)}
+.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid #E5E7EB;background:#fff;font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.sug:hover{color:#0A0A0A;border-color:#D1D5DB;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(91,92,246,.2)}
+.hero-cta:hover{background:#4F4DE6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(91,92,246,.25)}
 .trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
 .trust span{font-size:.78rem;color:#6B7280;display:flex;align-items:center;gap:.35rem}
 .trust .ck{color:#5B5CF6}
 
-/* === VERSION C: Light — cards + use cases === */
-.cards-row{max-width:720px;margin:0 auto;padding:4rem 1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.fcard{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:1.75rem;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.fcard:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:#D1D5DB}
-.fcard-icon{font-size:1.4rem;margin-bottom:.75rem}
+/* Cards with elevation */
+section{position:relative;z-index:1}
+.cards{max-width:720px;margin:0 auto;padding:2rem 1.5rem 5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.fcard{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:1.75rem;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.fcard:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.08);border-color:#D1D5DB}
+.fcard-icon{font-size:1.5rem;margin-bottom:.75rem;display:block}
 .fcard-title{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
-.fcard-desc{font-size:.82rem;color:#6B7280;line-height:1.5}
+.fcard-desc{font-size:.82rem;color:#6B7280;line-height:1.6}
 
-/* Steps */
-.steps{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
-.steps-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:#5B5CF6;margin-bottom:.5rem}
-.steps-title{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-.03em;margin-bottom:2.5rem}
-.st-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;text-align:center}
-.st-num{display:inline-flex;width:2.5rem;height:2.5rem;border-radius:10px;background:rgba(91,92,246,.08);color:#5B5CF6;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;margin:0 auto .75rem}
-.st-name{font-size:1rem;font-weight:700;margin-bottom:.25rem}
-.st-desc{font-size:.85rem;color:#6B7280;line-height:1.5}
+/* Workflow steps */
+.workflow{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
+.wf-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:#5B5CF6;margin-bottom:.5rem}
+.wf-title{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-.03em;margin-bottom:2.5rem}
+.wf-step{display:grid;grid-template-columns:3rem 1fr;gap:1.25rem;margin-bottom:2rem;align-items:start}
+.wf-num{width:2.5rem;height:2.5rem;border-radius:10px;background:rgba(91,92,246,.08);color:#5B5CF6;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+.wf-step h3{font-size:1rem;font-weight:700;margin-bottom:.2rem}
+.wf-step p{font-size:.85rem;color:#6B7280;line-height:1.6}
 
 /* Use cases */
 .cases{max-width:720px;margin:0 auto;padding:4rem 1.5rem}
-.cases-title{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.03em;margin-bottom:2rem}
-.case-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.case{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.case-who{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#5B5CF6;margin-bottom:.4rem}
-.case-quote{font-size:.88rem;color:#374151;line-height:1.5;font-style:italic;margin-bottom:.5rem}
-.case-result{font-size:.75rem;color:#6B7280}
+.cases-title{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.03em;margin-bottom:.4rem}
+.cases-sub{font-size:.9rem;color:#6B7280;margin-bottom:2rem}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.case{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .3s}
+.case:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.06)}
+.case-who{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#5B5CF6;margin-bottom:.4rem}
+.case-quote{font-size:.88rem;color:#374151;line-height:1.6;margin-bottom:.5rem}
+.case-result{font-size:.75rem;color:#6B7280;font-weight:500}
 
-.bcta{text-align:center;padding:5rem 1.5rem 6rem}
-.bcta p{color:#6B7280;font-size:.9rem;margin-bottom:1rem}
+.bcta{text-align:center;padding:6rem 1.5rem 7rem;position:relative}
+.bcta p{color:#6B7280;font-size:.9rem;margin-bottom:1.25rem}
 
-footer{padding:2rem;text-align:center;font-size:.75rem;color:#9CA3AF;border-top:1px solid #E5E7EB}
-footer a{color:#9CA3AF;text-decoration:none}footer a:hover{color:#5B5CF6}
-
-.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(250,250,250,.9);backdrop-filter:blur(12px);border:1px solid #E5E7EB;border-radius:100px;padding:.25rem}
+footer{position:relative;z-index:1;padding:2rem;text-align:center;font-size:.75rem;color:#9CA3AF;border-top:1px solid #E5E7EB}
+footer a{color:#9CA3AF;text-decoration:none;margin:0 .5rem}footer a:hover{color:#5B5CF6}
+.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(250,250,250,.85);backdrop-filter:blur(16px);border:1px solid #E5E7EB;border-radius:100px;padding:.25rem}
 .pn a{padding:.3rem .7rem;border-radius:100px;color:#6B7280;text-decoration:none;font-size:.7rem;font-weight:600;transition:all .15s}
 .pn a:hover{color:#0A0A0A}.pn a.on{background:#5B5CF6;color:#fff}
 
-@media(max-width:640px){.cards-row,.st-row,.case-row{grid-template-columns:1fr}.suggestions{flex-direction:column;align-items:center}}
+@media(max-width:768px){.cards,.case-grid{grid-template-columns:1fr}.suggestions{flex-direction:column;align-items:center}}
 </style>
 </head>
 <body>
+<div class="ambient"></div>
 <nav><a class="logo" href="/">🧠 Genius Team</a><a class="nav-link" href="https://github.com/w-3-art/genius-team">GitHub</a></nav>
 
 <section class="hero">
@@ -85,39 +93,60 @@ footer a{color:#9CA3AF;text-decoration:none}footer a:hover{color:#5B5CF6}
   <div class="trust"><span><span class="ck">✓</span> No code</span><span><span class="ck">✓</span> Ready in minutes</span><span><span class="ck">✓</span> Live on the web</span></div>
 </section>
 
-<div class="cards-row">
-  <div class="fcard"><div class="fcard-icon">🎨</div><div class="fcard-title">Design</div><p class="fcard-desc">UI, branding, responsive — crafted by AI design agents.</p></div>
-  <div class="fcard"><div class="fcard-icon">⚡</div><div class="fcard-title">Code</div><p class="fcard-desc">Frontend, backend, database — production-grade code.</p></div>
-  <div class="fcard"><div class="fcard-icon">🚀</div><div class="fcard-title">Deploy</div><p class="fcard-desc">Tested, documented, live on the internet.</p></div>
-</div>
+<section class="cards">
+  <div class="fcard"><span class="fcard-icon">🎨</span><div class="fcard-title">Design</div><p class="fcard-desc">UI, branding, responsive layouts — crafted by AI design specialists.</p></div>
+  <div class="fcard"><span class="fcard-icon">⚡</span><div class="fcard-title">Code</div><p class="fcard-desc">Frontend, backend, database, API — production-grade from day one.</p></div>
+  <div class="fcard"><span class="fcard-icon">🚀</span><div class="fcard-title">Deploy</div><p class="fcard-desc">Tested, documented, secured, and live on the internet.</p></div>
+</section>
 
-<section class="steps">
-  <div class="steps-label">How it works</div>
-  <h2 class="steps-title">Three steps. That's it.</h2>
-  <div class="st-row">
-    <div><div class="st-num">1</div><div class="st-name">Describe it</div><p class="st-desc">"Build me a booking app for my yoga studio."</p></div>
-    <div><div class="st-num">2</div><div class="st-name">We build it</div><p class="st-desc">42 AI agents design, code, test, and secure.</p></div>
-    <div><div class="st-num">3</div><div class="st-name">It's live</div><p class="st-desc">Production-ready. One command to deploy.</p></div>
-  </div>
+<section class="workflow">
+  <div class="wf-label">How it works</div>
+  <h2 class="wf-title">Three steps. That's it.</h2>
+  <div class="wf-step"><div class="wf-num">1</div><div><h3>Describe your idea</h3><p>"Build me a booking app for my yoga studio with online payments."</p></div></div>
+  <div class="wf-step"><div class="wf-num">2</div><div><h3>42 agents build it</h3><p>Design → Code → Test → Secure → Optimize. Fully automated.</p></div></div>
+  <div class="wf-step"><div class="wf-num">3</div><div><h3>Ship it</h3><p>Production-ready. Tested. Documented. One command to deploy.</p></div></div>
 </section>
 
 <section class="cases">
   <h2 class="cases-title">Built for everyone</h2>
-  <div class="case-row">
+  <p class="cases-sub">No coding experience needed. Just your idea.</p>
+  <div class="case-grid">
     <div class="case"><div class="case-who">Freelancer</div><p class="case-quote">"I needed a portfolio with a booking form. Done in 10 minutes."</p><div class="case-result">→ Portfolio + booking system</div></div>
     <div class="case"><div class="case-who">Startup founder</div><p class="case-quote">"Shipped our MVP before the deadline. No dev team needed."</p><div class="case-result">→ Full-stack SaaS MVP</div></div>
     <div class="case"><div class="case-who">Student</div><p class="case-quote">"Built my first web app for a school project. Got an A."</p><div class="case-result">→ Interactive web app</div></div>
   </div>
 </section>
 
-<div class="bcta">
+<section class="bcta">
   <p>Free. Open source. One command.</p>
   <button class="hero-cta">Generate my app</button>
-</div>
+</section>
 
-<footer>🧠 Genius Team v18.0 — MIT · <a href="https://github.com/w-3-art/genius-team">GitHub</a></footer>
+<footer>🧠 Genius Team v18.0 — MIT<a href="https://github.com/w-3-art/genius-team">GitHub</a></footer>
 <div class="pn"><a href="/proposition1">A</a><a href="/proposition2">B</a><a href="/proposition3" class="on">C</a><a href="/proposition4">D</a><a href="/proposition5">E</a></div>
 
-<script>function fill(btn){document.getElementById('mainInput').value=btn.textContent;document.getElementById('mainInput').focus()}</script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+
+function fill(btn){const i=document.getElementById('mainInput');i.value=btn.textContent;i.focus()}
+
+/* Hero entrance */
+gsap.from('.hero h1',{y:30,opacity:0,duration:1,ease:'expo.out',delay:.3});
+gsap.from('.hero-sub',{y:20,opacity:0,duration:.8,ease:'expo.out',delay:.5});
+gsap.from('.hero-input-wrap',{y:20,opacity:0,duration:.8,ease:'expo.out',delay:.65});
+gsap.from('.suggestions',{y:15,opacity:0,duration:.6,ease:'expo.out',delay:.8});
+gsap.from('.hero-cta',{y:15,opacity:0,duration:.6,ease:'expo.out',delay:.9});
+gsap.from('.trust',{y:10,opacity:0,duration:.5,ease:'expo.out',delay:1});
+
+/* Scroll reveals with stagger */
+gsap.utils.toArray('.fcard,.wf-step,.case').forEach((el,i)=>{
+  gsap.from(el,{y:30,opacity:0,duration:.7,delay:i%3*.08,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%'}});
+});
+gsap.utils.toArray('.wf-label,.wf-title,.cases-title,.cases-sub,.bcta p,.bcta .hero-cta').forEach(el=>{
+  gsap.from(el,{y:20,opacity:0,duration:.7,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+</script>
 </body>
 </html>

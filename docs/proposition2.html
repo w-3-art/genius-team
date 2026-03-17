@@ -4,82 +4,96 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Genius Team — Anyone can build</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:#0A0A0A;color:#FAFAFA;-webkit-font-smoothing:antialiased}
-/* Subtle grain */
-body::before{content:'';position:fixed;inset:0;z-index:-1;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+html{overflow-x:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:#0A0A0A;color:#FAFAFA;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,10,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+/* Film grain overlay */
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.025;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Gradient orbs — depth layers */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px)}
+.orb-1{width:600px;height:600px;background:rgba(91,92,246,.06);top:-200px;right:-200px}
+.orb-2{width:400px;height:400px;background:rgba(91,92,246,.04);bottom:10%;left:-100px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,10,.5);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.04)}
 .logo{font-weight:700;font-size:.95rem;color:#FAFAFA;text-decoration:none;letter-spacing:-.02em}
-.nav-link{font-size:.85rem;color:#6B7280;text-decoration:none;transition:color .15s}.nav-link:hover{color:#FAFAFA}
+.nav-links{display:flex;gap:1.5rem}
+.nav-link{font-size:.82rem;color:#6B7280;text-decoration:none;transition:color .15s}.nav-link:hover{color:#FAFAFA}
 
-/* HERO — identical structure */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8rem 1.5rem 4rem;text-align:center;max-width:720px;margin:0 auto}
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 1.5rem 5rem;text-align:center;max-width:720px;margin:0 auto}
 .hero h1{font-size:clamp(48px,8vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:.75rem}
 .hero-sub{font-size:clamp(16px,2.5vw,20px);color:#6B7280;line-height:1.6;margin-bottom:2.5rem;max-width:480px}
 .hero-input-wrap{width:100%;max-width:560px;position:relative;margin-bottom:1rem}
-.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid #E5E7EB;background:rgba(255,255,255,.04);padding:0 1.25rem;font-size:17px;color:#FAFAFA;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.hero-input{width:100%;height:64px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);padding:0 1.25rem;font-size:17px;color:#FAFAFA;font-family:inherit;outline:none;transition:all .2s}
 .hero-input::placeholder{color:#6B7280}
-.hero-input:focus{border-color:#5B5CF6;box-shadow:0 0 0 3px rgba(91,92,246,.15)}
+.hero-input:focus{border-color:#5B5CF6;box-shadow:0 0 0 3px rgba(91,92,246,.12),0 0 40px rgba(91,92,246,.05);background:rgba(255,255,255,.05)}
 .suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
-.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .15s;font-family:inherit}
-.sug:hover{color:#FAFAFA;border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06)}
-.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;margin-bottom:1.5rem}
-.hero-cta:hover{background:#6B6CF8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(91,92,246,.3)}
+.sug{padding:.45rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);font-size:.82rem;color:#6B7280;cursor:pointer;transition:all .2s;font-family:inherit}
+.sug:hover{color:#FAFAFA;border-color:rgba(91,92,246,.25);background:rgba(91,92,246,.06);transform:translateY(-1px)}
+.hero-cta{height:54px;padding:0 2rem;border-radius:12px;background:#5B5CF6;border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:1.5rem;box-shadow:0 2px 20px rgba(91,92,246,.2)}
+.hero-cta:hover{background:#6B6CF8;transform:translateY(-2px);box-shadow:0 8px 30px rgba(91,92,246,.35)}
 .trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
 .trust span{font-size:.78rem;color:#6B7280;display:flex;align-items:center;gap:.35rem}
 .trust .ck{color:#5B5CF6}
 
-/* === VERSION B: Premium — floating cards + workflow + skills grid === */
+/* === VERSION B: floating cards with glow borders + horizontal scroll workflow === */
+section{position:relative;z-index:1}
 
-/* Floating cards */
-.cards-row{max-width:720px;margin:0 auto;padding:4rem 1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.fcard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1.75rem;transition:all .2s}
-.fcard:hover{transform:translateY(-3px);border-color:rgba(91,92,246,.2);box-shadow:0 12px 32px rgba(0,0,0,.4)}
-.fcard-icon{font-size:1.4rem;margin-bottom:.75rem}
+.cards{max-width:720px;margin:0 auto;padding:2rem 1.5rem 5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.fcard{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:1.75rem;transition:all .35s;position:relative;overflow:hidden}
+.fcard::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:conic-gradient(from 180deg,transparent,rgba(91,92,246,.15),transparent 40%);opacity:0;transition:opacity .35s;z-index:-1}
+.fcard:hover{transform:translateY(-5px);background:rgba(255,255,255,.03)}.fcard:hover::before{opacity:1}
+.fcard-icon{font-size:1.5rem;margin-bottom:.75rem;display:block}
 .fcard-title{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
-.fcard-desc{font-size:.82rem;color:#6B7280;line-height:1.5}
+.fcard-desc{font-size:.82rem;color:#6B7280;line-height:1.6}
 
-/* Workflow */
-.workflow{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
-.wf-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:#5B5CF6;margin-bottom:.5rem}
-.wf-title{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-.03em;margin-bottom:2.5rem}
-.wf-step{display:grid;grid-template-columns:3rem 1fr;gap:1.25rem;margin-bottom:2rem;align-items:start}
-.wf-num{width:2.5rem;height:2.5rem;border-radius:10px;background:rgba(91,92,246,.1);color:#5B5CF6;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
-.wf-step h3{font-size:1rem;font-weight:700;margin-bottom:.2rem}
-.wf-step p{font-size:.85rem;color:#6B7280;line-height:1.5}
+/* Workflow — horizontal scroll section */
+.wf-wrap{padding:5rem 0;overflow:hidden}
+.wf-header{max-width:720px;margin:0 auto;padding:0 1.5rem 2.5rem}
+.wf-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:#5B5CF6;margin-bottom:.5rem}
+.wf-title{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:-.03em}
+.wf-track{display:flex;gap:1.5rem;padding:0 calc(50vw - 360px);width:max-content}
+.wf-card{width:320px;flex-shrink:0;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:2rem;position:relative}
+.wf-card-num{position:absolute;top:1.5rem;right:1.5rem;font-size:2.5rem;font-weight:800;color:rgba(91,92,246,.08);line-height:1}
+.wf-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.4rem}
+.wf-card p{font-size:.85rem;color:#6B7280;line-height:1.6}
 
 /* Skills */
-.skills{max-width:720px;margin:0 auto;padding:4rem 1.5rem}
+.skills{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
 .sk-title{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.03em;margin-bottom:.4rem}
 .sk-sub{font-size:.9rem;color:#6B7280;margin-bottom:2rem}
 .sk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.sk-item{padding:1.25rem;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);transition:all .2s}
-.sk-item:hover{border-color:rgba(91,92,246,.15)}
+.sk-item{padding:1.25rem;border-radius:14px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);transition:all .3s}
+.sk-item:hover{border-color:rgba(91,92,246,.12);transform:translateY(-2px)}
 .sk-emoji{font-size:1.2rem;margin-bottom:.4rem}
 .sk-name{font-size:.85rem;font-weight:700;margin-bottom:.15rem}
 .sk-count{font-size:.7rem;color:#6B7280}
-.sk-tags{display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.4rem}
-.sk-tags span{font-size:.6rem;padding:.12rem .35rem;border-radius:4px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.3)}
+.sk-tags{display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.5rem}
+.sk-tags span{font-size:.58rem;padding:.15rem .4rem;border-radius:4px;background:rgba(255,255,255,.03);color:rgba(255,255,255,.3)}
 
-/* Bottom CTA */
-.bcta{text-align:center;padding:5rem 1.5rem 6rem}
-.bcta p{color:#6B7280;font-size:.9rem;margin-bottom:1rem}
+.bcta{text-align:center;padding:6rem 1.5rem 7rem;position:relative}
+.bcta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(91,92,246,.04),transparent 70%);pointer-events:none}
+.bcta p{color:#6B7280;font-size:.9rem;margin-bottom:1.25rem;position:relative}
+.bcta .hero-cta{position:relative}
 
-footer{padding:2rem;text-align:center;font-size:.75rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.05)}
-footer a{color:rgba(255,255,255,.25);text-decoration:none}footer a:hover{color:#5B5CF6}
-
-.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06);border-radius:100px;padding:.25rem}
+footer{position:relative;z-index:1;padding:2rem;text-align:center;font-size:.75rem;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.04)}
+footer a{color:rgba(255,255,255,.25);text-decoration:none;margin:0 .5rem}footer a:hover{color:#5B5CF6}
+.pn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.25rem;z-index:100;background:rgba(10,10,10,.8);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.05);border-radius:100px;padding:.25rem}
 .pn a{padding:.3rem .7rem;border-radius:100px;color:#6B7280;text-decoration:none;font-size:.7rem;font-weight:600;transition:all .15s}
 .pn a:hover{color:#FAFAFA}.pn a.on{background:#5B5CF6;color:#fff}
 
-@media(max-width:640px){.cards-row,.sk-grid{grid-template-columns:1fr}.wf-step{grid-template-columns:2.5rem 1fr}.suggestions{flex-direction:column;align-items:center}}
+@media(max-width:768px){.cards,.sk-grid{grid-template-columns:1fr}.wf-track{padding:0 1.5rem}.wf-card{width:280px}.suggestions{flex-direction:column;align-items:center}}
 </style>
 </head>
 <body>
-<nav><a class="logo" href="/">🧠 Genius Team</a><a class="nav-link" href="https://github.com/w-3-art/genius-team">GitHub</a></nav>
+<div class="orb orb-1"></div><div class="orb orb-2"></div>
+<nav><a class="logo" href="/">🧠 Genius Team</a><div class="nav-links"><a class="nav-link" href="https://github.com/w-3-art/genius-team">GitHub</a><a class="nav-link" href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></div></nav>
 
 <section class="hero">
   <h1>Anyone can build</h1>
@@ -94,26 +108,27 @@ footer a{color:rgba(255,255,255,.25);text-decoration:none}footer a:hover{color:#
   <div class="trust"><span><span class="ck">✓</span> No code</span><span><span class="ck">✓</span> Ready in minutes</span><span><span class="ck">✓</span> Live on the web</span></div>
 </section>
 
-<!-- 3 floating cards -->
-<div class="cards-row">
-  <div class="fcard"><div class="fcard-icon">🎨</div><div class="fcard-title">Design</div><p class="fcard-desc">UI, brand, responsive layouts — designed by AI specialists.</p></div>
-  <div class="fcard"><div class="fcard-icon">⚡</div><div class="fcard-title">Code</div><p class="fcard-desc">Frontend, backend, database, API — production-grade.</p></div>
-  <div class="fcard"><div class="fcard-icon">🚀</div><div class="fcard-title">Deploy</div><p class="fcard-desc">Tested, documented, live on the internet.</p></div>
-</div>
-
-<!-- Workflow -->
-<section class="workflow">
-  <div class="wf-label">How it works</div>
-  <h2 class="wf-title">Three steps. That's it.</h2>
-  <div class="wf-step"><div class="wf-num">1</div><div><h3>Describe your idea</h3><p>"Build me a booking app for my yoga studio with online payments."</p></div></div>
-  <div class="wf-step"><div class="wf-num">2</div><div><h3>42 agents build it</h3><p>Design → Code → Test → Secure → Optimize. All automated.</p></div></div>
-  <div class="wf-step"><div class="wf-num">3</div><div><h3>Ship it</h3><p>Production-ready. Tested. Documented. One command to deploy.</p></div></div>
+<section class="cards">
+  <div class="fcard"><span class="fcard-icon">🎨</span><div class="fcard-title">Design</div><p class="fcard-desc">UI, branding, responsive layouts — crafted by AI design specialists.</p></div>
+  <div class="fcard"><span class="fcard-icon">⚡</span><div class="fcard-title">Code</div><p class="fcard-desc">Frontend, backend, database, API — production-grade from day one.</p></div>
+  <div class="fcard"><span class="fcard-icon">🚀</span><div class="fcard-title">Deploy</div><p class="fcard-desc">Tested, documented, secured, and live on the internet.</p></div>
 </section>
 
-<!-- Skills -->
+<section class="wf-wrap">
+  <div class="wf-header">
+    <div class="wf-label">How it works</div>
+    <h2 class="wf-title">Three steps. That's it.</h2>
+  </div>
+  <div class="wf-track" id="wfTrack">
+    <div class="wf-card"><div class="wf-card-num">01</div><h3>Describe your idea</h3><p>"Build me a booking app for my yoga studio with online payments and calendar sync."</p></div>
+    <div class="wf-card"><div class="wf-card-num">02</div><h3>42 agents build it</h3><p>Design → Code → Test → Secure → Optimize. Each agent is a domain specialist. They collaborate in real time.</p></div>
+    <div class="wf-card"><div class="wf-card-num">03</div><h3>Ship it</h3><p>Production-ready. Fully tested. Documentation generated. One command to deploy anywhere.</p></div>
+  </div>
+</section>
+
 <section class="skills">
   <h2 class="sk-title">Your AI team</h2>
-  <p class="sk-sub">42 agents. 6 departments. They work like a real product team.</p>
+  <p class="sk-sub">42 agents. 6 departments. They collaborate like a real product team.</p>
   <div class="sk-grid">
     <div class="sk-item"><div class="sk-emoji">💡</div><div class="sk-name">Ideation</div><div class="sk-count">5 agents</div><div class="sk-tags"><span>Interviewer</span><span>Analyst</span><span>Specs</span><span>Copy</span><span>Content</span></div></div>
     <div class="sk-item"><div class="sk-emoji">⚡</div><div class="sk-name">Build</div><div class="sk-count">7 agents</div><div class="sk-tags"><span>Architect</span><span>Designer</span><span>Front</span><span>Back</span><span>Mobile</span><span>DB</span><span>API</span></div></div>
@@ -124,14 +139,43 @@ footer a{color:rgba(255,255,255,.25);text-decoration:none}footer a:hover{color:#
   </div>
 </section>
 
-<div class="bcta">
+<section class="bcta">
   <p>Free. Open source. One command.</p>
   <button class="hero-cta">Generate my app</button>
-</div>
+</section>
 
-<footer>🧠 Genius Team v18.0 — MIT · <a href="https://github.com/w-3-art/genius-team">GitHub</a> · <a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></footer>
+<footer>🧠 Genius Team v18.0 — MIT<a href="https://github.com/w-3-art/genius-team">GitHub</a><a href="https://github.com/w-3-art/genius-team/blob/main/CHANGELOG.md">Changelog</a></footer>
 <div class="pn"><a href="/proposition1">A</a><a href="/proposition2" class="on">B</a><a href="/proposition3">C</a><a href="/proposition4">D</a><a href="/proposition5">E</a></div>
 
-<script>function fill(btn){document.getElementById('mainInput').value=btn.textContent;document.getElementById('mainInput').focus()}</script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+
+function fill(btn){const i=document.getElementById('mainInput');i.value=btn.textContent;i.focus()}
+
+/* Hero entrance */
+gsap.from('.hero h1',{y:30,opacity:0,duration:1,ease:'expo.out',delay:.3});
+gsap.from('.hero-sub',{y:20,opacity:0,duration:.8,ease:'expo.out',delay:.5});
+gsap.from('.hero-input-wrap',{y:20,opacity:0,duration:.8,ease:'expo.out',delay:.65});
+gsap.from('.suggestions',{y:15,opacity:0,duration:.6,ease:'expo.out',delay:.8});
+gsap.from('.hero-cta',{y:15,opacity:0,duration:.6,ease:'expo.out',delay:.9});
+gsap.from('.trust',{y:10,opacity:0,duration:.5,ease:'expo.out',delay:1});
+
+/* Orb parallax */
+gsap.to('.orb-1',{y:150,scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2}});
+gsap.to('.orb-2',{y:-100,scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2}});
+
+/* Horizontal scroll for workflow */
+gsap.to('#wfTrack',{x:()=>-(document.getElementById('wfTrack').scrollWidth-window.innerWidth+100),ease:'none',scrollTrigger:{trigger:'.wf-wrap',start:'top 60%',end:'bottom 40%',scrub:1.5}});
+
+/* Scroll reveals */
+gsap.utils.toArray('.fcard,.sk-item').forEach((el,i)=>{
+  gsap.from(el,{y:30,opacity:0,duration:.7,delay:i%3*.08,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%'}});
+});
+gsap.utils.toArray('.wf-label,.wf-title,.sk-title,.sk-sub,.bcta p,.bcta .hero-cta').forEach(el=>{
+  gsap.from(el,{y:20,opacity:0,duration:.7,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+</script>
 </body>
 </html>
