@@ -214,6 +214,49 @@ Provides: Error message, stack trace, what was attempted
 
 ---
 
+## MCP Elicitation Pattern (Claude Code ≥ 2.1.76, March 2026)
+
+MCP servers can now request **structured input mid-task** without blocking the agent workflow.
+
+### What is it?
+When an MCP tool needs user input (API key, confirmation, configuration), it can:
+1. Display an **interactive form** (fields, dropdowns, checkboxes) via a dialog
+2. Or **open a browser URL** to collect data externally
+The agent receives the result and continues — no interruption, no back-and-forth prompts.
+
+### Hooks available
+- `Elicitation` — fires before the elicitation dialog is shown; can override/pre-fill values
+- `ElicitationResult` — fires after the user submits; can validate or transform the response
+
+### When to use it in genius-dev tasks
+- Setting up a new integration that needs credentials → the MCP server shows a form, gets the key, stores it
+- Collecting user preferences for a feature before generating code
+- Confirming a destructive operation (delete, reset) without stopping the build flow
+
+### Example pattern (server-side)
+```typescript
+// In your MCP server tool handler:
+const { fields } = await server.elicit({
+  message: "Configure your Stripe integration",
+  requestedSchema: {
+    type: "object",
+    properties: {
+      apiKey: { type: "string", description: "Stripe secret key (sk_...)" },
+      webhookSecret: { type: "string", description: "Webhook endpoint secret" },
+    },
+    required: ["apiKey"]
+  }
+});
+// `fields` now contains validated user input
+```
+
+### Compatibility
+- Requires Claude Code ≥ 2.1.76 (released March 14, 2026)
+- Works with any MCP server using the `@modelcontextprotocol/sdk` package
+- Hooks are configured in `.claude/settings.json` under `hooks.Elicitation`
+
+---
+
 ## Cloudflare Code Mode MCP (Optional)
 
 If `GENIUS_MCP_CODE_MODE=true` is set and a Cloudflare Code Mode MCP server is configured, you can use this pattern for API integrations:

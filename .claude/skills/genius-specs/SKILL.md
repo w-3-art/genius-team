@@ -242,6 +242,20 @@ When this skill completes its work:
 → **Automatically suggest**: "Specifications complete! Ready for the design phase? (CHECKPOINT: approve specs first) I'll hand off to **genius-designer**."
 → If user approves: route to genius-designer
 → Update state.json: `currentSkill = "genius-designer"`
+## MCP Elicitation in Specs Phase (Claude Code ≥ 2.1.76)
+
+When generating specifications, if an MCP server needs to collect structured requirements from the user (e.g., confirmation of priorities, final scope gate), it can use the **Elicitation pattern**:
+
+- MCP server shows a form mid-task with fields like `confirm_scope`, `priority_stories[]`, `target_launch_date`
+- User fills it in without leaving the workflow
+- genius-specs receives the result and adjusts the SPECIFICATIONS.xml accordingly
+
+**Practical use:** Connect a `genius-specs-validator` MCP tool that shows a review dialog before finalizing specs — user can approve/reject each user story without back-and-forth.
+
+See `genius-dev/SKILL.md → MCP Elicitation Pattern` for the full technical reference.
+
+---
+
 ## Definition of Done
 
 - [ ] SPECIFICATIONS.xml generated with all stories
