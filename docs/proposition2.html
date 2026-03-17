@@ -3,446 +3,545 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team — Your AI Coding Crew</title>
-<meta name="description" content="42 AI specialists that guide you from idea to production. Vibe coding — you stay in control.">
+<title>Genius Team — Anyone Can Build</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--magenta:#EC4899;--violet:#8B5CF6;--bg:#0C0015;--surface:#12001F;--surface2:#1A0030;--text:#F0EDF5;--text2:rgba(240,237,245,.5);--glow-m:rgba(236,72,153,.12);--glow-v:rgba(139,92,246,.12)}
+:root{--magenta:#EC4899;--violet:#8B5CF6;--bg:#0C0015;--surface:#120A20;--text:#E8E0F0;--muted:rgba(232,224,240,.45);--glow-m:rgba(236,72,153,.12);--glow-v:rgba(139,92,246,.12)}
 html{scroll-behavior:smooth}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-body::after{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--violet);color:#fff}
 a{color:inherit;text-decoration:none}
-/* Ambient orbs */
-.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.ambient .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.25}
-.ambient .orb-1{width:500px;height:500px;top:5%;left:-10%;background:var(--magenta);animation:orbDrift 12s ease-in-out infinite}
-.ambient .orb-2{width:400px;height:400px;bottom:5%;right:-10%;background:var(--violet);animation:orbDrift 15s ease-in-out infinite reverse}
-.ambient .orb-3{width:250px;height:250px;top:50%;left:50%;background:var(--magenta);animation:orbDrift 18s ease-in-out infinite}
-@keyframes orbDrift{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-40px)}66%{transform:translate(-20px,30px)}}
-/* Cursor glow */
-.page-glow{position:fixed;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,.08),transparent 70%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);transition:opacity .3s}
-/* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(12,0,21,.6);border-bottom:1px solid rgba(139,92,246,.08)}
+
+/* Animated orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;opacity:.25}
+.orb-1{width:400px;height:400px;background:var(--magenta);top:-100px;left:-100px;animation:orbFloat1 12s ease-in-out infinite}
+.orb-2{width:350px;height:350px;background:var(--violet);bottom:-80px;right:-80px;animation:orbFloat2 15s ease-in-out infinite}
+.orb-3{width:250px;height:250px;background:linear-gradient(135deg,var(--magenta),var(--violet));top:40%;left:50%;animation:orbFloat3 18s ease-in-out infinite}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,-50px)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%)}33%{transform:translate(-30%,-60%)}66%{transform:translate(-70%,-40%)}}
+
+/* Loader */
+.loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
+.loader-pulse{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--violet));animation:pulse .8s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:scale(.8);opacity:.5}to{transform:scale(1.2);opacity:1}}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 2rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(24px);background:rgba(12,0,21,.7);border-bottom:1px solid rgba(139,92,246,.08)}
 .nav-logo{font-weight:800;font-size:1.1rem;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:2rem;font-size:.82rem;color:var(--text2)}
-.nav-links a{transition:color .2s}.nav-links a:hover{color:var(--magenta)}
-.nav-cta{padding:.5rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:600;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(236,72,153,.3)}
-/* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 3rem;position:relative;z-index:1}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem 1rem;border-radius:100px;font-size:.72rem;font-weight:500;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--violet);margin-bottom:1.2rem}
-.hero h1{font-size:clamp(2.5rem,7vw,5rem);font-weight:800;line-height:1.02;letter-spacing:-.05em;margin-bottom:1rem}
-.hero h1 .glow{background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:clamp(.95rem,1.8vw,1.15rem);color:var(--text2);max-width:500px;margin:0 auto 2rem;line-height:1.6;font-weight:300}
-.hero-input-wrap{position:relative;width:100%;max-width:540px;margin:0 auto .8rem}
-.hero-input{width:100%;padding:1rem 9rem 1rem 1.4rem;border-radius:14px;border:2px solid rgba(139,92,246,.2);background:rgba(255,255,255,.03);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;transition:all .2s}
-.hero-input:focus{outline:none;border-color:var(--magenta);box-shadow:0 0 40px rgba(236,72,153,.12)}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{font-size:.82rem;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--magenta)}
+.nav-cta{background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.55rem 1.4rem;border-radius:10px;font-weight:700;font-size:.82rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,92,246,.3)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.06);font-size:.72rem;font-weight:600;color:var(--violet);margin-bottom:2rem;letter-spacing:.06em;text-transform:uppercase}
+.hero h1{font-size:clamp(3rem,7vw,5rem);font-weight:800;line-height:1;letter-spacing:-.05em;margin-bottom:1.2rem}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:clamp(1rem,2vw,1.15rem);color:var(--muted);line-height:1.65;max-width:520px;margin-bottom:2.5rem}
+
+/* Input */
+.hero-input-wrap{position:relative;max-width:500px;width:100%;margin-bottom:1rem}
+.hero-input{width:100%;padding:1.05rem 1.4rem;padding-right:9rem;border-radius:14px;border:2px solid rgba(139,92,246,.15);background:rgba(255,255,255,.03);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;transition:border-color .2s,box-shadow .2s}
+.hero-input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 40px rgba(139,92,246,.1)}
 .hero-input::placeholder{color:rgba(255,255,255,.25)}
-.hero-input-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:.7rem 1.3rem;border-radius:11px;border:none;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
-.hero-input-btn:hover{transform:translateY(-50%) translateY(-2px);box-shadow:0 8px 30px rgba(236,72,153,.3)}
-.hero-suggestions{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.2rem}
-.hero-sug{padding:.4rem .9rem;border-radius:100px;font-size:.75rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .2s;color:var(--text2)}
-.hero-sug:hover{border-color:var(--magenta);color:var(--magenta);background:rgba(236,72,153,.06)}
-.hero-trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:.78rem;color:var(--text2)}
-.hero-trust span::before{content:'✔ ';color:var(--violet)}
-/* TICKER */
-.ticker{overflow:hidden;padding:.7rem 0;background:var(--surface);border-top:1px solid rgba(139,92,246,.06);border-bottom:1px solid rgba(139,92,246,.06);position:relative;z-index:1}
-.ticker-track{display:flex;gap:2.5rem;animation:tickerScroll 35s linear infinite;width:max-content}
-.ticker-item{font-size:.7rem;color:var(--text2);white-space:nowrap;display:flex;align-items:center;gap:.4rem;font-weight:500}
-.ticker-item .dot{width:4px;height:4px;border-radius:50%;background:var(--magenta)}
-@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-/* SECTIONS */
-section{padding:5rem 2rem;position:relative;z-index:1}
-.container{max-width:1100px;margin:0 auto}
-.section-label{display:inline-flex;font-size:.72rem;font-weight:600;color:var(--magenta);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.8rem}
-.section-title{font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.12;margin-bottom:.8rem}
-.section-desc{font-size:.92rem;color:var(--text2);max-width:560px;line-height:1.7}
-/* HOW — Card Stack with neon borders */
-.howit{background:linear-gradient(180deg,var(--bg),var(--surface),var(--bg))}
-.howit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-top:2rem;max-width:900px}
-.howit-card{padding:1.5rem;border-radius:16px;background:rgba(255,255,255,.025);border:1px solid rgba(139,92,246,.1);position:relative;overflow:hidden;transition:all .4s}
-.howit-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--magenta),var(--violet));transform:scaleX(0);transition:transform .6s;transform-origin:left}
-.howit-card.active::before{transform:scaleX(1)}
-.howit-card.active{border-color:rgba(236,72,153,.2);box-shadow:0 0 40px rgba(236,72,153,.06)}
-.howit-card:hover{transform:translateY(-3px);border-color:rgba(236,72,153,.15)}
-.howit-num{font-size:.62rem;font-weight:700;color:var(--violet);letter-spacing:.15em;margin-bottom:.4rem}
-.howit-card h4{font-size:1rem;font-weight:700;margin-bottom:.3rem}
-.howit-card p{font-size:.8rem;color:var(--text2);line-height:1.6}
-.howit-detail{font-size:.7rem;color:var(--magenta);margin-top:.4rem;opacity:.7;font-weight:500}
-/* TERMINAL */
-.terminal{background:var(--surface);padding:5rem 2rem;position:relative;z-index:1}
-.terminal-window{max-width:700px;margin:2rem auto 0;border-radius:12px;border:1px solid rgba(139,92,246,.12);background:rgba(0,0,0,.5);overflow:hidden;box-shadow:0 0 40px rgba(139,92,246,.06)}
-.terminal-bar{display:flex;gap:6px;padding:.7rem 1rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(139,92,246,.08)}
-.terminal-dot{width:10px;height:10px;border-radius:50%}
-.terminal-dot.r{background:#ff5f56}.terminal-dot.y{background:#ffbd2e}.terminal-dot.g{background:#27c93f}
-.terminal-body{padding:1.2rem;font-family:'SF Mono','Fira Code',monospace;font-size:.76rem;line-height:1.8;color:var(--text2)}
-.terminal-body .prompt{color:var(--magenta)}
-.terminal-body .cmd{color:var(--text)}
-.terminal-body .output{color:rgba(240,237,245,.35)}
-.terminal-body .success{color:#22c55e}
-/* AGENTS — Neon Grid */
-.agents-section{background:linear-gradient(180deg,var(--bg),var(--surface));z-index:1;position:relative}
-.agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
-.agent-pill{padding:1.3rem;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);transition:all .4s;position:relative;overflow:hidden}
-.agent-pill::after{content:'';position:absolute;inset:-1px;border-radius:15px;background:linear-gradient(135deg,var(--magenta),var(--violet));opacity:0;z-index:-1;transition:opacity .4s;filter:blur(1px)}
-.agent-pill:hover::after{opacity:.3}
-.agent-pill:hover{transform:translateY(-3px);border-color:rgba(236,72,153,.2)}
-.agent-pill-icon{font-size:1.2rem;margin-bottom:.7rem}
-.agent-pill h4{font-size:.88rem;font-weight:600;margin-bottom:.25rem}
-.agent-pill p{font-size:.74rem;color:var(--text2);line-height:1.5}
-.agent-pill-count{font-size:.66rem;color:var(--magenta);font-weight:500;margin-top:.4rem}
-/* FEATURES — Grid + horizontal scroll on mobile */
-.features-section{overflow:hidden;z-index:1;position:relative}
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
-.feat-card{padding:1.3rem;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);transition:all .3s}
-.feat-card:hover{border-color:rgba(139,92,246,.2);transform:translateY(-4px)}
-.feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
-.feat-card p{font-size:.78rem;color:var(--text2);line-height:1.6}
-/* PROOF */
-.proof{background:linear-gradient(180deg,var(--surface),var(--bg));z-index:1;position:relative}
-.proof-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}
-.proof-card{padding:1.3rem;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);text-align:center;transition:all .4s}
-.proof-card:hover{transform:translateY(-3px);border-color:rgba(139,92,246,.15)}
-.proof-num{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.2rem}
-.proof-label{font-size:.75rem;color:var(--text2)}
-/* COMPARISON */
-.comparison{z-index:1;position:relative}
-.comp-grid{display:grid;grid-template-columns:1fr 40px 1fr;gap:1rem;align-items:center;margin-top:2rem}
-.comp-card{padding:1.5rem;border-radius:14px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
-.comp-card.before{border-color:rgba(255,100,100,.1)}
-.comp-card.after{border-color:rgba(139,92,246,.2);background:rgba(139,92,246,.03)}
-.comp-card h4{font-size:.85rem;font-weight:600;margin-bottom:.8rem}
-.comp-item{font-size:.78rem;color:var(--text2);padding:.3rem 0;line-height:1.5}
-.comp-arrow{font-size:1.8rem;color:var(--violet);text-align:center}
+.hero-input-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.7rem 1.3rem;border-radius:10px;font-weight:700;font-size:.82rem;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.hero-input-btn:hover{transform:translateY(-50%) scale(1.03);box-shadow:0 6px 20px rgba(139,92,246,.35)}
+.hero-suggestions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.hero-suggestion{padding:.4rem .9rem;border-radius:100px;border:1px solid rgba(236,72,153,.12);background:rgba(236,72,153,.04);font-size:.73rem;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s}
+.hero-suggestion:hover{border-color:var(--magenta);color:var(--magenta);background:rgba(236,72,153,.1)}
+.hero-trust{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:.78rem;color:var(--muted)}
+.hero-trust span{display:flex;align-items:center;gap:.35rem}
+
+/* Section */
+section{padding:6rem 2rem;position:relative;z-index:1}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700;margin-bottom:.75rem;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-title{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.12;margin-bottom:1rem}
+.section-desc{color:var(--muted);font-size:.92rem;line-height:1.7;max-width:540px}
+
+/* Neon cards — Design/Code/Deploy */
+.neon-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem;max-width:1000px;margin-left:auto;margin-right:auto}
+.neon-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem 1.5rem;position:relative;overflow:hidden;transition:all .35s}
+.neon-card::before{content:'';position:absolute;inset:-1px;border-radius:20px;background:linear-gradient(135deg,var(--magenta),var(--violet));opacity:0;transition:opacity .35s;z-index:-1}
+.neon-card:hover::before{opacity:.12}
+.neon-card:hover{border-color:rgba(139,92,246,.2);transform:translateY(-4px);box-shadow:0 0 40px rgba(139,92,246,.08)}
+.neon-card-icon{font-size:2.2rem;margin-bottom:1rem}
+.neon-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.neon-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
+
+/* Card Stack section */
+.card-stack-section{padding:8rem 2rem;background:var(--surface);position:relative;overflow:hidden;z-index:1}
+.card-stack-wrap{max-width:700px;margin:3rem auto 0;position:relative;min-height:380px}
+.stack-card{position:absolute;left:0;right:0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2.5rem;backdrop-filter:blur(12px);transition:transform .5s ease,opacity .5s ease}
+.stack-card h3{font-size:1.3rem;font-weight:700;margin-bottom:.6rem}
+.stack-card p{font-size:.88rem;color:var(--muted);line-height:1.7}
+.stack-card-num{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--magenta);margin-bottom:1rem;display:block}
+
+/* Skills — horizontal pills */
+.skills-section{padding:6rem 2rem;z-index:1;position:relative}
+.skills-categories{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.5rem}
+.skill-cat{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:1.5rem;transition:border-color .3s}
+.skill-cat:hover{border-color:rgba(236,72,153,.15)}
+.skill-cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.skill-cat-name{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+.skill-cat-count{font-size:.62rem;padding:.2rem .55rem;border-radius:100px;background:linear-gradient(135deg,rgba(236,72,153,.12),rgba(139,92,246,.12));color:var(--magenta);font-weight:700}
+.skill-pills{display:flex;flex-wrap:wrap;gap:.35rem}
+.skill-pill{padding:.3rem .7rem;border-radius:100px;font-size:.67rem;font-weight:500;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.5);transition:all .2s}
+.skill-pill:hover{background:linear-gradient(135deg,rgba(236,72,153,.1),rgba(139,92,246,.1));border-color:rgba(139,92,246,.2);color:var(--violet)}
+
+/* Philosophy split */
+.philosophy{padding:6rem 2rem;background:var(--surface);z-index:1;position:relative}
+.philosophy-inner{max-width:900px;margin:0 auto}
+.philosophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
+.phil-card{border-radius:16px;padding:2rem;position:relative}
+.phil-card.wrong{background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1)}
+.phil-card.right{background:rgba(34,197,94,.03);border:1px solid rgba(34,197,94,.1)}
+.phil-card-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;font-weight:800;margin-bottom:1rem}
+.phil-card.wrong .phil-card-label{color:#ef4444}
+.phil-card.right .phil-card-label{color:#22c55e}
+.phil-items{display:flex;flex-direction:column;gap:.7rem}
+.phil-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.82rem;line-height:1.5;color:rgba(255,255,255,.6)}
+
+/* Feature blocks */
+.feat-section{padding:6rem 2rem;z-index:1;position:relative}
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;max-width:900px;margin:2.5rem auto 0}
+.feat-block{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1.8rem;transition:all .3s}
+.feat-block:hover{border-color:rgba(139,92,246,.15);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.feat-block h3{font-size:.95rem;font-weight:700;margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem}
+.feat-block p{font-size:.8rem;color:var(--muted);line-height:1.6}
+
+/* Stats bar */
+.stats-bar{padding:4rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;position:relative;z-index:1}
+.stat-item{text-align:center}
+.stat-num{font-size:2.4rem;font-weight:800;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block}
+.stat-label{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+
 /* CTA */
-.cta-section{text-align:center;padding:6rem 2rem;position:relative;z-index:1}
-.cta-section::before{content:'';position:absolute;top:50%;left:50%;width:500px;height:500px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(139,92,246,.08),transparent 60%);pointer-events:none}
-.cta-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2.2rem;border-radius:12px;font-size:1rem;font-weight:600;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;border:none;cursor:pointer;transition:all .25s;font-family:'Plus Jakarta Sans',sans-serif}
-.cta-btn:hover{transform:translateY(-3px);box-shadow:0 15px 50px rgba(236,72,153,.25)}
-/* PROP NAV */
-.prop-nav{padding:1.5rem 2rem;background:var(--surface);border-top:1px solid rgba(139,92,246,.06);z-index:1;position:relative}
-.prop-nav-inner{max-width:700px;margin:0 auto;display:flex;justify-content:center;gap:.8rem}
-.prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:500;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:all .2s}
-.prop-nav a:hover,.prop-nav a.active{border-color:var(--magenta);color:var(--magenta);background:rgba(236,72,153,.06)}
-footer{padding:1.5rem;text-align:center;font-size:.72rem;color:var(--text2);border-top:1px solid rgba(255,255,255,.04);position:relative;z-index:1}
-/* RESPONSIVE */
-@media(max-width:768px){
-  .nav-links{display:none}
-  .howit-grid,.agents-grid,.features-grid{grid-template-columns:1fr}
-  .proof-grid{grid-template-columns:repeat(2,1fr)}
-  .comp-grid{grid-template-columns:1fr}
-  .comp-arrow{transform:rotate(90deg)}
-  .hero h1{font-size:2.4rem}
-  section{padding:3.5rem 1.5rem}
-  .ambient .orb{opacity:.12}
-  .page-glow{display:none}
+.cta-final{padding:6rem 2rem;text-align:center;position:relative;z-index:1}
+.cta-final h2{font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem}
+.cta-final p{color:var(--muted);font-size:.95rem;margin-bottom:2rem;max-width:460px;margin-left:auto;margin-right:auto}
+.cta-final-btn{display:inline-block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:1rem 2.5rem;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif}
+.cta-final-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(139,92,246,.3)}
+
+/* Prop nav */
+.prop-nav{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
+.prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.78rem;font-weight:600;border:1px solid rgba(255,255,255,.07);color:var(--muted);transition:all .2s}
+.prop-nav a:hover,.prop-nav a.active{border-color:var(--violet);color:var(--violet);background:rgba(139,92,246,.06)}
+
+footer{padding:3rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,.03);position:relative;z-index:1}
+footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
+
+/* Responsive */
+@media(max-width:900px){
+  .neon-cards,.skills-categories{grid-template-columns:1fr 1fr}
+  .feat-grid{grid-template-columns:1fr}
 }
-@media(min-width:769px) and (max-width:1024px){
-  .howit-grid,.agents-grid,.features-grid{grid-template-columns:repeat(2,1fr)}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .neon-cards,.skills-categories,.philosophy-grid{grid-template-columns:1fr}
+  .hero{padding:6rem 1.5rem 3rem}
+  .stats-bar{gap:2rem}
+  .orb{opacity:.12}
 }
 </style>
 </head>
 <body>
 
-<div class="ambient">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-<div class="page-glow" id="pageGlow"></div>
+<!-- Floating orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 
-<nav class="nav" role="navigation" aria-label="Main navigation">
+<!-- Loader -->
+<div class="loader" id="loader"><div class="loader-pulse"></div></div>
+
+<!-- Nav -->
+<nav class="nav">
   <div class="nav-logo">Genius Team</div>
   <div class="nav-links">
-    <a href="#how">How it works</a>
-    <a href="#agents">Agents</a>
-    <a href="#features">Features</a>
+    <a href="#skills">Agents</a>
+    <a href="#how">How It Works</a>
+    <a href="#why">Why Us</a>
+    <button class="nav-cta" onclick="GeniusWizard.open()">Start Building</button>
   </div>
-  <button class="nav-cta" onclick="GeniusWizard.open()" aria-label="Get started">Get Started</button>
 </nav>
 
+<!-- Hero -->
 <section class="hero">
-  <div class="hero-badge">42 AI Specialists · Open Source</div>
-  <h1>Your AI<br><span class="glow">coding crew.</span></h1>
-  <p class="hero-sub">42 specialists that guide every step — from idea to production. Learn to build with AI at your side. No magic, just real skills.</p>
+  <div class="hero-badge">42 AI Agents &middot; Open Source</div>
+  <h1>Anyone can <em>build</em></h1>
+  <p class="hero-sub">Your AI coding crew — 42 specialists that guide every step. Vibe coding: you stay creative, they handle the technical heavy lifting.</p>
   <div class="hero-input-wrap">
-    <input type="text" class="hero-input" placeholder="What do you want to build?" id="heroInput" aria-label="Describe your project">
+    <input type="text" class="hero-input" id="heroInput" placeholder="What do you want to build?">
     <button class="hero-input-btn" onclick="GeniusWizard.open()">Start Building</button>
   </div>
   <div class="hero-suggestions">
-    <button class="hero-sug" data-text="Booking app for yoga studio">Booking app for yoga studio</button>
-    <button class="hero-sug" data-text="Marketplace for vintage watches">Marketplace for vintage watches</button>
-    <button class="hero-sug" data-text="Landing page for my brand">Landing page for my brand</button>
+    <span class="hero-suggestion" data-text="Booking app for yoga studio">Booking app for yoga studio</span>
+    <span class="hero-suggestion" data-text="Marketplace for vintage watches">Marketplace for vintage watches</span>
+    <span class="hero-suggestion" data-text="Landing page for my brand">Landing page for my brand</span>
   </div>
   <div class="hero-trust">
-    <span>No code needed</span>
-    <span>Free &amp; open source</span>
-    <span>Learn as you build</span>
+    <span>&#10003; No code needed</span>
+    <span>&#10003; Free &amp; open source</span>
+    <span>&#10003; Learn as you build</span>
   </div>
 </section>
 
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    <div class="ticker-item"><span class="dot"></span> Interviewer</div>
-    <div class="ticker-item"><span class="dot"></span> Market Analyst</div>
-    <div class="ticker-item"><span class="dot"></span> Designer</div>
-    <div class="ticker-item"><span class="dot"></span> Architect</div>
-    <div class="ticker-item"><span class="dot"></span> Frontend Dev</div>
-    <div class="ticker-item"><span class="dot"></span> Backend Dev</div>
-    <div class="ticker-item"><span class="dot"></span> Database Expert</div>
-    <div class="ticker-item"><span class="dot"></span> QA Tester</div>
-    <div class="ticker-item"><span class="dot"></span> Security Auditor</div>
-    <div class="ticker-item"><span class="dot"></span> Deployer</div>
-    <div class="ticker-item"><span class="dot"></span> SEO Expert</div>
-    <div class="ticker-item"><span class="dot"></span> Copywriter</div>
-    <div class="ticker-item"><span class="dot"></span> Debugger</div>
-    <div class="ticker-item"><span class="dot"></span> Orchestrator</div>
-    <div class="ticker-item"><span class="dot"></span> Interviewer</div>
-    <div class="ticker-item"><span class="dot"></span> Market Analyst</div>
-    <div class="ticker-item"><span class="dot"></span> Designer</div>
-    <div class="ticker-item"><span class="dot"></span> Architect</div>
-    <div class="ticker-item"><span class="dot"></span> Frontend Dev</div>
-    <div class="ticker-item"><span class="dot"></span> Backend Dev</div>
-    <div class="ticker-item"><span class="dot"></span> Database Expert</div>
-    <div class="ticker-item"><span class="dot"></span> QA Tester</div>
-    <div class="ticker-item"><span class="dot"></span> Security Auditor</div>
-    <div class="ticker-item"><span class="dot"></span> Deployer</div>
-    <div class="ticker-item"><span class="dot"></span> SEO Expert</div>
-    <div class="ticker-item"><span class="dot"></span> Copywriter</div>
-    <div class="ticker-item"><span class="dot"></span> Debugger</div>
-    <div class="ticker-item"><span class="dot"></span> Orchestrator</div>
+<!-- Design / Code / Deploy -->
+<section style="padding:4rem 2rem 6rem;position:relative;z-index:1">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">Three stages</div>
+    <h2 class="section-title" style="margin:0 auto">Design. Code. Deploy.</h2>
+    <p class="section-desc" style="margin:.8rem auto 0">From blank canvas to live product — guided by AI specialists who explain every step.</p>
   </div>
+  <div class="neon-cards">
+    <div class="neon-card">
+      <div class="neon-card-icon">&#9998;</div>
+      <h3>Design</h3>
+      <p>AI interviews you, researches the market, writes specs, and creates your brand identity. You approve at every checkpoint.</p>
+    </div>
+    <div class="neon-card">
+      <div class="neon-card-icon">&#9000;</div>
+      <h3>Code</h3>
+      <p>Frontend, backend, database, API — specialist agents write production code while you learn what each piece does.</p>
+    </div>
+    <div class="neon-card">
+      <div class="neon-card-icon">&#9889;</div>
+      <h3>Deploy</h3>
+      <p>Automated QA, security audit, and CI/CD. One click to go live — with full understanding of what's shipping.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Card Stack — How it works -->
+<section class="card-stack-section" id="how">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title" style="margin:0 auto">You lead. Agents follow.</h2>
+    <p class="section-desc" style="margin:.8rem auto 0">Four steps from idea to production. You're the boss at every stage.</p>
+  </div>
+  <div class="card-stack-wrap" id="cardStack">
+    <div class="stack-card" id="stackCard0">
+      <span class="stack-card-num">Step 1 / 4</span>
+      <h3>Share your vision</h3>
+      <p>The interviewer agent asks smart questions — your market, your users, your goals. No forms, no templates. Just a conversation that shapes a real plan.</p>
+    </div>
+    <div class="stack-card" id="stackCard1">
+      <span class="stack-card-num">Step 2 / 4</span>
+      <h3>Review the blueprint</h3>
+      <p>Specs, design system, architecture — each specialist proposes, you approve. Nothing is decided without your explicit OK. Three human checkpoints ensure alignment.</p>
+    </div>
+    <div class="stack-card" id="stackCard2">
+      <span class="stack-card-num">Step 3 / 4</span>
+      <h3>Build together</h3>
+      <p>Dev agents write code, QA agents test it, and you see every change in real time. Vibe coding — creative flow with AI support. You learn while shipping.</p>
+    </div>
+    <div class="stack-card" id="stackCard3">
+      <span class="stack-card-num">Step 4 / 4</span>
+      <h3>Go live with confidence</h3>
+      <p>Security scan, performance check, accessibility audit. Then one-click deploy. Your app is live — and you understand every line behind it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Philosophy -->
+<section class="philosophy">
+  <div class="philosophy-inner">
+    <div class="section-label">Our philosophy</div>
+    <h2 class="section-title">Honest about what we do</h2>
+    <p class="section-desc" style="margin-bottom:0">We empower, not replace. There's a real difference.</p>
+    <div class="philosophy-grid">
+      <div class="phil-card wrong">
+        <div class="phil-card-label">&#10005; Not this</div>
+        <div class="phil-items">
+          <div class="phil-item"><span>&#10060;</span>"Describe and we build it for you"</div>
+          <div class="phil-item"><span>&#10060;</span>"No effort required"</div>
+          <div class="phil-item"><span>&#10060;</span>"AI replaces developers"</div>
+          <div class="phil-item"><span>&#10060;</span>"Magic one-click solutions"</div>
+        </div>
+      </div>
+      <div class="phil-card right">
+        <div class="phil-card-label">&#10003; This is us</div>
+        <div class="phil-items">
+          <div class="phil-item"><span>&#9989;</span>AI toolkit that teaches you to build</div>
+          <div class="phil-item"><span>&#9989;</span>42 specialists guiding each step</div>
+          <div class="phil-item"><span>&#9989;</span>You stay in control — always</div>
+          <div class="phil-item"><span>&#9989;</span>Learn real skills with every project</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 Skill Categories -->
+<section class="skills-section" id="skills">
+  <div class="section-inner">
+    <div class="section-label">42 AI Agents</div>
+    <h2 class="section-title">Six specialist teams</h2>
+    <p class="section-desc">Every domain covered — from your first sketch to global scale.</p>
+    <div class="skills-categories">
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-name">&#128161; Ideation</div>
+          <div class="skill-cat-count">5</div>
+        </div>
+        <div class="skill-pills">
+          <span class="skill-pill">Interviewer</span>
+          <span class="skill-pill">Market Analyst</span>
+          <span class="skill-pill">Specs Writer</span>
+          <span class="skill-pill">Designer</span>
+          <span class="skill-pill">Copywriter</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-name">&#128296; Build</div>
+          <div class="skill-cat-count">7</div>
+        </div>
+        <div class="skill-pills">
+          <span class="skill-pill">Frontend</span>
+          <span class="skill-pill">Backend</span>
+          <span class="skill-pill">Mobile</span>
+          <span class="skill-pill">Database</span>
+          <span class="skill-pill">API</span>
+          <span class="skill-pill">Architect</span>
+          <span class="skill-pill">Orchestrator</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-name">&#9989; Quality</div>
+          <div class="skill-cat-count">5</div>
+        </div>
+        <div class="skill-pills">
+          <span class="skill-pill">QA Full</span>
+          <span class="skill-pill">QA Micro</span>
+          <span class="skill-pill">Code Review</span>
+          <span class="skill-pill">Debugger</span>
+          <span class="skill-pill">Security</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-name">&#128200; Growth</div>
+          <div class="skill-cat-count">5</div>
+        </div>
+        <div class="skill-pills">
+          <span class="skill-pill">SEO</span>
+          <span class="skill-pill">Analytics</span>
+          <span class="skill-pill">Performance</span>
+          <span class="skill-pill">Accessibility</span>
+          <span class="skill-pill">Content</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-name">&#9881; Ops</div>
+          <div class="skill-cat-count">4</div>
+        </div>
+        <div class="skill-pills">
+          <span class="skill-pill">Deployer</span>
+          <span class="skill-pill">i18n</span>
+          <span class="skill-pill">Experiments</span>
+          <span class="skill-pill">Docs</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-head">
+          <div class="skill-cat-name">&#129302; AI Engine</div>
+          <div class="skill-cat-count">5</div>
+        </div>
+        <div class="skill-pills">
+          <span class="skill-pill">Marketer</span>
+          <span class="skill-pill">Onboarding</span>
+          <span class="skill-pill">Memory</span>
+          <span class="skill-pill">Optimizer</span>
+          <span class="skill-pill">Skill Creator</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="feat-section" id="why">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">Why Genius Team</div>
+    <h2 class="section-title" style="margin:0 auto">Built for builders who learn</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-block">
+      <h3>&#128274; Own your code</h3>
+      <p>100% open source, runs locally. Your code stays on your machine — no vendor lock-in, no cloud dependency.</p>
+    </div>
+    <div class="feat-block">
+      <h3>&#127891; Learn by doing</h3>
+      <p>Agents explain every decision. After a few projects, you'll understand patterns that bootcamps take months to teach.</p>
+    </div>
+    <div class="feat-block">
+      <h3>&#128640; Idea to production</h3>
+      <p>Market research, design, code, QA, deploy — one continuous flow. No duct-taping 12 tools together.</p>
+    </div>
+    <div class="feat-block">
+      <h3>&#129309; Human checkpoints</h3>
+      <p>Specs approval, design choice, architecture sign-off. The workflow pauses for your decisions at every critical point.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-num" data-count="42">0</span><span class="stat-label">AI Agents</span></div>
+  <div class="stat-item"><span class="stat-num" data-count="31">0</span><span class="stat-label">Skills</span></div>
+  <div class="stat-item"><span class="stat-num" data-count="3">0</span><span class="stat-label">Phases</span></div>
+  <div class="stat-item"><span class="stat-num" data-count="100">0</span><span class="stat-label">% Open Source</span></div>
 </div>
 
-<section class="howit" id="how">
-  <div class="container">
-    <div class="section-label">How it works</div>
-    <h2 class="section-title">Four steps from "I have an idea"<br>to <span style="color:var(--magenta)">"it's live."</span></h2>
-    <p class="section-desc">You describe. We guide. You decide. Together, you build something real.</p>
-    <div class="howit-grid">
-      <div class="howit-card active">
-        <div class="howit-num">01 — DISCOVER</div>
-        <h4>Tell us your idea</h4>
-        <p>The interviewer agent asks smart questions. No tech jargon. Just describe what you want to build and who it's for.</p>
-        <div class="howit-detail">→ Outputs: Discovery brief, audience, features list</div>
-      </div>
-      <div class="howit-card">
-        <div class="howit-num">02 — PLAN</div>
-        <h4>Get your blueprint</h4>
-        <p>Market analysis, specifications, design system, architecture. Every decision explained, every choice is yours to make.</p>
-        <div class="howit-detail">→ Outputs: Specs, market report, design system</div>
-      </div>
-      <div class="howit-card">
-        <div class="howit-num">03 — BUILD</div>
-        <h4>Code together</h4>
-        <p>Specialized agents handle frontend, backend, database, and APIs. You review every piece of code as you learn.</p>
-        <div class="howit-detail">→ Automated QA after every task</div>
-      </div>
-      <div class="howit-card">
-        <div class="howit-num">04 — SHIP</div>
-        <h4>Deploy with confidence</h4>
-        <p>Quality assurance, security audits, performance checks. When everything passes, one-command deploy.</p>
-        <div class="howit-detail">→ Vercel, Netlify, or any platform</div>
-      </div>
-    </div>
-  </div>
+<!-- CTA -->
+<section class="cta-final">
+  <h2>Ready to build something real?</h2>
+  <p>Start with an idea. The crew handles the complexity — while you learn every step.</p>
+  <button class="cta-final-btn" onclick="GeniusWizard.open()">Get Started Free</button>
 </section>
 
-<section class="terminal">
-  <div class="container">
-    <div class="section-label">In action</div>
-    <h2 class="section-title">A real session.</h2>
-    <p class="section-desc">What it looks like when you start building with Genius Team.</p>
-    <div class="terminal-window">
-      <div class="terminal-bar"><div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div></div>
-      <div class="terminal-body">
-        <div><span class="prompt">~ $</span> <span class="cmd">claude</span></div>
-        <div><span class="output">Claude Code v2.1 • Genius Team v18.0</span></div>
-        <div><span class="prompt">you:</span> <span class="cmd">/genius-start</span></div>
-        <div><span class="success">✓ Memory loaded • 42 agents ready</span></div>
-        <div><span class="output">→ genius-interviewer: What do you want to build?</span></div>
-        <div><span class="prompt">you:</span> <span class="cmd">A marketplace for vintage watches</span></div>
-        <div><span class="output">→ Analyzing market... Generating specs...</span></div>
-        <div><span class="success">✓ Blueprint ready — 14 tasks planned</span></div>
-        <div><span class="output">→ genius-architect: React + Supabase + Stripe</span></div>
-        <div><span class="success">✓ Ready to build. Say "go" to start.</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="agents-section" id="agents">
-  <div class="container">
-    <div class="section-label">Your Crew</div>
-    <h2 class="section-title">42 specialists. 6 teams.<br><span style="color:var(--violet)">One mission.</span></h2>
-    <p class="section-desc">Not 42 random bots — 6 coordinated teams, each with a clear role. Like a real studio, but AI-powered.</p>
-    <div class="agents-grid">
-      <div class="agent-pill"><div class="agent-pill-icon">💡</div><h4>Ideation</h4><p>Discovery, market research, specs, design systems, content strategy.</p><div class="agent-pill-count">5 agents</div></div>
-      <div class="agent-pill"><div class="agent-pill-icon">🔨</div><h4>Build</h4><p>Frontend, backend, mobile, database, API — dedicated specialists.</p><div class="agent-pill-count">7 agents</div></div>
-      <div class="agent-pill"><div class="agent-pill-icon">🔍</div><h4>Quality</h4><p>Automated testing, code review, security, debugging, performance.</p><div class="agent-pill-count">5 agents</div></div>
-      <div class="agent-pill"><div class="agent-pill-icon">📈</div><h4>Growth</h4><p>SEO, analytics, marketing strategy, copywriting, accessibility.</p><div class="agent-pill-count">5 agents</div></div>
-      <div class="agent-pill"><div class="agent-pill-icon">⚙️</div><h4>Ops</h4><p>Deployment, CI/CD, i18n, documentation, onboarding flows.</p><div class="agent-pill-count">4 agents</div></div>
-      <div class="agent-pill"><div class="agent-pill-icon">🧠</div><h4>AI Engine</h4><p>Memory, orchestration, experiments, optimization, multi-model.</p><div class="agent-pill-count">5 agents</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="features-section" id="features">
-  <div class="container">
-    <div class="section-label">Why Genius Team</div>
-    <h2 class="section-title">Vibe coding.<br><span style="color:var(--magenta)">Not magic promises.</span></h2>
-    <p class="section-desc">You stay in control. The AI guides — you decide. Honest about what it does and what it doesn't.</p>
-    <div class="features-grid">
-      <div class="feat-card"><h4>🎯 You stay in control</h4><p>Agents suggest, you approve. Review every decision, learn every pattern. It's always your project.</p></div>
-      <div class="feat-card"><h4>🔓 Fully open source</h4><p>MIT licensed. No vendor lock-in, no hidden costs. Fork it, extend it, make it yours.</p></div>
-      <div class="feat-card"><h4>🧩 Any stack</h4><p>React, Vue, Svelte, Node, Python — adapts to your preferred tools and frameworks.</p></div>
-      <div class="feat-card"><h4>📚 Learn as you build</h4><p>Agents explain why, not just what. Each session grows your skills and understanding.</p></div>
-      <div class="feat-card"><h4>🤝 Real team workflow</h4><p>Sprint planning, code review, QA — same process pro teams use daily.</p></div>
-      <div class="feat-card"><h4>⚡ Idea to production</h4><p>From the first interview to deployment. No gaps, no manual handoffs.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="proof">
-  <div class="container">
-    <div class="section-label">By the numbers</div>
-    <h2 class="section-title">Built for builders who learn by doing.</h2>
-    <div class="proof-grid">
-      <div class="proof-card"><div class="proof-num" data-val="42">0</div><div class="proof-label">Specialized agents</div></div>
-      <div class="proof-card"><div class="proof-num" data-val="6">0</div><div class="proof-label">Coordinated teams</div></div>
-      <div class="proof-card"><div class="proof-num" data-val="14">0</div><div class="proof-label">Project phases</div></div>
-      <div class="proof-card"><div class="proof-num" data-val="100" data-pct>0%</div><div class="proof-label">Open source</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="comparison">
-  <div class="container">
-    <div class="section-label">The difference</div>
-    <h2 class="section-title">Alone vs. with a crew.</h2>
-    <div class="comp-grid">
-      <div class="comp-card before">
-        <h4>❌ Without Genius Team</h4>
-        <div class="comp-item">Blank editor, no direction</div>
-        <div class="comp-item">Googling every error</div>
-        <div class="comp-item">No architecture or plan</div>
-        <div class="comp-item">Skipping tests entirely</div>
-        <div class="comp-item">Deploying and hoping</div>
-      </div>
-      <div class="comp-arrow">→</div>
-      <div class="comp-card after">
-        <h4>✦ With Genius Team</h4>
-        <div class="comp-item">Guided discovery in minutes</div>
-        <div class="comp-item">AI debugger finds root causes</div>
-        <div class="comp-item">Architecture before code</div>
-        <div class="comp-item">Automated QA + security</div>
-        <div class="comp-item">One-command deploy</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="cta-section">
-  <div class="container">
-    <div class="section-label">Ready?</div>
-    <h2 class="section-title">Start building<br><span style="color:var(--violet)">right now.</span></h2>
-    <p class="section-desc" style="margin:0 auto 1.5rem;text-align:center">Describe your idea. Your AI crew handles the rest — with you in the driver's seat.</p>
-    <button class="cta-btn" onclick="GeniusWizard.open()">Get Started — It's Free</button>
-  </div>
-</section>
-
+<!-- Prop nav -->
 <div class="prop-nav">
-  <div class="prop-nav-inner">
-    <a href="/proposition1">Proposition 1</a>
-    <a href="/proposition2" class="active">Proposition 2</a>
-    <a href="/proposition3">Proposition 3</a>
-  </div>
+  <a href="/proposition1">Cinematic Amber</a>
+  <a href="/proposition2" class="active">Neon Violet</a>
+  <a href="/proposition3">Premium Gold</a>
 </div>
 
 <footer>
-  <p>Genius Team — Open source AI toolkit · <a href="https://github.com/w-3-art/genius-team" style="color:var(--magenta)">GitHub</a></p>
+  <p>Genius Team — Open source AI toolkit. Built with care.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="wizard.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded', () => {
   GeniusWizard.init();
-  const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
-  function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+
+  // Lenis
+  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
   requestAnimationFrame(raf);
-  lenis.on('scroll',ScrollTrigger.update);
-  gsap.ticker.add(time=>lenis.raf(time*1000));
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(time => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 
-  // Page glow follows cursor
-  const pg=document.getElementById('pageGlow');
-  if(pg && window.innerWidth>768){
-    document.addEventListener('mousemove',e=>{pg.style.left=e.clientX+'px';pg.style.top=e.clientY+'px'});
-  }
+  // Loader
+  gsap.to('#loader', { opacity: 0, duration: .5, delay: .4, onComplete() { document.getElementById('loader').style.display = 'none'; } });
 
   // Suggestions
-  document.querySelectorAll('.hero-sug').forEach(btn=>{
-    btn.addEventListener('click',()=>{const i=document.getElementById('heroInput');i.value=btn.dataset.text;i.focus();i.style.borderColor='var(--magenta)';i.style.boxShadow='0 0 40px rgba(236,72,153,.12)'});
+  document.querySelectorAll('.hero-suggestion').forEach(s => {
+    s.addEventListener('click', () => {
+      document.getElementById('heroInput').value = s.dataset.text;
+      document.getElementById('heroInput').focus();
+    });
   });
-
-  gsap.registerPlugin(ScrollTrigger);
 
   // Hero entrance
-  const tl=gsap.timeline({defaults:{ease:'power3.out'}});
-  tl.from('.hero-badge',{y:30,opacity:0,duration:.8})
-    .from('.hero h1',{y:50,opacity:0,duration:1.1},'-=.5')
-    .from('.hero-sub',{y:30,opacity:0,duration:.8},'-=.6')
-    .from('.hero-input-wrap',{y:30,opacity:0,duration:.8},'-=.5')
-    .from('.hero-suggestions',{y:20,opacity:0,duration:.6},'-=.4')
-    .from('.hero-trust',{y:20,opacity:0,duration:.6},'-=.3');
+  gsap.from('.hero-badge', { opacity: 0, y: 20, duration: .7, delay: .5 });
+  gsap.from('.hero h1', { opacity: 0, y: 35, duration: .8, delay: .7 });
+  gsap.from('.hero-sub', { opacity: 0, y: 20, duration: .7, delay: .9 });
+  gsap.from('.hero-input-wrap', { opacity: 0, y: 20, duration: .7, delay: 1.1 });
+  gsap.from('.hero-suggestions', { opacity: 0, duration: .5, delay: 1.3 });
+  gsap.from('.hero-trust', { opacity: 0, duration: .5, delay: 1.5 });
 
-  // Orb parallax
-  gsap.to('.orb-1',{y:-100,scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2}});
-  gsap.to('.orb-2',{y:80,scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:3}});
-  gsap.to('.orb-3',{y:-60,x:40,scrollTrigger:{trigger:'body',start:'top top',end:'bottom bottom',scrub:2.5}});
-
-  // How-it cards
-  gsap.utils.toArray('.howit-card').forEach((card,i)=>{
-    ScrollTrigger.create({trigger:card,start:'top 60%',onEnter:()=>{document.querySelectorAll('.howit-card').forEach(c=>c.classList.remove('active'));card.classList.add('active')}});
-    gsap.from(card,{y:40,opacity:0,duration:.6,delay:i*.05,scrollTrigger:{trigger:card,start:'top 80%'}});
+  // Neon cards
+  gsap.from('.neon-card', {
+    scrollTrigger: { trigger: '.neon-cards', start: 'top 80%' },
+    opacity: 0, y: 40, stagger: .15, duration: .7
   });
 
-  // Terminal typewriter
-  const termLines=document.querySelectorAll('.terminal-body div');
-  termLines.forEach(l=>{l.style.opacity='0';l.style.transform='translateY(8px)'});
-  ScrollTrigger.create({trigger:'.terminal-window',start:'top 70%',onEnter:()=>{
-    termLines.forEach((l,i)=>{gsap.to(l,{opacity:1,y:0,duration:.35,delay:i*.18})});
-  }});
-
-  // Agent pills
-  gsap.from('.agent-pill',{y:50,opacity:0,stagger:.06,duration:.5,scrollTrigger:{trigger:'.agents-grid',start:'top 75%'}});
-
-  // Feature cards
-  gsap.from('.feat-card',{y:40,opacity:0,stagger:.08,duration:.5,scrollTrigger:{trigger:'.features-grid',start:'top 78%'}});
-
-  // Proof counters
-  document.querySelectorAll('.proof-num').forEach(el=>{
-    const target=parseInt(el.dataset.val);const isPct=el.hasAttribute('data-pct');
-    ScrollTrigger.create({trigger:el,start:'top 85%',onEnter:()=>{
-      gsap.to({v:0},{v:target,duration:1.2,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v)+(isPct?'%':'')}});
-    }});
+  // Card stack animation
+  const cards = document.querySelectorAll('.stack-card');
+  const totalCards = cards.length;
+  cards.forEach((card, i) => {
+    gsap.set(card, { y: i * 8, scale: 1 - i * .03, opacity: i === 0 ? 1 : .6, zIndex: totalCards - i });
+  });
+  ScrollTrigger.create({
+    trigger: '.card-stack-section',
+    start: 'top 20%',
+    end: `+=${totalCards * 300}`,
+    pin: true,
+    scrub: .8,
+    onUpdate: self => {
+      const p = self.progress;
+      const active = Math.min(Math.floor(p * totalCards), totalCards - 1);
+      cards.forEach((card, i) => {
+        if (i < active) {
+          gsap.set(card, { y: -200 - (active - i) * 50, opacity: 0, scale: .9 });
+        } else if (i === active) {
+          gsap.set(card, { y: 0, opacity: 1, scale: 1, zIndex: totalCards });
+        } else {
+          gsap.set(card, { y: (i - active) * 8, opacity: .5, scale: 1 - (i - active) * .03, zIndex: totalCards - i });
+        }
+      });
+    }
   });
 
-  // Comparison
-  gsap.from('.comp-card.before',{x:-50,opacity:0,duration:.7,scrollTrigger:{trigger:'.comp-grid',start:'top 72%'}});
-  gsap.from('.comp-arrow',{scale:0,opacity:0,duration:.4,scrollTrigger:{trigger:'.comp-grid',start:'top 72%'}});
-  gsap.from('.comp-card.after',{x:50,opacity:0,duration:.7,delay:.1,scrollTrigger:{trigger:'.comp-grid',start:'top 72%'}});
+  // Philosophy
+  gsap.from('.phil-card', {
+    scrollTrigger: { trigger: '.philosophy-grid', start: 'top 80%' },
+    opacity: 0, y: 30, stagger: .15, duration: .7
+  });
+
+  // Skills categories
+  gsap.from('.skill-cat', {
+    scrollTrigger: { trigger: '.skills-categories', start: 'top 80%' },
+    opacity: 0, y: 25, stagger: .1, duration: .6
+  });
+
+  // Feature blocks
+  gsap.from('.feat-block', {
+    scrollTrigger: { trigger: '.feat-grid', start: 'top 80%' },
+    opacity: 0, y: 30, stagger: .12, duration: .7
+  });
+
+  // Stats counter
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = +el.dataset.count;
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(el, { duration: 1.5, ease: 'power2.out',
+          onUpdate() {
+            el.textContent = Math.round(target * this.progress());
+          }
+        });
+      }
+    });
+  });
 
   // CTA
-  gsap.fromTo('.cta-section .section-title',{filter:'blur(6px)',y:25,opacity:0},{filter:'blur(0px)',y:0,opacity:1,duration:1,scrollTrigger:{trigger:'.cta-section',start:'top 75%'}});
+  gsap.from('.cta-final h2, .cta-final p, .cta-final-btn', {
+    scrollTrigger: { trigger: '.cta-final', start: 'top 75%' },
+    opacity: 0, y: 25, stagger: .12, duration: .7
+  });
 
-  // Nav
-  ScrollTrigger.create({start:80,onUpdate:self=>{document.querySelector('.nav').style.background=self.progress>0?'rgba(12,0,21,.92)':'rgba(12,0,21,.6)'}});
+  // Orb parallax on scroll
+  gsap.to('.orb-1', {
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2 },
+    y: 200, x: 50
+  });
+  gsap.to('.orb-2', {
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2 },
+    y: -150, x: -40
+  });
+  gsap.to('.orb-3', {
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2 },
+    y: -100
+  });
 });
 </script>
 </body>

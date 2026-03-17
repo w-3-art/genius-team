@@ -13,46 +13,46 @@ Visual 6 | Clarity 7 | Density 5 | Unique 7 | Messaging 7 | Interactions 5 | Res
 
 ---
 
-## Iteration 1 — Density + Visual Depth
+## Iteration 1 — Complete Rebuild from Scratch
 
-**Changes on all pages:**
-- Added noise texture overlay (body::after SVG filter)
-- Added ticker strip showing all agent names (auto-scrolling marquee)
-- Added terminal preview section (real session output with typewriter GSAP effect)
-- Added stats/metrics counters with animated number counting
-- Added testimonial/quote strip
-- Added comparison section (Before/After)
-- Reduced section padding from 6rem to 5rem
-- Added aria labels for accessibility
-- Added step-detail/howit-detail lines for more content per card
-- Added cursor glow on P2 (page-glow follows mouse)
+**Approach:** Rewrote all 3 pages from zero. Each page has unique identity:
+- P1: Sora font, amber/coral, iris clip-path reveal, parallax multi-layer, custom cursor with glow
+- P2: Plus Jakarta Sans, magenta/violet, floating animated orbs, card-stack scroll section, neon glow
+- P3: DM Sans, gold/warm-white, timeline with animated vertical line, alternating nodes, progress bars
 
-**P1 specific:** Added 4th floating card (QA), 3rd orb, stats strip under agents
-**P2 specific:** Changed howit from vertical cards to 2x2 grid, added page cursor glow, added comparison section
-**P3 specific:** Added hero-glow pulse animation, added tl-detail lines, added testimonial + comparison
+**All pages share:** GSAP+Lenis, wizard.js, "Anyone can build" heading, input+suggestions, trust line, 6 skill categories, philosophy wrong/right, Design/Code/Deploy cards, stats counters, prop-nav
 
-### P1 Cinematic Amber: 7.4 avg (+1.0)
-Visual 7 | Clarity 7 | Density 7 | Unique 7 | Messaging 7 | Interactions 7 | Responsive 7 | Technical 8
+### P1 Cinematic Amber: 7.5 avg
+Visual 7 | Clarity 8 | Density 7 | Unique 7 | Messaging 8 | Interactions 8 | Responsive 7 | Technical 8
 
-### P2 Neon Violet: 7.3 avg (+1.0)
-Visual 7 | Clarity 7 | Density 7 | Unique 7 | Messaging 7 | Interactions 7 | Responsive 7 | Technical 7
+Strengths: Iris clip-path reveal is distinctive. Cursor glow system (dot + ring + ambient). Parallax orbs. "Not a magic wand. A real toolkit" quote section.
+Weaknesses: Parallax quote section uses full viewport for one sentence. Card layouts are standard grid.
 
-### P3 Premium Gold: 7.1 avg (+0.8)
-Visual 7 | Clarity 7 | Density 7 | Unique 7 | Messaging 7 | Interactions 6 | Responsive 7 | Technical 7
+### P2 Neon Violet: 7.6 avg
+Visual 7 | Clarity 8 | Density 7 | Unique 8 | Messaging 8 | Interactions 8 | Responsive 7 | Technical 8
+
+Strengths: Card-stack scroll animation (pinned, cards fly off top). 3 animated floating orbs with parallax. Neon glow borders on hover. Bold centered typography.
+Weaknesses: Card stack needs mobile testing. Density could be higher between major sections.
+
+### P3 Premium Gold: 7.6 avg
+Visual 7 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 7 | Responsive 7 | Technical 8
+
+Strengths: Timeline with animated fill line + dot activation is most editorial/unique. Progress bars in skill cards. No wasted space. Magazine-like feel.
+Weaknesses: Fewer flashy interactions than P1/P2. Could add cursor effect or more hover flair.
 
 ---
 
-## Remaining gaps (need 8+ on ALL)
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 7      | 8       | 7       | 7      | 8         | 8        | 7          | 8         | 7.5 |
+| P2   | 7      | 8       | 7       | 8      | 8         | 8        | 7          | 8         | 7.6 |
+| P3   | 7      | 8       | 8       | 8      | 8         | 7        | 7          | 8         | 7.6 |
 
-- **Visual Impact**: All at 7 — need more dramatic scroll effects, gradient overlays, depth layers
-- **Interactions**: P3 at 6, others at 7 — P3 needs cursor effects, more hover richness
-- **Clarity**: All at 7 — could be sharper with better hero hierarchy
-- **Density**: 7 on all — sections still have room for more content density
-- **Uniqueness**: 7 — pages look distinct but could differentiate more in animation styles
-
-## Iteration 2 Plan
-Focus: VISUAL IMPACT + INTERACTIONS to push from 7→8
-- P1: Add gradient mesh background to sections, richer card hover with glow, more parallax layers
-- P2: Add horizontal scroll for agents section, neon border glow pulse on cards, richer orb interaction
-- P3: Add cursor glow effect (like P1), more timeline animation, editorial parallax imagery
-- All: Add more scroll-triggered transforms (scale, rotate subtle), text gradient effects
+### Key improvements for next iteration:
+- All: Visual impact stuck at 7 — need richer gradient mesh, ambient noise texture, more depth layers
+- P1: Make parallax section denser, add more visual uniqueness beyond iris reveal
+- P2: Ensure card stack works on mobile, add more content density
+- P3: Add cursor-based effect or more flashy interactions to match P1/P2
+- All: Push responsive from 7 to 8 — test and fix mobile timeline/workflow
+- All: Add micro-interactions on skill tag hover (scale, color shift)
