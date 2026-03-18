@@ -166,6 +166,7 @@ footer{padding:3rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255
 footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
 
 /* Responsive */
+.nav-mobile-cta{display:none}
 @media(max-width:900px){
   .editorial-cards,.skills-grid{grid-template-columns:1fr 1fr}
   .timeline-node{flex-direction:column!important;text-align:left!important;gap:0;padding-left:2.5rem}
@@ -177,19 +178,41 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
   .philosophy-grid{gap:1rem}
 }
 @media(max-width:640px){
+  .nav-mobile-cta{display:block;background:var(--gold);color:#0F0F0F;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
   .nav-links{display:none}
   .editorial-cards,.skills-grid,.philosophy-grid{grid-template-columns:1fr}
-  .hero{padding:6rem 1.5rem 3rem}
-  .hero h1{font-size:2.2rem}
-  .hero-sub{font-size:.92rem}
-  section{padding:3.5rem 1.2rem}
-  .stats{gap:2rem}
-  .timeline-node{padding-left:2rem}
+  .hero{padding:5.5rem 1.2rem 2.5rem}
+  .hero h1{font-size:2.2rem;margin-bottom:.8rem}
+  .hero-sub{font-size:.9rem}
+  .hero-input{padding-right:1.2rem}
+  .hero-input-btn{position:static;transform:none;width:100%;margin-top:.5rem;border-radius:10px;padding:.7rem}
+  .hero-input-wrap{display:flex;flex-direction:column}
+  .hero-suggestion{font-size:.68rem;padding:.28rem .65rem}
+  section{padding:3rem 1.2rem}
+  .timeline-section{padding:3.5rem 1.2rem}
+  .timeline-node{padding-left:2rem;margin-bottom:2rem}
   .timeline-node-content{padding:1.2rem}
+  .parallax-quote{height:38vh}
+  .pq-text{font-size:clamp(1.05rem,4vw,1.5rem);padding:0 1.2rem}
+  .pq-orb{width:140px;height:140px;opacity:.1;filter:blur(50px)}
+  .philosophy{padding:3rem 1.2rem}
+  .skills-section{padding:3.5rem 1.2rem}
+  .feat-section{padding:3rem 1.2rem}
+  .feat-card{padding:1.2rem}
+  .stats{gap:1.5rem;padding:3rem 1.2rem}
+  .stat-num{font-size:1.8rem}
+  .cta{padding:4rem 1.2rem}
   .cursor-glow{display:none}
-  .parallax-quote{height:40vh}
-  .pq-text{font-size:1.2rem;padding:0 1.5rem}
-  .ticker{padding:.5rem 0}
+  .section-title{font-size:clamp(1.3rem,5vw,1.7rem)}
+  .ticker{padding:.45rem 0}
+  .prop-nav{padding:1.5rem 1.2rem}
+  .prop-nav a{padding:.4rem 1rem;font-size:.72rem}
+}
+@media(max-width:400px){
+  .hero-suggestions{flex-direction:column;align-items:center}
+  .hero-trust{flex-direction:column;align-items:center;gap:.6rem}
+  .stats{flex-direction:column;gap:1.2rem}
+  .ticker-track{gap:1.5rem}
 }
 </style>
 </head>
@@ -210,6 +233,7 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
     <a href="#features">Features</a>
     <button class="nav-cta" onclick="GeniusWizard.open()">Start Building</button>
   </div>
+  <button class="nav-mobile-cta" onclick="GeniusWizard.open()">Start</button>
 </nav>
 
 <!-- Hero -->

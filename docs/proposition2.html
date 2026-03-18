@@ -146,6 +146,7 @@ footer{padding:3rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255
 footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 
 /* Responsive */
+.nav-mobile-cta{display:none}
 @media(max-width:900px){
   .neon-cards,.skills-categories{grid-template-columns:1fr 1fr}
   .feat-grid{grid-template-columns:1fr}
@@ -155,18 +156,34 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .philosophy-grid{gap:1.2rem}
 }
 @media(max-width:640px){
+  .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
   .nav-links{display:none}
   .neon-cards,.skills-categories,.philosophy-grid{grid-template-columns:1fr}
-  .hero{padding:6rem 1.5rem 3rem}
-  .hero h1{font-size:2.4rem}
-  .hero-sub{font-size:.95rem}
+  .hero{padding:5.5rem 1.2rem 2.5rem}
+  .hero h1{font-size:2.4rem;margin-bottom:.8rem}
+  .hero-sub{font-size:.92rem}
+  .hero-input{padding-right:1.2rem}
+  .hero-input-btn{position:static;transform:none;width:100%;margin-top:.5rem;border-radius:10px;padding:.75rem}
+  .hero-input-wrap{display:flex;flex-direction:column}
+  .hero-suggestion{font-size:.68rem;padding:.3rem .65rem}
   section{padding:3.5rem 1.2rem}
-  .stats-bar{gap:2rem}
-  .card-stack-section{padding:5rem 1.2rem}
-  .card-stack-wrap{min-height:300px}
-  .stack-card{padding:1.8rem}
-  .orb{opacity:.12}
-  .cursor-glow{display:none}
+  .card-stack-section{padding:4rem 1.2rem}
+  .card-stack-wrap{min-height:auto}
+  .stack-card{position:relative!important;transform:none!important;opacity:1!important;margin-bottom:1rem;top:auto!important;left:auto!important;right:auto!important;padding:1.8rem}
+  .philosophy{padding:3.5rem 1.2rem}
+  .feat-block{padding:1.3rem}
+  .stats-bar{gap:1.5rem;padding:3rem 1.2rem}
+  .stat-num{font-size:2rem}
+  .cta-final{padding:4rem 1.2rem}
+  .section-title{font-size:clamp(1.4rem,5vw,1.8rem)}
+  .prop-nav{padding:1.5rem 1.2rem}
+  .prop-nav a{padding:.4rem 1rem;font-size:.72rem}
+  .orb{opacity:.1}
+}
+@media(max-width:400px){
+  .hero-suggestions{flex-direction:column;align-items:center}
+  .hero-trust{flex-direction:column;align-items:center;gap:.6rem}
+  .stats-bar{flex-direction:column;gap:1.2rem}
 }
 </style>
 </head>
@@ -192,6 +209,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
     <a href="#why">Why Us</a>
     <button class="nav-cta" onclick="GeniusWizard.open()">Start Building</button>
   </div>
+  <button class="nav-mobile-cta" onclick="GeniusWizard.open()">Start</button>
 </nav>
 
 <!-- Hero -->
@@ -493,28 +511,32 @@ document.addEventListener('DOMContentLoaded', () => {
     opacity: 0, y: 40, stagger: .15, duration: .7
   });
 
-  // Card stack animation
+  // Card stack animation — desktop only (mobile shows stacked cards via CSS)
   const cards = document.querySelectorAll('.stack-card');
   const totalCards = cards.length;
-  cards.forEach((card, i) => {
-    gsap.set(card, { y: i * 8, scale: 1 - i * .03, opacity: i === 0 ? 1 : .6, zIndex: totalCards - i });
-  });
-  ScrollTrigger.create({
-    trigger: '.card-stack-section',
-    start: 'top 20%',
-    end: `+=${totalCards * 300}`,
-    pin: true,
-    scrub: .8,
-    onUpdate: self => {
-      const p = self.progress;
-      const active = Math.min(Math.floor(p * totalCards), totalCards - 1);
+  ScrollTrigger.matchMedia({
+    '(min-width:641px)': function() {
       cards.forEach((card, i) => {
-        if (i < active) {
-          gsap.set(card, { y: -200 - (active - i) * 50, opacity: 0, scale: .9 });
-        } else if (i === active) {
-          gsap.set(card, { y: 0, opacity: 1, scale: 1, zIndex: totalCards });
-        } else {
-          gsap.set(card, { y: (i - active) * 8, opacity: .5, scale: 1 - (i - active) * .03, zIndex: totalCards - i });
+        gsap.set(card, { y: i * 8, scale: 1 - i * .03, opacity: i === 0 ? 1 : .6, zIndex: totalCards - i });
+      });
+      ScrollTrigger.create({
+        trigger: '.card-stack-section',
+        start: 'top 20%',
+        end: `+=${totalCards * 300}`,
+        pin: true,
+        scrub: .8,
+        onUpdate: self => {
+          const p = self.progress;
+          const active = Math.min(Math.floor(p * totalCards), totalCards - 1);
+          cards.forEach((card, i) => {
+            if (i < active) {
+              gsap.set(card, { y: -200 - (active - i) * 50, opacity: 0, scale: .9 });
+            } else if (i === active) {
+              gsap.set(card, { y: 0, opacity: 1, scale: 1, zIndex: totalCards });
+            } else {
+              gsap.set(card, { y: (i - active) * 8, opacity: .5, scale: 1 - (i - active) * .03, zIndex: totalCards - i });
+            }
+          });
         }
       });
     }
