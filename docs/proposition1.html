@@ -628,6 +628,26 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.from('.hero-suggestions', { opacity: 0, duration: .6, delay: 1.3 });
   gsap.from('.hero-trust', { opacity: 0, duration: .6, delay: 1.5 });
 
+  // Text scramble — hero keyword "build" decodes from cipher characters
+  setTimeout(() => {
+    const em = document.querySelector('.hero h1 em');
+    if (!em) return;
+    const final = 'build';
+    const glyphs = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789@#$%&!?+';
+    let frame = 0;
+    const interval = setInterval(() => {
+      em.textContent = final.split('').map((c, i) => {
+        if (frame / 3 > i) return c;
+        return glyphs[Math.floor(Math.random() * glyphs.length)];
+      }).join('');
+      frame++;
+      if (frame > final.length * 3 + 8) {
+        em.textContent = final;
+        clearInterval(interval);
+      }
+    }, 40);
+  }, 800);
+
   // Floating cards stagger
   gsap.from('.floating-card', {
     scrollTrigger: { trigger: '.floating-cards', start: 'top 80%' },

@@ -169,6 +169,10 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .stack-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .35s}
 .stack-dot.active{background:var(--magenta);box-shadow:0 0 14px rgba(236,72,153,.5),0 0 28px rgba(236,72,153,.15)}
 
+/* Typewriter cursor */
+.typewriter-cursor{display:inline-block;width:2px;height:1.1em;background:var(--magenta);margin-left:2px;vertical-align:text-bottom;animation:cursorBlink .6s step-end infinite}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+
 /* Stats neon flash */
 @keyframes neonFlash{0%{transform:scale(1);filter:brightness(1)}40%{transform:scale(1.18);filter:brightness(1.5) drop-shadow(0 0 12px rgba(139,92,246,.4))}100%{transform:scale(1);filter:brightness(1)}}
 .stat-num.counted{animation:neonFlash .5s cubic-bezier(.34,1.56,.64,1)}
@@ -567,7 +571,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hero entrance
   gsap.from('.hero-badge', { opacity: 0, y: 20, duration: .7, delay: .5 });
   gsap.from('.hero h1', { opacity: 0, y: 35, duration: .8, delay: .7 });
-  gsap.from('.hero-sub', { opacity: 0, y: 20, duration: .7, delay: .9 });
+  // Typewriter hero subtitle — terminal decode effect
+  const heroSub = document.querySelector('.hero-sub');
+  const subFullText = heroSub.textContent.trim();
+  gsap.set(heroSub, { opacity: 0 });
+  setTimeout(() => {
+    heroSub.textContent = '';
+    gsap.set(heroSub, { opacity: 1 });
+    const cursor = document.createElement('span');
+    cursor.className = 'typewriter-cursor';
+    heroSub.appendChild(cursor);
+    let ci = 0;
+    const typeInt = setInterval(() => {
+      if (ci < subFullText.length) {
+        heroSub.insertBefore(document.createTextNode(subFullText[ci]), cursor);
+        ci++;
+      } else {
+        clearInterval(typeInt);
+        setTimeout(() => { cursor.style.opacity = '0'; cursor.style.transition = 'opacity .5s'; }, 2000);
+      }
+    }, 18);
+  }, 900);
   gsap.from('.hero-input-wrap', { opacity: 0, y: 20, duration: .7, delay: 1.1 });
   gsap.from('.hero-suggestions', { opacity: 0, duration: .5, delay: 1.3 });
   gsap.from('.hero-trust', { opacity: 0, duration: .5, delay: 1.5 });

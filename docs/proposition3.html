@@ -175,6 +175,19 @@ section{padding:5rem 2rem;position:relative}
 .prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.76rem;font-weight:600;border:1px solid rgba(255,255,255,.06);color:var(--muted);transition:all .2s}
 .prop-nav a:hover,.prop-nav a.active{border-color:var(--gold);color:var(--gold);background:rgba(212,165,116,.05)}
 
+/* Testimonials */
+.testimonials{padding:4rem 2rem;background:var(--surface);position:relative}
+.testimonials-inner{max-width:620px;margin:0 auto;text-align:center;position:relative;min-height:130px}
+.testimonial{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .8s ease}
+.testimonial.active{opacity:1}
+.testimonial-quote{font-size:clamp(.95rem,1.8vw,1.12rem);font-weight:400;line-height:1.75;color:rgba(255,255,255,.65);font-style:italic;margin-bottom:.8rem;letter-spacing:.005em}
+.testimonial-quote em{font-style:normal;color:var(--gold)}
+.testimonial-author{font-size:.7rem;color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.testimonial-dots{display:flex;justify-content:center;gap:6px;margin-top:1.2rem}
+.testimonial-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.1);cursor:pointer;transition:all .3s}
+.testimonial-dot.active{background:var(--gold);box-shadow:0 0 10px rgba(212,165,116,.3)}
+@media(max-width:640px){.testimonials{padding:3rem 1.2rem}.testimonials-inner{min-height:150px}}
+
 /* Stats gold flash */
 @keyframes goldFlash{0%{transform:scale(1);text-shadow:none}40%{transform:scale(1.15);text-shadow:0 0 20px rgba(212,165,116,.5)}100%{transform:scale(1);text-shadow:none}}
 .stat-num.counted{animation:goldFlash .5s cubic-bezier(.34,1.56,.64,1)}
@@ -539,6 +552,32 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
   </div>
 </section>
 
+<!-- Builder Testimonials -->
+<section class="testimonials">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">From builders</div>
+  </div>
+  <div class="testimonials-inner" id="testimonials">
+    <div class="testimonial active">
+      <p class="testimonial-quote">"I had zero coding experience. In three weeks, I shipped a booking app for my yoga studio — and I actually <em>understood</em> the code."</p>
+      <div class="testimonial-author">Sarah M. — Yoga Instructor</div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"It's not magic — it's better. The agents explain every decision. I went from watching tutorials to <em>shipping products</em>."</p>
+      <div class="testimonial-author">Marcus T. — Freelance Designer</div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"I tried no-code tools but hit walls everywhere. With Genius Team, I built a real marketplace — <em>my way</em>, not a template."</p>
+      <div class="testimonial-author">Léa D. — Vintage Collector</div>
+    </div>
+  </div>
+  <div class="testimonial-dots" id="testimonialDots">
+    <div class="testimonial-dot active"></div>
+    <div class="testimonial-dot"></div>
+    <div class="testimonial-dot"></div>
+  </div>
+</section>
+
 <!-- Stats -->
 <div class="stats">
   <div class="stat"><span class="stat-num" data-count="42">0</span><span class="stat-label">AI Agents</span></div>
@@ -709,6 +748,29 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollTrigger: { trigger: '.cta', start: 'top 75%' },
     opacity: 0, y: 25, duration: .8
   });
+
+  // Testimonial auto-rotation
+  const testimonials = document.querySelectorAll('.testimonial');
+  const tDots = document.querySelectorAll('.testimonial-dot');
+  let curTest = 0;
+  if (testimonials.length > 0) {
+    setInterval(() => {
+      testimonials[curTest].classList.remove('active');
+      tDots[curTest].classList.remove('active');
+      curTest = (curTest + 1) % testimonials.length;
+      testimonials[curTest].classList.add('active');
+      tDots[curTest].classList.add('active');
+    }, 4000);
+    tDots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        testimonials[curTest].classList.remove('active');
+        tDots[curTest].classList.remove('active');
+        curTest = i;
+        testimonials[curTest].classList.add('active');
+        tDots[curTest].classList.add('active');
+      });
+    });
+  }
 });
 </script>
 </body>

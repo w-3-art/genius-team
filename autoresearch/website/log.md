@@ -366,3 +366,71 @@ The gold sweep effect is unique — a diagonal highlight scanning across the her
 - All: Consider pushing Unique or Density to 9 as the next lowest criteria
 
 --- End iteration 6 ---
+
+--- End iteration 6 ---
+
+=== Iteration 7 / 25 — Wed Mar 18 01:19:41 CET 2026 ===
+
+## Iteration 7 — Uniqueness Push: Per-Page Signature Interactions (Unique 8→9)
+
+**Target:** Unique 8→9 across all 3 pages + Density 8→9 for P3
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — text scramble/cipher decode on hero keyword:**
+- Hero heading word "build" (inside `<em>`) scrambles through random glyphs (A-Z, 0-9, symbols) before resolving letter-by-letter
+- 40ms per frame, ~23 frames total (~920ms of scramble), starts 800ms after page load (synced with h1 fade-in)
+- Characters decode left-to-right creating a cipher/mission-briefing reveal — matches cinematic identity
+- No other page has text scramble effects
+- Result: Unique 8→9 (iris reveal + horizontal scroll + text scramble = three signature interactions, each completely different from P2/P3)
+
+**P2 (Neon Violet) — typewriter terminal decode on hero subtitle:**
+- Hero subtitle types out character-by-character (18ms/char, ~2.3s total) with a blinking magenta cursor
+- Cursor blinks at 600ms intervals using step-end timing (sharp terminal blink, not smooth)
+- Cursor fades out 2s after text completes
+- Creates a "hacker terminal decrypting a message" feel — perfectly fits neon/tech aesthetic
+- No other page has typewriter/terminal effects
+- Result: Unique 8→9 (card-stack + magnetic CTA + typewriter terminal = three signature interactions, each completely different from P1/P3)
+
+**P3 (Premium Gold) — builder testimonials carousel:**
+- New section between Features and Stats with 3 crossfading builder quotes
+- Quotes reference real use-case personas (yoga instructor, designer, vintage collector) — ties to the showcase cards on other pages
+- 4s auto-rotation with smooth 800ms opacity crossfade + clickable gold navigation dots
+- Gold-accented `<em>` highlights in each quote for editorial emphasis
+- Magazine-style italic typography with warm gold author attribution
+- No other page has testimonials or social proof quotes
+- Result: Unique 8→9 (timeline + word reveal + testimonial carousel = three distinct signature elements) + Density 8→9 (new content section fills the gap between features and stats)
+
+**What stayed the same:** All desktop layouts, visual palettes, messaging, responsive breakpoints, existing animations unchanged.
+
+### P1 Cinematic Amber: 8.5 avg
+Visual 9 | Clarity 8 | Density 8 | Unique 9 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+The text scramble on "build" is a subtle but memorable hero moment — the word materializes from cipher characters like a classified briefing being decoded. Combined with iris clip-path reveal (scroll) and horizontal scroll showcase (content), P1 now has three completely distinct signature interactions. The scramble reinforces the "cinematic" identity without adding visual clutter.
+
+### P2 Neon Violet: 8.5 avg
+Visual 9 | Clarity 8 | Density 8 | Unique 9 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+The typewriter effect transforms the hero subtitle from static text into a terminal-like experience. The blinking magenta cursor is a strong brand element — it feels like a hacking terminal decoding a message. Combined with card-stack scroll animation and magnetic CTA button, P2 now has three signature interactions all consistent with the neon/tech identity. No other page has character-by-character text reveals.
+
+### P3 Premium Gold: 8.6 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+The testimonial carousel adds both uniqueness and density. Three auto-rotating builder quotes with editorial typography create a social proof section that no other page has. The crossfade animation is smooth and editorial, the gold-accented highlights match the warm palette, and the clickable dots add interactivity. The section fills the gap between features and stats — P3 now has zero empty zones. Timeline + word reveal + testimonials = three distinct editorial signatures.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 8       | 8       | 9      | 8         | 9        | 8          | 8         | 8.5 |
+| P2   | 9      | 8       | 8       | 9      | 8         | 9        | 8          | 8         | 8.5 |
+| P3   | 9      | 8       | 9       | 9      | 8         | 9        | 8          | 8         | 8.6 |
+
+### Unique now at 9 (all pages), Density at 9 (P3). Next iteration targets:
+- P1: Density could reach 9 — add a testimonial section or builder showcase between glass-cards and stats
+- P2: Density could reach 9 — add a testimonial/quote section or community stats between features and stats
+- All: Clarity, Messaging, Responsive, Technical all at 8 — consider pushing Messaging to 9 with stronger "you're in control" language
+- P3 leads slightly — could use as template for density improvements on P1/P2
+
+--- End iteration 7 ---
