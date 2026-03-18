@@ -152,6 +152,18 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.78rem;font-weight:600;border:1px solid rgba(255,255,255,.07);color:var(--muted);transition:all .2s}
 .prop-nav a:hover,.prop-nav a.active{border-color:var(--violet);color:var(--violet);background:rgba(139,92,246,.06)}
 
+/* Magnetic CTA ease */
+.cta-final-btn{position:relative}
+
+/* Card stack progress dots */
+.stack-progress{display:flex;justify-content:center;gap:8px;margin-top:1.5rem}
+.stack-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .35s}
+.stack-dot.active{background:var(--magenta);box-shadow:0 0 14px rgba(236,72,153,.5),0 0 28px rgba(236,72,153,.15)}
+
+/* Stats neon flash */
+@keyframes neonFlash{0%{transform:scale(1);filter:brightness(1)}40%{transform:scale(1.18);filter:brightness(1.5) drop-shadow(0 0 12px rgba(139,92,246,.4))}100%{transform:scale(1);filter:brightness(1)}}
+.stat-num.counted{animation:neonFlash .5s cubic-bezier(.34,1.56,.64,1)}
+
 footer{padding:3rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,.03);position:relative;z-index:1}
 footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 
@@ -298,6 +310,12 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
       <h3>Go live with confidence</h3>
       <p>Security scan, performance check, accessibility audit. Then one-click deploy. Your app is live — and you understand every line behind it.</p>
     </div>
+  </div>
+  <div class="stack-progress" id="stackProgress">
+    <div class="stack-dot active"></div>
+    <div class="stack-dot"></div>
+    <div class="stack-dot"></div>
+    <div class="stack-dot"></div>
   </div>
 </section>
 
@@ -574,6 +592,11 @@ document.addEventListener('DOMContentLoaded', () => {
               gsap.set(card, { y: (i - active) * 8, opacity: .5, scale: 1 - (i - active) * .03, zIndex: totalCards - i });
             }
           });
+          // Update stack progress dots
+          const stackDots = document.querySelectorAll('.stack-dot');
+          stackDots.forEach((d, i) => {
+            d.classList.toggle('active', i <= active);
+          });
         }
       });
     }
@@ -603,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
     opacity: 0, y: 30, stagger: .12, duration: .7
   });
 
-  // Stats counter
+  // Stats counter with neon flash on complete
   document.querySelectorAll('.stat-num').forEach(el => {
     const target = +el.dataset.count;
     ScrollTrigger.create({
@@ -614,11 +637,26 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.to(el, { duration: 1.5, ease: 'power2.out',
           onUpdate() {
             el.textContent = Math.round(target * this.progress());
-          }
+          },
+          onComplete() { el.classList.add('counted'); }
         });
       }
     });
   });
+
+  // Magnetic CTA button
+  const magnetBtn = document.querySelector('.cta-final-btn');
+  if (magnetBtn && window.innerWidth > 768) {
+    magnetBtn.addEventListener('mousemove', e => {
+      const rect = magnetBtn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      gsap.to(magnetBtn, { x: x * .25, y: y * .35, duration: .3, ease: 'power2.out' });
+    });
+    magnetBtn.addEventListener('mouseleave', () => {
+      gsap.to(magnetBtn, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1,.4)' });
+    });
+  }
 
   // CTA
   gsap.from('.cta-final h2, .cta-final p, .cta-final-btn', {

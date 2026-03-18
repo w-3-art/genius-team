@@ -243,3 +243,64 @@ Word-by-word parallax quote reveal is the standout new interaction — each word
 - All: Consider pushing Interactions to 9 with micro-animations on scroll (counter tick, progress reveal, etc.)
 
 --- End iteration 4 ---
+
+--- End iteration 4 ---
+
+=== Iteration 5 / 25 — Wed Mar 18 01:12:08 CET 2026 ===
+
+## Iteration 5 — Interaction Enrichment: Per-Page Micro-Animations (8→9)
+
+**Target:** Interactions 8→9 across all 3 pages with distinct per-page signature micro-interactions
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — scroll progress + orb breathing + stats pop:**
+- Scroll progress bar: fixed 3px amber→coral gradient line at top of viewport, fills based on scroll position via ScrollTrigger (Linear/Stripe-style)
+- Parallax orb breathing: orbs now scale-pulse (1→1.1→1 on 6s/8s loops) with CSS keyframes — creates living, organic depth
+- Stats counter scale pop: when counter reaches target value, `.counted` class triggers scale(1.2) + brightness bounce animation
+- Result: Interactions 8→9 (scroll progress = constant visual feedback, orb breathing = ambient life, stats pop = satisfying completion)
+
+**P2 (Neon Violet) — magnetic CTA + card-stack progress dots + stats flash:**
+- Magnetic CTA button: "Get Started Free" button subtly follows cursor position within its bounds via mousemove with elastic snap-back on mouseleave (desktop only)
+- Card-stack progress dots: 4 neon dots below card stack section that light up progressively as cards are revealed during scroll — magenta glow + shadow on active dots
+- Stats counter neon flash: counter completion triggers scale(1.18) + brightness(1.5) + violet drop-shadow flash
+- Result: Interactions 8→9 (magnetic button = premium feel, progress dots = clear scroll feedback, neon flash = brand-consistent completion)
+
+**P3 (Premium Gold) — interactive ticker + stats gold flash:**
+- Ticker interactivity: hover pauses ticker animation (`animation-play-state:paused`), hovered item gets gold color + text-shadow glow, dot scales 1.8x with gold box-shadow
+- Stats counter gold flash: counter completion triggers scale(1.15) + gold text-shadow glow
+- Result: Interactions 8→9 (interactive ticker = decorative→functional, gold flash = warm completion feedback)
+
+**What stayed the same:** All content, desktop layouts, visual palettes, messaging, responsive breakpoints, existing animations unchanged.
+
+### P1 Cinematic Amber: 8.1 avg
+Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Scroll progress bar creates constant visual feedback — premium sites like Linear use this. Parallax orbs now breathe, adding ambient life to the parallax section. Stats pop animation gives a satisfying "completion" moment. Three new interaction layers push well past 8.
+
+### P2 Neon Violet: 8.1 avg
+Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Magnetic CTA button is a premium interaction — the elastic snap-back feels playful and high-end. Card-stack progress dots give clear feedback during the scroll animation (which card am I on?). Neon flash on stats matches the violet brand. Three new interaction layers, all cohesive with neon identity.
+
+### P3 Premium Gold: 8.1 avg
+Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Ticker was purely decorative — now it responds to hover (pauses, glows gold). This turns passive decoration into an interactive element users can explore. Gold flash on stats matches editorial warmth. Two targeted additions push interactions past 8 while maintaining editorial restraint.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 8      | 8       | 8       | 8      | 8         | 9        | 8          | 8         | 8.1 |
+| P2   | 8      | 8       | 8       | 8      | 8         | 9        | 8          | 8         | 8.1 |
+| P3   | 8      | 8       | 8       | 8      | 8         | 9        | 8          | 8         | 8.1 |
+
+### Interactions now at 9. Next iteration targets:
+- P1: Visual could reach 9 — add animated gradient mesh in hero that morphs on scroll
+- P2: Unique could reach 9 — add a second signature interaction (text scramble reveal, morphing shapes)
+- P3: Density could reach 9 — add a testimonial/quote carousel or builder stats section
+- All: Consider pushing Visual to 9 with richer hero gradient animations or depth layers
+
+--- End iteration 5 ---

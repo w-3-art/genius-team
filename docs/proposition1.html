@@ -165,6 +165,19 @@ section{padding:6rem 2rem;position:relative}
 .prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.78rem;font-weight:600;border:1px solid rgba(255,255,255,.08);color:var(--muted);transition:all .2s}
 .prop-nav a:hover,.prop-nav a.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.06)}
 
+/* Scroll progress bar */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--coral));z-index:10002;width:0;transform-origin:left;will-change:width;pointer-events:none}
+
+/* Parallax orb breathing */
+@keyframes orbBreathe1{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes orbBreathe2{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.parallax-orb-1{animation:orbBreathe1 6s ease-in-out infinite}
+.parallax-orb-2{animation:orbBreathe2 8s ease-in-out infinite 1s}
+
+/* Stats counter pop on complete */
+@keyframes statPop{0%{transform:scale(1)}50%{transform:scale(1.2);filter:brightness(1.3)}100%{transform:scale(1);filter:brightness(1)}}
+.proof-stat-num.counted{animation:statPop .45s cubic-bezier(.34,1.56,.64,1)}
+
 /* Footer */
 footer{padding:3rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,.04)}
 footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
@@ -220,6 +233,9 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 </style>
 </head>
 <body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- Cursor -->
 <div class="cursor" id="cursor"></div>
@@ -680,7 +696,17 @@ document.addEventListener('DOMContentLoaded', () => {
     opacity: 0, y: 30, stagger: .12, duration: .7
   });
 
-  // Stats counter
+  // Scroll progress bar
+  ScrollTrigger.create({
+    trigger: document.body,
+    start: 'top top',
+    end: 'bottom bottom',
+    onUpdate: self => {
+      document.getElementById('scrollProgress').style.width = (self.progress * 100) + '%';
+    }
+  });
+
+  // Stats counter with scale pop on complete
   document.querySelectorAll('.proof-stat-num').forEach(el => {
     const target = +el.dataset.count;
     ScrollTrigger.create({
@@ -692,7 +718,8 @@ document.addEventListener('DOMContentLoaded', () => {
           onUpdate() {
             const p = this.progress();
             el.textContent = Math.round(target * p);
-          }
+          },
+          onComplete() { el.classList.add('counted'); }
         });
       }
     });
