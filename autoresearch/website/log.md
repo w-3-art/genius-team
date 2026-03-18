@@ -112,5 +112,66 @@ Warm grain texture + softer vignette fits editorial tone. Richer hero mesh with 
 
 --- End iteration 2 ---
 
-=== Iteration 3 / 25 — Wed Mar 18 00:54:28 CET 2026 ===
-Running claude for iteration 3...
+## Iteration 3 — Responsive: Mobile Layout Fix (All 3 Pages)
+
+**Target:** Responsive 7→8 (lowest criterion, tied across ALL 3 pages)
+
+**Changes applied to ALL 3 pages:**
+- Mobile nav CTA button (`.nav-mobile-cta`) — visible when nav-links hidden on mobile, keeps CTA accessible
+- Hero input + button stack vertically on mobile — no more button overflow, full-width "Start Building" button
+- Added `@media(max-width:400px)` breakpoint — suggestions/trust/stats stack vertically on tiny phones
+- Reduced section padding (2rem→1.2rem) on mobile for tighter, denser layout
+- Font sizes scaled down for mobile readability (section-title clamp'd smaller)
+- Prop nav compacted on mobile (smaller padding/font)
+
+**P1-specific:**
+- Parallax section reduced from 100vh to 45vh on mobile, orbs shrunk to 180px with reduced blur/opacity
+- Parallax text font clamped smaller for mobile
+- Iris section padding reduced
+- Custom cursor hidden on mobile (already was, now also hides glow properly)
+
+**P2-specific:**
+- Card-stack disabled on mobile: CSS forces `position:relative!important; opacity:1!important` so cards stack normally
+- Card-stack JS wrapped in `ScrollTrigger.matchMedia('(min-width:641px)')` — pin animation only runs on desktop
+- Orb opacity reduced to .1 on mobile
+
+**P3-specific:**
+- Parallax quote section reduced from 55vh to 38vh, orbs shrunk to 140px
+- Timeline nodes get tighter padding and spacing on mobile
+- Cursor glow hidden on mobile
+- Ticker track gap reduced on tiny phones
+
+**What stayed the same:** All content, desktop layout, visual effects, messaging, interactions unchanged.
+
+### P1 Cinematic Amber: 7.8 avg
+Visual 8 | Clarity 8 | Density 7 | Unique 7 | Messaging 8 | Interactions 8 | Responsive 8 | Technical 8
+
+Mobile nav CTA works. Input stacks cleanly. Parallax section no longer wastes full viewport on mobile. Workflow steps stack to single column properly. Glass cards, skills grid all single-column and readable. 400px breakpoint handles small phones.
+
+### P2 Neon Violet: 7.9 avg
+Visual 8 | Clarity 8 | Density 7 | Unique 8 | Messaging 8 | Interactions 8 | Responsive 8 | Technical 8
+
+Card-stack section is now fully functional on mobile — shows all 4 cards stacked normally instead of broken pinned animation. Mobile nav CTA present. Input stacks properly. Philosophy grid goes single-column. Orbs fade gracefully.
+
+### P3 Premium Gold: 7.9 avg
+Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 7 | Responsive 8 | Technical 8
+
+Timeline already had decent tablet support, now mobile is polished too. Parallax quote section right-sized for mobile. Cursor glow hidden. Editorial cards, skills grid, philosophy grid all stack correctly. Ticker still scrolls nicely on small screens.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 8      | 8       | 7       | 7      | 8         | 8        | 8          | 8         | 7.8 |
+| P2   | 8      | 8       | 7       | 8      | 8         | 8        | 8          | 8         | 7.9 |
+| P3   | 8      | 8       | 8       | 8      | 8         | 7        | 8          | 8         | 7.9 |
+
+### Key improvements for next iteration:
+- P1: Density 7 + Unique 7 remain the weakest — parallax section still wastes space, card layouts standard
+- P2: Density 7 — consider adding content between sections or enriching existing sections
+- P3: Interactions 7 — still needs cursor effect or more hover flair compared to P1/P2
+- All: Responsive now at 8 across the board
+- Consider: P1 uniqueness could benefit from a second signature interaction beyond iris reveal
+
+--- End iteration 3 ---
