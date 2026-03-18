@@ -13,7 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--magenta:#EC4899;--violet:#8B5CF6;--bg:#0C0015;--surface:#120A20;--text:#E8E0F0;--muted:rgba(232,224,240,.45);--glow-m:rgba(236,72,153,.12);--glow-v:rgba(139,92,246,.12)}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 ::selection{background:var(--violet);color:#fff}
 a{color:inherit;text-decoration:none}
@@ -63,7 +63,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 @keyframes glowDrift3{0%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-40%,-60%) scale(1.2)}100%{transform:translate(-60%,-45%) scale(.9)}}
 
 /* Hero */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;z-index:1}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;z-index:1;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 30% 30%,rgba(236,72,153,.08),transparent 50%),radial-gradient(ellipse 50% 40% at 70% 50%,rgba(139,92,246,.08),transparent 45%),radial-gradient(ellipse 40% 35% at 50% 80%,rgba(236,72,153,.04),transparent);pointer-events:none;z-index:0}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.06);font-size:.72rem;font-weight:600;color:var(--violet);margin-bottom:2rem;letter-spacing:.06em;text-transform:uppercase}
 .hero h1{font-size:clamp(3rem,7vw,5rem);font-weight:800;line-height:1;letter-spacing:-.05em;margin-bottom:1.2rem}
@@ -121,7 +121,7 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .skill-pill:hover{background:linear-gradient(135deg,rgba(236,72,153,.1),rgba(139,92,246,.1));border-color:rgba(139,92,246,.2);color:var(--violet);transform:translateY(-1px);box-shadow:0 2px 10px rgba(139,92,246,.1)}
 
 /* Philosophy split */
-.philosophy{padding:6rem 2rem;background:var(--surface);z-index:1;position:relative}.philosophy::before{content:'';position:absolute;bottom:0;left:20%;width:500px;height:200px;background:radial-gradient(ellipse,rgba(236,72,153,.04),transparent 65%);pointer-events:none}
+.philosophy{padding:6rem 2rem;background:var(--surface);z-index:1;position:relative;overflow:hidden}.philosophy::before{content:'';position:absolute;bottom:0;left:20%;width:500px;height:200px;background:radial-gradient(ellipse,rgba(236,72,153,.04),transparent 65%);pointer-events:none}
 .philosophy-inner{max-width:900px;margin:0 auto}
 .philosophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 .phil-card{border-radius:16px;padding:2rem;position:relative}
@@ -215,6 +215,12 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .hero h1{font-size:clamp(2.4rem,6vw,4rem)}
   .philosophy-grid{gap:1.2rem}
 }
+@media(max-width:768px){
+  .neon-cards,.skills-categories{grid-template-columns:1fr 1fr}
+  .use-cases-grid{grid-template-columns:1fr 1fr}
+  .voices-grid{grid-template-columns:1fr;max-width:480px}
+  .card-stack-wrap{min-height:340px}
+}
 @media(max-width:640px){
   .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
   .nav-links{display:none}
@@ -238,7 +244,8 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .section-title{font-size:clamp(1.4rem,5vw,1.8rem)}
   .prop-nav{padding:1.5rem 1.2rem}
   .prop-nav a{padding:.4rem 1rem;font-size:.72rem}
-  .orb{opacity:.1}
+  .orb{opacity:.08;width:200px!important;height:200px!important}
+  .hero-glow{display:none}
 }
 @media(max-width:400px){
   .hero-suggestions{flex-direction:column;align-items:center}

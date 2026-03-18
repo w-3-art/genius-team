@@ -13,7 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--amber:#F59E0B;--coral:#F97316;--bg:#0A0A0A;--surface:#111111;--text:#E5E5E5;--muted:rgba(255,255,255,.45);--glow:rgba(245,158,11,.15)}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
 ::selection{background:var(--amber);color:#000}
 a{color:inherit;text-decoration:none}
@@ -144,7 +144,7 @@ section{padding:6rem 2rem;position:relative}
 .showcase-card-tag{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);font-weight:600;margin-bottom:.6rem;display:block}
 
 /* Before/After messaging */
-.messaging{padding:6rem 2rem;background:var(--surface);position:relative}.messaging::before{content:'';position:absolute;bottom:-40px;left:30%;width:400px;height:150px;background:radial-gradient(ellipse,rgba(245,158,11,.03),transparent 70%);pointer-events:none}
+.messaging{padding:6rem 2rem;background:var(--surface);position:relative;overflow:hidden}.messaging::before{content:'';position:absolute;bottom:-40px;left:30%;width:400px;height:150px;background:radial-gradient(ellipse,rgba(245,158,11,.03),transparent 70%);pointer-events:none}
 .messaging-inner{max-width:900px;margin:0 auto}
 .messaging-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 .msg-card{border-radius:16px;padding:2rem;position:relative;overflow:hidden}
@@ -231,6 +231,13 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   section{padding:5rem 1.5rem}
   .hero h1{font-size:clamp(2.4rem,5vw,3.5rem)}
 }
+@media(max-width:768px){
+  .workflow-steps{grid-template-columns:1fr 1fr;gap:1.5rem 1rem}
+  .workflow-connector{display:none}
+  .dossier-grid{grid-template-columns:1fr;max-width:480px}
+  .parallax-section{height:42vh}
+  .parallax-text{font-size:clamp(1.2rem,4vw,1.8rem)}
+}
 @media(max-width:640px){
   .showcase-inner{flex-wrap:wrap;gap:1rem;padding:3rem 1.2rem}.showcase-card{min-width:100%;max-width:100%}.showcase-header{min-width:100%}
   .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Sora',sans-serif}
@@ -261,6 +268,8 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   .prop-nav a{padding:.4rem 1rem;font-size:.72rem}
   body{cursor:auto}
   .cursor,.cursor-dot,.cursor-glow{display:none}
+  .hero-aurora{inset:0;width:100%;height:100%;opacity:.4}
+  .parallax-orb{width:150px!important;height:150px!important;opacity:.12;filter:blur(60px)}
 }
 @media(max-width:400px){
   .hero-suggestions{flex-direction:column;align-items:center}
@@ -723,7 +732,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Horizontal showcase scroll
   ScrollTrigger.matchMedia({
-    '(min-width:641px)': function() {
+    '(min-width:901px)': function() {
       const track = document.getElementById('showcaseTrack');
       const section = document.querySelector('.showcase');
       gsap.to(track, {
