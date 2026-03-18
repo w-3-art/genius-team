@@ -806,3 +806,90 @@ P3's hero was the most vulnerable — `.hero-warmth` at 120% width with inset:-1
 - Consider: highest-impact push would be Visual or Interactions to 10 first
 
 --- End iteration 12 ---
+
+--- End iteration 12 ---
+
+=== Iteration 13 / 25 — Wed Mar 18 01:46:44 CET 2026 ===
+
+## Iteration 13 — Interaction Depth: 4th Signature Interaction Per Page + Nav Scroll-Spy (Interactions 9→10)
+
+**Target:** Interactions 9→10 across all 3 pages (pushing past the 9.0 plateau with per-page signature micro-interactions)
+
+**Problem identified:** All pages had 3 signature interactions each — enough for 9/10 but not exceptional. Missing features that premium sites like Linear, Stripe, clay.global all have:
+- No nav scroll-spy (active link highlighting based on scroll position)
+- P1 had custom cursor but no particle trail (cursor felt static despite 3-piece system)
+- P2 had typewriter + card-stack but section transitions felt flat (no visual punctuation)
+- P3 had editorial depth (timeline, word reveal) but cards felt 2D on hover (no perspective)
+
+**Changes applied:**
+
+**ALL 3 pages — Nav scroll-spy:**
+- GSAP ScrollTrigger monitors each nav link's target section
+- When a section enters the 40% viewport zone, its nav link gets `.active-link` class (amber on P1, magenta on P2, gold on P3)
+- All other nav links lose the active class — only one active at a time
+- Provides constant orientation feedback during scroll (premium standard feature)
+
+**P1 (Cinematic Amber) — Cursor trail particles:**
+- Canvas-based particle system spawning amber/coral sparks at cursor position
+- Particles float upward with random drift, fading out over ~1.5s
+- Spawn rate proportional to cursor velocity (fast movement = more sparks, stationary = none)
+- Two color variants: amber `rgba(245,158,11)` and coral `rgba(249,115,22)` — randomly selected per particle
+- Desktop only (width > 768px), properly layered at z-index 9994 (below noise grain)
+- `aria-hidden="true"` on canvas for accessibility
+- No other page has cursor particles — uniquely cinematic
+- Result: 4th signature interaction (iris + horizontal scroll + text scramble + cursor trail)
+
+**P2 (Neon Violet) — Section heading glitch effect:**
+- When `.section-title` elements scroll into view, they briefly glitch for 400ms
+- RGB channel-split effect: text-shadow offsets in magenta, violet, and cyan create CRT-style chromatic aberration
+- Jitter: translate offsets (1-2px) create the "signal interference" feel
+- `steps(2)` easing creates harsh, digital transitions (not smooth — intentionally choppy)
+- Triggers once per heading (via `once: true`) — first impression, not repetitive
+- Fits perfectly with neon/hacker/terminal aesthetic (typewriter + card-stack + magnetic CTA + glitch headings)
+- No other page has glitch effects — uniquely cyberpunk
+- Result: 4th signature interaction (card-stack + typewriter + magnetic CTA + heading glitch)
+
+**P3 (Premium Gold) — 3D perspective card tilt on hover:**
+- Editorial cards, feature cards, and skill categories all tilt toward cursor on hover
+- Max 4 degrees rotation on both axes — subtle but perceptible
+- `perspective(800px)` creates realistic depth with foreshortening
+- 150ms transition for smooth, responsive feel
+- Cards lift 2px on hover (translateY) for extra depth
+- Parent containers get `perspective: 1200px` for consistent viewing angle
+- Resets cleanly on mouseleave
+- Desktop only (width > 768px)
+- No other page has 3D perspective transforms — uniquely editorial/premium
+- Result: 4th signature interaction (timeline + word reveal + testimonial carousel + 3D card tilt)
+
+**What stayed the same:** All content, desktop layouts, visual palettes, messaging, responsive breakpoints, existing animations, mobile behavior unchanged. Only new interaction layers added.
+
+### P1 Cinematic Amber: 9.1 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 10 | Responsive 9 | Technical 9
+
+The cursor trail transforms P1's custom cursor from a visual indicator into an atmospheric element. Amber sparks float upward as you move, creating a cinematic "magic dust" effect that matches the warm palette. Combined with the 3-piece cursor (dot + ring + ambient glow), the cursor system is now the richest of all 3 pages. Nav scroll-spy adds constant orientation. Four signature interactions (iris clip-path + horizontal scroll showcase + text scramble cipher + cursor particle trail) make P1's interaction set exceptional — each one is unique to this page and impossible to confuse with P2 or P3.
+
+### P2 Neon Violet: 9.1 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 10 | Responsive 9 | Technical 9
+
+The glitch effect on section headings is a subtle but powerful brand reinforcement — every time a new section scrolls into view, the heading briefly fractures into RGB channels like a corrupted signal. The `steps(2)` easing makes it feel digital and harsh, not smooth. Combined with the typewriter terminal decode (hero) and card-stack scroll animation (how it works), P2 now has four distinct interactions all rooted in the same hacker/terminal/neon aesthetic. Nav scroll-spy with magenta highlight completes the navigation experience.
+
+### P3 Premium Gold: 9.1 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 10 | Responsive 9 | Technical 9
+
+The 3D card tilt adds tactile depth to P3's editorial design. When you hover over editorial cards, feature cards, or skill categories, they subtly rotate toward your cursor — creating the illusion of a physical card you're examining. This fits the premium, magazine-like identity perfectly. Combined with timeline animation (scroll-driven progress), word-by-word parallax reveal (atmospheric quote), and testimonial carousel (social proof), P3 now has four signature interactions that all feel editorial and measured — not flashy like P1 or aggressive like P2. Nav scroll-spy with gold highlight matches the warm palette.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 9       | 9       | 9      | 9         | 10       | 9          | 9         | 9.1 |
+| P2   | 9      | 9       | 9       | 9      | 9         | 10       | 9          | 9         | 9.1 |
+| P3   | 9      | 9       | 9       | 9      | 9         | 10       | 9          | 9         | 9.1 |
+
+### Interactions now at 10 (all pages). Next iteration targets:
+- Visual 9→10: Animated grain intensity that shifts per-section, per-section color temperature gradients, parallax depth layers on every section (not just hero + parallax quote)
+- Unique 9→10: Now at 4 signature interactions each — could push to 5 with scroll-velocity reactive effects
+- Consider: Visual 10 would be the highest-impact next push — richer ambient depth on every section
+
+--- End iteration 13 ---

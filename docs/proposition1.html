@@ -276,6 +276,10 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   .hero-trust{flex-direction:column;align-items:center;gap:.6rem}
   .proof-stats{flex-direction:column;gap:1.2rem}
 }
+/* Nav scroll-spy active link */
+.nav-links a.active-link{color:var(--amber)}
+/* Cursor trail canvas */
+.cursor-trail{position:fixed;inset:0;z-index:9994;pointer-events:none}
 </style>
 </head>
 <body>
@@ -289,6 +293,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 <div class="cursor" id="cursor" aria-hidden="true"></div>
 <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
 <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<canvas class="cursor-trail" id="cursorTrail" aria-hidden="true"></canvas>
 
 <!-- Loader -->
 <div class="loader" id="loader" role="status" aria-label="Loading"><div class="loader-ring"></div></div>
@@ -675,6 +680,73 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(dot, { x: mx - 3, y: my - 3, duration: .1 });
     gsap.to(cursor, { x: mx - 12, y: my - 12, duration: .25 });
     gsap.to(glow, { x: mx, y: my, duration: .6 });
+  });
+
+  // Cursor trail particles
+  const trailCanvas = document.getElementById('cursorTrail');
+  if (trailCanvas && window.innerWidth > 768) {
+    const ctx = trailCanvas.getContext('2d');
+    let particles = [];
+    const resize = () => { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; };
+    resize();
+    window.addEventListener('resize', resize);
+
+    let lastX = 0, lastY = 0;
+    document.addEventListener('mousemove', e => {
+      const dx = e.clientX - lastX, dy = e.clientY - lastY;
+      const speed = Math.sqrt(dx*dx + dy*dy);
+      lastX = e.clientX; lastY = e.clientY;
+      // Spawn particles based on movement speed
+      const count = Math.min(Math.floor(speed / 8), 4);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: e.clientX + (Math.random() - .5) * 8,
+          y: e.clientY + (Math.random() - .5) * 8,
+          vx: (Math.random() - .5) * 1.5,
+          vy: -Math.random() * 2 - .5,
+          life: 1,
+          decay: .012 + Math.random() * .008,
+          size: 1.5 + Math.random() * 2,
+          hue: Math.random() > .5 ? '245,158,11' : '249,115,22' // amber or coral
+        });
+      }
+    });
+
+    function animateTrail() {
+      ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      particles = particles.filter(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy -= .01; // slight upward drift
+        p.life -= p.decay;
+        if (p.life <= 0) return false;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.hue},${p.life * .6})`;
+        ctx.fill();
+        return true;
+      });
+      requestAnimationFrame(animateTrail);
+    }
+    animateTrail();
+  }
+
+  // Nav scroll-spy
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    ScrollTrigger.create({
+      trigger: target,
+      start: 'top 40%',
+      end: 'bottom 40%',
+      onToggle: self => {
+        if (self.isActive) {
+          document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active-link'));
+          link.classList.add('active-link');
+        }
+      }
+    });
   });
 
   // Suggestions fill input (click + keyboard)

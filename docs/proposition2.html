@@ -252,6 +252,21 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .hero-trust{flex-direction:column;align-items:center;gap:.6rem}
   .stats-bar{flex-direction:column;gap:1.2rem}
 }
+.nav-links a.active-link{color:var(--magenta)}
+/* Glitch heading effect */
+@keyframes glitchText{
+  0%{transform:translate(0);text-shadow:none}
+  10%{transform:translate(-2px,1px);text-shadow:2px 0 var(--magenta),-2px 0 var(--violet)}
+  20%{transform:translate(1px,-1px);text-shadow:-1px 0 var(--violet),1px 0 var(--magenta)}
+  30%{transform:translate(0,2px);text-shadow:1px 0 var(--magenta),-1px 0 cyan}
+  40%{transform:translate(-1px,0);text-shadow:-2px 0 cyan,2px 0 var(--magenta)}
+  50%{transform:translate(2px,1px);text-shadow:1px 0 var(--violet),-1px 0 var(--magenta)}
+  60%{transform:translate(0,-1px);text-shadow:-1px 0 var(--magenta),1px 0 cyan}
+  70%{transform:translate(1px,0);text-shadow:2px 0 cyan,-2px 0 var(--violet)}
+  80%{transform:translate(-1px,1px);text-shadow:0 0 transparent}
+  90%,100%{transform:translate(0);text-shadow:none}
+}
+.section-title.glitching{animation:glitchText .4s steps(2) forwards}
 </style>
 </head>
 <body>
@@ -782,6 +797,37 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.to('.orb-3', {
     scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2 },
     y: -100
+  });
+
+  // Nav scroll-spy
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    ScrollTrigger.create({
+      trigger: target,
+      start: 'top 40%',
+      end: 'bottom 40%',
+      onToggle: self => {
+        if (self.isActive) {
+          document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active-link'));
+          link.classList.add('active-link');
+        }
+      }
+    });
+  });
+
+  // Section heading glitch on scroll entry
+  gsap.utils.toArray('.section-title').forEach(title => {
+    ScrollTrigger.create({
+      trigger: title,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        title.classList.add('glitching');
+        setTimeout(() => title.classList.remove('glitching'), 400);
+      }
+    });
   });
 });
 </script>
