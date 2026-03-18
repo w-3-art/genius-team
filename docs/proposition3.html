@@ -78,7 +78,8 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 /* Hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:10%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse 60% 45% at 40% 40%,rgba(212,165,116,.09),transparent 50%),radial-gradient(ellipse 40% 35% at 65% 55%,rgba(212,165,116,.06),transparent 45%),radial-gradient(ellipse 50% 30% at 50% 80%,rgba(212,165,116,.04),transparent);pointer-events:none}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:100px;border:1px solid rgba(212,165,116,.15);background:rgba(212,165,116,.04);font-size:.7rem;font-weight:600;color:var(--gold);margin-bottom:2rem;letter-spacing:.08em;text-transform:uppercase}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:100px;border:1px solid rgba(212,165,116,.15);background:rgba(212,165,116,.04);font-size:.7rem;font-weight:600;color:var(--gold);margin-bottom:.6rem;letter-spacing:.08em;text-transform:uppercase}
+.hero-badge-sub{font-size:.68rem;color:var(--muted);letter-spacing:.03em;margin-bottom:1.8rem;opacity:.5;font-style:italic}
 .hero h1{font-size:clamp(2.8rem,6vw,4.2rem);font-weight:800;line-height:1.08;letter-spacing:-.03em;margin-bottom:1.2rem}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero-sub{font-size:clamp(.95rem,1.8vw,1.1rem);color:var(--muted);line-height:1.7;max-width:500px;margin-bottom:2.5rem;letter-spacing:.01em}
@@ -316,6 +317,7 @@ body::after{display:none!important}
   <div class="hero-sweep"></div>
   <div class="hero-warmth"></div>
   <div class="hero-badge">Vibe Coding &middot; Open Source &middot; 42 Agents</div>
+  <div class="hero-badge-sub">You create, AI assists — that's vibe coding</div>
   <h1>Anyone can <em>build</em></h1>
   <p class="hero-sub">The AI toolkit that turns anyone into a builder. 42 specialist agents guide every step — you stay in control, learn real skills, ship real products.</p>
   <div class="hero-input-wrap">
@@ -694,6 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hero entrance
   gsap.from('.hero-badge', { opacity: 0, y: 15, duration: .7, delay: .6 });
+  gsap.from('.hero-badge-sub', { opacity: 0, y: 10, duration: .5, delay: .72 });
   gsap.from('.hero h1', { opacity: 0, y: 25, duration: .8, delay: .8 });
   gsap.from('.hero-sub', { opacity: 0, y: 15, duration: .7, delay: 1 });
   gsap.from('.hero-input-wrap', { opacity: 0, y: 15, duration: .7, delay: 1.2 });

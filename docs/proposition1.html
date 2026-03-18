@@ -67,7 +67,8 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 25% 20%,rgba(245,158,11,.1),transparent 50%),radial-gradient(ellipse 50% 40% at 75% 35%,rgba(249,115,22,.08),transparent 45%),radial-gradient(ellipse 60% 50% at 50% 80%,rgba(245,158,11,.05),transparent 50%),radial-gradient(ellipse 30% 25% at 15% 70%,rgba(249,115,22,.06),transparent 40%),radial-gradient(ellipse 40% 30% at 85% 75%,rgba(245,158,11,.04),transparent)}
 .hero-content{position:relative;z-index:2;max-width:720px}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.06);font-size:.75rem;font-weight:500;color:var(--amber);margin-bottom:2rem;letter-spacing:.04em;text-transform:uppercase}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.06);font-size:.75rem;font-weight:500;color:var(--amber);margin-bottom:.6rem;letter-spacing:.04em;text-transform:uppercase}
+.hero-badge-sub{font-size:.7rem;color:var(--muted);letter-spacing:.02em;margin-bottom:1.8rem;opacity:.55;font-style:italic}
 .hero h1{font-size:clamp(2.8rem,6vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:1rem}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--amber),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--muted);line-height:1.6;max-width:540px;margin:0 auto 2.5rem}
@@ -334,6 +335,7 @@ body::after{display:none!important}
   <div class="hero-bg"></div>
   <div class="hero-content">
     <div class="hero-badge">Vibe Coding &middot; Open Source</div>
+    <div class="hero-badge-sub">You create, AI assists — that's vibe coding</div>
     <h1>Anyone can <em>build</em></h1>
     <p class="hero-sub">Learn to code by building real apps. 42 AI specialists guide every step — you decide what to build, you learn how it works, you ship.</p>
     <div class="hero-input-wrap">
@@ -402,7 +404,7 @@ body::after{display:none!important}
         <div class="workflow-step">
           <div class="workflow-step-num">3</div>
           <h4>You build, agents assist</h4>
-          <p>You write code with AI pair-programming, review every change, and learn real skills along the way. Vibe coding means you lead the creative direction — agents handle the repetitive work.</p>
+          <p>You write code with AI by your side, review every change, and learn real skills along the way. Vibe coding means you lead the creative direction — agents handle the repetitive work.</p>
           <div class="workflow-connector"></div>
         </div>
         <div class="workflow-step">
@@ -780,6 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hero animations
   gsap.from('.hero-badge', { opacity: 0, y: 20, duration: .8, delay: .5 });
+  gsap.from('.hero-badge-sub', { opacity: 0, y: 12, duration: .6, delay: .65 });
   gsap.from('.hero h1', { opacity: 0, y: 30, duration: .8, delay: .7 });
   gsap.from('.hero-sub', { opacity: 0, y: 20, duration: .8, delay: .9 });
   gsap.from('.hero-input-wrap', { opacity: 0, y: 20, duration: .8, delay: 1.1 });
