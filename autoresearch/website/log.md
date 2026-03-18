@@ -1126,3 +1126,84 @@ P3's reduced-motion is the most restrained — targets `.hero-warmth, .hero-swee
 - Responsive 9→10: Audit mobile tap targets (min 44px), test on 320px viewport, fix any overflow or text truncation
 
 --- End iteration 16 ---
+
+--- End iteration 16 ---
+
+=== Iteration 17 / 25 — Wed Mar 18 02:11:34 CET 2026 ===
+
+## Iteration 17 — Messaging Push: User-Centric Language + Vibe Coding Defined (Messaging 9→10)
+
+**Target:** Messaging 9→10 across all 3 pages (four criteria tied at 9 — Messaging has the most concrete fixable issues and founder explicitly marks it CRITICAL)
+
+**Problems identified:**
+- Step 3 (the build step) across all 3 pages used agent-centric language: "Dev agents write code, QA agents test it, you [passively watch/learn]" — agents were the grammatical subjects doing the work, user was a passive observer
+- P1 Step 3 heading was "Agents build with you" — agents as primary actor
+- Design/Code/Deploy card descriptions on all 3 pages had agents as subjects: "specialist agents write production code", "five agents shape your vision", "AI interviews you, researches the market, writes specs"
+- "Vibe coding" appeared in hero badges and Step 3 descriptions but was never defined — non-tech users had no way to understand what it means
+- Skills section descriptions on P1 ("Each knows their domain") and P3 ("Six teams covering every domain") were agent-centric
+
+**Changes applied:**
+
+**ALL 3 pages — Step 3 (Build step) rewritten:**
+- P1: "Agents build with you" → "You build, agents assist" (heading). "Dev agents write code, QA agents test it, you learn" → "You write code with AI pair-programming, review every change, and learn real skills along the way"
+- P2: "Dev agents write code, QA agents test it, and you see every change" → "You direct the build, review every change in real time, and learn while shipping"
+- P3: "Specialist agents write production code, QA agents test it live, and you see every change" → "You guide every feature, review each change live, and grow your skills with every commit"
+
+**ALL 3 pages — "Vibe coding" defined inline:**
+- P1: "Vibe coding means you lead the creative direction — agents handle the repetitive work"
+- P2: "Vibe coding means you set the creative direction — agents handle the heavy lifting so you can focus on decisions"
+- P3: "Vibe coding means you drive the creative flow — agents do the heavy lifting at your side"
+- Each definition uses different phrasing to maintain distinct page voices while conveying the same concept
+
+**ALL 3 pages — Design/Code/Deploy cards rewritten:**
+- P1 Design: "the ideation agents interview you, research your market, and shape your vision" → "you define your vision while ideation agents interview you, research your market, and help shape it"
+- P1 Code: "specialist agents write production code while you learn" → "you direct specialists who write production code while explaining what each piece does"
+- P1 Deploy: "quality agents catch issues, you approve" → "you review flagged issues, approve every fix"
+- P2 Design: "AI interviews you, researches the market, writes specs" → "You describe your vision. AI helps with market research, specs, and brand identity"
+- P2 Code: "specialist agents write production code while you learn" → "you direct specialists who write production code while explaining what each piece does"
+- P3 Design: "Five agents shape your vision" → "You shape your vision with five specialists"
+- P3 Code: "Seven agents write production code" → "You direct seven specialists who write production code"
+
+**ALL 3 pages — Skills section descriptions:**
+- P1: "Each knows their domain deeply" → "Each guides you through their domain"
+- P3: "Six teams covering every domain" → "Six teams ready to guide you"
+
+**Messaging pattern before vs after:**
+- BEFORE: "Agents [verb]. You [passively observe]." — Agents are actors, user watches
+- AFTER: "You [verb]. Agents [support verb]." — User is the actor, agents are helpers
+- Every Step 3 now starts with "You" as the grammatical subject
+- Every Design/Code/Deploy card now has "you" as the primary actor
+- "Vibe coding" is now defined in plain language for non-tech users
+
+**What stayed the same:** All visual effects, animations, interactions, responsive breakpoints, technical features, layout, color palettes unchanged. Only copy text modified — no CSS, no JS, no structural HTML changes.
+
+### P1 Cinematic Amber: 9.6 avg
+Visual 10 | Clarity 9 | Density 9 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 9 | Technical 10
+
+The messaging overhaul transforms P1's narrative voice. Step 3 heading changed from "Agents build with you" to "You build, agents assist" — a complete inversion of the power dynamic. The user is now the subject in every sentence: "You write code", "you review every change", "you learn real skills." The vibe coding definition ("you lead the creative direction — agents handle the repetitive work") uses P1's direct, cinematic voice. The Design/Code/Deploy cards now all start with user actions: "you define your vision", "you direct specialists", "you review flagged issues." The skills section says agents "guide you through their domain" instead of passively "knowing" things. Every copy block now passes the founder's test: user is the actor, agents are the support cast.
+
+### P2 Neon Violet: 9.6 avg
+Visual 10 | Clarity 9 | Density 9 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 9 | Technical 10
+
+P2's messaging fix maintains its bold, direct tone while putting the user first. Step 3: "You direct the build, review every change in real time, and learn while shipping" — three user-centric verbs in one sentence. The vibe coding definition ("you set the creative direction — agents handle the heavy lifting so you can focus on decisions") adds the decision-making emphasis that matches P2's "You lead. Agents follow." section heading. The Design card now starts with "You describe your vision" instead of "AI interviews you" — subtle but important: the user initiates, AI responds. The Code card matches P1's pattern: "you direct specialists." Every section now has "you" as the dominant subject.
+
+### P3 Premium Gold: 9.6 avg
+Visual 10 | Clarity 9 | Density 9 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 9 | Technical 10
+
+P3's editorial voice shines in the rewrites. Step 3: "You guide every feature, review each change live, and grow your skills with every commit" — three progressively impactful verbs (guide → review → grow) that mirror P3's editorial pacing. The vibe coding definition ("you drive the creative flow — agents do the heavy lifting at your side") uses "at your side" which is uniquely P3 — editorial, warm, measured. The Design/Code/Deploy cards now lead with "You shape your vision" and "You direct seven specialists" — the user is the editor, the agents are the staff. Skills section: "Six teams ready to guide you" — agents exist to serve the user, not independently.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 10     | 9       | 9       | 10     | 10        | 10       | 9          | 10        | 9.6 |
+| P2   | 10     | 9       | 9       | 10     | 10        | 10       | 9          | 10        | 9.6 |
+| P3   | 10     | 9       | 9       | 10     | 10        | 10       | 9          | 10        | 9.6 |
+
+### Messaging now at 10 (all pages). Five criteria at 10 (Visual, Unique, Messaging, Interactions, Technical). Next iteration targets:
+- Clarity 9→10: "Vibe coding" is now defined in Step 3 but hero badges still use it without context. Consider adding a tooltip or subtitle. Ensure every section has a clear 1-sentence value prop visible above the fold
+- Density 9→10: Audit for remaining spacing gaps, add micro-content (stat callouts, inline badges) to fill dead zones
+- Responsive 9→10: Audit mobile tap targets (min 44px), test on 320px viewport, fix any overflow or text truncation
+
+--- End iteration 17 ---
