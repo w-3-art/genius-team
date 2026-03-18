@@ -116,6 +116,16 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .phil-items{display:flex;flex-direction:column;gap:.7rem}
 .phil-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.82rem;line-height:1.5;color:rgba(255,255,255,.6)}
 
+/* Use cases */
+.use-cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:950px;margin:2.5rem auto 0}
+.use-case-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1.8rem;transition:all .35s;position:relative;overflow:hidden}
+.use-case-card::before{content:'';position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,var(--magenta),var(--violet));opacity:0;transition:opacity .35s;z-index:-1}
+.use-case-card:hover::before{opacity:.1}
+.use-case-card:hover{border-color:rgba(236,72,153,.2);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.use-case-tag{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:.6rem;display:block;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.use-case-card h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.use-case-card p{font-size:.8rem;color:var(--muted);line-height:1.6}
+
 /* Feature blocks */
 .feat-section{padding:6rem 2rem;z-index:1;position:relative}
 .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;max-width:900px;margin:2.5rem auto 0}
@@ -148,6 +158,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 /* Responsive */
 .nav-mobile-cta{display:none}
 @media(max-width:900px){
+  .use-cases-grid{grid-template-columns:1fr 1fr}
   .neon-cards,.skills-categories{grid-template-columns:1fr 1fr}
   .feat-grid{grid-template-columns:1fr}
   section{padding:5rem 1.5rem}
@@ -158,7 +169,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 @media(max-width:640px){
   .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
   .nav-links{display:none}
-  .neon-cards,.skills-categories,.philosophy-grid{grid-template-columns:1fr}
+  .neon-cards,.skills-categories,.philosophy-grid,.use-cases-grid{grid-template-columns:1fr}
   .hero{padding:5.5rem 1.2rem 2.5rem}
   .hero h1{font-size:2.4rem;margin-bottom:.8rem}
   .hero-sub{font-size:.92rem}
@@ -315,6 +326,32 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
           <div class="phil-item"><span>&#9989;</span>Learn real skills with every project</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section style="padding:5rem 2rem;position:relative;z-index:1">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">Real projects</div>
+    <h2 class="section-title" style="margin:0 auto">What people are building</h2>
+    <p class="section-desc" style="margin:.8rem auto 0">Non-technical founders. Real products. Shipped with Genius Team.</p>
+  </div>
+  <div class="use-cases-grid">
+    <div class="use-case-card">
+      <span class="use-case-tag">SaaS</span>
+      <h3>Booking platform</h3>
+      <p>A yoga instructor built a full booking system with payments and calendar sync — her first real app, launched in two weeks.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="use-case-tag">E-commerce</span>
+      <h3>Watch marketplace</h3>
+      <p>A collector launched an authenticated marketplace with escrow and seller dashboards. Zero prior coding experience.</p>
+    </div>
+    <div class="use-case-card">
+      <span class="use-case-tag">Portfolio</span>
+      <h3>Design agency site</h3>
+      <p>A freelance designer shipped an animated portfolio with CMS, SEO, and multi-language support — over a single weekend.</p>
     </div>
   </div>
 </section>
@@ -546,6 +583,12 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.from('.phil-card', {
     scrollTrigger: { trigger: '.philosophy-grid', start: 'top 80%' },
     opacity: 0, y: 30, stagger: .15, duration: .7
+  });
+
+  // Use cases
+  gsap.from('.use-case-card', {
+    scrollTrigger: { trigger: '.use-cases-grid', start: 'top 80%' },
+    opacity: 0, y: 30, stagger: .12, duration: .7
   });
 
   // Skills categories

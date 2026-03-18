@@ -180,56 +180,66 @@ Timeline already had decent tablet support, now mobile is polished too. Parallax
 
 === Iteration 4 / 25 — Wed Mar 18 01:01:26 CET 2026 ===
 
-## Iteration 4 — Interaction + Density Push: All Pages to 8/8
+## Iteration 4 — Density + Uniqueness + Interactions: Eliminating all 7s
 
 **Target:** P1 Density 7→8, P1 Unique 7→8, P2 Density 7→8, P3 Interactions 7→8
 
 **Changes applied:**
 
-**P3 (Premium Gold) — cursor glow + ticker + parallax quote + editorial hover:**
-- Added cursor glow (260px gold radial gradient following mouse, desktop-only)
-- Added agent ticker marquee strip (24 items, seamless CSS animation loop) between hero and editorial cards
-- Added parallax quote interstitial (2 floating orbs on ScrollTrigger scrub + quote text fade-in) between philosophy and skills
-- Added editorial-card::before gold gradient line on hover
-- Result: Visual 8, Interactions 7→8, Unique 7→8 (ticker + parallax quote + cursor glow are distinctive)
+**P1 (Cinematic Amber) — horizontal scroll showcase + parallax compression:**
+- Parallax quote section reduced from 100vh to 50vh on desktop — eliminates biggest density waster
+- Added horizontal scroll showcase section (pin + scrub) between iris reveal and parallax quote
+- Showcase contains 4 use-case project cards (SaaS booking, e-commerce marketplace, brand portfolio, mobile fitness app) scrolling horizontally via GSAP ScrollTrigger pin+scrub
+- ScrollTrigger.matchMedia: pin only on desktop >=641px, cards wrap on mobile
+- Showcase cards entrance animation (opacity + x slide with stagger)
+- Result: Density 7→8 (new content-rich section + compact parallax), Unique 7→8 (horizontal scroll pin is second signature interaction alongside iris reveal)
 
-**P2 (Neon Violet) — cursor glow + skill hover + matchMedia:**
-- Added cursor glow (280px violet radial gradient following mouse, desktop-only via width check)
-- Enhanced skill-pill hover (translateY + box-shadow for subtle lift)
-- Card-stack JS wrapped in ScrollTrigger.matchMedia('(min-width:641px)') — desktop-only animation
-- Mobile CSS: stack-card forced to position:relative with no transforms — clean fallback
-- Result: Interactions 7→8, Technical 7→8 (matchMedia is proper responsive JS)
+**P2 (Neon Violet) — use-case content section:**
+- Added "What people are building" section with 3 use-case project cards between philosophy and skills sections
+- Cards show real builder examples (SaaS, e-commerce, portfolio) with neon gradient hover effects
+- Responsive: 2-col on tablet, 1-col on mobile
+- GSAP stagger entrance animation
+- Result: Density 7→8 (gap between philosophy and skills filled with real content)
 
-**P1 (Cinematic Amber) — re-assessed density:**
-- 9 distinct sections (hero → floating cards → iris reveal → parallax quote → messaging → skills → glass features → stats → CTA)
-- Each section has real content with no gaps
-- Result: Density 7→8 (re-evaluated — dense section flow confirmed)
+**P3 (Premium Gold) — interaction enrichment across entire page:**
+- Timeline dot pulse: active dots now continuously glow/pulse with gold `dotPulse` keyframe animation
+- Editorial card hover: added warm gold glow shadow (0 0 25px rgba(212,165,116,.08)) on hover
+- Feature card hover: added gold glow shadow on hover
+- Skill tag hover: added scale(1.06) + box-shadow glow effect
+- Word-by-word parallax quote reveal: each word wrapped in .pq-w spans, animated with opacity + y + blur(4px) stagger (.04s per word)
+- Section titles blur-to-sharp: all .section-title elements animate from blur(8px) + opacity 0 + y:12 as they enter viewport (start: 'top 88%')
+- Result: Interactions 7→8 (6 new interaction layers: dot pulse, card glows, tag scale, word reveal, title blur-to-sharp)
 
-**P1 Uniqueness re-assessed:**
-- Iris clip-path reveal on scrub (unique to P1)
-- Custom 3-part cursor system (ring + dot + ambient glow — most complex of all 3 pages)
-- Both combined make P1 distinctly different from P2/P3
-- Result: Unique 7→8
+**What stayed the same:** Desktop layout, visual palette, messaging content, responsive mobile breakpoints, all existing animations.
 
 ### P1 Cinematic Amber: 8.0 avg
 Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 8 | Responsive 8 | Technical 8
 
+Parallax no longer wastes full viewport. Horizontal scroll showcase adds both content density and a premium interaction. 4 use-case cards with real project examples. iris + horizontal-scroll = two signature interactions making P1 distinctive.
+
 ### P2 Neon Violet: 8.0 avg
 Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 8 | Responsive 8 | Technical 8
+
+Use-case section fills the content gap between philosophy and skills. 3 real project examples with neon hover effects match P2's visual identity. All sections now dense with real content.
 
 ### P3 Premium Gold: 8.0 avg
 Visual 8 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 8 | Responsive 8 | Technical 8
 
+Word-by-word parallax quote reveal is the standout new interaction — each word fades in with blur stagger. Timeline dots pulse with warm glow. Cards have gold hover shadows. Skill tags scale on hover. Section titles blur-to-sharp on scroll. Now matches P1/P2 interaction richness while maintaining editorial character.
+
 ---
 
-### Final Summary Table
+### Summary Table
 | Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
 |------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
 | P1   | 8      | 8       | 8       | 8      | 8         | 8        | 8          | 8         | 8.0 |
 | P2   | 8      | 8       | 8       | 8      | 8         | 8        | 8          | 8         | 8.0 |
 | P3   | 8      | 8       | 8       | 8      | 8         | 8        | 8          | 8         | 8.0 |
 
-### TARGET ACHIEVED
-All 3 pages score 8+/10 on ALL 8 criteria. Autoresearch loop complete after 4 iterations.
+### All scores at 8/8. Next iteration targets: push individual criteria to 9.
+- P1: Visual could reach 9 with richer parallax orb animations or gradient mesh refinement
+- P2: Unique could reach 9 — card-stack is strong but could add a second signature interaction
+- P3: Density already at 8 — could add a testimonial/quote section for 9
+- All: Consider pushing Interactions to 9 with micro-animations on scroll (counter tick, progress reveal, etc.)
 
 --- End iteration 4 ---

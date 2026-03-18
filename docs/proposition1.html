@@ -102,7 +102,7 @@ section{padding:6rem 2rem;position:relative}
 .skill-tag:hover{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.15);color:var(--amber)}
 
 /* Parallax showcase */
-.parallax-section{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.parallax-section{position:relative;height:50vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .parallax-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .parallax-layer-1{z-index:1}
 .parallax-layer-3{z-index:3}
@@ -111,6 +111,16 @@ section{padding:6rem 2rem;position:relative}
 .parallax-orb{width:400px;height:400px;border-radius:50%;filter:blur(100px);opacity:.35;position:absolute}
 .parallax-orb-1{background:var(--amber);top:20%;left:10%}
 .parallax-orb-2{background:var(--coral);bottom:20%;right:10%}
+
+/* Horizontal scroll showcase */
+.showcase{position:relative;overflow:hidden}
+.showcase-inner{display:flex;gap:2rem;padding:4rem 2rem;will-change:transform}
+.showcase-header{min-width:300px;flex-shrink:0;padding-right:.5rem}
+.showcase-card{min-width:300px;max-width:300px;background:rgba(255,255,255,.03);border:1px solid rgba(245,158,11,.08);border-radius:16px;padding:1.8rem;flex-shrink:0;transition:border-color .3s,transform .3s,box-shadow .3s}
+.showcase-card:hover{border-color:rgba(245,158,11,.2);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.3),0 0 20px rgba(245,158,11,.06)}
+.showcase-card h4{font-size:.92rem;font-weight:700;margin-bottom:.4rem}
+.showcase-card p{font-size:.78rem;color:var(--muted);line-height:1.6}
+.showcase-card-tag{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);font-weight:600;margin-bottom:.6rem;display:block}
 
 /* Before/After messaging */
 .messaging{padding:6rem 2rem;background:var(--surface);position:relative}.messaging::before{content:'';position:absolute;bottom:-40px;left:30%;width:400px;height:150px;background:radial-gradient(ellipse,rgba(245,158,11,.03),transparent 70%);pointer-events:none}
@@ -162,6 +172,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 /* Responsive */
 .nav-mobile-cta{display:none}
 @media(max-width:900px){
+  .showcase-inner{flex-wrap:wrap}.showcase-card{min-width:calc(50% - 1rem);max-width:none}.showcase-header{min-width:100%}
   .floating-cards,.skills-grid{grid-template-columns:1fr 1fr}
   .workflow-steps{grid-template-columns:1fr 1fr;gap:2rem 1.5rem}
   .workflow-connector{display:none}
@@ -171,6 +182,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   .hero h1{font-size:clamp(2.4rem,5vw,3.5rem)}
 }
 @media(max-width:640px){
+  .showcase-inner{flex-wrap:wrap;gap:1rem;padding:3rem 1.2rem}.showcase-card{min-width:100%;max-width:100%}.showcase-header{min-width:100%}
   .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Sora',sans-serif}
   .nav-links{display:none}
   .floating-cards,.skills-grid,.messaging-grid{grid-template-columns:1fr}
@@ -311,6 +323,37 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
           <p>Security scan, performance check, one-click deploy. Your app goes live — and you understand every line behind it.</p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Horizontal Scroll Showcase -->
+<section class="showcase" id="showcase">
+  <div class="showcase-inner" id="showcaseTrack">
+    <div class="showcase-header">
+      <div class="section-label">Real projects</div>
+      <h2 class="section-title">What builders<br>are creating</h2>
+      <p class="section-desc">Non-technical founders shipping real products with Genius Team.</p>
+    </div>
+    <div class="showcase-card">
+      <span class="showcase-card-tag">SaaS Platform</span>
+      <h4>Booking system</h4>
+      <p>A yoga instructor built a full booking platform with payments, calendar sync, and automated reminders — her first app ever.</p>
+    </div>
+    <div class="showcase-card">
+      <span class="showcase-card-tag">E-commerce</span>
+      <h4>Vintage watch marketplace</h4>
+      <p>A collector launched an authenticated marketplace with escrow payments and seller dashboards. Zero coding background.</p>
+    </div>
+    <div class="showcase-card">
+      <span class="showcase-card-tag">Brand Site</span>
+      <h4>Agency portfolio</h4>
+      <p>A designer shipped an animated portfolio with CMS integration, SEO optimization, and i18n support — built in a single weekend.</p>
+    </div>
+    <div class="showcase-card">
+      <span class="showcase-card-tag">Mobile App</span>
+      <h4>Fitness tracker</h4>
+      <p>A personal trainer created a React Native app with workout logging, progress charts, and push notifications for her clients.</p>
     </div>
   </div>
 </section>
@@ -571,6 +614,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = 5 + self.progress * 75;
       document.getElementById('irisContent').style.clipPath = `circle(${r}% at 50% 50%)`;
     }
+  });
+
+  // Horizontal showcase scroll
+  ScrollTrigger.matchMedia({
+    '(min-width:641px)': function() {
+      const track = document.getElementById('showcaseTrack');
+      const section = document.querySelector('.showcase');
+      gsap.to(track, {
+        x: () => -(track.scrollWidth - section.offsetWidth),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.showcase',
+          start: 'top top',
+          end: () => '+=' + (track.scrollWidth - section.offsetWidth),
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+  });
+
+  // Showcase cards entrance
+  gsap.from('.showcase-card', {
+    scrollTrigger: { trigger: '.showcase', start: 'top 80%' },
+    opacity: 0, x: 40, stagger: .12, duration: .7
   });
 
   // Workflow steps stagger

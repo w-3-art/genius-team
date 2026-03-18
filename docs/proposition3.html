@@ -36,6 +36,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .pq-orb-2{width:220px;height:220px;background:#C4956A;bottom:15%;right:12%}
 .pq-text{position:relative;z-index:2;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;text-align:center;max-width:620px;padding:0 2rem;line-height:1.35;letter-spacing:-.015em}
 .pq-text em{font-style:normal;color:var(--gold)}
+.pq-w{display:inline-block}
 
 /* Loader */
 .loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
@@ -85,7 +86,7 @@ section{padding:5rem 2rem;position:relative}
 .editorial-card{background:rgba(255,255,255,.02);border:1px solid rgba(212,165,116,.06);border-radius:16px;padding:1.8rem 1.4rem;transition:all .3s;position:relative;overflow:hidden}
 .editorial-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
 .editorial-card:hover::before{opacity:.5}
-.editorial-card:hover{border-color:rgba(212,165,116,.15);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.editorial-card:hover{border-color:rgba(212,165,116,.15);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(212,165,116,.08)}
 .editorial-card-icon{font-size:1.8rem;margin-bottom:.9rem}
 .editorial-card h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem;letter-spacing:.01em}
 .editorial-card p{font-size:.78rem;color:var(--muted);line-height:1.65}
@@ -102,7 +103,8 @@ section{padding:5rem 2rem;position:relative}
 .timeline-node-content{flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:1.5rem;transition:border-color .3s}
 .timeline-node-content:hover{border-color:rgba(212,165,116,.12)}
 .timeline-node-dot{position:absolute;left:50%;top:1.5rem;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid rgba(212,165,116,.2);transform:translateX(-50%);z-index:2;transition:all .3s}
-.timeline-node-dot.active{background:var(--gold);border-color:var(--gold);box-shadow:0 0 12px rgba(212,165,116,.3)}
+.timeline-node-dot.active{background:var(--gold);border-color:var(--gold);box-shadow:0 0 12px rgba(212,165,116,.3);animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 12px rgba(212,165,116,.3)}50%{box-shadow:0 0 24px rgba(212,165,116,.5),0 0 40px rgba(212,165,116,.15)}}
 .timeline-node-num{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--gold);margin-bottom:.6rem;display:block}
 .timeline-node-content h3{font-size:1rem;font-weight:700;margin-bottom:.4rem}
 .timeline-node-content p{font-size:.78rem;color:var(--muted);line-height:1.6}
@@ -130,7 +132,7 @@ section{padding:5rem 2rem;position:relative}
 .skill-cat-count{font-size:.6rem;padding:.18rem .5rem;border-radius:100px;background:rgba(212,165,116,.08);color:var(--gold);font-weight:700}
 .skill-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem}
 .skill-tag{padding:.25rem .6rem;border-radius:6px;font-size:.65rem;background:rgba(255,255,255,.03);color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.04);transition:all .2s}
-.skill-tag:hover{background:rgba(212,165,116,.06);border-color:rgba(212,165,116,.12);color:var(--gold)}
+.skill-tag:hover{background:rgba(212,165,116,.06);border-color:rgba(212,165,116,.12);color:var(--gold);transform:scale(1.06);box-shadow:0 2px 10px rgba(212,165,116,.1)}
 .skill-progress{height:3px;border-radius:2px;background:rgba(255,255,255,.04);overflow:hidden}
 .skill-progress-fill{height:100%;border-radius:2px;background:var(--gold);width:0;transition:width 1.2s ease}
 
@@ -138,7 +140,7 @@ section{padding:5rem 2rem;position:relative}
 .feat-section{padding:5rem 2rem}
 .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:850px;margin:2rem auto 0}
 .feat-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:1.5rem;transition:all .3s}
-.feat-card:hover{border-color:rgba(212,165,116,.12);transform:translateY(-2px)}
+.feat-card:hover{border-color:rgba(212,165,116,.12);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2),0 0 20px rgba(212,165,116,.06)}
 .feat-card h3{font-size:.88rem;font-weight:700;margin-bottom:.35rem;display:flex;align-items:center;gap:.45rem}
 .feat-card p{font-size:.78rem;color:var(--muted);line-height:1.6}
 
@@ -395,7 +397,7 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
 <section class="parallax-quote">
   <div class="pq-orb pq-orb-1" id="pqOrb1"></div>
   <div class="pq-orb pq-orb-2" id="pqOrb2"></div>
-  <div class="pq-text" id="pqText">Not a magic wand. <em>A real toolkit</em> that teaches you to build — with AI at your side, not in your way.</div>
+  <div class="pq-text" id="pqText"><span class="pq-w">Not</span> <span class="pq-w">a</span> <span class="pq-w">magic</span> <span class="pq-w">wand.</span> <em><span class="pq-w">A</span> <span class="pq-w">real</span> <span class="pq-w">toolkit</span></em> <span class="pq-w">that</span> <span class="pq-w">teaches</span> <span class="pq-w">you</span> <span class="pq-w">to</span> <span class="pq-w">build</span> <span class="pq-w">—</span> <span class="pq-w">with</span> <span class="pq-w">AI</span> <span class="pq-w">at</span> <span class="pq-w">your</span> <span class="pq-w">side,</span> <span class="pq-w">not</span> <span class="pq-w">in</span> <span class="pq-w">your</span> <span class="pq-w">way.</span></div>
 </section>
 
 <!-- 6 Skill Categories with progress bars -->
@@ -592,6 +594,18 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.from('.hero-suggestions', { opacity: 0, duration: .5, delay: 1.4 });
   gsap.from('.hero-trust', { opacity: 0, duration: .5, delay: 1.6 });
 
+  // Section titles blur-to-sharp reveal
+  gsap.utils.toArray('.section-title').forEach(title => {
+    gsap.from(title, {
+      scrollTrigger: { trigger: title, start: 'top 88%' },
+      filter: 'blur(8px)',
+      opacity: 0,
+      y: 12,
+      duration: .9,
+      ease: 'power2.out'
+    });
+  });
+
   // Editorial cards
   gsap.from('.editorial-card', {
     scrollTrigger: { trigger: '.editorial-cards', start: 'top 82%' },
@@ -669,7 +683,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Parallax quote orbs
   gsap.to('#pqOrb1', { scrollTrigger: { trigger: '.parallax-quote', start: 'top bottom', end: 'bottom top', scrub: 1 }, y: -80 });
   gsap.to('#pqOrb2', { scrollTrigger: { trigger: '.parallax-quote', start: 'top bottom', end: 'bottom top', scrub: 1 }, y: 60 });
-  gsap.from('#pqText', { scrollTrigger: { trigger: '.parallax-quote', start: 'top 65%' }, opacity: 0, scale: .92, duration: .9, ease: 'power2.out' });
+  // Word-by-word parallax quote reveal
+  gsap.from('.pq-w', { scrollTrigger: { trigger: '.parallax-quote', start: 'top 65%' }, opacity: 0, y: 20, filter: 'blur(4px)', stagger: .04, duration: .5, ease: 'power2.out' });
 
   // CTA
   gsap.from('.cta-content', {
