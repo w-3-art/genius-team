@@ -503,3 +503,81 @@ No changes to P3 — already at Density 9 from iteration 7's testimonial carouse
 - Consider: Messaging is the founder's top priority — push that next
 
 --- End iteration 8 ---
+
+--- End iteration 8 ---
+
+=== Iteration 9 / 25 — Wed Mar 18 01:28:35 CET 2026 ===
+
+## Iteration 9 — Messaging Push: "You Decide, You Learn, You Ship" (Messaging 8→9)
+
+**Target:** Messaging 8→9 across all 3 pages (founder's top priority — the lowest-impact criterion most important to the product)
+
+**Problem identified:** Several key touchpoints used language where agents sound too autonomous:
+- P1 hero sub: passive tone, no mention of "vibe coding"
+- P1 CTA: "The crew handles the rest" — implies agents do everything
+- P1 Deploy card: "You watch and learn" — makes user sound passive
+- P2 hero sub: "they handle the technical heavy lifting" — agents doing everything
+- P2 CTA: "The crew handles the complexity" — same issue
+- P3 hero sub: missing "vibe coding" term
+- P3 Deploy card: "Quality agents verify everything, then deploy it live" — agents acting alone
+- Multiple CTA sections: users positioned as observers, not decision-makers
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — 4 copy changes:**
+- Hero sub: "The AI coding crew that guides every step..." → "Your AI coding crew — 42 specialists that guide every step. Vibe coding: you decide what to build, you learn how it works, you own every line."
+- "What you get" desc: added "with your approval at every checkpoint"
+- Deploy card: "You watch and learn" → "quality agents catch issues, you approve the fix. When you're ready, one click to go live."
+- CTA: "The crew handles the rest" → "The crew guides you through every step — you learn, you decide, you ship."
+
+**P2 (Neon Violet) — 3 copy changes:**
+- Hero sub (typewriter text): "they handle the technical heavy lifting" → "you stay creative, you learn the craft, you own what you ship"
+- "Three stages" desc: "who explain every step" → "You approve every decision, you understand every choice"
+- CTA: "The crew handles the complexity" → "The crew guides you through the complexity — you learn, you decide, you ship."
+
+**P3 (Premium Gold) — 3 copy changes:**
+- Hero sub: "42 specialist agents guide every step" → "Vibe coding with 42 specialist agents" (adds missing vibe coding term)
+- Deploy card: "verify everything, then deploy it live" → "flag issues, you approve the fix. One click to go live — understanding every line."
+- "What you get" desc: added "You make every key decision"
+- CTA: "42 agents guide the rest" → "42 agents guide you through every step — you learn, you decide, you ship."
+
+**Messaging pattern now consistent across all 3 pages:**
+- Hero: explicit "vibe coding" + "you decide / you learn / you own"
+- How it works: "you approve" / "your OK" / "you're the boss" (already strong, unchanged)
+- Philosophy: "honest about what we do" / "not a magic wand" (already strong, unchanged)
+- Deploy: "you approve" the fix (not agents acting alone)
+- CTA: "you learn, you decide, you ship" (triple agency triplet — user as active agent)
+
+**What stayed the same:** All visual effects, layouts, interactions, responsive CSS, animations, HTML structure unchanged. Only text copy was modified.
+
+### P1 Cinematic Amber: 8.8 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 8
+
+Hero sub now explicitly frames the three pillars of user agency: "you decide what to build, you learn how it works, you own every line." Deploy card shifts from passive "you watch" to active "you approve the fix." CTA uses the clear agency triplet "you learn, you decide, you ship." Vibe coding is now mentioned in the hero — a key brand term that was missing. Every section now reinforces: you're the builder, agents are the guides.
+
+### P2 Neon Violet: 8.8 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 8
+
+The biggest fix: hero subtitle (which types out character-by-character via typewriter) no longer says "they handle the heavy lifting." Now it reads "you stay creative, you learn the craft, you own what you ship" — three active "you" statements instead of passive "they handle." The typewriter effect makes this copy even more impactful since each word appears deliberately. CTA matches the agency triplet.
+
+### P3 Premium Gold: 8.8 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 8
+
+P3 already had the strongest messaging (hero sub was already excellent). Added "vibe coding" to the hero to match the brand vocabulary. Deploy card now puts user in the approval seat. CTA uses the consistent agency triplet. Editorial tone maintained throughout — copy changes fit the premium, measured voice of P3.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 8       | 9       | 9      | 9         | 9        | 8          | 8         | 8.8 |
+| P2   | 9      | 8       | 9       | 9      | 9         | 9        | 8          | 8         | 8.8 |
+| P3   | 9      | 8       | 9       | 9      | 9         | 9        | 8          | 8         | 8.8 |
+
+### Messaging now at 9 (all pages). Next iteration targets:
+- All pages: Clarity 8, Responsive 8, Technical 8 — three criteria tied at 8
+- Clarity 8→9: Simplify any remaining jargon, ensure hero subtitle is instantly clear to non-tech users. Consider: is "vibe coding" clear to non-tech people? May need a parenthetical or tooltip.
+- Responsive 8→9: Advanced mobile polish — test horizontal scroll, card stack, parallax on real devices
+- Technical 8→9: Add aria-labels, semantic landmarks, reduce unused CSS, improve Lighthouse score
+
+--- End iteration 9 ---
