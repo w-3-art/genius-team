@@ -178,6 +178,12 @@ section{padding:5rem 2rem;position:relative}
 .cta-btn{display:inline-block;background:var(--gold);color:#0F0F0F;padding:.9rem 2.2rem;border-radius:12px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'DM Sans',sans-serif}
 .cta-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(212,165,116,.2)}
 
+/* Section atmospheres — editorial lighting pools */
+.feat-section{background:radial-gradient(ellipse 45% 50% at 22% 55%,rgba(212,165,116,.03),transparent 50%),radial-gradient(ellipse 30% 35% at 85% 25%,rgba(196,149,106,.02),transparent 45%)}
+.testimonials{background:radial-gradient(ellipse 45% 45% at 50% 50%,rgba(212,165,116,.035),transparent 50%),var(--surface)}
+.philosophy::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 78% 35%,rgba(212,165,116,.04),transparent 50%),radial-gradient(ellipse 35% 40% at 15% 68%,rgba(196,149,106,.025),transparent 45%);animation:ambientDrift3 18s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+@keyframes ambientDrift3{0%{opacity:.5;transform:translate(2%,-2%)}100%{opacity:1;transform:translate(-2%,2%)}}
+
 /* Prop nav */
 .prop-nav{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,.04);display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
 .prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.76rem;font-weight:600;border:1px solid rgba(255,255,255,.06);color:var(--muted);transition:all .2s}
@@ -834,6 +840,21 @@ document.addEventListener('DOMContentLoaded', () => {
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
       });
+    });
+  }
+
+  // Grain modulation — scroll-reactive texture density
+  const noiseEl = document.querySelector('.noise');
+  if (noiseEl) {
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: self => {
+        const p = self.progress;
+        const grain = .025 + Math.sin(p * Math.PI * 2.5) * .015;
+        noiseEl.style.opacity = grain;
+      }
     });
   }
 });

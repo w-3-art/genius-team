@@ -180,6 +180,11 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .cta-final-btn{display:inline-block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:1rem 2.5rem;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif}
 .cta-final-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(139,92,246,.3)}
 
+/* Section atmospheres — electric zone depth */
+.feat-section{background:radial-gradient(ellipse 45% 50% at 20% 40%,rgba(236,72,153,.03),transparent 50%),radial-gradient(ellipse 35% 35% at 82% 70%,rgba(139,92,246,.025),transparent 45%)}
+.skills-section::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 50% at 85% 30%,rgba(139,92,246,.05),transparent 50%),radial-gradient(ellipse 40% 40% at 10% 72%,rgba(236,72,153,.03),transparent 50%);animation:ambientDrift2 16s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+@keyframes ambientDrift2{0%{opacity:.6;transform:translate(3%,-2%)}100%{opacity:1;transform:translate(-3%,2%)}}
+
 /* Prop nav */
 .prop-nav{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
 .prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.78rem;font-weight:600;border:1px solid rgba(255,255,255,.07);color:var(--muted);transition:all .2s}
@@ -829,6 +834,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Grain modulation — scroll-reactive texture density
+  const noiseEl = document.querySelector('.noise');
+  if (noiseEl) {
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: self => {
+        const p = self.progress;
+        const grain = .02 + Math.sin(p * Math.PI * 2.5) * .016;
+        noiseEl.style.opacity = grain;
+      }
+    });
+  }
 });
 </script>
 </body>

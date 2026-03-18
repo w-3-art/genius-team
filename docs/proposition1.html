@@ -197,6 +197,12 @@ section{padding:6rem 2rem;position:relative}
 .cta-btn{display:inline-block;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;padding:1rem 2.5rem;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Sora',sans-serif}
 .cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(245,158,11,.3)}
 
+/* Section atmospheres — cinematic scene lighting */
+.showcase{background:radial-gradient(ellipse 55% 50% at 18% 45%,rgba(249,115,22,.03),transparent 55%),var(--bg)}
+.proof{background:radial-gradient(ellipse 45% 50% at 55% 40%,rgba(245,158,11,.035),transparent 50%)}
+.skills-section::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 55% at 12% 65%,rgba(245,158,11,.05),transparent 50%),radial-gradient(ellipse 35% 30% at 88% 25%,rgba(249,115,22,.03),transparent 45%);animation:ambientDrift1 14s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+@keyframes ambientDrift1{0%{opacity:.6;transform:translate(-3%,2%)}100%{opacity:1;transform:translate(3%,-2%)}}
+
 /* Prop nav */
 .prop-nav{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
 .prop-nav a{padding:.5rem 1.2rem;border-radius:10px;font-size:.78rem;font-weight:600;border:1px solid rgba(255,255,255,.08);color:var(--muted);transition:all .2s}
@@ -908,6 +914,21 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollTrigger: { trigger: '.cta-section', start: 'top 75%' },
     opacity: 0, y: 30, duration: .8
   });
+
+  // Grain modulation — scroll-reactive texture density
+  const noiseEl = document.querySelector('.noise');
+  if (noiseEl) {
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: self => {
+        const p = self.progress;
+        const grain = .028 + Math.sin(p * Math.PI * 2.5) * .018;
+        noiseEl.style.opacity = grain;
+      }
+    });
+  }
 });
 </script>
 </body>
