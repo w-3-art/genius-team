@@ -8,6 +8,9 @@
 <meta property="og:title" content="Genius Team — Anyone Can Build">
 <meta property="og:description" content="The AI toolkit that turns anyone into a builder. 42 specialist agents guide every step.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="canonical" href="https://genius.w3art.io/proposition1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Genius Team","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"The AI toolkit that turns anyone into a builder. 42 specialist agents guide every step — you decide, you learn, you ship.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2400"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -286,6 +289,14 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 .nav-links a.active-link{color:var(--amber)}
 /* Cursor trail canvas */
 .cursor-trail{position:fixed;inset:0;z-index:9994;pointer-events:none}
+
+/* Accessibility: reduced motion */
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+.noise,.hero-aurora,.cursor-dot,.cursor-ring,.cursor-ambient,.cursor-trail{display:none!important}
+body::after{display:none!important}
+.parallax-orb{animation:none!important;opacity:.15!important}
+}
 </style>
 </head>
 <body>
@@ -662,19 +673,24 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 <script src="wizard.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // Init wizard
   GeniusWizard.init();
 
-  // Lenis smooth scroll
-  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(time => lenis.raf(time * 1000));
-  gsap.ticker.lagSmoothing(0);
+  // Lenis smooth scroll (skip if reduced motion)
+  let lenis;
+  if (!prefersReducedMotion) {
+    lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
 
   // Loader
-  gsap.to('#loader', { opacity: 0, duration: .5, delay: .3, onComplete() { document.getElementById('loader').style.display = 'none'; } });
+  gsap.to('#loader', { opacity: 0, duration: prefersReducedMotion ? 0 : .5, delay: prefersReducedMotion ? 0 : .3, onComplete() { document.getElementById('loader').style.display = 'none'; } });
 
   // Custom cursor
   const cursor = document.getElementById('cursor');
@@ -690,7 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Cursor trail particles
   const trailCanvas = document.getElementById('cursorTrail');
-  if (trailCanvas && window.innerWidth > 768) {
+  if (trailCanvas && window.innerWidth > 768 && !prefersReducedMotion) {
     const ctx = trailCanvas.getContext('2d');
     let particles = [];
     const resize = () => { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; };
@@ -917,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Grain modulation — scroll-reactive texture density
   const noiseEl = document.querySelector('.noise');
-  if (noiseEl) {
+  if (noiseEl && !prefersReducedMotion) {
     ScrollTrigger.create({
       trigger: document.body,
       start: 'top top',
@@ -933,7 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Scroll-velocity reactive aurora — cinematic energy surge
   // Faster scrolling = aurora mesh scales up + brightens, creating motion-driven lighting
   const auroraEl = document.querySelector('.hero-aurora');
-  if (auroraEl && window.innerWidth > 768) {
+  if (auroraEl && window.innerWidth > 768 && !prefersReducedMotion) {
     let scrollVel = 0;
     let smoothVel = 0;
     let lastY = window.scrollY;

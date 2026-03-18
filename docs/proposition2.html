@@ -8,6 +8,9 @@
 <meta property="og:title" content="Genius Team — Anyone Can Build">
 <meta property="og:description" content="The AI toolkit that turns anyone into a builder. 42 specialist agents guide every step.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0C0015">
+<link rel="canonical" href="https://genius.w3art.io/proposition2">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Genius Team","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"Learn to code by building real apps. 42 AI specialists guide every step — you stay creative, you learn the craft, you ship.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2400"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -272,6 +275,14 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   90%,100%{transform:translate(0);text-shadow:none}
 }
 .section-title.glitching{animation:glitchText .4s steps(2) forwards}
+
+/* Accessibility: reduced motion */
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+.noise,.orb{display:none!important}
+body::after{display:none!important}
+.hero-glow-blob{animation:none!important;opacity:.08!important}
+}
 </style>
 </head>
 <body>
@@ -624,18 +635,23 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 <script src="wizard.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   GeniusWizard.init();
 
-  // Lenis
-  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(time => lenis.raf(time * 1000));
-  gsap.ticker.lagSmoothing(0);
+  // Lenis (skip if reduced motion)
+  let lenis;
+  if (!prefersReducedMotion) {
+    lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
 
   // Loader
-  gsap.to('#loader', { opacity: 0, duration: .5, delay: .4, onComplete() { document.getElementById('loader').style.display = 'none'; } });
+  gsap.to('#loader', { opacity: 0, duration: prefersReducedMotion ? 0 : .5, delay: prefersReducedMotion ? 0 : .4, onComplete() { document.getElementById('loader').style.display = 'none'; } });
 
   // Cursor glow
   const glow = document.getElementById('cursorGlow');
@@ -837,7 +853,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Grain modulation — scroll-reactive texture density
   const noiseEl = document.querySelector('.noise');
-  if (noiseEl) {
+  if (noiseEl && !prefersReducedMotion) {
     ScrollTrigger.create({
       trigger: document.body,
       start: 'top top',
@@ -854,7 +870,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Faster scrolling = orbs expand + brighten, creating energy-surge feedback
   const orbEls = document.querySelectorAll('.orb-1, .orb-2, .orb-3');
   const glowEls = document.querySelectorAll('.hero-glow');
-  if (orbEls.length && window.innerWidth > 768) {
+  if (orbEls.length && window.innerWidth > 768 && !prefersReducedMotion) {
     let scrollVel = 0;
     let smoothVel = 0;
     let lastY = window.scrollY;
