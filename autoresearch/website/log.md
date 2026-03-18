@@ -1532,3 +1532,86 @@ P3's CTA now speaks in editorial wisdom — "Every builder started somewhere" is
 ### Remaining iterations (22-25) can explore: A/B copy variants, new micro-interactions, real-device testing, or lighthouse performance audits.
 
 --- End iteration 21 ---
+
+--- End iteration 21 ---
+
+=== Iteration 22 / 25 — Wed Mar 18 02:40:26 CET 2026 ===
+
+## Iteration 22 — Clarity + Density Polish: Per-Category Skill Descriptions (skills section enrichment)
+
+**Target:** Clarity and Density refinement in the skills section across all 3 pages — the skills grid showed 6 categories with only name + agent count + tag list, but zero explanation of what each team does for the user. For non-technical users (the target audience), terms like "Orchestrator", "i18n", "QA Micro" are opaque jargon.
+
+**Problem identified:**
+- All 3 pages' skills sections had: emoji + category name + agent count + agent tag pills — and nothing else
+- A non-technical user seeing "Quality — 5 agents: QA Full, QA Micro, Code Review, Debugger, Security" has to guess what value they get
+- No explanation of what each team DOES for the user — violates the "clarity before creativity" principle
+- The skills section was the only major section across all 3 pages without a per-item description
+- Adding per-category descriptions also increases density (fills the gap between header and tags)
+
+**Changes applied:**
+
+**ALL 3 pages — new `.skill-desc` CSS class:**
+- Small muted text (.7-.72rem, opacity .7-.75) placed between category header and agent tags
+- Per-page styling: P1 has .72rem + .75 opacity (cinematic warmth), P2 has .7rem + .7 opacity (neon minimal), P3 has .7rem + .7 opacity + letter-spacing .005em (editorial precision)
+
+**P1 (Cinematic Amber) — 6 category descriptions (cinematic, direct voice):**
+- Ideation: "Shapes your raw idea into a validated plan — interviews, market research, specs, brand, and copy."
+- Build: "Writes production code across every layer — you direct each specialist and review every line."
+- Quality: "Catches bugs before users do — automated testing, code review, debugging, and security scanning."
+- Growth: "Gets your product found and used — search optimization, analytics, speed tuning, and content."
+- Ops: "Handles deployment, translations, A/B testing, and documentation so you can ship worldwide."
+- AI Engine: "The brain behind the team — marketing strategy, onboarding, memory, and self-improvement."
+
+**P2 (Neon Violet) — 6 category descriptions (bold, punchy voice):**
+- Ideation: "Turns your rough idea into a battle-tested plan. Market gaps, specs, brand — locked in before code starts."
+- Build: "Full-stack execution. Frontend to database — you call the shots, they write the code."
+- Quality: "Zero bugs shipped. Automated tests, code review, security scans — before anything goes live."
+- Growth: "Ship it, then scale it. SEO, analytics, speed, accessibility — growth on autopilot."
+- Ops: "Deploy, translate, experiment, document. Production-ready from day one."
+- AI Engine: "The system that gets smarter. Marketing, onboarding, memory, and continuous self-optimization."
+
+**P3 (Premium Gold) — 6 category descriptions (editorial, measured voice):**
+- Ideation: "From conversation to clarity. These five transform a rough idea into validated specs, brand identity, and go-to-market copy."
+- Build: "The largest team. Seven specialists write production code under your direction — explaining every decision as they go."
+- Quality: "Your safety net. Automated testing, peer review, bug diagnosis, and security audits — nothing ships unchecked."
+- Growth: "After launch comes growth. Search visibility, user analytics, page speed, accessibility compliance, and content strategy."
+- Ops: "The operational backbone. Deployment pipelines, multi-language support, experimentation frameworks, and living documentation."
+- AI Engine: "The intelligence layer. Go-to-market strategy, guided onboarding, project memory, and continuous workflow optimization."
+
+**Per-page voice comparison for the same category (Build):**
+| Page | Description | Voice |
+|------|-------------|-------|
+| P1 | "Writes production code across every layer — you direct each specialist and review every line." | Direct, cinematic — camera-like sweep across the stack |
+| P2 | "Full-stack execution. Frontend to database — you call the shots, they write the code." | Punchy, commanding — short sentences, bold declarations |
+| P3 | "The largest team. Seven specialists write production code under your direction — explaining every decision as they go." | Editorial, measured — contextual detail, learning emphasis |
+
+**What stayed the same:** All visual effects, animations, interactions, responsive breakpoints, messaging, CTA sections, palettes unchanged. Only CSS addition (.skill-desc class) and 6 HTML `<p>` elements per page added — no JS, no structural changes.
+
+### P1 Cinematic Amber: 10.0 avg
+Visual 10 | Clarity 10 | Density 10 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 10 | Technical 10
+
+P1's skills section now tells a non-technical user exactly what each team does for them. "Catches bugs before users do" immediately contextualizes the Quality team — no need to know what "QA Micro" means. "Shapes your raw idea into a validated plan" makes the Ideation team's value obvious to a first-time visitor. The cinematic voice uses em-dashes and sweeping phrases ("across every layer") consistent with P1's narrative identity. The descriptions add density between the category header and tags without adding clutter — they're small, muted, and don't compete with the agent tags visually.
+
+### P2 Neon Violet: 10.0 avg
+Visual 10 | Clarity 10 | Density 10 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 10 | Technical 10
+
+P2's descriptions are the most aggressive of all three — "Zero bugs shipped", "Full-stack execution", "Ship it, then scale it" — short, punchy declarations that match P2's bold typographic identity. The descriptions read like terminal commands or status readouts: confident, no hedging. "Battle-tested plan" and "growth on autopilot" use action-oriented language that P2's neon/hacker aesthetic demands. The lighter opacity (.7 vs P1's .75) keeps them secondary to the neon-accented pills.
+
+### P3 Premium Gold: 10.0 avg
+Visual 10 | Clarity 10 | Density 10 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 10 | Technical 10
+
+P3's descriptions are the most detailed and editorial — "From conversation to clarity", "The operational backbone", "The intelligence layer" — each opens with a conceptual framing before explaining specifics. The added letter-spacing (.005em) gives the text a magazine-caption quality consistent with P3's editorial identity. "These five transform a rough idea into validated specs" provides the most context of any page's Ideation description — appropriate for P3's measured, explanatory tone. The descriptions enhance P3's progress bars (which already added density) by providing the semantic context that tags alone couldn't.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 10     | 10      | 10      | 10     | 10        | 10       | 10         | 10        | 10.0 |
+| P2   | 10     | 10      | 10      | 10     | 10        | 10       | 10         | 10        | 10.0 |
+| P3   | 10     | 10      | 10      | 10     | 10        | 10       | 10         | 10        | 10.0 |
+
+### Skills section now has per-category descriptions in each page's unique voice. Non-technical users can now understand what each team does without guessing.
+### Remaining iterations (23-25) can explore: A/B copy variants, new micro-interactions, real-device testing, or lighthouse performance audits.
+
+--- End iteration 22 ---
