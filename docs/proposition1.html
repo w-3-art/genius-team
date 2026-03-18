@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genius Team — Anyone Can Build</title>
+<meta name="description" content="Learn to code by building real apps. 42 AI specialists guide every step — you decide, you learn, you ship. Free & open source.">
+<meta property="og:title" content="Genius Team — Anyone Can Build">
+<meta property="og:description" content="The AI toolkit that turns anyone into a builder. 42 specialist agents guide every step.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -13,6 +17,10 @@ html{scroll-behavior:smooth}
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
 ::selection{background:var(--amber);color:#000}
 a{color:inherit;text-decoration:none}
+
+/* Skip to content */
+.skip-link{position:absolute;top:-100%;left:50%;transform:translateX(-50%);background:var(--amber);color:#000;padding:.6rem 1.2rem;border-radius:8px;font-weight:700;font-size:.85rem;z-index:10002;transition:top .2s}
+.skip-link:focus{top:1rem}
 
 /* Noise grain overlay */
 .noise{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.04;mix-blend-mode:overlay}
@@ -267,15 +275,17 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- Cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-glow" id="cursorGlow"></div>
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
 <!-- Loader -->
-<div class="loader" id="loader"><div class="loader-ring"></div></div>
+<div class="loader" id="loader" role="status" aria-label="Loading"><div class="loader-ring"></div></div>
 
 <!-- Nav -->
-<nav class="nav">
+<nav class="nav" aria-label="Main navigation">
   <div class="nav-logo"><span>Genius Team</span></div>
   <div class="nav-links">
     <a href="#skills">Skills</a>
@@ -286,6 +296,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   <button class="nav-mobile-cta" onclick="GeniusWizard.open()">Start</button>
 </nav>
 
+<main id="main-content">
 <!-- Hero -->
 <section class="hero" id="hero">
   <div class="hero-aurora"></div>
@@ -298,15 +309,15 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
       <input type="text" class="hero-input" id="heroInput" placeholder="What do you want to build?">
       <button class="hero-input-btn" onclick="GeniusWizard.open()">Start Building</button>
     </div>
-    <div class="hero-suggestions">
-      <span class="hero-suggestion" data-text="Booking app for yoga studio">Booking app for yoga studio</span>
-      <span class="hero-suggestion" data-text="Marketplace for vintage watches">Marketplace for vintage watches</span>
-      <span class="hero-suggestion" data-text="Landing page for my brand">Landing page for my brand</span>
+    <div class="hero-suggestions" role="group" aria-label="Project suggestions">
+      <span class="hero-suggestion" role="button" tabindex="0" data-text="Booking app for yoga studio">Booking app for yoga studio</span>
+      <span class="hero-suggestion" role="button" tabindex="0" data-text="Marketplace for vintage watches">Marketplace for vintage watches</span>
+      <span class="hero-suggestion" role="button" tabindex="0" data-text="Landing page for my brand">Landing page for my brand</span>
     </div>
-    <div class="hero-trust">
-      <span>&#10003; No code needed</span>
-      <span>&#10003; Free &amp; open source</span>
-      <span>&#10003; Learn as you build</span>
+    <div class="hero-trust" role="list" aria-label="Key benefits">
+      <span role="listitem">&#10003; No code needed</span>
+      <span role="listitem">&#10003; Free &amp; open source</span>
+      <span role="listitem">&#10003; Learn as you build</span>
     </div>
   </div>
 </section>
@@ -611,18 +622,19 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 </section>
 
 <!-- Prop nav -->
-<div class="prop-nav">
+<nav class="prop-nav" aria-label="Page variants">
   <a href="/proposition1" class="active">Cinematic Amber</a>
   <a href="/proposition2">Neon Violet</a>
   <a href="/proposition3">Premium Gold</a>
-</div>
+</nav>
+</main>
 
-<footer>
+<footer role="contentinfo">
   <p>Genius Team — Open source AI toolkit. Built with care.</p>
 </footer>
 
-<svg style="position:absolute;width:0;height:0"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
-<div class="noise" style="filter:url(#noiseFilter)"></div>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
+<div class="noise" aria-hidden="true" style="filter:url(#noiseFilter)"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -656,12 +668,11 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(glow, { x: mx, y: my, duration: .6 });
   });
 
-  // Suggestions fill input
+  // Suggestions fill input (click + keyboard)
   document.querySelectorAll('.hero-suggestion').forEach(s => {
-    s.addEventListener('click', () => {
-      document.getElementById('heroInput').value = s.dataset.text;
-      document.getElementById('heroInput').focus();
-    });
+    const fill = () => { document.getElementById('heroInput').value = s.dataset.text; document.getElementById('heroInput').focus(); };
+    s.addEventListener('click', fill);
+    s.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fill(); } });
   });
 
   // Hero animations

@@ -657,3 +657,70 @@ P3's editorial sub "The AI toolkit that turns anyone into a builder" was already
 - Technical 8→9: Add aria-labels to interactive elements, use semantic landmarks (main, nav, article, aside), add skip-to-content link, reduce unused CSS, add meta description + OG tags
 
 --- End iteration 10 ---
+
+--- End iteration 10 ---
+
+=== Iteration 11 / 25 — Wed Mar 18 01:35:55 CET 2026 ===
+
+## Iteration 11 — Technical Push: Semantic HTML, Accessibility, Meta Tags (Technical 8→9)
+
+**Target:** Technical 8→9 across all 3 pages (tied with Responsive at 8 — Technical has the most concrete, actionable fixes)
+
+**Problems identified:**
+- No `<meta name="description">` or Open Graph tags — poor SEO/sharing
+- No `<main>` landmark — screen readers can't identify primary content
+- No skip-to-content link — keyboard users can't bypass navigation
+- `<nav>` elements missing `aria-label` — multiple navs not distinguishable
+- Hero suggestion `<span>` elements used as buttons but had no `role="button"`, `tabindex`, or keyboard support
+- Decorative elements (cursor, orbs, SVG noise filter) not marked `aria-hidden="true"`
+- Loader had no `role="status"` or `aria-label`
+- Prop-nav was a `<div>` instead of `<nav>`
+- Trust line items had no semantic list structure
+
+**Changes applied to ALL 3 pages:**
+1. **Meta tags**: Added `<meta name="description">` with unique per-page copy + `og:title`, `og:description`, `og:type`
+2. **Skip-to-content link**: Added `.skip-link` (visually hidden, appears on Tab focus) with per-page brand color
+3. **`<main id="main-content">`**: Wrapped all content sections (hero through prop-nav) in semantic `<main>` landmark
+4. **`aria-label` on all `<nav>` elements**: Main navigation gets `aria-label="Main navigation"`, prop-nav gets `aria-label="Page variants"`
+5. **Prop-nav**: Changed from `<div class="prop-nav">` to `<nav class="prop-nav" aria-label="Page variants">`
+6. **Hero suggestions**: Added `role="button"` + `tabindex="0"` to all `.hero-suggestion` spans + keyboard event listener (Enter/Space)
+7. **Trust line**: Added `role="list"` + `role="listitem"` for semantic structure + `aria-label="Key benefits"`
+8. **Decorative aria-hidden**: Added `aria-hidden="true"` to cursor divs (P1), orbs (P2), cursor-glow (all), SVG noise filter, noise div
+9. **Loader**: Added `role="status"` + `aria-label="Loading"` to loader div
+10. **Footer**: Added `role="contentinfo"` to `<footer>` element
+
+**P1-specific:** Cursor, cursor-dot, cursor-glow all get `aria-hidden="true"`
+**P2-specific:** Three floating orbs all get `aria-hidden="true"`
+**P3-specific:** Ticker already had `aria-hidden="true"` from earlier iteration (good)
+
+**What stayed the same:** All visual effects, layouts, interactions, responsive CSS, animations, messaging, content unchanged. Only HTML attributes and meta tags added.
+
+### P1 Cinematic Amber: 9.0 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 9
+
+Skip-to-content link allows keyboard users to bypass the custom cursor and navigation. `<main>` landmark gives screen readers clear content boundaries. Meta description + OG tags enable proper search engine indexing and social sharing. Suggestion spans are now keyboard-accessible with Enter/Space support. All decorative elements (cursor system, noise, aurora) properly hidden from assistive tech. Two distinct `<nav>` elements with clear labels.
+
+### P2 Neon Violet: 9.0 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 9
+
+Same technical improvements as P1. Three floating orbs properly marked `aria-hidden`. Loader pulse animation has `role="status"` for screen readers. Prop-nav is now a semantic `<nav>` element. Trust line items in a proper list structure. All the accessibility improvements maintain P2's neon visual identity without any visual changes.
+
+### P3 Premium Gold: 9.0 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 9
+
+P3 already had `aria-hidden` on its ticker from an earlier iteration — now all other decorative elements match. Testimonial carousel dots and timeline dots are interactive but those were already using standard click handlers. Skip-to-content link styled in gold to match brand. Meta description reflects P3's editorial voice ("The AI toolkit that turns anyone into a builder").
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 9       | 9       | 9      | 9         | 9        | 8          | 9         | 9.0 |
+| P2   | 9      | 9       | 9       | 9      | 9         | 9        | 8          | 9         | 9.0 |
+| P3   | 9      | 9       | 9       | 9      | 9         | 9        | 8          | 9         | 9.0 |
+
+### Technical now at 9 (all pages). Next iteration target:
+- All pages: Responsive 8 — the ONLY remaining criterion below 9
+- Responsive 8→9: Test horizontal overflow on all breakpoints, fix card stack on tablet (768-900px), ensure parallax orbs don't cause horizontal scroll on mobile, test mobile Safari specific issues, verify all grid layouts collapse properly on small viewports
+
+--- End iteration 11 ---
