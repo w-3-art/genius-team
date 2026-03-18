@@ -235,16 +235,16 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .card-stack-wrap{min-height:340px}
 }
 @media(max-width:640px){
-  .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+  .nav-mobile-cta{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.55rem 1.1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;min-height:44px}
   .nav-links{display:none}
   .neon-cards,.skills-categories,.philosophy-grid,.use-cases-grid{grid-template-columns:1fr}
   .hero{padding:5.5rem 1.2rem 2.5rem}
   .hero h1{font-size:2.4rem;margin-bottom:.8rem}
   .hero-sub{font-size:.92rem}
   .hero-input{padding-right:1.2rem}
-  .hero-input-btn{position:static;transform:none;width:100%;margin-top:.5rem;border-radius:10px;padding:.75rem}
+  .hero-input-btn{position:static;transform:none;width:100%;margin-top:.5rem;border-radius:10px;padding:.75rem;min-height:44px}
   .hero-input-wrap{display:flex;flex-direction:column}
-  .hero-suggestion{font-size:.68rem;padding:.3rem .65rem}
+  .hero-suggestion{font-size:.68rem;padding:.5rem .8rem;min-height:44px;display:inline-flex;align-items:center}
   section{padding:3.5rem 1.2rem}
   .card-stack-section{padding:4rem 1.2rem}
   .card-stack-wrap{min-height:auto}
@@ -254,9 +254,10 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .stats-bar{gap:1.5rem;padding:3rem 1.2rem}
   .stat-num{font-size:2rem}
   .cta-final{padding:4rem 1.2rem}
+  .cta-btn{min-height:44px}
   .section-title{font-size:clamp(1.4rem,5vw,1.8rem)}
   .prop-nav{padding:1.5rem 1.2rem}
-  .prop-nav a{padding:.4rem 1rem;font-size:.72rem}
+  .prop-nav a{padding:.55rem 1rem;font-size:.72rem;min-height:44px;display:inline-flex;align-items:center}
   .orb{opacity:.08;width:200px!important;height:200px!important}
   .hero-glow{display:none}
 }
@@ -264,6 +265,20 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   .hero-suggestions{flex-direction:column;align-items:center}
   .hero-trust{flex-direction:column;align-items:center;gap:.6rem}
   .stats-bar{flex-direction:column;gap:1.2rem}
+  .cta-trust{display:flex;flex-direction:column;align-items:center;gap:.3rem}
+  .cta-trust span{display:none}
+}
+@media(max-width:320px){
+  .hero{padding:4.5rem 1rem 2rem}
+  .hero h1{font-size:1.9rem}
+  section{padding:2.5rem 1rem}
+  .card-stack-section{padding:3rem 1rem}
+  .philosophy{padding:2.5rem 1rem}
+  .orb{width:140px!important;height:140px!important}
+  .cta-final{padding:3rem 1rem}
+  .stats-bar{padding:2.5rem 1rem}
+  .prop-nav{padding:1.2rem 1rem}
+  .section-title{font-size:1.25rem}
 }
 .nav-links a.active-link{color:var(--magenta)}
 /* Glitch heading effect */

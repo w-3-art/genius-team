@@ -252,7 +252,7 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
 }
 @media(max-width:640px){
   .showcase-inner{flex-wrap:wrap;gap:1rem;padding:3rem 1.2rem}.showcase-card{min-width:100%;max-width:100%}.showcase-header{min-width:100%}
-  .nav-mobile-cta{display:block;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;padding:.45rem 1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Sora',sans-serif}
+  .nav-mobile-cta{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;padding:.55rem 1.1rem;border-radius:8px;font-weight:700;font-size:.75rem;border:none;cursor:pointer;font-family:'Sora',sans-serif;min-height:44px}
   .nav-links{display:none}
   .floating-cards,.skills-grid,.messaging-grid{grid-template-columns:1fr}
   .workflow-steps{grid-template-columns:1fr}
@@ -260,9 +260,9 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   .hero h1{font-size:2.2rem;margin-bottom:.8rem}
   .hero-sub{font-size:.92rem}
   .hero-input{padding-right:1.2rem}
-  .hero-input-btn{position:static;transform:none;width:100%;margin-top:.5rem;border-radius:10px;padding:.75rem}
+  .hero-input-btn{position:static;transform:none;width:100%;margin-top:.5rem;border-radius:10px;padding:.75rem;min-height:44px}
   .hero-input-wrap{display:flex;flex-direction:column}
-  .hero-suggestion{font-size:.68rem;padding:.3rem .65rem}
+  .hero-suggestion{font-size:.68rem;padding:.5rem .8rem;min-height:44px;display:inline-flex;align-items:center}
   section{padding:3.5rem 1.2rem}
   .iris-section{padding:4rem 1.2rem}
   .parallax-section{height:45vh}
@@ -274,10 +274,10 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   .proof-stats{gap:1.5rem}
   .proof-stat-num{font-size:1.8rem}
   .cta-section{padding:4rem 1.2rem}
-  .cta-btn{padding:.8rem 1.8rem;font-size:.9rem}
+  .cta-btn{padding:.8rem 1.8rem;font-size:.9rem;min-height:44px}
   .section-title{font-size:clamp(1.4rem,5vw,1.8rem)}
   .prop-nav{padding:1.5rem 1.2rem}
-  .prop-nav a{padding:.4rem 1rem;font-size:.72rem}
+  .prop-nav a{padding:.55rem 1rem;font-size:.72rem;min-height:44px;display:inline-flex;align-items:center}
   body{cursor:auto}
   .cursor,.cursor-dot,.cursor-glow{display:none}
   .hero-aurora{inset:0;width:100%;height:100%;opacity:.4}
@@ -287,6 +287,19 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   .hero-suggestions{flex-direction:column;align-items:center}
   .hero-trust{flex-direction:column;align-items:center;gap:.6rem}
   .proof-stats{flex-direction:column;gap:1.2rem}
+  .cta-trust{display:flex;flex-direction:column;align-items:center;gap:.3rem}
+  .cta-trust span{display:none}
+}
+@media(max-width:320px){
+  .hero{padding:4.5rem 1rem 2rem}
+  .hero h1{font-size:1.85rem}
+  section{padding:2.5rem 1rem}
+  .iris-section{padding:3rem 1rem}
+  .parallax-orb{width:100px!important;height:100px!important}
+  .messaging{padding:2.5rem 1rem}
+  .cta-section{padding:3rem 1rem}
+  .prop-nav{padding:1.2rem 1rem}
+  .section-title{font-size:1.25rem}
 }
 /* Nav scroll-spy active link */
 .nav-links a.active-link{color:var(--amber)}
