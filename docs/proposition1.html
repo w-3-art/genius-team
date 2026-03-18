@@ -929,6 +929,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Scroll-velocity reactive aurora — cinematic energy surge
+  // Faster scrolling = aurora mesh scales up + brightens, creating motion-driven lighting
+  const auroraEl = document.querySelector('.hero-aurora');
+  if (auroraEl && window.innerWidth > 768) {
+    let scrollVel = 0;
+    let smoothVel = 0;
+    let lastY = window.scrollY;
+    const velTick = () => {
+      const dy = Math.abs(window.scrollY - lastY);
+      lastY = window.scrollY;
+      scrollVel = dy;
+      smoothVel += (Math.min(scrollVel, 60) - smoothVel) * .12;
+      const intensity = smoothVel / 60; // 0 → 1
+      const s = 1 + intensity * .08; // scale 1 → 1.08
+      const o = .55 + intensity * .35; // opacity .55 → .9
+      auroraEl.style.transform = `scale(${s})`;
+      auroraEl.style.opacity = o;
+      requestAnimationFrame(velTick);
+    };
+    requestAnimationFrame(velTick);
+  }
 });
 </script>
 </body>

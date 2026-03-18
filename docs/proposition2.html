@@ -849,6 +849,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Scroll-velocity reactive orbs — neon power surge
+  // Faster scrolling = orbs expand + brighten, creating energy-surge feedback
+  const orbEls = document.querySelectorAll('.orb-1, .orb-2, .orb-3');
+  const glowEls = document.querySelectorAll('.hero-glow');
+  if (orbEls.length && window.innerWidth > 768) {
+    let scrollVel = 0;
+    let smoothVel = 0;
+    let lastY = window.scrollY;
+    const velTick = () => {
+      const dy = Math.abs(window.scrollY - lastY);
+      lastY = window.scrollY;
+      scrollVel = dy;
+      smoothVel += (Math.min(scrollVel, 60) - smoothVel) * .1;
+      const intensity = smoothVel / 60; // 0 → 1
+      const s = 1 + intensity * .12; // scale 1 → 1.12
+      const o = .15 + intensity * .2;  // opacity .15 → .35
+      orbEls.forEach(orb => {
+        orb.style.transform = `scale(${s})`;
+        orb.style.opacity = o;
+      });
+      glowEls.forEach(g => {
+        g.style.opacity = .1 + intensity * .12;
+      });
+      requestAnimationFrame(velTick);
+    };
+    requestAnimationFrame(velTick);
+  }
 });
 </script>
 </body>

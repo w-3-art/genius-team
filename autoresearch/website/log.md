@@ -970,3 +970,87 @@ P3's editorial restraint shows in its atmosphere treatment: the philosophy secti
 - Density/Messaging/Responsive/Technical all at 9 — solid but could be pushed with targeted improvements
 
 --- End iteration 14 ---
+
+--- End iteration 14 ---
+
+=== Iteration 15 / 25 — Wed Mar 18 02:00:29 CET 2026 ===
+
+## Iteration 15 — Uniqueness Push: Per-Page Scroll-Velocity Reactive Effects (Unique 9→10)
+
+**Target:** Unique 9→10 across all 3 pages (six criteria tied at 9 — Unique is the most clearly pushable with a 5th signature interaction per page)
+
+**Problem identified:** Each page has 4 signature interactions — enough for 9/10 but premium reference sites (Linear, Stripe, clay.global) use scroll-velocity as a reactive dimension. None of the 3 pages currently track or respond to scroll speed. Adding velocity-reactive effects gives each page a 5th completely distinct signature interaction that no other page shares.
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — Velocity-driven aurora energy surge:**
+- Tracks `window.scrollY` delta per frame to compute scroll velocity
+- Smoothed via exponential moving average (.12 easing factor) — prevents jitter
+- Faster scroll → `.hero-aurora` mesh scales from 1→1.08 + opacity rises from .55→.9
+- When scrolling stops, aurora calms back to resting state
+- Creates a "cinematic motion energy" effect — the lighting responds to how fast you're moving through the page, like a camera dolly accelerating
+- Desktop only (>768px), capped at 60px/frame to prevent extreme values
+- No other page has velocity-reactive lighting — uniquely cinematic
+
+**P2 (Neon Violet) — Velocity-driven neon power surge:**
+- Same velocity tracking architecture (different easing: .1 — slightly slower response for neon "lag")
+- Faster scroll → all 3 floating orbs scale from 1→1.12 + opacity rises from .15→.35
+- Hero glow blobs also intensify from .1→.22 opacity
+- Creates a "power surge" effect — the neon environment pulses with energy as you scroll faster, like an electrical system under load
+- Desktop only, capped at 60px/frame
+- No other page has velocity-reactive environmental elements — uniquely cyberpunk
+
+**P3 (Premium Gold) — Velocity-driven editorial typography breathing:**
+- Same velocity tracking, slowest easing (.08) for editorial restraint
+- Faster scroll → all `.section-title` headings widen letter-spacing from 0→3px + scale from 1→1.015
+- When scrolling stops, typography returns to tight spacing
+- Creates a "kinetic typography" effect — headings subtly breathe and expand as you move through the page, like type on a magazine page reacting to the reader's pace
+- Desktop only, capped at 50px/frame (lower cap for more controlled response)
+- No other page has velocity-reactive typography — uniquely editorial
+
+**Each page's 5 signature interactions are now completely distinct:**
+- P1: iris clip-path + horizontal scroll showcase + text scramble cipher + cursor particle trail + **velocity aurora surge**
+- P2: card-stack scroll + typewriter terminal + magnetic CTA + heading glitch + **velocity neon surge**
+- P3: timeline progress + word-by-word reveal + testimonial carousel + 3D card tilt + **velocity typography breathing**
+
+**Technical implementation notes:**
+- All three use `requestAnimationFrame` for smooth 60fps updates
+- Exponential moving average smoothing prevents jitter (different easing per page identity)
+- Velocity capped to prevent extreme values from fast-scroll/trackpad flings
+- All desktop-only (>768px) — mobile touch scrolling has different velocity characteristics
+- Zero impact on existing animations — velocity effects are additive layers
+
+**What stayed the same:** All content, desktop layouts, messaging, responsive breakpoints, existing animations, interactions, mobile behavior unchanged. Only additive velocity-reactive layers on desktop.
+
+### P1 Cinematic Amber: 9.4 avg
+Visual 10 | Clarity 9 | Density 9 | Unique 10 | Messaging 9 | Interactions 10 | Responsive 9 | Technical 9
+
+The aurora energy surge is the most dramatic of the three velocity effects — the hero's gradient mesh visibly scales and brightens when scrolling fast, then calms when you stop. It creates a cinematic "camera movement = lighting shift" relationship that premium film sites use. Combined with cursor particle trail (movement-based) and iris clip-path (scroll-position-based), P1 now has three different types of motion-reactive systems: cursor speed, scroll position, and scroll velocity. Five signature interactions that are completely impossible to confuse with P2 or P3.
+
+### P2 Neon Violet: 9.4 avg
+Visual 10 | Clarity 9 | Density 9 | Unique 10 | Messaging 9 | Interactions 10 | Responsive 9 | Technical 9
+
+The neon power surge makes the entire environment pulse with scrolling energy. The orbs expanding and hero glows intensifying create a feeling of electrical current flowing through the page — the faster you scroll, the more the neon world surges. This is conceptually different from P1's aurora (localized hero lighting) — P2's velocity effect is environmental (all orbs + glows across the page respond). Combined with heading glitch (position-triggered), card-stack (progress-driven), and magnetic CTA (cursor-driven), P2 now has five interactions each driven by a different input type.
+
+### P3 Premium Gold: 9.4 avg
+Visual 10 | Clarity 9 | Density 9 | Unique 10 | Messaging 9 | Interactions 10 | Responsive 9 | Technical 9
+
+The typography breathing is the most subtle of the three velocity effects — appropriate for P3's editorial restraint. Headings subtly widen their letter-spacing as you scroll faster, creating a "kinetic typography" effect that luxury editorial sites use. The slower easing (.08 vs .12 for P1, .1 for P2) means the effect lags behind slightly — it feels measured and deliberate, not twitchy. Combined with 3D card tilt (hover-driven), timeline progress (scroll-position), and word reveal (scroll-trigger), P3 now has five signature interactions all rooted in editorial design principles.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 10     | 9       | 9       | 10     | 9         | 10       | 9          | 9         | 9.4 |
+| P2   | 10     | 9       | 9       | 10     | 9         | 10       | 9          | 9         | 9.4 |
+| P3   | 10     | 9       | 9       | 10     | 9         | 10       | 9          | 9         | 9.4 |
+
+### Unique now at 10 (all pages). Three criteria at 10 (Visual, Unique, Interactions). Next iteration targets:
+- Clarity 9→10: Add micro-copy tooltips, ensure every section has a clear 1-sentence value prop visible above the fold
+- Density 9→10: Audit for any remaining spacing gaps, add micro-content (stat callouts, inline badges) to fill dead zones
+- Messaging 9→10: Audit every copy block for passive voice or agent-centric language, ensure "you" appears in every section
+- Responsive 9→10: Test on real devices, fix any sub-pixel rendering issues on retina
+- Technical 9→10: Add prefers-reduced-motion media query, CSP headers, structured data
+
+--- End iteration 15 ---

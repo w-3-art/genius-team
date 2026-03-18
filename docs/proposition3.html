@@ -857,6 +857,30 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Scroll-velocity reactive typography — editorial breathing
+  // Faster scrolling = section title letter-spacing widens + slight scale, creating kinetic typography
+  const headings = document.querySelectorAll('.section-title');
+  if (headings.length && window.innerWidth > 768) {
+    let scrollVel = 0;
+    let smoothVel = 0;
+    let lastY = window.scrollY;
+    const velTick = () => {
+      const dy = Math.abs(window.scrollY - lastY);
+      lastY = window.scrollY;
+      scrollVel = dy;
+      smoothVel += (Math.min(scrollVel, 50) - smoothVel) * .08; // slower easing = more editorial
+      const intensity = smoothVel / 50; // 0 → 1
+      const ls = intensity * 3; // letter-spacing 0 → 3px
+      const sc = 1 + intensity * .015; // scale 1 → 1.015
+      headings.forEach(h => {
+        h.style.letterSpacing = `${ls}px`;
+        h.style.transform = `scale(${sc})`;
+      });
+      requestAnimationFrame(velTick);
+    };
+    requestAnimationFrame(velTick);
+  }
 });
 </script>
 </body>
