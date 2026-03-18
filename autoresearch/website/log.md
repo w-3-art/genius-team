@@ -581,3 +581,79 @@ P3 already had the strongest messaging (hero sub was already excellent). Added "
 - Technical 8→9: Add aria-labels, semantic landmarks, reduce unused CSS, improve Lighthouse score
 
 --- End iteration 9 ---
+
+--- End iteration 9 ---
+
+=== Iteration 10 / 25 — Wed Mar 18 01:32:33 CET 2026 ===
+
+## Iteration 10 — Clarity Push: Hero Sub Simplification + Vibe Coding Repositioning (Clarity 8→9)
+
+**Target:** Clarity 8→9 across all 3 pages (the spec says "Clarity before creativity" and "Target audience: NON-TECHNICAL people")
+
+**Problems identified:**
+- Hero subs led with "Vibe coding" — jargon that non-tech users won't understand in <3 seconds
+- Hero subs were 25-30 words with multiple concepts crammed together (crew, 42 agents, vibe coding, agency triplet)
+- P1 section labels "Built different" and "Field reports" used marketing slang instead of plain language
+- The core value prop ("learn to code by building real apps") was buried under insider terminology
+
+**Changes applied:**
+
+**ALL pages — hero badge + sub restructure:**
+- "Vibe coding" moved from hero subtitle to hero badge (secondary label position)
+- Hero subs now front-load the clearest value prop: "Learn to code by building real apps" (P1/P2) or "turns anyone into a builder" (P3)
+- Subs shortened from ~28 words to ~22 words — more scannable, instant comprehension
+- Agency triplet retained but placed AFTER the clear first sentence
+
+**P1 (Cinematic Amber) — 4 changes:**
+- Badge: "Open Source AI Toolkit" → "Vibe Coding · Open Source"
+- Hero sub: "Your AI coding crew — 42 specialists... Vibe coding: you decide..." → "Learn to code by building real apps. 42 AI specialists guide every step — you decide what to build, you learn how it works, you ship."
+- Section label: "Built different" → "Why Genius Team" (plain language)
+- Section label: "Field reports" → "Builder stories" (clearer for non-tech audience)
+
+**P2 (Neon Violet) — 2 changes:**
+- Badge: "42 AI Agents · Open Source" → "Vibe Coding · 42 Agents · Open Source"
+- Hero sub (typewriter): "Your AI coding crew — 42 specialists... Vibe coding: you stay creative..." → "Learn to code by building real apps. 42 AI specialists guide every step — you stay creative, you learn the craft, you ship."
+- Typewriter effect now types out a clearer message — each character appears deliberately, making the clear opening even more impactful
+
+**P3 (Premium Gold) — 2 changes:**
+- Badge: "Open Source · 42 AI Agents" → "Vibe Coding · Open Source · 42 Agents"
+- Hero sub: "...Vibe coding with 42 specialist agents —" → "...42 specialist agents guide every step —" (removed mid-sentence jargon, kept editorial tone)
+
+**Clarity improvements summarized:**
+- Hero first sentence is now instantly understandable: "Learn to code by building real apps" (P1/P2) or "turns anyone into a builder" (P3)
+- "Vibe coding" is still visible (badge) but doesn't block comprehension of the core value prop
+- Section labels use plain language: "Builder stories" not "Field reports", "Why Genius Team" not "Built different"
+- Trust line already reinforces clarity: "No code needed · Free & open source · Learn as you build"
+
+**What stayed the same:** All visual effects, layouts, interactions, responsive CSS, animations, HTML structure, messaging agency triplets unchanged. Only hero subs, badges, and 2 section labels modified.
+
+### P1 Cinematic Amber: 8.9 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 8
+
+Hero sub now leads with the clearest possible value prop: "Learn to code by building real apps." A non-tech person instantly understands the product's purpose — no jargon barrier. "Vibe coding" in the badge is visible to insiders without blocking newcomers. "Built different" → "Why Genius Team" and "Field reports" → "Builder stories" eliminate two more slang barriers. The agency triplet is intact after the clear opener. Combined with the trust line ("No code needed · Free & open source · Learn as you build"), the value prop is now comprehensible in <3 seconds.
+
+### P2 Neon Violet: 8.9 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 8
+
+The typewriter effect now types "Learn to code by building real apps" as its opening — the clearest possible first impression, letter by letter. Previously the typewriter decoded "Vibe coding: you stay creative..." which started with jargon. Now each character reinforces the core message before reaching the agency triplet. Badge adds "Vibe Coding" as a label so the brand term is present without blocking comprehension. Section labels were already clear on P2.
+
+### P3 Premium Gold: 8.9 avg
+Visual 9 | Clarity 9 | Density 9 | Unique 9 | Messaging 9 | Interactions 9 | Responsive 8 | Technical 8
+
+P3's editorial sub "The AI toolkit that turns anyone into a builder" was already strong — the fix was removing "Vibe coding with" from mid-sentence, which injected jargon into an otherwise clear statement. Badge now carries the "Vibe Coding" label. The premium, measured voice is preserved. Section labels on P3 were already plain language.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 9       | 9       | 9      | 9         | 9        | 8          | 8         | 8.9 |
+| P2   | 9      | 9       | 9       | 9      | 9         | 9        | 8          | 8         | 8.9 |
+| P3   | 9      | 9       | 9       | 9      | 9         | 9        | 8          | 8         | 8.9 |
+
+### Clarity now at 9 (all pages). Next iteration targets:
+- All pages: Responsive 8 and Technical 8 — two criteria tied at 8
+- Responsive 8→9: Test and fix horizontal scroll edge cases, card stack on tablet, parallax on mobile Safari, ensure no horizontal overflow
+- Technical 8→9: Add aria-labels to interactive elements, use semantic landmarks (main, nav, article, aside), add skip-to-content link, reduce unused CSS, add meta description + OG tags
+
+--- End iteration 10 ---
