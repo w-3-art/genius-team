@@ -45,6 +45,15 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .nav-cta{background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:.55rem 1.4rem;border-radius:10px;font-weight:700;font-size:.82rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif}
 .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,92,246,.3)}
 
+/* Animated neon glow blobs */
+.hero-glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.hero-glow-1{width:550px;height:550px;background:rgba(236,72,153,.13);top:-15%;left:5%;animation:glowDrift1 11s ease-in-out infinite alternate}
+.hero-glow-2{width:450px;height:450px;background:rgba(139,92,246,.11);bottom:-5%;right:0;animation:glowDrift2 14s ease-in-out infinite alternate}
+.hero-glow-3{width:300px;height:300px;background:rgba(236,72,153,.08);top:40%;left:55%;animation:glowDrift3 17s ease-in-out infinite alternate}
+@keyframes glowDrift1{0%{transform:translate(0,0) scale(1)}50%{transform:translate(6%,4%) scale(1.12)}100%{transform:translate(-3%,8%) scale(.95)}}
+@keyframes glowDrift2{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-8%,-3%) scale(1.08)}100%{transform:translate(4%,-6%) scale(1.15)}}
+@keyframes glowDrift3{0%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-40%,-60%) scale(1.2)}100%{transform:translate(-60%,-45%) scale(.9)}}
+
 /* Hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative;z-index:1}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 30% 30%,rgba(236,72,153,.08),transparent 50%),radial-gradient(ellipse 50% 40% at 70% 50%,rgba(139,92,246,.08),transparent 45%),radial-gradient(ellipse 40% 35% at 50% 80%,rgba(236,72,153,.04),transparent);pointer-events:none;z-index:0}
@@ -237,6 +246,9 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
 
 <!-- Hero -->
 <section class="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-glow hero-glow-3"></div>
   <div class="hero-badge">42 AI Agents &middot; Open Source</div>
   <h1>Anyone can <em>build</em></h1>
   <p class="hero-sub">Your AI coding crew — 42 specialists that guide every step. Vibe coding: you stay creative, they handle the technical heavy lifting.</p>

@@ -304,3 +304,65 @@ Ticker was purely decorative — now it responds to hover (pauses, glows gold). 
 - All: Consider pushing Visual to 9 with richer hero gradient animations or depth layers
 
 --- End iteration 5 ---
+
+--- End iteration 5 ---
+
+=== Iteration 6 / 25 — Wed Mar 18 01:16:57 CET 2026 ===
+
+## Iteration 6 — Visual Depth: Animated Hero Gradient Meshes (8→9)
+
+**Target:** Visual 8→9 across all 3 pages with per-page animated gradient effects
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — animated aurora mesh:**
+- New `.hero-aurora` layer: oversized (140%) gradient mesh with 3 radial gradients (amber/coral) that slowly drifts, scales, and rotates via 14s CSS keyframe cycle
+- 4-stop keyframe with translate + scale + rotate + opacity variation creates organic, cinematic light movement
+- Combined with existing static hero-bg, noise grain, and vignette: creates multi-layered living depth
+- Result: Visual 8→9 (aurora creates organic depth movement that premium sites like Linear/clay.global use)
+
+**P2 (Neon Violet) — pulsing neon glow blobs:**
+- Three independent `.hero-glow` blobs (550px magenta, 450px violet, 300px magenta) with blur(120px)
+- Each blob drifts on its own cycle (11s, 14s, 17s) with translate + scale — creates dynamic neon atmosphere
+- Stacked on top of existing static hero::before gradient mesh and floating orbs
+- Result: Visual 8→9 (multiple independent light sources create a living, breathing neon environment — much richer than static gradients)
+
+**P3 (Premium Gold) — gold light sweep + warm ambient drift:**
+- `.hero-sweep`: diagonal gold highlight that scans across hero on 6s cycle (linear-gradient with 250% background-size animation) — creates editorial magazine "light passing over paper" effect
+- `.hero-warmth`: oversized (120%) warm gradient mesh that slowly drifts and scales on 16s cycle — organic depth movement
+- Combined with existing static hero::before gradient
+- Result: Visual 8→9 (sweep effect is unique and editorial; warm drift adds organic depth without competing with content)
+
+**What stayed the same:** All content, desktop layouts, messaging, interactions, responsive breakpoints, existing animations unchanged.
+
+### P1 Cinematic Amber: 8.3 avg
+Visual 9 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Aurora mesh adds organic, breathing light movement to the hero. Combined with the static 5-gradient mesh, noise grain, and vignette, the visual stack is now 4 layers deep. The slow drift (14s cycle) feels cinematic and premium — comparable to Linear's gradient animations. Amber/coral light organically shifts focus across the hero.
+
+### P2 Neon Violet: 8.3 avg
+Visual 9 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Three independent neon glow blobs create a dynamic light environment. Unlike static gradients, these move at different speeds and directions, creating depth parallax even before scrolling. The blurred magenta/violet blobs layer on top of the floating orbs for a rich, living atmosphere. Premium neon feel without being gaudy.
+
+### P3 Premium Gold: 8.3 avg
+Visual 9 | Clarity 8 | Density 8 | Unique 8 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+The gold sweep effect is unique — a diagonal highlight scanning across the hero like light moving over a magazine page. Combined with the warm ambient drift (subtle gradient movement), the hero feels alive and premium. The 6s sweep is fast enough to be noticed, slow enough to not distract. Editorial warmth elevated.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 8       | 8       | 8      | 8         | 9        | 8          | 8         | 8.3 |
+| P2   | 9      | 8       | 8       | 8      | 8         | 9        | 8          | 8         | 8.3 |
+| P3   | 9      | 8       | 8       | 8      | 8         | 9        | 8          | 8         | 8.3 |
+
+### Visual now at 9. Next iteration targets:
+- P1: Unique could reach 9 — iris reveal + horizontal scroll are strong but a third signature element (text scramble, morphing shapes) would push further
+- P2: Unique could reach 9 — card-stack is strong but a second signature (text decode reveal, morphing blob SVG) would differentiate more
+- P3: Density could reach 9 — add a testimonial/quote carousel or builder stats section between features and CTA
+- All: Consider pushing Unique or Density to 9 as the next lowest criteria
+
+--- End iteration 6 ---

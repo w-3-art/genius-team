@@ -57,6 +57,13 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .nav-cta{background:var(--gold);color:#0F0F0F;padding:.55rem 1.4rem;border-radius:10px;font-weight:700;font-size:.82rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'DM Sans',sans-serif}
 .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,165,116,.2)}
 
+/* Gold light sweep */
+.hero-sweep{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(212,165,116,.07) 42%,rgba(212,165,116,.14) 50%,rgba(212,165,116,.07) 58%,transparent 70%);background-size:250% 100%;animation:goldSweep 6s ease-in-out infinite;pointer-events:none;z-index:0}
+@keyframes goldSweep{0%,100%{background-position:250% 0}50%{background-position:-150% 0}}
+/* Warm ambient drift */
+.hero-warmth{position:absolute;inset:-10%;width:120%;height:120%;background:radial-gradient(ellipse 50% 40% at 35% 35%,rgba(212,165,116,.1),transparent 50%),radial-gradient(ellipse 40% 35% at 70% 60%,rgba(196,149,106,.07),transparent 45%);animation:warmDrift 16s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+@keyframes warmDrift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-2%) scale(1.05)}100%{transform:translate(-2%,3%) scale(.97)}}
+
 /* Hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 4rem;position:relative}
 .hero::before{content:'';position:absolute;top:10%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse 60% 45% at 40% 40%,rgba(212,165,116,.09),transparent 50%),radial-gradient(ellipse 40% 35% at 65% 55%,rgba(212,165,116,.06),transparent 45%),radial-gradient(ellipse 50% 30% at 50% 80%,rgba(212,165,116,.04),transparent);pointer-events:none}
@@ -248,6 +255,8 @@ footer p{font-size:.7rem;color:rgba(255,255,255,.18)}
 
 <!-- Hero -->
 <section class="hero">
+  <div class="hero-sweep"></div>
+  <div class="hero-warmth"></div>
   <div class="hero-badge">Open Source &middot; 42 AI Agents</div>
   <h1>Anyone can <em>build</em></h1>
   <p class="hero-sub">The AI toolkit that turns anyone into a builder. 42 specialist agents guide every step — you stay in control, learn real skills, and ship real products.</p>
