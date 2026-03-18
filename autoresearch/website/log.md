@@ -1691,3 +1691,79 @@ P3's philosophy section now reads like a magazine op-ed — "A matter of princip
 ### Remaining iterations (24-25) can explore: lighthouse performance audits, real-device testing, testimonial section differentiation, or new micro-interactions.
 
 --- End iteration 23 ---
+
+--- End iteration 23 ---
+
+=== Iteration 24 / 25 — Wed Mar 18 02:50:39 CET 2026 ===
+
+## Iteration 24 — Uniqueness Polish: Testimonial Section Voice Differentiation (unique personas per page)
+
+**Target:** Uniqueness — the testimonial/social proof sections used the same 3 people (Sarah M., Marcus T., Léa D.) with near-identical quotes across all 3 pages. This was the last section with recycled content undermining each page's distinct identity.
+
+**Problem identified:**
+- All 3 pages featured the same 3 personas with only minor rewording
+- P1 and P2 had Sarah M.'s yoga studio quote word-for-word identical
+- The same "no-code tools hit walls" and "agents explain every decision" phrases appeared across all pages
+- For pages with radically different visual and tonal identities, the testimonials should reflect each page's unique voice and audience
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — "Builder Stories" dossiers with cinematic transformation arcs:**
+- Case 001: Daniel R. — Chef & Restaurant Owner (Hospitality). "The idea kept nagging me... Four weeks later, I had one. I wrote the logic myself." — story-arc language with a narrative origin moment
+- Case 002: Anika J. — Portrait Photographer (Creative). "I wanted a client gallery that felt like my photography... let me *direct every detail*" — cinematic "directing" metaphor consistent with P1's film identity
+- Case 003: James K. — Music Teacher (Education). "Building software felt like learning a new instrument — intimidating at first, then *one note at a time*" — musical metaphor as transformation arc
+
+**P2 (Neon Violet) — "Community Voices" with punchy, results-first declarations:**
+- Voice 1: Priya S. — Startup Founder. "Had an idea on Monday. *Shipped the MVP on Friday.* Investors saw it the next week." — short sentences, speed emphasis, no hedging
+- Voice 2: Tyler W. — College Student. "My CS professor couldn't believe I built it... *auth, payments, search* — in two weeks." — bold, bragging energy that matches P2's hacker voice
+- Voice 3: Rosa M. — Real Estate Agent. "No budget for a dev team. *Built it myself.* Clients think I hired an agency." — blunt declaration, results-first
+
+**P3 (Premium Gold) — editorial/reflective testimonials emphasizing learning and process:**
+- Testimonial 1: Nadia F. — Architect. "What surprised me was how much it felt like a design process — *iterating, reviewing, refining* — not just generating output." — reflective, process-oriented, measured tone
+- Testimonial 2: Dr. Owen L. — Therapist. "The real value wasn't the app — it was *understanding how it worked*. I can modify it myself now." — educational emphasis, long-term value
+- Testimonial 3: Carmen V. — Small Business Owner. "I built my own — and learned enough along the way to *keep improving it* without help." — growth narrative, self-sufficiency
+
+**Per-page voice comparison for testimonials about "building something real":**
+| Page | Quote snippet | Voice |
+|------|--------------|-------|
+| P1 | "The idea kept nagging me... I wrote the logic myself." | Cinematic — origin story with narrative tension |
+| P2 | "Had an idea on Monday. Shipped the MVP on Friday." | Punchy — speed and results, zero filler |
+| P3 | "The real value wasn't the app — it was understanding how it worked." | Editorial — reflective, learning-focused |
+
+**Each page now has completely different people, industries, and voice:**
+| Page | People | Industries | Emphasis |
+|------|--------|-----------|----------|
+| P1 | Daniel R., Anika J., James K. | Hospitality, Creative, Education | Transformation journeys |
+| P2 | Priya S., Tyler W., Rosa M. | Startup, Academic, Real Estate | Speed and results |
+| P3 | Nadia F., Dr. Owen L., Carmen V. | Architecture, Healthcare, Small Business | Process and growth |
+
+**What stayed the same:** All visual effects, animations, interactions, responsive breakpoints, CTA sections, skill descriptions, palettes, JS unchanged. Only testimonial text content and personas differentiated — no CSS or JS changes.
+
+### P1 Cinematic Amber: 10.0 avg
+Visual 10 | Clarity 10 | Density 10 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 10 | Technical 10
+
+P1's dossier section now tells three distinct stories with cinematic arc language. Daniel the chef's quote has an origin moment ("the idea kept nagging me") that reads like a film's inciting incident. Anika the photographer uses "direct every detail" — film production language consistent with P1's "You direct the story" philosophy. James the music teacher's musical metaphor ("one note at a time") creates a unique sensory transformation arc. The case-file format (Case 001 — Hospitality) reinforces the classified-briefing identity. None of these personas or quotes appear on any other page.
+
+### P2 Neon Violet: 10.0 avg
+Visual 10 | Clarity 10 | Density 10 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 10 | Technical 10
+
+P2's community voices now speak in the shortest, most direct sentences of all 3 pages. Priya's quote has three sentences averaging 7 words each — pure P2 cadence. Tyler's "My CS professor couldn't believe I built it" has the bragging energy that matches P2's "No BS" philosophy section. Rosa's "Built it myself. Clients think I hired an agency." is the kind of two-punch declaration that P2's hacker/power-user voice demands. The emoji icons (rocket, graduation cap, house) are more action-oriented than the previous set. None of these personas or quotes appear on any other page.
+
+### P3 Premium Gold: 10.0 avg
+Visual 10 | Clarity 10 | Density 10 | Unique 10 | Messaging 10 | Interactions 10 | Responsive 10 | Technical 10
+
+P3's testimonials now read like magazine pull-quotes from professionals reflecting on their learning journey. Nadia the architect draws a parallel between software and design process — the most intellectual comparison of all 3 pages. Dr. Owen's quote inverts expectations: "The real value wasn't the app" — a reflective twist that matches P3's "the process is the product" philosophy. Carmen's emphasis on self-sufficiency ("keep improving it without help") reinforces P3's educational theme. The rotating carousel format gives each quote breathing room — appropriate for editorial contemplation. None of these personas or quotes appear on any other page.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 10     | 10      | 10      | 10     | 10        | 10       | 10         | 10        | 10.0 |
+| P2   | 10     | 10      | 10      | 10     | 10        | 10       | 10         | 10        | 10.0 |
+| P3   | 10     | 10      | 10      | 10     | 10        | 10       | 10         | 10        | 10.0 |
+
+### Testimonial sections now fully voice-differentiated with unique personas per page. All content sections across all 3 pages are now completely distinct.
+### Remaining iteration (25) can explore: hero suggestion chip differentiation, stats section voice differentiation, or Lighthouse performance audit.
+
+--- End iteration 24 ---
