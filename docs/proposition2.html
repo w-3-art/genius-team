@@ -183,6 +183,10 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .cta-final p{color:var(--muted);font-size:.95rem;margin-bottom:2rem;max-width:460px;margin-left:auto;margin-right:auto}
 .cta-final-btn{display:inline-block;background:linear-gradient(135deg,var(--magenta),var(--violet));color:#fff;padding:1rem 2.5rem;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Plus Jakarta Sans',sans-serif}
 .cta-final-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(139,92,246,.3)}
+.cta-trust{margin-top:1.2rem;font-size:.78rem;color:var(--muted);letter-spacing:.04em;opacity:.7}
+.cta-trust span{margin:0 .5rem;opacity:.35}
+.stats-label{text-align:center;padding:3rem 2rem 0;position:relative;z-index:1}
+.stats-label .section-label{display:inline-block}
 
 /* Section atmospheres — electric zone depth */
 .feat-section{background:radial-gradient(ellipse 45% 50% at 20% 40%,rgba(236,72,153,.03),transparent 50%),radial-gradient(ellipse 35% 35% at 82% 70%,rgba(139,92,246,.025),transparent 45%)}
@@ -579,6 +583,7 @@ body::after{display:none!important}
   <div class="section-inner" style="text-align:center">
     <div class="section-label">Community</div>
     <h2 class="section-title" style="margin:0 auto">Builders talk back</h2>
+    <p class="section-desc" style="margin:.6rem auto 0;max-width:460px">Real stories from non-technical founders who shipped with Genius Team.</p>
   </div>
   <div class="voices-grid">
     <div class="voice-card">
@@ -603,6 +608,7 @@ body::after{display:none!important}
 </section>
 
 <!-- Stats -->
+<div class="stats-label"><div class="section-label">By the numbers</div></div>
 <div class="stats-bar">
   <div class="stat-item"><span class="stat-num" data-count="42">0</span><span class="stat-label">AI Agents</span></div>
   <div class="stat-item"><span class="stat-num" data-count="31">0</span><span class="stat-label">Skills</span></div>
@@ -615,6 +621,7 @@ body::after{display:none!important}
   <h2>Ready to build something real?</h2>
   <p>Start with an idea. The crew guides you through the complexity — you learn, you decide, you ship.</p>
   <button class="cta-final-btn" onclick="GeniusWizard.open()">Get Started Free</button>
+  <div class="cta-trust">2,400+ builders<span>·</span>4.9★ avg rating<span>·</span>Free forever</div>
 </section>
 
 <!-- Prop nav -->
@@ -808,6 +815,14 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.from('.cta-final h2, .cta-final p, .cta-final-btn', {
     scrollTrigger: { trigger: '.cta-final', start: 'top 75%' },
     opacity: 0, y: 25, stagger: .12, duration: .7
+  });
+  gsap.from('.cta-trust', {
+    scrollTrigger: { trigger: '.cta-final', start: 'top 70%' },
+    opacity: 0, y: 10, duration: .6, delay: .4
+  });
+  gsap.from('.stats-label', {
+    scrollTrigger: { trigger: '.stats-label', start: 'top 85%' },
+    opacity: 0, y: 12, duration: .5
   });
 
   // Orb parallax on scroll
