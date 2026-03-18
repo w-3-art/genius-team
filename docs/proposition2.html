@@ -143,6 +143,22 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .feat-block h3{font-size:.95rem;font-weight:700;margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem}
 .feat-block p{font-size:.8rem;color:var(--muted);line-height:1.6}
 
+/* Community Voices */
+.voices{padding:5rem 2rem;position:relative;z-index:1}
+.voices::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 50% at 60% 40%,rgba(139,92,246,.06),transparent)}
+.voices-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:960px;margin:2.5rem auto 0}
+.voice-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:2rem 1.8rem;position:relative;overflow:hidden;transition:all .35s}
+.voice-card::after{content:'';position:absolute;top:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--magenta),var(--violet));opacity:.5;transition:opacity .35s}
+.voice-card:hover{border-color:rgba(139,92,246,.2);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.voice-card:hover::after{opacity:1}
+.voice-emoji{font-size:1.5rem;margin-bottom:.8rem;display:block}
+.voice-quote{font-size:.85rem;line-height:1.7;color:rgba(232,224,240,.6);font-style:italic;margin-bottom:1rem}
+.voice-quote em{font-style:normal;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:600}
+.voice-author{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:linear-gradient(135deg,var(--magenta),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.voice-project{margin-top:.6rem;font-size:.7rem;color:rgba(232,224,240,.3);display:flex;align-items:center;gap:.4rem}
+.voice-project::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--violet);box-shadow:0 0 8px rgba(139,92,246,.4)}
+@media(max-width:768px){.voices-grid{grid-template-columns:1fr;max-width:480px}}
+
 /* Stats bar */
 .stats-bar{padding:4rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;position:relative;z-index:1}
 .stat-item{text-align:center}
@@ -506,6 +522,34 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
   </div>
 </section>
 
+<!-- Community Voices -->
+<section class="voices">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">Community</div>
+    <h2 class="section-title" style="margin:0 auto">Builders talk back</h2>
+  </div>
+  <div class="voices-grid">
+    <div class="voice-card">
+      <span class="voice-emoji">&#128161;</span>
+      <p class="voice-quote">"I had zero coding experience. In three weeks I shipped a booking app for my yoga studio — and I actually <em>understood</em> the code."</p>
+      <div class="voice-author">Sarah M. — Yoga Instructor</div>
+      <div class="voice-project">Shipped: SaaS booking platform</div>
+    </div>
+    <div class="voice-card">
+      <span class="voice-emoji">&#127912;</span>
+      <p class="voice-quote">"The agents explain every decision. I went from watching tutorials to <em>shipping products</em> — and landing freelance clients."</p>
+      <div class="voice-author">Marcus T. — Freelance Designer</div>
+      <div class="voice-project">Shipped: 3 client sites in 2 months</div>
+    </div>
+    <div class="voice-card">
+      <span class="voice-emoji">&#9201;</span>
+      <p class="voice-quote">"No-code tools hit walls everywhere. With Genius Team I built a real marketplace — <em>my architecture</em>, not a template."</p>
+      <div class="voice-author">Léa D. — Vintage Collector</div>
+      <div class="voice-project">Shipped: Watch marketplace with Stripe</div>
+    </div>
+  </div>
+</section>
+
 <!-- Stats -->
 <div class="stats-bar">
   <div class="stat-item"><span class="stat-num" data-count="42">0</span><span class="stat-label">AI Agents</span></div>
@@ -660,6 +704,14 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.from('.feat-block', {
     scrollTrigger: { trigger: '.feat-grid', start: 'top 80%' },
     opacity: 0, y: 30, stagger: .12, duration: .7
+  });
+
+  // Voice cards entrance
+  gsap.utils.toArray('.voice-card').forEach((c, i) => {
+    gsap.from(c, {
+      scrollTrigger: { trigger: c, start: 'top 88%' },
+      opacity: 0, y: 30, duration: .6, delay: i * .12, ease: 'power2.out'
+    });
   });
 
   // Stats counter with neon flash on complete

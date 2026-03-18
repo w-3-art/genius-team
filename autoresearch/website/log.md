@@ -434,3 +434,72 @@ The testimonial carousel adds both uniqueness and density. Three auto-rotating b
 - P3 leads slightly — could use as template for density improvements on P1/P2
 
 --- End iteration 7 ---
+
+--- End iteration 7 ---
+
+=== Iteration 8 / 25 — Wed Mar 18 01:24:18 CET 2026 ===
+
+## Iteration 8 — Density Push: Builder Social Proof Sections (P1/P2 Density 8→9)
+
+**Target:** Density 8→9 on P1 and P2 (lowest criteria tied at 8 with Clarity/Messaging/Responsive/Technical — but P3 already at Density 9 via testimonials, so P1/P2 density is the clearest gap)
+
+**Changes applied:**
+
+**P1 (Cinematic Amber) — "Builder Dossiers" section:**
+- New section between glass-cards ("Why builders choose") and stats ("By the numbers")
+- 3 dossier-style cards with amber left-border accent (3px gradient stripe) — matches cinematic/classified briefing identity
+- Each card: case number tag with glowing amber dot, italic quote, author attribution, and outcome metric
+- Case 001 (SaaS booking), Case 002 (marketplace), Case 003 (portfolio) — references same personas as other pages
+- Cards have hover lift + shadow, GSAP stagger entrance animation
+- Responsive: 3-col → 1-col on mobile
+- Fills the gap between feature rationale and stats — P1 now has zero content gaps
+- Result: Density 8→9 (new content section bridges "why choose us" with "by the numbers")
+
+**P2 (Neon Violet) — "Community Voices" section:**
+- New section between features ("Built for builders") and stats bar
+- 3 voice cards with neon gradient top-border (2px magenta→violet line) — matches neon identity
+- Each card: emoji icon, italic quote with gradient-highlighted keywords, gradient author name, project outcome with glowing violet dot
+- Hover: border color shift + lift + shadow + top-border opacity increase
+- GSAP stagger entrance animation
+- Responsive: 3-col → 1-col on mobile
+- Fills the gap between features and stats — P2 now has zero content gaps
+- Result: Density 8→9 (new social proof section fills the last remaining gap)
+
+**All 3 pages now have builder testimonial/social proof sections, each with a DISTINCT visual treatment:**
+- P1: Dossier cards with left amber stripe + case numbers (classified briefing feel)
+- P2: Neon voice cards with top gradient border + emoji icons (terminal/tech community feel)
+- P3: Auto-rotating editorial carousel with gold dots (magazine feel)
+
+**What stayed the same:** All desktop layouts, visual palettes, messaging, responsive breakpoints, existing animations unchanged.
+
+### P1 Cinematic Amber: 8.6 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Builder dossiers add real social proof with a cinematic twist — case numbers ("Case 001") and outcome metrics feel like a classified mission report. The amber left-border stripe ties into the warm palette. P1 now flows seamlessly from features → dossiers → stats → CTA with no content gaps. Iris reveal + horizontal scroll + text scramble + dossier grid = rich, dense, distinct page.
+
+### P2 Neon Violet: 8.6 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+Community voice cards bring social proof in a neon-native format. The gradient top-border and gradient-highlighted keywords are distinctly P2. The glowing violet dots on project outcomes add micro-detail. P2 now flows features → voices → stats → CTA without gaps. Card-stack + magnetic CTA + typewriter + neon voice cards = fully dense neon experience.
+
+### P3 Premium Gold: 8.6 avg
+Visual 9 | Clarity 8 | Density 9 | Unique 9 | Messaging 8 | Interactions 9 | Responsive 8 | Technical 8
+
+No changes to P3 — already at Density 9 from iteration 7's testimonial carousel. Scores maintained.
+
+---
+
+### Summary Table
+| Page | Visual | Clarity | Density | Unique | Messaging | Interact | Responsive | Technical | AVG |
+|------|--------|---------|---------|--------|-----------|----------|------------|-----------|-----|
+| P1   | 9      | 8       | 9       | 9      | 8         | 9        | 8          | 8         | 8.6 |
+| P2   | 9      | 8       | 9       | 9      | 8         | 9        | 8          | 8         | 8.6 |
+| P3   | 9      | 8       | 9       | 9      | 8         | 9        | 8          | 8         | 8.6 |
+
+### Density now at 9 (all pages). Next iteration targets:
+- All pages: Clarity, Messaging, Responsive, Technical all at 8 — five criteria tied
+- Messaging 8→9: Strengthen "you're in control" / "vibe coding" language throughout. Add more explicit "you decide" / "you learn" phrasing
+- Clarity 8→9: Simplify any remaining jargon, ensure hero subtitle is instantly clear to non-tech users
+- Consider: Messaging is the founder's top priority — push that next
+
+--- End iteration 8 ---

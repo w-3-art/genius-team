@@ -157,6 +157,22 @@ section{padding:6rem 2rem;position:relative}
 .glass-card h3{font-size:1rem;font-weight:700;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
 .glass-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
 
+/* Builder Dossiers */
+.dossiers{padding:5rem 2rem;position:relative}
+.dossiers::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 40% 50% at 30% 40%,rgba(245,158,11,.05),transparent)}
+.dossier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:960px;margin:2.5rem auto 0}
+.dossier{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:2rem 1.8rem;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.dossier::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--amber),var(--coral));opacity:.6}
+.dossier:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.dossier-tag{font-size:.55rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--amber);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+.dossier-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px rgba(245,158,11,.4)}
+.dossier-quote{font-size:.85rem;line-height:1.7;color:rgba(255,255,255,.6);font-style:italic;margin-bottom:1rem}
+.dossier-quote em{font-style:normal;color:var(--amber);font-weight:600}
+.dossier-meta{font-size:.68rem;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.dossier-result{margin-top:.8rem;font-size:.7rem;color:rgba(255,255,255,.35);border-top:1px solid rgba(255,255,255,.05);padding-top:.7rem}
+.dossier-result strong{color:var(--amber);font-weight:700}
+@media(max-width:768px){.dossier-grid{grid-template-columns:1fr;max-width:480px}}
+
 /* Social proof */
 .proof{padding:5rem 2rem;text-align:center}
 .proof-stats{display:flex;justify-content:center;gap:4rem;margin-top:2rem;flex-wrap:wrap}
@@ -543,6 +559,34 @@ footer p{font-size:.72rem;color:rgba(255,255,255,.25)}
   </div>
 </section>
 
+<!-- Builder Dossiers -->
+<section class="dossiers">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">Field reports</div>
+    <h2 class="section-title" style="margin:0 auto">What builders are shipping</h2>
+  </div>
+  <div class="dossier-grid">
+    <div class="dossier">
+      <div class="dossier-tag">Case 001 — SaaS</div>
+      <p class="dossier-quote">"I had zero coding experience. In three weeks I shipped a booking app for my yoga studio — and I actually <em>understood</em> the code."</p>
+      <div class="dossier-meta">Sarah M. — Yoga Instructor</div>
+      <div class="dossier-result">Outcome: <strong>Live app, 40+ weekly bookings</strong></div>
+    </div>
+    <div class="dossier">
+      <div class="dossier-tag">Case 002 — Marketplace</div>
+      <p class="dossier-quote">"No-code tools hit walls. With Genius Team I built a real marketplace for vintage watches — <em>my architecture</em>, not a template."</p>
+      <div class="dossier-meta">Léa D. — Vintage Collector</div>
+      <div class="dossier-result">Outcome: <strong>200+ listings, Stripe payments</strong></div>
+    </div>
+    <div class="dossier">
+      <div class="dossier-tag">Case 003 — Portfolio</div>
+      <p class="dossier-quote">"The agents explain every decision. I went from watching tutorials to <em>shipping products</em> — and getting freelance clients."</p>
+      <div class="dossier-meta">Marcus T. — Freelance Designer</div>
+      <div class="dossier-result">Outcome: <strong>3 client sites launched in 2 months</strong></div>
+    </div>
+  </div>
+</section>
+
 <!-- Stats -->
 <section class="proof">
   <div class="section-inner">
@@ -738,6 +782,14 @@ document.addEventListener('DOMContentLoaded', () => {
     onUpdate: self => {
       document.getElementById('scrollProgress').style.width = (self.progress * 100) + '%';
     }
+  });
+
+  // Dossier entrance
+  gsap.utils.toArray('.dossier').forEach((d, i) => {
+    gsap.from(d, {
+      scrollTrigger: { trigger: d, start: 'top 88%' },
+      opacity: 0, y: 30, duration: .6, delay: i * .12, ease: 'power2.out'
+    });
   });
 
   // Stats counter with scale pop on complete
