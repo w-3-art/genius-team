@@ -185,6 +185,10 @@ section{padding:6rem 2rem;position:relative;z-index:1}
 .cta-final-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(139,92,246,.3)}
 .cta-trust{margin-top:1.2rem;font-size:.78rem;color:var(--muted);letter-spacing:.04em;opacity:.7}
 .cta-trust span{margin:0 .5rem;opacity:.35}
+.cta-final-btn{animation:neonPulse 2.5s ease-in-out infinite alternate}
+@keyframes neonPulse{0%{box-shadow:0 4px 20px rgba(139,92,246,.25)}100%{box-shadow:0 8px 30px rgba(236,72,153,.35),0 0 50px rgba(139,92,246,.15)}}
+/* Scroll progress bar */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--magenta),var(--violet));z-index:10002;width:0;transform-origin:left;will-change:width;pointer-events:none;box-shadow:0 0 10px rgba(139,92,246,.5)}
 .stats-label{text-align:center;padding:3rem 2rem 0;position:relative;z-index:1}
 .stats-label .section-label{display:inline-block}
 
@@ -306,6 +310,9 @@ body::after{display:none!important}
 </style>
 </head>
 <body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
 
@@ -633,10 +640,10 @@ body::after{display:none!important}
 
 <!-- CTA -->
 <section class="cta-final">
-  <h2>Ready to build something real?</h2>
-  <p>Start with an idea. The crew guides you through the complexity — you learn, you decide, you ship.</p>
-  <button class="cta-final-btn" onclick="GeniusWizard.open()">Get Started Free</button>
-  <div class="cta-trust">2,400+ builders<span>·</span>4.9★ avg rating<span>·</span>Free forever</div>
+  <h2>Stop scrolling. Start shipping.</h2>
+  <p>Your AI crew is ready. Pick a project, launch the build, learn the craft. No excuses left.</p>
+  <button class="cta-final-btn" onclick="GeniusWizard.open()">Launch Now</button>
+  <div class="cta-trust">2,400+ builders<span>·</span>100% free<span>·</span>Open source forever</div>
 </section>
 
 <!-- Prop nav -->
@@ -838,6 +845,16 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.from('.stats-label', {
     scrollTrigger: { trigger: '.stats-label', start: 'top 85%' },
     opacity: 0, y: 12, duration: .5
+  });
+
+  // Scroll progress bar
+  ScrollTrigger.create({
+    trigger: document.body,
+    start: 'top top',
+    end: 'bottom bottom',
+    onUpdate: self => {
+      document.getElementById('scrollProgress').style.width = (self.progress * 100) + '%';
+    }
   });
 
   // Orb parallax on scroll

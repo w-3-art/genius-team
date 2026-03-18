@@ -200,6 +200,8 @@ section{padding:6rem 2rem;position:relative}
 .cta-content p{color:var(--muted);margin-bottom:2rem;font-size:.95rem}
 .cta-btn{display:inline-block;background:linear-gradient(135deg,var(--amber),var(--coral));color:#000;padding:1rem 2.5rem;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Sora',sans-serif}
 .cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(245,158,11,.3)}
+.cta-btn{animation:ctaGlow 3s ease-in-out infinite alternate}
+@keyframes ctaGlow{0%{box-shadow:0 4px 20px rgba(245,158,11,.2)}100%{box-shadow:0 8px 35px rgba(245,158,11,.4),0 0 60px rgba(245,158,11,.1)}}
 .cta-trust{margin-top:1.2rem;font-size:.78rem;color:var(--muted);letter-spacing:.04em;opacity:.7}
 .cta-trust span{margin:0 .5rem;opacity:.35}
 
@@ -665,10 +667,10 @@ body::after{display:none!important}
 <!-- CTA -->
 <section class="cta-section">
   <div class="cta-content">
-    <h2>Ready to build something?</h2>
-    <p>Start with an idea. The crew guides you through every step — you learn, you decide, you ship.</p>
-    <button class="cta-btn" onclick="GeniusWizard.open()">Get Started Free</button>
-    <div class="cta-trust">2,400+ builders<span>·</span>4.9★ avg rating<span>·</span>Free forever</div>
+    <h2>Your story starts with one idea</h2>
+    <p>Type it in. The crew takes it from there — guiding you through every step while you learn, decide, and ship something real.</p>
+    <button class="cta-btn" onclick="GeniusWizard.open()">Start Your Story</button>
+    <div class="cta-trust">2,400+ builders<span>·</span>4.9★ avg<span>·</span>Free &amp; open source</div>
   </div>
 </section>
 
