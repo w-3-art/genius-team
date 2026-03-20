@@ -334,7 +334,8 @@ body::after{display:none!important}
   <div class="nav-links">
     <a href="#timeline">How It Works</a>
     <a href="#skills">Agents</a>
-    <a href="#features">Features</a>
+    <a href="#modes">Modes</a>
+    <a href="#faq">FAQ</a>
     <button class="nav-cta" onclick="GeniusWizard.open()">Start Building</button>
   </div>
   <button class="nav-mobile-cta" onclick="GeniusWizard.open()">Start</button>
@@ -669,6 +670,65 @@ body::after{display:none!important}
   <div class="stat"><span class="stat-num" data-count="3">0</span><span class="stat-label">Structured Phases</span></div>
   <div class="stat"><span class="stat-num" data-count="100">0</span><span class="stat-label">% Open Source</span></div>
 </div>
+
+<!-- Operating Modes -->
+<section class="modes-section" id="modes" style="padding:5rem 2rem;background:var(--surface)">
+  <div class="section-inner">
+    <div class="section-label">Choose your workflow</div>
+    <h2 class="section-title">4 modes. One framework.</h2>
+    <p class="section-desc" style="margin-bottom:2rem">Whether you prefer the terminal or your IDE, working alone or with an AI team — Genius Team adapts to how you work.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem">
+      <div class="editorial-card"><div class="editorial-card-icon">⌨️</div><h3>CLI Mode</h3><p>Pure terminal. Fast, focused, minimal. You type, AI responds. Best for experienced developers who love the command line.</p></div>
+      <div class="editorial-card"><div class="editorial-card-icon">🖥️</div><h3>IDE Mode</h3><p>Works inside VS Code or Cursor. See AI suggestions right in your editor. Best for visual learners who want context.</p></div>
+      <div class="editorial-card"><div class="editorial-card-icon">🌐</div><h3>Omni Mode</h3><p>CLI + IDE together. Switch between terminal and editor seamlessly. Best for power users who want everything.</p></div>
+      <div class="editorial-card"><div class="editorial-card-icon">👥</div><h3>Dual Mode</h3><p>Two AI engines working in parallel — Claude + Codex. One plans, one executes. Best for complex projects that benefit from two perspectives.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- v19 — What's New -->
+<section style="padding:5rem 2rem">
+  <div class="section-inner">
+    <div class="section-label">What's new in v19</div>
+    <h2 class="section-title">Vibe code from anywhere.</h2>
+    <p class="section-desc" style="margin-bottom:2rem">v19 brings mobile vibe coding, voice control, and longer sessions.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+      <div class="editorial-card"><div class="editorial-card-icon">📱</div><h3>Claude Channels</h3><p>Talk to your coding session from Telegram or Discord. Monitor builds from your phone. Vibe code on the go.</p></div>
+      <div class="editorial-card"><div class="editorial-card-icon">🎙️</div><h3>Voice Mode</h3><p>Push-to-talk with your AI team. Brainstorm ideas, review designs, or give quick commands — hands-free. 20 languages.</p></div>
+      <div class="editorial-card"><div class="editorial-card-icon">🧠</div><h3>1M Context</h3><p>Full million-token window. Work on entire codebases without losing context. Longer sessions, better continuity.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq" style="padding:5rem 2rem;background:var(--surface)">
+  <div class="section-inner">
+    <div class="section-label">Common questions</div>
+    <h2 class="section-title">Good questions deserve clear answers.</h2>
+    <div style="max-width:700px;margin-top:2rem">
+      <details style="border-bottom:1px solid rgba(255,255,255,.06);padding:1.2rem 0">
+        <summary style="cursor:pointer;font-size:.95rem;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center">Do I need to know how to code?<span style="color:var(--gold);font-size:1.2rem;transition:transform .2s">+</span></summary>
+        <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted);line-height:1.7">No. That's the whole point. Genius Team is designed for people who want to learn to build with AI. The 42 agents guide you through every step — but you'll actually learn real skills along the way.</p>
+      </details>
+      <details style="border-bottom:1px solid rgba(255,255,255,.06);padding:1.2rem 0">
+        <summary style="cursor:pointer;font-size:.95rem;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center">Is it really free?<span style="color:var(--gold);font-size:1.2rem;transition:transform .2s">+</span></summary>
+        <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted);line-height:1.7">Yes. Genius Team is MIT-licensed open source. You need an API key from your AI provider (Anthropic, OpenAI) — their pricing applies, but Genius Team itself is free forever.</p>
+      </details>
+      <details style="border-bottom:1px solid rgba(255,255,255,.06);padding:1.2rem 0">
+        <summary style="cursor:pointer;font-size:.95rem;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center">What can I build with it?<span style="color:var(--gold);font-size:1.2rem;transition:transform .2s">+</span></summary>
+        <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted);line-height:1.7">Anything you can describe. Web apps, mobile apps, APIs, landing pages, tools, dashboards. The agents handle architecture, design, frontend, backend, testing, deployment — and teach you along the way.</p>
+      </details>
+      <details style="border-bottom:1px solid rgba(255,255,255,.06);padding:1.2rem 0">
+        <summary style="cursor:pointer;font-size:.95rem;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center">How is this different from ChatGPT / Cursor / Bolt?<span style="color:var(--gold);font-size:1.2rem;transition:transform .2s">+</span></summary>
+        <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted);line-height:1.7">Those are single tools. Genius Team is a full team — 42 specialized agents that collaborate across the entire product lifecycle. It's not one AI answering questions, it's a structured workflow: PM → Designer → Developer → QA → DevOps, with handoffs and quality gates.</p>
+      </details>
+      <details style="border-bottom:1px solid rgba(255,255,255,.06);padding:1.2rem 0">
+        <summary style="cursor:pointer;font-size:.95rem;font-weight:600;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center">Does the AI do everything for me?<span style="color:var(--gold);font-size:1.2rem;transition:transform .2s">+</span></summary>
+        <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted);line-height:1.7">No — and that's a feature, not a bug. You stay in the driver's seat. The agents guide, suggest, and build alongside you, but you make the decisions. This means you actually learn and can maintain what you build.</p>
+      </details>
+    </div>
+  </div>
+</section>
 
 <!-- CTA -->
 <section class="cta">
