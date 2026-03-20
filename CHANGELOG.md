@@ -1,5 +1,30 @@
 # Changelog
 
+## [19.0.0] - 2026-03-21
+
+### Added — Claude Code Channels & Mobile Vibe Coding
+- 📱 **Claude Code Channels support** — Talk to your Genius Team session from Telegram or Discord. Vibe code from your phone, monitor builds from the train, brainstorm on the go. Full filesystem + MCP + git access through messaging apps.
+- 🎙️ **Voice mode guide** — Use `/voice` for push-to-talk interactions with Genius Team. Perfect for brainstorming with genius-pm, quick design reviews, or hands-free coding sessions. 20 languages supported.
+- 🔄 **/loop integration** — Native recurring tasks with `/loop 5m check deploy`. Simplifies autoresearch loops and CI monitoring. No more bash wrapper scripts.
+- 🎚️ **Effort levels** — `/effort low|medium|high` to control analysis depth per-task. Quick answers when you need speed, deep analysis when you need precision.
+
+### Improved — 1M Token Context Window
+- 🧠 **Opus 4.6 1M context** — Full support for 1M token window on Max/Team/Enterprise. Less aggressive compaction = better session continuity. Genius Team workflows can now maintain full context across longer sessions.
+- Updated compaction strategy references across all 4 modes
+
+### Improved — Tool & Engine Versions
+- Claude Code minimum version: 1.0.0 → **2.1.76**
+- Updated TOOLS.md with all March 2026 Claude Code features
+- MCP elicitation support documented
+- Codex CLI multi-agent orchestration patterns updated
+
+### Improved — Website
+- 🌐 **New landing page** (proposition3 / Premium Gold) — editorial design, DM Sans, timeline workflow, interactive skills grid, testimonials
+- 25 autoresearch iterations of visual polish
+- Messaging aligned: "vibe coding toolkit" — honest positioning, not magic promises
+
+---
+
 ## [18.0.0] - 2026-03-13
 
 ### Added — Autoresearch Framework

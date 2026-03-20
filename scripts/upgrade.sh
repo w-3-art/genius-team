@@ -1,7 +1,7 @@
 #!/bin/bash
 #═══════════════════════════════════════════════════════════════════════════════
 # Genius Team Universal Upgrade Script
-# Upgrades from any previous version to v18.0
+# Upgrades from any previous version to v19.0
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -17,7 +17,7 @@ NC='\033[0m'
 
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
-TARGET_VERSION="18.0.0"
+TARGET_VERSION="19.0.0"
 CLAUDE_SKILL_DIR=".claude/skills"
 
 # ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────

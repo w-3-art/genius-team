@@ -4,8 +4,8 @@
 
 | Engine | Min Version | Notes |
 |--------|-------------|-------|
-| Claude Code | 1.0.0+ | Default engine; Agent Teams for parallel dev |
-| Codex CLI | 0.107.0+ | GPT-5.4 default depuis 05/03/2026 |
+| Claude Code | 2.1.76+ | Default engine; Channels, Voice, 1M context, Agent Teams |
+| Codex CLI | 0.107.0+ | GPT-5.4 default; multi-agent orchestration |
 
 ## Codex Features (≥ 0.107.0)
 
@@ -15,12 +15,19 @@
 - **Configurable memories** — `codex debug clear-memories` to reset
 - **GPT-5.4 (05 Mar 2026)** — le modèle par défaut dans Codex CLI. Reasoning + coding + agentic en un modèle unifié. Contexte 1M tokens. Computer use natif.
 
-## Claude Code Features (≥ 1.0.0)
+## Claude Code Features (≥ 2.1.76)
 
+- **Claude Code Channels** — talk to your Genius Team session from Telegram or Discord (research preview, Mar 20 2026). Setup: install channel plugin → launch with `--channels` → pair your account. Full filesystem + MCP + git access from your phone.
+- **Voice Mode** — `/voice` to activate push-to-talk (spacebar). 20 languages. Great for brainstorming with genius-pm or quick commands.
+- **1M Token Context** — Opus 4.6 supports 1M tokens on Max/Team/Enterprise. Less compaction needed = better session continuity.
+- **/loop** — recurring tasks: `/loop 5m check deploy`, `/loop 30s run tests`. Replaces manual bash loops for autoresearch/monitoring.
+- **/effort** — control analysis depth: `low` (quick), `medium` (default), `high` (deep). Use "ultrathink" keyword for max depth on a single turn.
+- **/color** — color-code your session prompt when running multiple parallel sessions.
+- **Agent Teams** — `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` for parallel genius-dev
 - **HTTP Hooks** — POST JSON to external URL on hook events (set `GENIUS_WEBHOOK_URL`)
 - **Shared project configs** — configs sync across git worktrees automatically
-- **Agent Teams** — `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` for parallel genius-dev
 - `/simplify`, `/batch` — built-in slash commands for context management
+- **MCP Elicitation** — tools can ask for missing parameters interactively
 
 ## OpenClaw (Genius-Claw)
 
