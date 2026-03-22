@@ -44,18 +44,16 @@ bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scr
 🆕 New version available!
 
 Current version: v11.0.0
-Latest version: v18.0.0
+Latest version: v19.0.0
 
-What's new in v18.0:
-- 🎯 38 skills total — genius-dev splits into 5 domain experts + 12 new standalone skills
-- 🔍 genius-code-review — Multi-agent PR review: bugs + security + quality in parallel
-- 🛠️ genius-skill-creator — Framework creates new project-specific skills on demand (self-extending)
-- 🔬 genius-experiments — Autonomous overnight optimization loop (Karpathy autoresearch pattern)
-- 🌐 genius-seo — GEO-first: optimize for ChatGPT, Perplexity, Claude + traditional search
-- 🪙 genius-crypto — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL
-- 📊 Post-launch suite — genius-analytics, genius-performance, genius-accessibility
-- 📝 Project lifecycle — genius-docs, genius-content, genius-template (SaaS/e-commerce/mobile/web3)
-- ✅ Anthropic Skills Guide compliance — All 38 skills follow official best practices
+What's new in v19.0:
+- 📱 Claude Code Channels — vibe code from Telegram/Discord, talk to your session from your phone
+- 🎙️ Voice mode — /voice for push-to-talk, brainstorm hands-free, 20 languages
+- 🔄 /loop integration — native recurring tasks, no more bash wrappers for autoresearch
+- 🎚️ /effort levels — low/medium/high analysis depth control per-task
+- 🧠 1M token context — Opus 4.6 full context, less compaction, longer sessions
+- 🔧 Subagent fix — workaround for Claude Code bug #20931 (genius-dev/qa-micro now always work)
+- ⬆️ Claude Code min version: 2.1.76
 
 Proceed with upgrade? (yes/no)
 ```
@@ -64,12 +62,12 @@ Proceed with upgrade? (yes/no)
 
 Run the curl command above (NOT the local script) and display results.
 
-After completion: "Run `/genius-start` to reinitialize with v17 features."
+After completion: "Run `/genius-start` to reinitialize with v19 features."
 
 ### If already at latest:
 
 ```
-✅ Genius Team is up to date (v18.0.0)
+✅ Genius Team is up to date (v19.0.0)
 ```
 
 ### If local script gives wrong result:

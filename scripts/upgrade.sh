@@ -309,6 +309,37 @@ upgrade_to_v17() {
   log_success "v17.0.0 upgrade complete — 42 skills, 7 new playgrounds, /challenge, engine-switch"
 }
 
+upgrade_to_v19() {
+  upgrade_to_v18
+
+  # ── v19 extras ─────────────────────────────────────────────────────────────
+  log_info "v19: Claude Channels, Voice, 1M context, subagent fix..."
+
+  # ── Re-download core files (v19 refs + subagent fix) ──────────────────────
+  download_file "CLAUDE.md"       "CLAUDE.md"
+  download_file "TOOLS.md"        "TOOLS.md"
+  download_file "CHANGELOG.md"    "CHANGELOG.md"
+  download_file "README.md"       "README.md"
+  download_file "VERSION"         "VERSION"
+
+  # ── Updated configs (subagent_type fix + version bump) ────────────────────
+  for mode in cli ide omni dual; do
+    download_file "configs/$mode/settings.json" "configs/$mode/settings.json"
+    download_file "configs/$mode/CLAUDE.md"     "configs/$mode/CLAUDE.md"
+  done
+
+  # ── Update genius-upgrade command ─────────────────────────────────────────
+  download_file ".claude/commands/genius-upgrade.md" ".claude/commands/genius-upgrade.md"
+
+  # ── Update state.json version ────────────────────────────────────────────
+  if [ "$DRY_RUN" = false ] && [ -f ".genius/state.json" ]; then
+    sed -i.tmp 's/"version"[[:space:]]*:[[:space:]]*"[^"]*"/"version": "19.0.0"/' .genius/state.json
+    rm -f .genius/state.json.tmp
+  fi
+
+  log_success "v19.0.0 upgrade complete — Claude Channels, Voice, 1M context, subagent fix"
+}
+
 upgrade_to_v18() {
   upgrade_to_v17
 
