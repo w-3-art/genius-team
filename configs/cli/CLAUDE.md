@@ -51,7 +51,7 @@ In CLI mode, Agent Teams are accessed via **Shift+Tab** (delegate mode):
 Task(
   description: "Implement auth flow",
   prompt: "Read @.genius/memory/BRIEFING.md for context. Then implement...",
-  subagent_type: "genius-dev"
+  # subagent_type removed — use prompt injection instead (CC bug #20931)
 )
 ```
 

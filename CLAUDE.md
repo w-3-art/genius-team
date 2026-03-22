@@ -96,10 +96,11 @@ In CLI mode, Agent Teams are accessed via **Shift+Tab** (delegate mode):
 ```
 Task(
   description: "Implement auth flow",
-  prompt: "Read @.genius/memory/BRIEFING.md for context. Then implement...",
-  subagent_type: "genius-dev"
+  prompt: "You are genius-dev, a specialized implementation agent. Read @.genius/memory/BRIEFING.md for context. Then implement..."
 )
 ```
+
+> **Note:** Do NOT use `subagent_type: "genius-dev"` — custom agent types are unreliable (Claude Code bug #20931). Instead, inject the agent role directly into the Task prompt. This works with the default `general-purpose` agent type which is always available.
 
 ### Resuming After Interruption
 
@@ -126,12 +127,14 @@ Genius Team v18.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_
 
 ### Subagents
 
-| Subagent | subagent_type | Purpose |
-|----------|---------------|---------|
-| genius-dev | `genius-dev` | Code implementation |
-| genius-qa-micro | `genius-qa-micro` | Quick 30s quality check |
-| genius-debugger | `genius-debugger` | Fix errors |
-| genius-reviewer | `genius-reviewer` | Quality score (read-only) |
+Spawn via `Task(description, prompt)`. Inject the role in the prompt — do NOT use `subagent_type` (unreliable, see Claude Code bug #20931).
+
+| Role | Prompt prefix | Purpose |
+|------|--------------|---------|
+| genius-dev | `"You are genius-dev, implementation specialist."` | Code implementation |
+| genius-qa-micro | `"You are genius-qa-micro, quality checker."` | Quick 30s quality check |
+| genius-debugger | `"You are genius-debugger, error fixer."` | Fix errors |
+| genius-reviewer | `"You are genius-reviewer, code reviewer."` | Quality score (read-only) |
 
 ---
 
