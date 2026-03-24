@@ -2052,3 +2052,147 @@ This is a significant competitive advantage — no other tool does this.
 *10 iterations over ~50 minutes*
 *Score: 9.1 → 9.8 (+0.7)*
 *Total: 21 iterations, baseline 7.1 → final 9.8 (+2.7)*
+
+## Iteration 22 — Global Playground (19:27)
+**Target:** Add consolidated playground view across all projects
+
+### Concept
+Chaque projet GT génère des playgrounds (`.genius/playgrounds/`) — des dashboards HTML interactifs pour chaque skill (design, frontend, backend, QA, etc.). Actuellement ils sont isolés par projet.
+
+**Global Playground** = un meta-dashboard qui consolide TOUS les playgrounds de TOUS les projets en un seul endroit dans Cortex.
+
+### Architecture
+
+```
+~/.genius-cortex/playground/
+├── index.html              # Meta-dashboard: project selector + playground viewer
+├── cache/                  # Cached playground data from each project
+│   ├── utopia/
+│   │   ├── design.html
+│   │   ├── frontend.html
+│   │   └── qa.html
+│   ├── artts/
+│   │   └── ...
+│   └── cinefi/
+│       └── ...
+└── global/                 # Cross-project aggregated views
+    ├── qa-overview.html    # QA status across ALL projects
+    ├── design-system.html  # Design tokens/components across projects
+    └── activity.html       # Activity timeline across projects
+```
+
+### How It Works
+
+**1. Playground Collection**
+When Cortex scans repos or at each heartbeat:
+```typescript
+async function collectPlaygrounds(registry: RepoEntry[]) {
+  for (const repo of registry) {
+    const playgroundDir = path.join(repo.path, '.genius', 'playgrounds');
+    if (await exists(playgroundDir)) {
+      const files = await glob(path.join(playgroundDir, '*.html'));
+      for (const file of files) {
+        // Copy to cache with repo namespace
+        await copy(file, `~/.genius-cortex/playground/cache/${repo.name}/${basename(file)}`);
+      }
+    }
+  }
+}
+```
+
+**2. Meta-Dashboard (index.html)**
+```
+┌─── Global Playground ──────────────────────────────┐
+│                                                     │
+│  Project: [All ▾]  Skill: [All ▾]  View: [Grid ▾]  │
+│                                                     │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐  │
+│  │  Utopia     │ │  Artts      │ │  CineFi     │  │
+│  │  🎨 Design  │ │  🎨 Design  │ │  🎨 Design  │  │
+│  │  ⚡ Frontend│ │  ⚡ Frontend│ │  ⚡ Frontend│  │
+│  │  🔧 Backend │ │  🛡️ QA     │ │  🔧 Backend │  │
+│  │  🛡️ QA     │ │  📊 Perf   │ │  📱 Mobile  │  │
+│  │  📈 SEO    │ │             │ │  🛡️ QA     │  │
+│  └─────────────┘ └─────────────┘ └─────────────┘  │
+│                                                     │
+│  ─── Cross-Project Views ────────────────────────  │
+│                                                     │
+│  [🛡️ QA Overview]  — Test results across all repos │
+│  [🎨 Design System] — Components & tokens comparison│
+│  [📊 Activity]     — Who worked on what, when      │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+**3. Cross-Project Aggregated Views**
+
+**QA Overview** — most valuable:
+```
+┌─── QA Overview (all projects) ─────────────────────┐
+│                                                     │
+│  Project    │ Tests │ Pass │ Fail │ Coverage │ Score │
+│  ──────────┼───────┼──────┼──────┼──────────┼──────│
+│  Utopia    │  47   │  47  │  0   │  82%     │ 100  │
+│  Artts     │  23   │  20  │  3   │  61%     │  74  │
+│  CineFi    │  35   │  34  │  1   │  73%     │  91  │
+│  My-SaaS   │  12   │  12  │  0   │  45%     │  85  │
+│                                                     │
+│  Total: 117 tests, 113 passing, 4 failing           │
+│  Avg coverage: 65%                                  │
+│                                                     │
+│  ⚠️ Artts: 3 failing tests since Mar 20             │
+│  [Open Artts QA Playground] [Run genius-qa on Artts]│
+└─────────────────────────────────────────────────────┘
+```
+
+**4. Live Playground Viewer**
+Click on any project's playground → opens in an iframe within Cortex dashboard. No need to navigate to the project directory.
+
+**5. Playground Templates in Cortex**
+Global playground templates stored in Cortex, not per-project:
+```
+~/.genius-cortex/playground-templates/
+├── design-tokens.css     # Shared design system
+├── base-template.html    # Common structure
+└── skill-templates/
+    ├── frontend.html
+    ├── backend.html
+    ├── qa.html
+    └── ...
+```
+
+When a new project is created via Project Factory, playground templates come from Cortex (not from the GT repo). This means:
+- Update templates ONCE in Cortex → ALL new projects get the latest
+- Existing projects can `cortex playgrounds refresh` to get updated templates
+
+### Integration with Dashboard
+Global Playground is a top-level section in the Cortex dashboard sidebar:
+```
+📊 Home
+📁 Repos
+🧬 Behaviors
+🧠 Memory
+🔐 Vault
+📋 Templates
+📡 Watch
+🎮 Playgrounds    ← NEW
+💬 Chat
+📊 Stats
+```
+
+### CLI
+```bash
+cortex playgrounds list                    # Show all playgrounds across all repos
+cortex playgrounds open utopia/design      # Open specific playground
+cortex playgrounds refresh                 # Update all playground templates
+cortex playgrounds overview qa             # Show QA overview across all repos
+cortex playgrounds serve                   # Start local server for playground viewer
+```
+
+### Concept Addition to the Master List
+This is concept #17: **Global Playgrounds**
+
+| Concept | Description | Stockage |
+|---------|-------------|----------|
+| **Global Playgrounds** | Consolidated view of all playgrounds across all projects + cross-project aggregated views (QA, Design, Activity) | `~/.genius-cortex/playground/` |
+
