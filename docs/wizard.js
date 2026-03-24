@@ -113,16 +113,16 @@ const GeniusWizard = {
     style.textContent = `
       .gw-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(12px); z-index:9999; display:flex; align-items:center; justify-content:center; padding:1.5rem; opacity:0; pointer-events:none; transition:opacity .3s; }
       .gw-overlay.open { opacity:1; pointer-events:all; }
-      .gw-card { background:#111118; border:1px solid rgba(255,255,255,.08); border-radius:24px; padding:2.5rem; max-width:520px; width:100%; position:relative; transform:translateY(20px) scale(.97); transition:transform .3s; }
+      .gw-card { background:#161616; border:1px solid rgba(212,165,116,.12); border-radius:24px; padding:2.5rem; max-width:520px; width:100%; position:relative; transform:translateY(20px) scale(.97); transition:transform .3s; font-family:'DM Sans','Inter',system-ui,sans-serif; }
       .gw-overlay.open .gw-card { transform:none; }
       .gw-close { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,.06); border:none; color:rgba(255,255,255,.5); font-size:1.4rem; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
       .gw-close:hover { background:rgba(255,255,255,.12); color:#fff; }
       .gw-progress { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:2rem; }
       .gw-dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.15); transition:all .3s; }
-      .gw-dot.active { background:#4f6ef7; box-shadow:0 0 10px rgba(79,110,247,.4); }
+      .gw-dot.active { background:#D4A574; box-shadow:0 0 10px rgba(212,165,116,.4); }
       .gw-dot.done { background:#22c55e; }
       .gw-line { width:40px; height:2px; background:rgba(255,255,255,.08); margin:0 4px; overflow:hidden; border-radius:1px; }
-      .gw-line-fill { height:100%; width:0; background:linear-gradient(90deg,#4f6ef7,#22d3ee); transition:width .4s; border-radius:1px; }
+      .gw-line-fill { height:100%; width:0; background:linear-gradient(90deg,#D4A574,#F5F0EB); transition:width .4s; border-radius:1px; }
       .gw-step { display:none; flex-direction:column; align-items:center; text-align:center; min-height:280px; animation:gwFadeIn .3s ease; }
       .gw-step.active { display:flex; }
       @keyframes gwFadeIn { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:none; } }
@@ -130,25 +130,25 @@ const GeniusWizard = {
       .gw-step h3 { font-size:1.4rem; font-weight:700; margin-bottom:.4rem; color:#fff; }
       .gw-step p { color:rgba(255,255,255,.45); font-size:.9rem; margin-bottom:1.5rem; }
       .gw-input { width:100%; max-width:280px; padding:.9rem 1.2rem; border-radius:12px; border:2px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03); color:#fff; font-family:monospace; font-size:1.1rem; text-align:center; transition:border-color .2s; margin-bottom:1.5rem; }
-      .gw-input:focus { outline:none; border-color:#4f6ef7; }
+      .gw-input:focus { outline:none; border-color:#D4A574; }
       .gw-options { display:flex; gap:.75rem; margin-bottom:1.5rem; flex-wrap:wrap; justify-content:center; }
       .gw-options.three { gap:.6rem; }
       .gw-opt { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:1.1rem 1.4rem; min-width:120px; border-radius:16px; background:rgba(255,255,255,.03); border:2px solid rgba(255,255,255,.08); cursor:pointer; transition:all .25s; color:#fff; }
       .gw-opt:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.15); transform:translateY(-2px); }
-      .gw-opt.selected { background:rgba(79,110,247,.12); border-color:#4f6ef7; }
+      .gw-opt.selected { background:rgba(212,165,116,.12); border-color:#D4A574; }
       .gw-opt-icon { font-size:1.5rem; }
       .gw-opt-title { font-weight:600; font-size:.9rem; }
       .gw-opt-desc { font-size:.72rem; color:rgba(255,255,255,.4); }
       .gw-nav { display:flex; justify-content:space-between; width:100%; margin-top:auto; padding-top:1rem; }
       .gw-btn { padding:.7rem 1.6rem; border-radius:12px; font-weight:600; font-size:.9rem; cursor:pointer; border:none; transition:all .25s; text-decoration:none; display:inline-block; }
-      .gw-btn.primary { background:linear-gradient(135deg,#4f6ef7,#6366f1); color:#fff; box-shadow:0 4px 15px rgba(79,110,247,.3); }
-      .gw-btn.primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(79,110,247,.4); }
+      .gw-btn.primary { background:linear-gradient(135deg,#D4A574,#C4956A); color:#fff; box-shadow:0 4px 15px rgba(212,165,116,.3); }
+      .gw-btn.primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(212,165,116,.4); }
       .gw-btn.ghost { background:rgba(255,255,255,.05); color:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.1); }
       .gw-btn.ghost:hover { background:rgba(255,255,255,.08); color:#fff; }
-      .gw-result { background:rgba(0,0,0,.4); border:1px solid rgba(79,110,247,.2); border-radius:12px; padding:1rem 1.2rem; width:100%; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
-      .gw-result code { font-size:.82rem; color:#22d3ee; word-break:break-all; text-align:left; flex:1; }
-      .gw-copy { padding:.4rem .8rem; border-radius:8px; background:rgba(79,110,247,.15); border:1px solid rgba(79,110,247,.2); color:#4f6ef7; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
-      .gw-copy:hover { background:rgba(79,110,247,.25); }
+      .gw-result { background:rgba(0,0,0,.4); border:1px solid rgba(212,165,116,.2); border-radius:12px; padding:1rem 1.2rem; width:100%; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+      .gw-result code { font-size:.82rem; color:#F5F0EB; word-break:break-all; text-align:left; flex:1; }
+      .gw-copy { padding:.4rem .8rem; border-radius:8px; background:rgba(212,165,116,.15); border:1px solid rgba(212,165,116,.2); color:#D4A574; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
+      .gw-copy:hover { background:rgba(212,165,116,.25); }
       .gw-then { background:rgba(34,197,94,.06); border:1px solid rgba(34,197,94,.15); border-radius:12px; padding:1rem; width:100%; text-align:left; margin-bottom:1rem; }
       .gw-then strong { color:#22c55e; font-size:.85rem; }
       .gw-then code { background:rgba(0,0,0,.3); padding:.15rem .4rem; border-radius:4px; font-size:.82rem; color:rgba(255,255,255,.7); }
