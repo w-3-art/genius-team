@@ -769,25 +769,75 @@ body::after{display:none!important}
 <!-- Genius Cortex -->
 <section style="padding:5rem 2rem;background:var(--surface)">
   <div class="section-inner">
-    <div class="section-label">Coming soon</div>
-    <h2 class="section-title">Genius Cortex — your multi-project brain.</h2>
-    <p class="section-desc" style="margin-bottom:2rem">One dashboard for all your projects. Shared behaviors, cross-project memory, and a vault for your secrets. Talk to your projects from Telegram.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
-      <div class="editorial-card"><div class="editorial-card-icon">🧬</div><h3>Shared Behaviors</h3><p>Coding habits that follow you across projects. "Prove before fix." "Read before write." Your rules, enforced everywhere.</p></div>
-      <div class="editorial-card"><div class="editorial-card-icon">🧠</div><h3>Cross-Project Memory</h3><p>"Where did I implement Stripe webhooks?" Cortex remembers across all your repos. Search once, find everywhere.</p></div>
-      <div class="editorial-card"><div class="editorial-card-icon">🏭</div><h3>Project Factory</h3><p>"New SaaS project." Template, persona, GitHub repo, Genius Team installed, Claude launched. 30 seconds.</p></div>
-      <div class="editorial-card"><div class="editorial-card-icon">🔐</div><h3>Secrets Vault</h3><p>API keys, tokens, URLs. Encrypted, centralized, injected per-project. Never hunt for a .env file again.</p></div>
-      <div class="editorial-card"><div class="editorial-card-icon">📡</div><h3>Genius Watch</h3><p>Claude Code updated? Supabase has a security advisory? Cortex tells you what changed and how it affects your projects.</p></div>
-      <div class="editorial-card"><div class="editorial-card-icon">💚</div><h3>Health Scores</h3><p>Every project scored 0-100. Tests passing? GT up to date? Uncommitted changes? One glance, all your repos.</p></div>
-    </div>
-    <div style="margin-top:2rem;text-align:center">
-      <p style="color:var(--muted);font-size:.85rem">Genius Team is free forever. Cortex adds the multi-project layer.</p>
-      <div style="display:flex;gap:1.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
-        <div style="padding:1rem 1.5rem;border-radius:12px;background:rgba(212,165,116,.04);border:1px solid rgba(212,165,116,.1)"><div style="font-size:.7rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Free</div><div style="font-size:1.5rem;font-weight:800">$0</div><div style="font-size:.75rem;color:var(--muted)">5 repos, 10 behaviors</div></div>
-        <div style="padding:1rem 1.5rem;border-radius:12px;background:rgba(212,165,116,.08);border:1px solid rgba(212,165,116,.2)"><div style="font-size:.7rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Pro</div><div style="font-size:1.5rem;font-weight:800">$9<span style="font-size:.75rem;font-weight:400;color:var(--muted)">/mo</span></div><div style="font-size:.75rem;color:var(--muted)">Unlimited everything</div></div>
-        <div style="padding:1rem 1.5rem;border-radius:12px;background:rgba(212,165,116,.04);border:1px solid rgba(212,165,116,.1)"><div style="font-size:.7rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Team</div><div style="font-size:1.5rem;font-weight:800">$19<span style="font-size:.75rem;font-weight:400;color:var(--muted)">/seat</span></div><div style="font-size:.75rem;color:var(--muted)">Shared vault + behaviors</div></div>
+    <div class="section-label">New — Genius Cortex</div>
+    <h2 class="section-title">One brain for all your projects.</h2>
+    <p class="section-desc" style="margin-bottom:1.5rem">You have 5 projects. Each has its own config, its own habits, its own secrets. Cortex puts one brain on top of all of them.</p>
+
+    <!-- Terminal demo -->
+    <div style="background:#111;border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;font-family:'SF Mono','JetBrains Mono',monospace;font-size:.75rem;margin-bottom:2rem;max-width:600px">
+      <div style="padding:.5rem .8rem;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:.3rem"><span style="width:7px;height:7px;border-radius:50%;background:#ff5f57"></span><span style="width:7px;height:7px;border-radius:50%;background:#febc2e"></span><span style="width:7px;height:7px;border-radius:50%;background:#28c840"></span><span style="margin-left:.4rem;color:rgba(255,255,255,.3);font-size:.6rem;font-family:sans-serif">genius-cortex</span></div>
+      <div style="padding:1rem;line-height:1.9;color:rgba(255,255,255,.7)">
+        <div><span style="color:var(--gold)">$</span> cortex status</div>
+        <div style="color:rgba(255,255,255,.3)">🧠 Genius Cortex — 5 projects</div>
+        <div>&nbsp; ✅ utopia &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v19 &nbsp; up to date</div>
+        <div>&nbsp; ⚠️ artts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v17 &nbsp; <span style="color:#FBBF24">outdated</span></div>
+        <div>&nbsp; ✅ cinefi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v19 &nbsp; up to date</div>
+        <div>&nbsp; ✅ my-saas &nbsp;&nbsp;&nbsp;&nbsp; v19 &nbsp; up to date</div>
+        <div>&nbsp; ⚠️ beat-blocks &nbsp; v16 &nbsp; <span style="color:#FBBF24">outdated</span></div>
+        <div style="margin-top:.5rem"><span style="color:var(--gold)">$</span> cortex upgrade --all</div>
+        <div style="color:#34D399">&nbsp; ✅ 2 projects upgraded to v19</div>
       </div>
     </div>
+
+    <!-- 3 columns: what Cortex manages -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+      <div>
+        <div style="font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.8rem">Governance</div>
+        <div class="editorial-card" style="margin-bottom:.6rem"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">🧬</div><h3 style="font-size:.85rem">Behaviors</h3><p style="font-size:.72rem">7 coding habits. "Prove before fix." "Read before write." Injected into every Claude Code session.</p></div>
+        <div class="editorial-card" style="margin-bottom:.6rem"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">🚫</div><h3 style="font-size:.85rem">Rules</h3><p style="font-size:.72rem">Hard limits. "Never push to main." "Never hardcode secrets." Enforced at the tool level — Claude Code can't break them.</p></div>
+        <div class="editorial-card"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">📖</div><h3 style="font-size:.85rem">Glossary</h3><p style="font-size:.72rem">Shared vocabulary. "pnpm, never npm." "MVP means X." Consistent language across all projects.</p></div>
+      </div>
+      <div>
+        <div style="font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.8rem">Knowledge</div>
+        <div class="editorial-card" style="margin-bottom:.6rem"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">🧠</div><h3 style="font-size:.85rem">Memory</h3><p style="font-size:.72rem">"How did I do Stripe in Utopia?" Cortex searches all your repos. Knowledge from one project helps the next.</p></div>
+        <div class="editorial-card" style="margin-bottom:.6rem"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">👤</div><h3 style="font-size:.85rem">Personas</h3><p style="font-size:.72rem">Client context. "CJ Intelligence = legal vocab, French, GDPR." Auto-loaded when you open that project.</p></div>
+        <div class="editorial-card"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">🔗</div><h3 style="font-size:.85rem">Code Bits</h3><p style="font-size:.72rem">Reusable snippets. Auth handler, webhook verifier, database setup. Captured once, available everywhere.</p></div>
+      </div>
+      <div>
+        <div style="font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.8rem">Infrastructure</div>
+        <div class="editorial-card" style="margin-bottom:.6rem"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">🏭</div><h3 style="font-size:.85rem">Project Factory</h3><p style="font-size:.72rem">New project in 30 seconds. Pick a template, set the persona, create the GitHub repo. Done.</p></div>
+        <div class="editorial-card" style="margin-bottom:.6rem"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">🔐</div><h3 style="font-size:.85rem">Vault</h3><p style="font-size:.72rem">AES-256 encrypted. API keys, tokens, URLs. One place, all projects. <code>cortex vault inject utopia</code> → .env created.</p></div>
+        <div class="editorial-card"><div class="editorial-card-icon" style="font-size:1.2rem;margin-bottom:.4rem">📡</div><h3 style="font-size:.85rem">Watch + Health</h3><p style="font-size:.72rem">Claude Code updated? Tests failing? Cortex checks, scores each project 0-100, and alerts you.</p></div>
+      </div>
+    </div>
+
+    <!-- Install + link -->
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="display:inline-flex;align-items:center;gap:.8rem;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.7rem 1.4rem;font-family:'SF Mono',monospace;font-size:.8rem;color:var(--gold);cursor:pointer" onclick="navigator.clipboard.writeText('npm install -g genius-cortex');this.querySelector('span').textContent='✓ copied'">
+        $ npm install -g genius-cortex <span style="font-family:'DM Sans';font-size:.65rem;color:rgba(255,255,255,.25);margin-left:.5rem">click to copy</span>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap">
+      <div style="padding:1.2rem 1.8rem;border-radius:14px;background:rgba(212,165,116,.03);border:1px solid rgba(212,165,116,.08);text-align:center;min-width:160px">
+        <div style="font-size:.65rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Free</div>
+        <div style="font-size:1.8rem;font-weight:800">$0</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">5 repos · 10 behaviors<br>Local dashboard · CLI</div>
+      </div>
+      <div style="padding:1.2rem 1.8rem;border-radius:14px;background:rgba(212,165,116,.07);border:1px solid rgba(212,165,116,.18);text-align:center;min-width:160px;position:relative">
+        <div style="position:absolute;top:-.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:#0F0F0F;padding:.15rem .6rem;border-radius:100px;font-size:.55rem;font-weight:800;letter-spacing:.05em">POPULAR</div>
+        <div style="font-size:.65rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Pro</div>
+        <div style="font-size:1.8rem;font-weight:800">$9<span style="font-size:.7rem;font-weight:400;color:var(--muted)">/mo</span></div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Unlimited repos<br>Watch · Sync · Marketplace</div>
+      </div>
+      <div style="padding:1.2rem 1.8rem;border-radius:14px;background:rgba(212,165,116,.03);border:1px solid rgba(212,165,116,.08);text-align:center;min-width:160px">
+        <div style="font-size:.65rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Team</div>
+        <div style="font-size:1.8rem;font-weight:800">$19<span style="font-size:.7rem;font-weight:400;color:var(--muted)">/seat</span></div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Shared vault · Shared rules<br>Team dashboard</div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:.72rem;color:rgba(255,255,255,.2);margin-top:1rem">Genius Team stays free forever. Cortex is the pro layer on top.</p>
   </div>
 </section>
 
