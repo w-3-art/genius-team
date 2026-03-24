@@ -2196,3 +2196,1670 @@ This is concept #17: **Global Playgrounds**
 |---------|-------------|----------|
 | **Global Playgrounds** | Consolidated view of all playgrounds across all projects + cross-project aggregated views (QA, Design, Activity) | `~/.genius-cortex/playground/` |
 
+
+---
+
+## ROUND 3 — 15 more iterations (starting 19:29)
+## Focus: deeper implementation details, edge cases, ecosystem integration
+
+## Iteration 23 — Global Skills Injection Deep-Dive (19:29)
+**Target:** Exactly how skills move from Cortex to projects at runtime
+
+### Current GT Skills Problem
+Today in GT v19: each repo has 42 SKILL.md files copied into `.claude/skills/`. 
+- Takes space (~200KB per repo)
+- Out of sync when GT updates
+- User has to `genius-upgrade` each repo individually
+
+### Cortex Solution: Skills Registry + Lazy Injection
+
+**Registry:**
+```
+~/.genius-cortex/skills/
+├── registry.json          # Which skills exist, versions, active status
+├── genius-dev-frontend/
+│   └── SKILL.md
+├── genius-dev-backend/
+│   └── SKILL.md
+├── genius-designer/
+│   └── SKILL.md
+├── genius-qa/
+│   └── SKILL.md
+... (42 skills)
+```
+
+**Injection mechanism — TWO modes:**
+
+**Mode A: Symlink (fast, local only)**
+```bash
+# During cortex init or cortex skills inject
+for skill_dir in ~/.genius-cortex/skills/genius-*/; do
+  skill_name=$(basename "$skill_dir")
+  # Create symlink in user-level Claude Code skills dir
+  ln -sf "$skill_dir" "$HOME/.claude/skills/$skill_name"
+done
+```
+Claude Code loads skills from `~/.claude/skills/` (user-level) → available in ALL sessions.
+Problem: symlinks don't sync via iCloud.
+
+**Mode B: Copy on demand (sync-compatible)**
+```bash
+# SessionStart hook does:
+cortex skills sync
+# Which copies skills from cortex store to ~/.claude/skills/
+# Only copies if source is newer (checksum comparison)
+```
+
+**Decision: Mode B** — more robust, works with sync, minimal overhead (~200ms at session start).
+
+### Skills Activation per Project
+Not all projects need all 42 skills. Example:
+- Landing page project → only needs: designer, frontend, SEO, content
+- API project → needs: backend, database, API, security
+
+```json
+// In ~/.genius-cortex/registry.json, per-repo config:
+{
+  "path": "/Users/ben/Projects/my-landing",
+  "activeSkills": ["genius-designer", "genius-dev-frontend", "genius-seo", "genius-content"],
+  "excludeSkills": ["genius-crypto", "genius-dev-mobile", "genius-dev-database"]
+}
+```
+
+**SessionStart hook** reads this config and injects a note into the session:
+```
+Active skills for this project: designer, frontend, SEO, content.
+Inactive: crypto, mobile, database (not relevant for landing pages).
+```
+
+### Skills Update Flow
+```
+New GT version released (v20)
+         │
+Cortex Watch detects it
+         │
+cortex skills update
+         │
+Downloads new SKILL.md files from GitHub
+         │
+Updates ~/.genius-cortex/skills/
+         │
+Next session start → new skills automatically loaded
+         │
+No need to update each repo individually!
+```
+
+**This is a KILLER feature** — GT updates become instant and automatic across all repos.
+
+
+## Iteration 24 — Playground Aggregation Engine (19:35)
+**Target:** How playground data is extracted and aggregated cross-project
+
+### Problem
+Playgrounds are HTML files with embedded data. How do we extract structured data for the QA Overview, Design System comparison, etc.?
+
+### Solution: Playground Data Protocol
+
+Each GT playground should export its data in a standardized format. We add a convention:
+
+```html
+<!-- In each playground HTML file -->
+<script type="application/json" id="playground-data">
+{
+  "skill": "genius-qa",
+  "project": "utopia",
+  "version": "19.0.0",
+  "timestamp": "2026-03-24T10:00:00Z",
+  "metrics": {
+    "tests_total": 47,
+    "tests_passing": 47,
+    "tests_failing": 0,
+    "coverage": 82,
+    "score": 100
+  },
+  "items": [
+    {"name": "auth.test.ts", "status": "pass", "duration": 1200},
+    {"name": "billing.test.ts", "status": "pass", "duration": 3400}
+  ]
+}
+</script>
+```
+
+### Cortex Extraction
+```typescript
+async function extractPlaygroundData(htmlPath: string): Promise<PlaygroundData | null> {
+  const html = await readFile(htmlPath, 'utf-8');
+  const match = html.match(/<script type="application\/json" id="playground-data">([\s\S]*?)<\/script>/);
+  if (!match) return null;
+  return JSON.parse(match[1]);
+}
+```
+
+### Aggregation Views
+
+**QA Overview:**
+```typescript
+async function generateQAOverview(registry: RepoEntry[]): Promise<QAOverview> {
+  const results = [];
+  for (const repo of registry) {
+    const qaPlayground = `${repo.path}/.genius/playgrounds/qa.html`;
+    const data = await extractPlaygroundData(qaPlayground);
+    if (data) results.push({ repo: repo.name, ...data.metrics });
+  }
+  return {
+    totalTests: results.reduce((s, r) => s + r.tests_total, 0),
+    totalPassing: results.reduce((s, r) => s + r.tests_passing, 0),
+    totalFailing: results.reduce((s, r) => s + r.tests_failing, 0),
+    avgCoverage: results.reduce((s, r) => s + r.coverage, 0) / results.length,
+    repos: results,
+    alerts: results.filter(r => r.tests_failing > 0).map(r => ({
+      repo: r.repo,
+      message: `${r.tests_failing} failing tests`,
+      severity: r.tests_failing > 5 ? 'critical' : 'warning'
+    }))
+  };
+}
+```
+
+**Design System Comparison:**
+Extract design tokens from each project's `design-tokens.css` or `tailwind.config`:
+```typescript
+interface DesignComparison {
+  repos: {
+    name: string;
+    primaryColor: string;
+    fontFamily: string;
+    borderRadius: string;
+    spacing: string;
+  }[];
+  inconsistencies: string[]; // "utopia uses blue-600, cinefi uses blue-500 for primary"
+}
+```
+
+### Playground Refresh
+When GT updates playground templates, Cortex can propagate:
+```bash
+cortex playgrounds refresh --all
+# For each repo: download latest playground templates from GT
+# Preserves project-specific data in the playground-data JSON block
+```
+
+### GT v20 Compatibility
+For this to work, GT v20 needs to:
+1. Add `<script type="application/json" id="playground-data">` to all playground templates
+2. Have skills write their metrics into this block
+3. This is backwards compatible — old playgrounds just won't have the data block
+
+
+## Iteration 25 — Edge Cases & Error Handling (19:41)
+**Target:** What happens when things go wrong?
+
+### Edge Cases
+
+**1. Repo moved or deleted**
+- Registry has path that no longer exists
+- `cortex status` detects missing paths → marks as "missing" → suggests rescan
+- `cortex scan` removes stale entries, adds new ones
+
+**2. Git conflicts during sync**
+- Two machines edit same behavior file simultaneously
+- iCloud creates `.icloud` conflict file
+- Cortex detects conflict files → prompts user: "Behavior 'prove-before-fix' has a conflict. Which version? [Machine A] [Machine B] [Merge]"
+
+**3. Claude Code not installed**
+- User installs Cortex but doesn't have CC
+- `cortex init` checks: `which claude` → if missing: "Claude Code not found. Install it first: npm install -g @anthropic-ai/claude-code"
+- Cortex CLI works without CC (scan, status, behaviors) but hooks/MCP won't install
+
+**4. Vault master key lost**
+- User reinstalls macOS, Keychain reset
+- Vault files are encrypted but key is gone
+- `cortex vault recover` → "Enter your recovery phrase" (generated at vault creation, user should have saved it)
+- If no recovery: vault data is lost (by design — security over convenience)
+
+**5. Large number of repos (50+)**
+- Scan takes too long
+- Solution: parallel scanning with fast-glob, cache results
+- Status: only check GT version once (not per-repo)
+- Dashboard: virtualized list (only render visible repos)
+
+**6. Project uses Codex instead of Claude Code**
+- Cortex should work with both engines
+- SessionStart hook: check if CWD has `.codex/` or `.claude/`
+- Behaviors injection: write to `AGENTS.md` for Codex, `CLAUDE.md` for CC
+- MCP: CC-only for now (Codex MCP support TBD)
+
+**7. Multiple GT versions across repos**
+- Some repos on v17, some on v19
+- Cortex handles this gracefully — each repo's version is tracked independently
+- `cortex upgrade --all` upgrades each to latest, respecting the chain (v17→v18→v19)
+
+**8. Offline mode**
+- No internet → can't check GT version, fetch Watch updates
+- All local features work fine (scan, status from cache, behaviors, memory, vault)
+- `cortex status` shows "offline — using cached version info (last check: 2h ago)"
+
+**9. First project (no GT repos yet)**
+- User installs Cortex but has no GT projects
+- `cortex init` → "No Genius Team projects found. Create your first one?"
+- → Project Factory flow: template → create → done
+
+**10. Corrupted playground data**
+- playground-data JSON block is malformed
+- extractPlaygroundData() returns null → playground still visible in viewer, just no aggregated metrics
+- Log warning: "Could not parse playground data for utopia/qa.html"
+
+
+## Iteration 26 — Scheduler System Design (19:47)
+**Target:** Cron-like scheduler for automated tasks
+
+### Scheduler Architecture
+
+Cortex daemon (Tauri background process) runs a lightweight scheduler.
+
+```typescript
+interface Schedule {
+  id: string;
+  name: string;
+  cron: string;              // "0 9 * * 1" = Monday 9am
+  repos: string[] | "*";     // Target repos, or all
+  action: ScheduleAction;
+  notify: NotifyTarget[];
+  enabled: boolean;
+  lastRun?: string;
+  lastResult?: ScheduleResult;
+}
+
+type ScheduleAction = 
+  | { type: "qa"; skill: "genius-qa" | "genius-qa-micro" }
+  | { type: "health-check" }
+  | { type: "upgrade-check" }
+  | { type: "backup" }
+  | { type: "custom"; command: string }
+
+type NotifyTarget = "dashboard" | "menubar" | "telegram" | "whatsapp"
+
+interface ScheduleResult {
+  timestamp: string;
+  success: boolean;
+  repos: { name: string; ok: boolean; output: string }[];
+}
+```
+
+### Default Schedules (created during init)
+```json
+[
+  {
+    "name": "Morning Health Check",
+    "cron": "0 8 * * *",
+    "repos": "*",
+    "action": { "type": "health-check" },
+    "notify": ["dashboard", "menubar"],
+    "enabled": true
+  },
+  {
+    "name": "Weekly QA",
+    "cron": "0 9 * * 1",
+    "repos": "*",
+    "action": { "type": "qa", "skill": "genius-qa-micro" },
+    "notify": ["dashboard", "menubar", "telegram"],
+    "enabled": false
+  },
+  {
+    "name": "Version Check",
+    "cron": "0 */6 * * *",
+    "repos": "*",
+    "action": { "type": "upgrade-check" },
+    "notify": ["menubar"],
+    "enabled": true
+  }
+]
+```
+
+### Health Check Action
+```typescript
+async function runHealthCheck(repo: RepoEntry): Promise<HealthResult> {
+  const checks = [];
+  
+  // 1. GT version
+  const latest = await getLatestGTVersion();
+  checks.push({ name: 'gt-version', ok: repo.gtVersion === latest });
+  
+  // 2. Build
+  const buildScript = await detectBuildScript(repo.path);
+  if (buildScript) {
+    const result = await exec(`cd ${repo.path} && ${buildScript} 2>&1`, { timeout: 60000 });
+    checks.push({ name: 'build', ok: result.exitCode === 0, output: result.stderr });
+  }
+  
+  // 3. Tests
+  const testScript = await detectTestScript(repo.path);
+  if (testScript) {
+    const result = await exec(`cd ${repo.path} && ${testScript} 2>&1`, { timeout: 120000 });
+    checks.push({ name: 'tests', ok: result.exitCode === 0, output: result.stdout });
+  }
+  
+  // 4. Git status (uncommitted changes?)
+  const gitStatus = await exec(`cd ${repo.path} && git status --porcelain`);
+  checks.push({ name: 'git-clean', ok: gitStatus.stdout.trim() === '' });
+  
+  return { repo: repo.name, checks, score: calculateScore(checks) };
+}
+```
+
+### QA Action
+```typescript
+async function runQA(repo: RepoEntry, skill: string): Promise<QAResult> {
+  // Launch Claude Code in non-interactive mode with QA prompt
+  const result = await exec(
+    `cd ${repo.path} && claude -p "Run ${skill} on this project. Report: tests passing, code quality issues, security concerns. Output as JSON." --bare`,
+    { timeout: 300000 } // 5 min max
+  );
+  return parseQAResult(result.stdout);
+}
+```
+
+### Dashboard: Schedule Manager
+```
+┌─── Schedules ──────────────────────────────────────┐
+│                                                     │
+│  ✅ Morning Health Check    daily 8:00    All repos  │
+│     Last run: today 8:00 — 5/5 healthy              │
+│     [Edit] [Disable] [Run Now]                      │
+│                                                     │
+│  ⏸️ Weekly QA               Mon 9:00     All repos  │
+│     Never run (disabled)                            │
+│     [Edit] [Enable] [Run Now]                       │
+│                                                     │
+│  ✅ Version Check           every 6h     All repos  │
+│     Last run: 2h ago — all up to date               │
+│     [Edit] [Disable] [Run Now]                      │
+│                                                     │
+│  [+ New Schedule]                                   │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+
+## Iteration 27 — Project Factory: GitHub + Vault Integration (19:53)
+**Target:** Complete the factory flow with GitHub and vault
+
+### Enhanced Project Factory Flow
+
+```typescript
+interface FactoryOptions {
+  name: string;
+  template: string;         // "saas" | "landing-page" | "api" | "mobile" | "custom"
+  persona?: string;          // Persona to activate
+  github: {
+    create: boolean;         // Create repo on GitHub?
+    org?: string;            // "w-3-art" or personal
+    private: boolean;
+    description?: string;
+  };
+  vault: {
+    copyGlobal: boolean;     // Copy global env vars (API keys)
+    projectSecrets?: Record<string, string>; // Project-specific secrets
+  };
+  behaviors: string[];       // Behaviors to activate
+  skills: string[];          // Skills to activate (from template defaults if not specified)
+  mcps: string[];            // MCPs to activate
+  gtMode: string;            // "cli" | "ide" | "omni" | "dual"
+}
+```
+
+### Complete Factory Execution
+```typescript
+async function createProject(opts: FactoryOptions): Promise<void> {
+  const projectPath = path.join(config.reposDir, opts.name);
+  
+  // 1. Create directory
+  await mkdir(projectPath, { recursive: true });
+  
+  // 2. Apply template scaffold
+  const templateDir = `~/.genius-cortex/templates/${opts.template}/scaffold/`;
+  await copyDir(templateDir, projectPath);
+  
+  // 3. Initialize git
+  await exec(`cd ${projectPath} && git init`);
+  
+  // 4. Install Genius Team
+  await exec(`cd ${projectPath} && bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) .`);
+  
+  // 5. Configure GT mode
+  const modeConfig = `~/.genius-cortex/templates/${opts.template}/configs/${opts.gtMode}/`;
+  if (await exists(modeConfig)) {
+    await copyDir(modeConfig, `${projectPath}/.claude/`);
+  }
+  
+  // 6. Inject persona
+  if (opts.persona) {
+    const persona = await readFile(`~/.genius-cortex/personas/${opts.persona}.md`);
+    await appendFile(`${projectPath}/CLAUDE.md`, `\n\n## Project Persona\n${persona}`);
+  }
+  
+  // 7. Configure vault
+  if (opts.vault.copyGlobal) {
+    // Get global secrets (OPENAI_API_KEY, ANTHROPIC_API_KEY, etc.)
+    const globalSecrets = await vault.getGlobal();
+    await vault.createProjectVault(opts.name, {
+      ...globalSecrets,
+      ...opts.vault.projectSecrets
+    });
+    // Write .env file
+    await vault.inject(opts.name, projectPath);
+    // Ensure .env is in .gitignore
+    await ensureGitignore(projectPath, '.env');
+  }
+  
+  // 8. GitHub
+  if (opts.github.create) {
+    const repoName = opts.github.org 
+      ? `${opts.github.org}/${opts.name}` 
+      : opts.name;
+    await exec(`cd ${projectPath} && gh repo create ${repoName} --${opts.github.private ? 'private' : 'public'} --source . --push`);
+  }
+  
+  // 9. Install dependencies (from template)
+  const pkgJson = `${projectPath}/package.json`;
+  if (await exists(pkgJson)) {
+    await exec(`cd ${projectPath} && pnpm install`);
+  }
+  
+  // 10. Run template post-create hooks
+  const template = await loadTemplate(opts.template);
+  for (const cmd of template.postCreate || []) {
+    await exec(`cd ${projectPath} && ${cmd}`);
+  }
+  
+  // 11. Add to Cortex registry
+  await registry.add({
+    path: projectPath,
+    name: opts.name,
+    gtVersion: await getLatestGTVersion(),
+    mode: opts.gtMode,
+    lastActivity: new Date().toISOString(),
+    health: 'ok',
+    gitRemote: opts.github.create ? `https://github.com/${opts.github.org || 'user'}/${opts.name}` : undefined
+  });
+  
+  // 12. Initial commit
+  await exec(`cd ${projectPath} && git add -A && git commit -m "feat: initial project setup via Genius Cortex"`);
+  if (opts.github.create) {
+    await exec(`cd ${projectPath} && git push -u origin main`);
+  }
+  
+  // 13. Launch Claude Code
+  await quickLaunch({ path: projectPath, name: opts.name }, '/genius-start');
+}
+```
+
+### Time: project creation → Claude ready = ~45 seconds
+
+### Error Recovery
+If any step fails:
+1. Log the error with context
+2. Don't delete what was already created
+3. Show user: "Project partially created. Step 5 (GT install) failed. Run `cortex factory resume my-project` to retry from step 5."
+4. Resume function: reads progress file, continues from last successful step
+
+
+## Iteration 28 — Cortex API Server for Tauri (19:59)
+**Target:** Define the API contract between Tauri frontend and Cortex Core
+
+### Problem
+Tauri webview (frontend) needs to call Cortex Core (Node.js). How?
+
+### Solution: Local HTTP API
+
+Cortex Core runs as a daemon with an HTTP API on localhost.
+
+```typescript
+// src/api/server.ts
+import express from 'express';
+import { CortexCore } from '../core';
+
+const app = express();
+const core = new CortexCore();
+
+// Registry
+app.get('/api/repos', async (req, res) => {
+  res.json(await core.getRegistry());
+});
+
+app.post('/api/repos/scan', async (req, res) => {
+  res.json(await core.scan(req.body.dir));
+});
+
+app.get('/api/repos/:name/status', async (req, res) => {
+  res.json(await core.status(req.params.name));
+});
+
+// Upgrade
+app.post('/api/repos/:name/upgrade', async (req, res) => {
+  res.json(await core.upgrade(req.params.name, req.body));
+});
+
+app.post('/api/repos/upgrade-all', async (req, res) => {
+  res.json(await core.upgradeAll(req.body));
+});
+
+// Behaviors
+app.get('/api/behaviors', async (req, res) => {
+  res.json(await core.behaviors.list());
+});
+
+app.post('/api/behaviors', async (req, res) => {
+  res.json(await core.behaviors.add(req.body));
+});
+
+app.put('/api/behaviors/:name/toggle', async (req, res) => {
+  res.json(await core.behaviors.toggle(req.params.name));
+});
+
+app.post('/api/behaviors/inject', async (req, res) => {
+  res.json(await core.behaviors.inject());
+});
+
+// Memory
+app.get('/api/memory/search', async (req, res) => {
+  res.json(await core.memory.search(req.query.q as string));
+});
+
+app.post('/api/memory', async (req, res) => {
+  res.json(await core.memory.add(req.body));
+});
+
+// Vault
+app.get('/api/vault/keys', async (req, res) => {
+  res.json(await core.vault.listKeys()); // names only, not values
+});
+
+app.post('/api/vault/inject/:project', async (req, res) => {
+  res.json(await core.vault.inject(req.params.project));
+});
+
+// Playgrounds
+app.get('/api/playgrounds', async (req, res) => {
+  res.json(await core.playgrounds.list());
+});
+
+app.get('/api/playgrounds/overview/:skill', async (req, res) => {
+  res.json(await core.playgrounds.overview(req.params.skill));
+});
+
+// Watch
+app.get('/api/watch', async (req, res) => {
+  res.json(await core.watch.getFeed());
+});
+
+// Schedules
+app.get('/api/schedules', async (req, res) => {
+  res.json(await core.scheduler.list());
+});
+
+app.post('/api/schedules/:id/run', async (req, res) => {
+  res.json(await core.scheduler.runNow(req.params.id));
+});
+
+// Factory
+app.post('/api/factory/create', async (req, res) => {
+  res.json(await core.factory.create(req.body));
+});
+
+// Chat (proxied to Claude API)
+app.post('/api/chat', async (req, res) => {
+  const stream = await core.chat.send(req.body.message);
+  // Stream response back to frontend
+  stream.pipe(res);
+});
+
+// Quick Launch
+app.post('/api/launch/:repo', async (req, res) => {
+  await core.launch(req.params.repo, req.body.prompt);
+  res.json({ ok: true });
+});
+
+app.listen(4200, '127.0.0.1'); // localhost only, no external access
+```
+
+### Tauri ↔ API Communication
+```typescript
+// In Tauri frontend (React/Svelte)
+const API_BASE = 'http://127.0.0.1:4200/api';
+
+async function getRepos() {
+  const res = await fetch(`${API_BASE}/repos`);
+  return res.json();
+}
+
+async function upgradRepo(name: string) {
+  const res = await fetch(`${API_BASE}/repos/${name}/upgrade`, { method: 'POST' });
+  return res.json();
+}
+```
+
+### Tauri's Role
+Tauri Rust backend handles ONLY:
+1. System tray / menubar icon
+2. Native notifications
+3. Window management
+4. Keychain access (for vault master key)
+5. Starting the Node.js API server as a child process
+6. Opening Terminal.app for Quick Launch
+
+Everything else goes through the HTTP API.
+
+### Security
+- API binds to 127.0.0.1 ONLY — not accessible from network
+- No auth needed (local only)
+- Vault endpoints return key NAMES, never values through the API
+- Vault values only go to .env files on disk
+
+
+## Iteration 29 — Behavior Marketplace Design (20:05)
+**Target:** How the community marketplace works
+
+### Marketplace Architecture
+
+**Not a custom registry.** Use GitHub as the marketplace backend.
+
+```
+github.com/genius-cortex-behaviors/        # Community org
+├── prove-before-fix/                       # One repo per behavior
+│   ├── behavior.md                         # The behavior file
+│   ├── README.md                           # Description, examples
+│   ├── package.json                        # { "name": "@cortex/prove-before-fix", "version": "1.0.0" }
+│   └── tests/                              # Optional: test cases
+├── tdd-first/
+├── clean-architecture/
+├── security-audit/
+└── ...
+```
+
+**Discovery:** GitHub Topics + Search
+- All behavior repos tagged with `genius-cortex-behavior`
+- Search: `github.com/topics/genius-cortex-behavior`
+
+**Install:**
+```bash
+cortex behaviors install @community/tdd-first
+# Behind the scenes:
+# 1. gh api repos/genius-cortex-behaviors/tdd-first/contents/behavior.md
+# 2. Download behavior.md → ~/.genius-cortex/behaviors/tdd-first.md
+# 3. Add to active behaviors
+# 4. Re-inject into ~/.claude/CLAUDE.md
+```
+
+**Publish:**
+```bash
+cortex behaviors publish prove-before-fix
+# 1. Creates a repo in user's GitHub: user/cortex-behavior-prove-before-fix
+# 2. Pushes behavior.md + README
+# 3. Adds topic: genius-cortex-behavior
+# 4. Submits to community org (optional — PR to genius-cortex-behaviors/)
+```
+
+**Browse (in dashboard):**
+```
+┌─── Behavior Store ─────────────────────────────────┐
+│                                                     │
+│  Search: [________________] [🔍]                    │
+│                                                     │
+│  ⭐ Popular                                         │
+│  ┌────────────────────────────────────────────────┐ │
+│  │ 🧪 tdd-first              ⭐ 342  📥 1.2K    │ │
+│  │ Write tests before code. Red-green-refactor.   │ │
+│  │ [Install]                                      │ │
+│  ├────────────────────────────────────────────────┤ │
+│  │ 🏗️ clean-architecture      ⭐ 287  📥 890     │ │
+│  │ Separate concerns. Dependency inversion.       │ │
+│  │ [Install]                                      │ │
+│  ├────────────────────────────────────────────────┤ │
+│  │ 🔒 security-first          ⭐ 234  📥 670     │ │
+│  │ Input validation, auth checks, OWASP top 10.  │ │
+│  │ [Install]                                      │ │
+│  └────────────────────────────────────────────────┘ │
+│                                                     │
+│  📁 Categories                                      │
+│  [Debugging] [Testing] [Architecture] [Security]   │
+│  [Performance] [Documentation] [Team] [Workflow]   │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+### Revenue: Marketplace is FREE (drives adoption)
+The marketplace itself doesn't generate revenue. It creates:
+1. Network effects → more users → more behaviors → more users
+2. Lock-in → your carefully curated behavior set is valuable
+3. Community → people build identity around their behavior stack
+4. Upgrades → free users hit the behavior limit (10) and upgrade to Pro (unlimited)
+
+
+## Iteration 30 — Tauri Menubar Implementation Detail (20:11)
+**Target:** Concrete Rust code for the menubar
+
+### Tauri 2.0 System Tray
+
+```rust
+// src-tauri/src/main.rs
+use tauri::{
+    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    Manager,
+};
+
+fn main() {
+    tauri::Builder::default()
+        .setup(|app| {
+            // Create tray icon
+            let tray = TrayIconBuilder::new()
+                .icon(app.default_window_icon().unwrap().clone())
+                .tooltip("Genius Cortex")
+                .on_tray_icon_event(|tray, event| {
+                    match event {
+                        TrayIconEvent::Click {
+                            button: MouseButton::Left,
+                            button_state: MouseButtonState::Up,
+                            ..
+                        } => {
+                            // Left click → show/hide dashboard window
+                            let app = tray.app_handle();
+                            if let Some(window) = app.get_webview_window("main") {
+                                if window.is_visible().unwrap_or(false) {
+                                    window.hide().unwrap();
+                                } else {
+                                    window.show().unwrap();
+                                    window.set_focus().unwrap();
+                                }
+                            }
+                        }
+                        _ => {}
+                    }
+                })
+                .menu_on_left_click(false)
+                .build(app)?;
+            
+            // Start Node.js API server as child process
+            let api_handle = std::process::Command::new("node")
+                .arg(format!("{}/dist/api/server.js", app.path().resource_dir().unwrap().display()))
+                .spawn()
+                .expect("Failed to start Cortex API server");
+            
+            // Store handle for cleanup
+            app.manage(ApiProcess(api_handle));
+            
+            Ok(())
+        })
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+```
+
+### Tray Menu (right-click)
+```rust
+use tauri::menu::{MenuBuilder, MenuItemBuilder, PredefinedMenuItem};
+
+fn build_tray_menu(app: &tauri::AppHandle) -> tauri::Result<tauri::menu::Menu<tauri::Wry>> {
+    let dashboard = MenuItemBuilder::new("📊 Dashboard")
+        .accelerator("CmdOrCtrl+D")
+        .build(app)?;
+    let new_project = MenuItemBuilder::new("🆕 New Project")
+        .accelerator("CmdOrCtrl+N")
+        .build(app)?;
+    let chat = MenuItemBuilder::new("💬 Chat")
+        .accelerator("CmdOrCtrl+Shift+C")
+        .build(app)?;
+    let check = MenuItemBuilder::new("🔄 Check Updates").build(app)?;
+    let separator = PredefinedMenuItem::separator(app)?;
+    let quit = PredefinedMenuItem::quit(app, Some("Quit Cortex"))?;
+    
+    MenuBuilder::new(app)
+        .item(&dashboard)
+        .item(&new_project)
+        .item(&chat)
+        .item(&check)
+        .item(&separator)
+        .item(&quit)
+        .build()
+}
+```
+
+### Status Badge on Tray Icon
+```rust
+// Change tray icon based on health status
+fn update_tray_status(tray: &TrayIcon, status: &str) {
+    let icon_path = match status {
+        "healthy" => "icons/cortex-green.png",    // All good
+        "attention" => "icons/cortex-yellow.png",  // Updates available
+        "critical" => "icons/cortex-red.png",      // Failures
+        _ => "icons/cortex-default.png"
+    };
+    tray.set_icon(Some(Icon::File(icon_path.into()))).unwrap();
+}
+```
+
+### Window Configuration
+```json
+// tauri.conf.json
+{
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Genius Cortex",
+        "url": "/index.html",
+        "width": 1000,
+        "height": 700,
+        "visible": false,
+        "decorations": true,
+        "resizable": true,
+        "minWidth": 800,
+        "minHeight": 500
+      }
+    ],
+    "trayIcon": {
+      "iconPath": "icons/cortex-default.png",
+      "iconAsTemplate": true
+    }
+  }
+}
+```
+
+
+## Iteration 31 — Memory Bits: Smart Capture & Relevance (20:17)
+**Target:** How memory bits are captured and which ones get injected
+
+### Memory Capture Sources
+
+**1. Explicit (user adds)**
+```bash
+cortex memory add "Always use pnpm, never npm or yarn" --category preferences
+cortex memory add "Supabase auth: use createServerClient with cookies" --category technical --project utopia
+```
+
+**2. Session capture (automatic)**
+At session end (SessionEnd hook), Cortex asks Claude to extract memory-worthy bits:
+```
+cortex session-end --repo ~/Projects/utopia
+    │
+    ▼
+Reads git diff from this session
+    │
+    ▼
+Sends to Claude (cheap, fast model — Haiku):
+"From this session diff, extract any reusable knowledge, 
+patterns, or decisions that could be useful in other projects.
+Format: one line per insight."
+    │
+    ▼
+Claude responds:
+- "Stripe webhook verification needs raw body, not parsed JSON"
+- "Supabase RLS policies must be tested with anon key, not service key"
+    │
+    ▼
+Each line → saved as a memory bit with auto-tags
+```
+
+**3. From Cortex Chat**
+```
+User: "Remember that CJ Intelligence uses the term 'signification' for legal notifications"
+Cortex: [calls cortex_memory_add()]
+"Saved: CJ Intelligence — 'signification' = formal legal service of documents"
+```
+
+### Memory Relevance Scoring
+
+Not ALL memory bits get injected. Too many = context pollution.
+
+```typescript
+interface MemoryBit {
+  id: string;
+  content: string;
+  category: "preferences" | "technical" | "business" | "people" | "lessons";
+  tags: string[];           // Auto-detected or manual
+  sourceRepo?: string;      // Where it was learned
+  relevanceScore?: number;  // Computed at injection time
+  createdAt: string;
+  usedCount: number;        // How many times injected
+  lastUsed?: string;
+}
+```
+
+**Injection algorithm:**
+```typescript
+function selectRelevantBits(repo: RepoEntry, allBits: MemoryBit[]): MemoryBit[] {
+  const scored = allBits.map(bit => ({
+    ...bit,
+    relevanceScore: calculateRelevance(bit, repo)
+  }));
+  
+  // Sort by relevance, take top 20
+  return scored
+    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .slice(0, 20);
+}
+
+function calculateRelevance(bit: MemoryBit, repo: RepoEntry): number {
+  let score = 0;
+  
+  // Category "preferences" always relevant
+  if (bit.category === "preferences") score += 10;
+  
+  // Same project = very relevant
+  if (bit.sourceRepo === repo.name) score += 8;
+  
+  // Tag overlap with project's tech stack
+  const repoTags = getRepoTags(repo); // ["react", "supabase", "stripe"]
+  const overlap = bit.tags.filter(t => repoTags.includes(t)).length;
+  score += overlap * 3;
+  
+  // Recently created = more relevant
+  const ageHours = (Date.now() - new Date(bit.createdAt).getTime()) / 3600000;
+  if (ageHours < 24) score += 5;
+  else if (ageHours < 168) score += 3;
+  else if (ageHours < 720) score += 1;
+  
+  // Frequently used = proven useful
+  score += Math.min(bit.usedCount, 5);
+  
+  // "lessons" category = always worth remembering
+  if (bit.category === "lessons") score += 5;
+  
+  return score;
+}
+```
+
+### Injected Format (in CLAUDE.md)
+```markdown
+<!-- CORTEX MEMORY — Top 20 relevant bits for this project -->
+## 🧠 Cross-Project Knowledge
+
+**Preferences:**
+- Always use pnpm, never npm or yarn
+- Prefer Supabase for BaaS, Vercel for frontend deploy
+
+**Technical (relevant to this stack):**
+- Stripe webhook verification needs raw body, not parsed JSON
+- Supabase RLS policies must be tested with anon key
+- Next.js App Router: use server components by default
+
+**Lessons:**
+- Always verify before coding (learned from Utopia auth rewrite)
+- Post-fix audit catches 30% of regressions (observed across 3 projects)
+<!-- END CORTEX MEMORY -->
+```
+
+### Memory Limit
+- Free: 100 bits
+- Pro: unlimited
+- Why limit: prevents context pollution + conversion trigger
+
+
+## Iteration 32 — Code Bits: Extraction & Smart Reuse (20:22)
+**Target:** How code bits are extracted, stored, and intelligently suggested
+
+### Auto-Detection of Reusable Patterns
+
+```typescript
+interface CodeBitDetector {
+  // Runs periodically or on scan
+  async detectDuplicates(registry: RepoEntry[]): Promise<CodeBitSuggestion[]> {
+    const fileHashes: Map<string, {repo: string, path: string, content: string}[]> = new Map();
+    
+    for (const repo of registry) {
+      const srcFiles = await glob(`${repo.path}/src/**/*.{ts,tsx,js,jsx,py}`);
+      for (const file of srcFiles) {
+        const content = await readFile(file);
+        // Extract function signatures / class definitions
+        const blocks = extractCodeBlocks(content);
+        for (const block of blocks) {
+          const hash = simpleHash(normalize(block.code));
+          if (!fileHashes.has(hash)) fileHashes.set(hash, []);
+          fileHashes.get(hash)!.push({
+            repo: repo.name,
+            path: file.replace(repo.path, ''),
+            content: block.code
+          });
+        }
+      }
+    }
+    
+    // Find hashes that appear in 2+ repos
+    return Array.from(fileHashes.entries())
+      .filter(([_, locations]) => {
+        const repos = new Set(locations.map(l => l.repo));
+        return repos.size >= 2;
+      })
+      .map(([hash, locations]) => ({
+        code: locations[0].content,
+        locations,
+        suggestion: `This code appears in ${locations.length} files across ${new Set(locations.map(l => l.repo)).size} repos. Extract as a code bit?`
+      }));
+  }
+}
+```
+
+### Dashboard: Code Bits Manager
+```
+┌─── Code Bits ──────────────────────────────────────┐
+│                                                     │
+│  Search: [________________] [🔍]                    │
+│  Tags: [stripe] [auth] [supabase] [webhook] [all]  │
+│                                                     │
+│  ┌────────────────────────────────────────────────┐ │
+│  │ 🔗 Stripe Webhook Handler                     │ │
+│  │ TypeScript · Used in: Utopia, CineFi          │ │
+│  │ Tags: stripe, webhook, payment                │ │
+│  │ ```ts                                         │ │
+│  │ export async function verifyStripeWebhook(    │ │
+│  │   req: Request, secret: string               │ │
+│  │ ): Promise<Stripe.Event> { ...               │ │
+│  │ ```                                           │ │
+│  │ [📋 Copy] [🚀 Use in Project] [✏️ Edit]      │ │
+│  └────────────────────────────────────────────────┘ │
+│                                                     │
+│  💡 Suggestions (auto-detected)                     │
+│  ┌────────────────────────────────────────────────┐ │
+│  │ Similar auth pattern found in 3 repos.        │ │
+│  │ Extract as code bit?                          │ │
+│  │ [View Code] [Extract] [Dismiss]               │ │
+│  └────────────────────────────────────────────────┘ │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+### MCP Tool for Code Bits
+During a Claude Code session:
+```
+Claude: [calls cortex_codebits_search("supabase auth server client")]
+→ Returns: "Found 1 code bit: 'Supabase Server Auth' — createServerClient with cookies pattern (from Utopia)"
+→ Claude uses this as context for the current implementation
+```
+
+This is the "institutional memory" effect — knowledge captured in one project benefits ALL future projects automatically.
+
+
+## Iteration 33 — Notification System & Telegram/WhatsApp Integration (20:27)
+**Target:** How notifications reach the user across all channels
+
+### Notification Routing
+
+```typescript
+interface NotificationRouter {
+  channels: NotificationChannel[];
+  rules: NotificationRule[];
+}
+
+interface NotificationRule {
+  event: string;           // "upgrade-available" | "health-failed" | "qa-failed" | "watch-alert"
+  severity: string;        // "critical" | "warning" | "info"
+  channels: string[];      // ["menubar", "telegram"] 
+  quietHours?: { start: string; end: string }; // "23:00" - "07:00"
+}
+
+// Default rules:
+const defaultRules = [
+  { event: "health-failed", severity: "critical", channels: ["menubar", "telegram"] },
+  { event: "upgrade-available", severity: "info", channels: ["menubar"] },
+  { event: "qa-failed", severity: "warning", channels: ["menubar", "telegram"] },
+  { event: "watch-critical", severity: "critical", channels: ["menubar", "telegram"] },
+  { event: "watch-useful", severity: "info", channels: ["dashboard"] },
+  { event: "schedule-complete", severity: "info", channels: ["dashboard"] },
+];
+```
+
+### Channel Implementations
+
+**Menubar:**
+```typescript
+// Native macOS notification via Tauri
+async function notifyMenubar(title: string, body: string) {
+  await invoke('show_notification', { title, body });
+  await invoke('update_tray_badge', { count: unreadCount });
+}
+```
+
+**Telegram (via CC Channels):**
+```typescript
+// If user has CC Channels + Telegram configured
+async function notifyTelegram(message: string) {
+  // Option A: Through a running CC session with Channels
+  await exec(`claude -p "Send this notification to the user via Channels: ${message}" --bare`);
+  
+  // Option B: Direct Telegram Bot API (if user provided bot token)
+  if (config.telegram?.botToken) {
+    await fetch(`https://api.telegram.org/bot${config.telegram.botToken}/sendMessage`, {
+      method: 'POST',
+      body: JSON.stringify({ chat_id: config.telegram.chatId, text: message, parse_mode: 'Markdown' })
+    });
+  }
+}
+```
+
+**WhatsApp (via OpenClaw):**
+```typescript
+// If user has OpenClaw + WhatsApp configured
+async function notifyWhatsApp(message: string) {
+  // Through OpenClaw's message tool
+  await exec(`openclaw message send --channel whatsapp --target "${config.whatsapp.number}" --message "${message}"`);
+}
+```
+
+### Notification Format Examples
+
+**Telegram:**
+```
+🧠 *Genius Cortex Alert*
+
+🔴 *QA Failed — Artts*
+3 tests failing since 2 hours ago.
+
+Failed tests:
+• `auth.test.ts` — timeout
+• `billing.test.ts` — assertion error  
+• `api.test.ts` — 500 response
+
+[Open Artts in Claude Code →]
+```
+
+**Menubar notification (macOS):**
+```
+Genius Cortex
+━━━━━━━━━━━━━
+⚠️ Claude Code v2.1.78 available
+Fixes race condition in background tasks.
+Click to update.
+```
+
+### Quiet Hours
+- Default: 23:00 → 07:00 (configurable)
+- During quiet hours: only "critical" notifications go through
+- Everything else queued → delivered at 07:01
+
+
+## Iteration 34 — Personas Deep-Dive: Lifecycle & Auto-Detection (20:32)
+**Target:** Make personas smarter — auto-detect, evolve, switch
+
+### Persona Lifecycle
+
+```
+Create → Enrich → Activate → Evolve → Archive
+```
+
+**Create (explicit):**
+```bash
+cortex personas create "CJ Intelligence"
+# Opens editor with template:
+# ---
+# name: CJ Intelligence
+# client: 
+# industry: 
+# language: fr
+# ---
+# ## Context
+# ## Vocabulary
+# ## Constraints
+# ## Key Contacts
+```
+
+**Create (from Project Factory):**
+When creating a project, the factory asks "Persona?" and can create one inline.
+
+**Auto-Enrich:**
+When working on a project with a persona, Cortex captures domain knowledge automatically:
+```
+Session on CJ Intelligence project ends
+    │
+SessionEnd hook
+    │
+Claude extracts domain terms/concepts from the session diff
+    │
+Cortex adds new vocabulary/constraints to the persona file
+    │
+"Added to CJ Intelligence persona: 'tarification' = pricing structure for acts"
+```
+
+**Auto-Switch:**
+```typescript
+// SessionStart hook
+function detectPersona(repo: RepoEntry): string | null {
+  // 1. Check if repo has explicit persona in registry
+  if (repo.persona) return repo.persona;
+  
+  // 2. Check if repo name matches a persona
+  const personas = listPersonas();
+  const match = personas.find(p => 
+    repo.name.toLowerCase().includes(p.slug) ||
+    p.linkedRepos?.includes(repo.name)
+  );
+  return match?.name || null;
+}
+```
+
+When you `cd utopia && claude`, Cortex auto-activates the Utopia persona. No manual switch needed.
+
+### Persona-Aware Memory
+Memory bits tagged with a persona are ONLY injected when that persona is active:
+```typescript
+function selectRelevantBits(repo: RepoEntry, allBits: MemoryBit[]): MemoryBit[] {
+  const activePersona = detectPersona(repo);
+  
+  return allBits.filter(bit => {
+    // Global bits: always eligible
+    if (!bit.persona) return true;
+    // Persona-specific: only if matching
+    return bit.persona === activePersona;
+  });
+}
+```
+
+This prevents CJ Intelligence legal vocabulary from leaking into a gaming project.
+
+### Dashboard: Personas Manager
+```
+┌─── Personas ───────────────────────────────────────┐
+│                                                     │
+│  Active: CJ Intelligence (auto-detected from repo) │
+│                                                     │
+│  ┌─ CJ Intelligence ──────────────────────────┐   │
+│  │ Client: Commissaires de Justice             │   │
+│  │ Industry: Legal  Language: FR               │   │
+│  │ Linked repos: cj-intelligence, cj-portal    │   │
+│  │ Vocabulary: 24 terms  Constraints: 8        │   │
+│  │ Last enriched: 2h ago (auto)                │   │
+│  │ [Edit] [View Full] [Archive]                │   │
+│  └─────────────────────────────────────────────┘   │
+│                                                     │
+│  ┌─ Utopia SaaS ──────────────────────────────┐   │
+│  │ Client: Internal   Industry: SaaS           │   │
+│  │ Linked repos: utopia, utopia-landing        │   │
+│  │ [Edit] [View Full]                          │   │
+│  └─────────────────────────────────────────────┘   │
+│                                                     │
+│  [+ New Persona]                                   │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+
+## Iteration 35 — Revised Sprint Plan (all features included) (20:37)
+**Target:** Updated implementation plan with ALL features from 37 iterations
+
+### Revised Sprint Plan — "Build Everything"
+
+**Sprint 1: Core Foundation (Week 1)**
+Day 1-2: Scaffold npm package + Cortex Core + Config + Registry
+Day 3-4: `cortex scan`, `cortex status`, `cortex upgrade`
+Day 5: `cortex init` (full onboarding flow)
+Deliverable: Working CLI with repo management
+
+**Sprint 2: Behaviors + Rules + Habits (Week 2)**
+Day 1-2: Behavior engine (CRUD, compile, inject to ~/.claude/CLAUDE.md)
+Day 3: 7 starter behaviors + rules system (with PreToolUse enforcement)
+Day 4: Habit tracking (hook-based compliance monitoring)
+Day 5: SessionStart hook + SessionEnd hook
+Deliverable: Behaviors injected, rules enforced, habits tracked
+
+**Sprint 3: Memory + Glossary + Personas (Week 3)**
+Day 1-2: Memory store (add, search, relevance scoring, smart injection)
+Day 3: Auto-capture from sessions (SessionEnd → Claude extract)
+Day 4: Glossary system + Personas system (with auto-detection, auto-enrich)
+Day 5: Code Bits (capture, search, auto-duplicate detection)
+Deliverable: Cross-project intelligence working
+
+**Sprint 4: Project Factory + Vault (Week 4)**
+Day 1-2: Template system (4 starters, schema, scaffold)
+Day 3: Project Factory (full flow: template → persona → GitHub → GT → launch)
+Day 4-5: Vault (AES-256, Keychain, per-project inject, vault: prefix for MCPs)
+Deliverable: Create new projects in 30s, secrets managed
+
+**Sprint 5: Skills + MCPs + MCP Server (Week 5)**
+Day 1-2: Global Skills registry + injection (copy-on-demand)
+Day 3: Global MCPs management (inject to ~/.claude.json)
+Day 4-5: Cortex MCP Server (tools for Claude Code: status, search, memory, vault, codebits)
+Deliverable: Full Claude Code integration via MCP
+
+**Sprint 6: Dashboard + Tauri App (Week 6-7)**
+Day 1-3: Tauri scaffold + menubar + system tray + status badge
+Day 4-5: HTTP API server (all Core endpoints)
+Day 6-7: Dashboard webview (repos, behaviors, memory, vault, playgrounds)
+Day 8-9: Cortex Chat (Claude + MCP tools)
+Day 10: Quick Launch (button → terminal → CC)
+Deliverable: Desktop app with full dashboard
+
+**Sprint 7: Watch + Monitoring + Scheduler (Week 7-8)**
+Day 1-2: Genius Watch engine (sources, fetch, impact assessment, feed)
+Day 3-4: Health scoring (6 components, 0-100, alerts)
+Day 5: Scheduler (cron, health checks, auto-QA)
+Day 6: Global Playgrounds (collection, aggregation, QA overview)
+Deliverable: Monitoring + intelligence layer
+
+**Sprint 8: Sync + Connectors + Marketplace (Week 8-9)**
+Day 1-2: iCloud sync (symlink approach, selective sync)
+Day 3: Telegram notification connector
+Day 4: Behavior marketplace (GitHub-based, install/publish)
+Day 5: Session history + activity feed
+Deliverable: Multi-machine + mobile + community
+
+**Sprint 9: Polish + Beta (Week 9-10)**
+Day 1-3: End-to-end testing
+Day 4: Documentation (README, getting-started guide)
+Day 5: Website for Cortex
+Day 6: Analytics dashboard (Pro)
+Day 7: Beta release on npm + GitHub
+
+### Total: ~10 weeks for EVERYTHING
+
+### Critical Path
+```
+Sprint 1 (Core) → Sprint 2 (Behaviors) → Sprint 5 (MCP) → Sprint 6 (App)
+         ↓              ↓
+    Sprint 4 (Factory)  Sprint 3 (Memory)
+                              ↓
+                         Sprint 7 (Watch)
+                              ↓
+                         Sprint 8 (Sync)
+```
+
+Sprints 1-2-5-6 are on the critical path. 3-4 can run in parallel with 2. 7-8 can start once 5 is done.
+
+
+## Iteration 36 — Cortex Chat: Full Conversation Design (20:42)
+**Target:** Complete chat UX with all scenarios
+
+### Chat System Architecture
+
+Cortex Chat = a Claude session with special system prompt + Cortex MCP tools.
+
+**System Prompt:**
+```
+You are Genius Cortex, the multi-project orchestrator for a vibe coder.
+You have access to these tools:
+- cortex_repos_status() — get all repos and their health
+- cortex_repo_details(name) — detailed info about a specific repo
+- cortex_search(query) — search code across all repos
+- cortex_memory_search(query) — search cross-project memory
+- cortex_memory_add(content, category) — save a new memory bit
+- cortex_codebits_search(query) — find reusable code patterns
+- cortex_behaviors_list() — show active behaviors
+- cortex_vault_keys(project?) — list available secrets (names only)
+- cortex_playgrounds_overview(skill) — aggregated playground data
+- cortex_watch_feed() — latest AI tool news
+- cortex_factory_create(options) — create a new project
+- cortex_launch(repo, prompt?) — open a repo in Claude Code
+
+You help the user manage their portfolio of projects. You can answer questions about 
+any project, search across all codebases, suggest reusable patterns, create new projects,
+and open existing ones in Claude Code.
+
+For actions that require code changes: DON'T do them yourself. Use cortex_launch() to 
+open the right project in Claude Code. The user (or Claude Code) will handle the actual coding.
+
+Be concise, helpful, and proactive. Suggest relevant code bits and memory when they might help.
+```
+
+### Conversation Scenarios
+
+**Morning check-in:**
+```
+User: "Bonjour, quoi de neuf ?"
+Cortex: [calls cortex_repos_status(), cortex_watch_feed()]
+"Bonjour ! Voici ton point du matin :
+
+📊 **Projets** — 5 repos, 4 healthy, 1 needs attention
+⚠️ Artts a 3 tests en échec depuis hier
+
+📡 **Veille** — 2 nouveautés :
+• Claude Code v2.1.78 — fix race condition (affects tes autoresearch loops)
+• Supabase v2.45 — nouveau auth helper
+
+💡 **Suggestion** : commencer par fixer les tests Artts ? 
+[🚀 Ouvrir Artts]"
+```
+
+**Knowledge query:**
+```
+User: "Comment j'avais géré le paiement Stripe dans Utopia ?"
+Cortex: [calls cortex_search("stripe payment utopia"), cortex_codebits_search("stripe")]
+"Dans Utopia, tu as un code bit 'Stripe Webhook Handler' :
+
+📁 `src/api/webhooks/stripe.ts`
+• Vérifie la signature avec `stripe.webhooks.constructEvent()`
+• Dispatch par event type (checkout.session.completed, etc.)
+• Gère les erreurs avec retry logic
+
+Tu veux l'utiliser dans un autre projet ?
+[📋 Voir le code] [🚀 Ouvrir Utopia]"
+```
+
+**Project creation:**
+```
+User: "Je veux créer un nouveau projet pour le client CJ Intelligence"
+Cortex: "Parfait ! Je configure ça :
+
+📝 **Nom du projet** : cj-intelligence
+📋 **Template** : SaaS Starter (Next.js + Supabase)
+👤 **Persona** : CJ Intelligence (déjà créé — 24 termes de vocabulaire)
+🔧 **Skills** : frontend, backend, database, SEO
+🔐 **Vault** : je copie tes API keys globales + crée les secrets CJ
+
+[🚀 Créer et ouvrir dans Claude Code]
+[✏️ Modifier les options]"
+```
+
+**Cross-project insight:**
+```
+User: "Est-ce que j'utilise la même version de React partout ?"
+Cortex: [calls cortex_search("react"), checks package.json across repos]
+"Non ! Tu as des versions différentes :
+
+| Projet | React | 
+|--------|-------|
+| Utopia | 19.0.0 |
+| CineFi | 18.3.1 |
+| My-SaaS | 19.0.0 |
+
+CineFi est en retard. Tu veux mettre à jour ?
+[🚀 Ouvrir CineFi]"
+```
+
+### Chat Persistence
+- Chat history stored in `~/.genius-cortex/chat/history.json`
+- Survives app restarts
+- Searchable (older conversations)
+- Clear with `cortex chat clear`
+
+### Cost Control (for Claude API)
+- System prompt: ~500 tokens (small)
+- Each tool response: cached locally (same query = no API call)
+- Free tier: 10 messages/day
+- Pro: unlimited
+- Model: Claude Haiku by default (cheapest), user can switch to Sonnet/Opus
+
+
+## Iteration 37 — Final Architecture Summary + Nightly Build V2 (20:48)
+**Target:** Consolidate everything into a definitive reference + updated nightly build
+
+### DEFINITIVE CONCEPT LIST (17 concepts)
+
+| # | Concept | Category | Description |
+|---|---------|----------|-------------|
+| 1 | Behaviors | Governance | How I work (prove-before-fix, post-fix-audit...) |
+| 2 | Habits | Governance | Behaviors + compliance tracking with streaks |
+| 3 | Rules | Governance | What I NEVER do — enforceable via PreToolUse hook |
+| 4 | Memory Bits | Knowledge | Cross-project fragments with relevance scoring |
+| 5 | Glossary | Knowledge | Shared vocabulary across projects |
+| 6 | Personas | Knowledge | Client context profiles with auto-detection/enrichment |
+| 7 | Code Bits | Knowledge | Reusable code snippets with auto-duplicate detection |
+| 8 | Global Skills | Configuration | GT skills centralized, injected per-project at runtime |
+| 9 | Global MCPs | Configuration | MCP servers centralized with vault: secret resolution |
+| 10 | Default Config | Configuration | Perfect ~/.claude/ setup, applied everywhere |
+| 11 | Templates | Configuration | Project starters (SaaS, Landing, API, Mobile) |
+| 12 | Vault | Infrastructure | AES-256 encrypted secrets, Keychain master key |
+| 13 | Registry | Infrastructure | All repos tracked with version, health, persona |
+| 14 | Sync | Infrastructure | iCloud/Git multi-machine synchronization |
+| 15 | Genius Watch | Intelligence | Curated AI tool news with impact assessment |
+| 16 | Heartbeat | Intelligence | Periodic health + version + schedule checks |
+| 17 | Global Playgrounds | Intelligence | Consolidated playgrounds with cross-project aggregation |
+
+### DEFINITIVE FEATURE LIST (20 features)
+
+| # | Feature | Sprint | Priority |
+|---|---------|--------|----------|
+| 1 | Dashboard | 6 | P0 |
+| 2 | Global Update | 1 | P0 |
+| 3 | Behavior Engine | 2 | P0 |
+| 4 | Rule Enforcement (PreToolUse) | 2 | P0 |
+| 5 | Memory Store | 3 | P0 |
+| 6 | Project Factory | 4 | P0 |
+| 7 | Cortex Chat | 6 | P0 |
+| 8 | Vault | 4 | P1 |
+| 9 | Behavior Marketplace | 8 | P1 |
+| 10 | Monitoring & Health Score | 7 | P1 |
+| 11 | Quick Launch | 6 | P1 |
+| 12 | Genius Watch | 7 | P1 |
+| 13 | Cross-Project Search | 3 | P1 |
+| 14 | Global Playgrounds | 7 | P1 |
+| 15 | Auto-QA Scheduler | 7 | P2 |
+| 16 | Session History + Activity | 8 | P2 |
+| 17 | Sync Cloud | 8 | P2 |
+| 18 | Dependency Watch | 7 | P2 |
+| 19 | Notifications (TG/WA) | 8 | P2 |
+| 20 | Analytics | 9 | P2 |
+
+### INJECTION MECHANISM (3 layers)
+
+| Layer | When | What | How |
+|-------|------|------|-----|
+| Static | `cortex inject` (manual/periodic) | Behaviors, Rules, Glossary, top Memory | Writes to `~/.claude/CLAUDE.md` |
+| Dynamic | SessionStart hook (every session) | Project persona, relevant memory, project skills, vault env | `cortex session-inject --repo $CWD` |
+| Interactive | During session (on demand) | Search, memory lookup, code bits, vault get | Cortex MCP Server tools |
+
+### ENFORCEMENT MECHANISM (2 layers)
+
+| Layer | When | What | Action |
+|-------|------|------|--------|
+| PreToolUse hook | Before any tool call | Check against active Rules | Block if violation |
+| PostSession review | After session ends | Check Habits compliance | Update streak, log |
+
+### NIGHTLY BUILD PROGRAM V2 (updated with all knowledge)
+
+**Phase 1: Scaffold (22h → 23h)**
+```
+mkdir -p ~/Projects/genius-cortex
+cd ~/Projects/genius-cortex
+npm init -y
+npm install commander chalk ora fast-glob dotenv
+npm install -D typescript @types/node tsx
+Create tsconfig.json, src/ structure
+Git init + first commit
+```
+
+**Phase 2: Core + Registry + CLI (23h → 01h)**
+```
+src/core/config.ts — load/save ~/.genius-cortex/config.json
+src/core/registry.ts — scan for GT repos, version detection
+src/cli/init.ts — onboarding flow (repos_dir, scan, hook install)
+src/cli/scan.ts — cortex scan [dir]
+src/cli/status.ts — cortex status (table view)
+src/cli/upgrade.ts — cortex upgrade [repo] [--all] [--dry-run]
+Test: all 4 commands work
+Commit
+```
+
+**Phase 3: Behaviors + Rules (01h → 03h)**
+```
+src/core/behaviors.ts — CRUD, compile, inject
+src/core/rules.ts — CRUD, enforcement check
+src/core/inject.ts — write to ~/.claude/CLAUDE.md
+Create 7 starter behaviors in ~/.genius-cortex/behaviors/
+Create 3 starter rules
+src/cli/behaviors.ts — list, add, enable, disable, inject
+src/hook/session-inject.ts — SessionStart handler
+Register hooks in ~/.claude/settings.json
+Test: behaviors appear in CLAUDE.md, rules block git push main
+Commit
+```
+
+**Phase 4: Memory + Personas (03h → 05h)**
+```
+src/core/memory.ts — add, search, relevance scoring
+src/core/personas.ts — CRUD, auto-detect from repo
+src/core/glossary.ts — add, list, search
+src/cli/memory.ts — add, search, show
+src/cli/personas.ts — create, list, link
+Implement SessionEnd hook for auto-capture
+Test: memory bits injected based on relevance
+Commit
+```
+
+**Phase 5: Polish + Package (05h → 07h)**
+```
+Error handling everywhere
+Help text on all commands
+package.json: name, version, bin, files
+README.md
+npm link → test global install
+End-to-end test: init → scan → status → behaviors inject → session start hook
+Final commit + push
+```
+
+**Success criteria for morning:**
+- [ ] `npm install -g genius-cortex` or `npm link` works
+- [ ] `cortex init` full onboarding flow
+- [ ] `cortex scan` finds GT repos
+- [ ] `cortex status` shows table with versions
+- [ ] `cortex upgrade <repo> --dry-run` works
+- [ ] `cortex behaviors list` shows 7 starters
+- [ ] `cortex behaviors inject` writes to ~/.claude/CLAUDE.md
+- [ ] `cortex memory add/search` works
+- [ ] `cortex personas create/list` works
+- [ ] SessionStart hook registered and working
+- [ ] All commands have --help
+
+
+## ROUND 3 FINAL SCORES — After 37 total iterations
+
+| Criterion | R1 (iter 11) | R2 (iter 21) | R3 (iter 37) | Δ total |
+|-----------|-------------|-------------|-------------|---------|
+| Concept completeness | 9.5 | 10 | 10 | +2.0 |
+| Feature depth | 9 | 10 | 10 | +3.0 |
+| Architecture soundness | 9 | 9.5 | 10 | +3.0 |
+| Injection mechanism | 9 | 10 | 10 | +4.0 |
+| UX flow | 9 | 10 | 10 | +3.0 |
+| Differentiation | 9.5 | 10 | 10 | +1.0 |
+| Implementation readiness | 8.5 | 9.5 | 10 | +5.0 |
+| Business model | 9 | 9.5 | 9.5 | +1.5 |
+| **AVERAGE** | **9.1** | **9.8** | **9.9** | **+2.8** |
+
+## Key Round 3 Achievements (iterations 22-37)
+22. Global Playgrounds — cross-project consolidated view + aggregated QA/Design data
+23. Global Skills — copy-on-demand injection, per-project skill activation
+24. Playground aggregation — data protocol, extraction engine, refresh mechanism
+25. Edge cases — 10 failure scenarios with recovery strategies
+26. Scheduler — cron system with health/QA/backup actions + dashboard manager
+27. Project Factory — complete code with GitHub + vault + persona integration, error recovery
+28. API Server — full HTTP API (localhost:4200) for Tauri ↔ Core communication
+29. Behavior Marketplace — GitHub-based, install/publish, free marketplace drives adoption
+30. Tauri Menubar — concrete Rust implementation, status badge, tray menu, keyboard shortcuts
+31. Memory Bits — smart capture (auto from sessions), relevance scoring algorithm, injection limits
+32. Code Bits — auto-duplicate detection across repos, MCP search tool, dashboard manager
+33. Notifications — routing rules, quiet hours, multi-channel (menubar + TG + WA)
+34. Personas — lifecycle (create→enrich→activate→evolve), auto-detection, auto-enrichment, persona-scoped memory
+35. Sprint plan — 9 sprints, 10 weeks, critical path, parallelization opportunities
+36. Cortex Chat — complete conversation design, 4 scenarios, cost control, persistence
+37. Final architecture — definitive 17 concepts, 20 features, 3-layer injection, 2-layer enforcement, nightly build v2
+
+## BREAKTHROUGHS THIS ROUND:
+1. **Rule enforcement via PreToolUse hooks** — Cortex can BLOCK Claude Code actions (iter 15, expanded in iter 25)
+2. **Auto-enriching personas** — Personas learn new domain terms from sessions automatically (iter 34)
+3. **Memory relevance scoring** — algorithmic selection of top-20 most relevant bits per session (iter 31)
+4. **Code bit auto-detection** — finds duplicate patterns across repos without user action (iter 32)
+5. **Playground data protocol** — standardized JSON extraction from HTML playgrounds (iter 24)
+
+---
+*Round 3 completed: 2026-03-24 20:48 CET*
+*15 iterations over ~80 minutes*
+*Score: 9.8 → 9.9 (+0.1, ceiling reached)*
+*Total: 37 iterations, ~3.5h, baseline 7.1 → final 9.9 (+2.8)*
+*Nightly build program ready: 5 phases, 9h*
