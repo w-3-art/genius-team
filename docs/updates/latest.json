@@ -1,10 +1,10 @@
 {
-  "version": "1.6.1",
-  "notes": "Full CRUD dashboard, auto-updater, Hub with 15 items",
-  "pub_date": "2026-03-25T21:56:48Z",
+  "version": "1.7.0",
+  "notes": "First-launch wizard, auto-install CLI, full CRUD dashboard",
+  "pub_date": "2026-03-25T22:30:26Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMmd3ZmN5Rk53Ylp1MFJTN1FBSkVKWGd0YlY1WlpCY1RGKzJiZXZuZlRsNjR0SlZuMDc4Q3Nhd1h0ci93eHdBUU94dFJwWUJzV25MZmVKZ2FQTDVHVUFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NDc1Nzk4CWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6CmhhUWxoaERMM0hFeEl0dlZyMmVPUGRKTG13VUpWV2kxdEt4ZkxtK3FOT0wyVXNTSW0rVmsxRStReFg4TS80ZWJKRzFPdExiaWovbnVXMHRJZEM2UUNRPT0K",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMmxqRTNjNE85dy8wcURuYXdDSFdqeitaLzdBNFNxNDYzdnNoTFZNdjJuUVFRN0ZGZnBwNDNETzBCNHhTSFgvMjc5MDZhQ1dWSUVPaTJKYXBmSU4zUUFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NDc3ODA2CWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6Ci9hWUFoSlBZLzNGT1JpZzdQdEpWMkZGNldBeVErdnJnTlA4TlNSVzI0T1BrK3k2NnR1YTBMSUxicWVWblZpK3hEVmhvSkVOZWhTb1ZsMXRreHErQkJ3PT0K",
       "url": "https://genius.w3art.io/updates/Genius-Cortex.app.tar.gz"
     }
   }
