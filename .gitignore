@@ -63,3 +63,4 @@ coverage/
 credentials.json
 token.json
 .genius/
+.vercel

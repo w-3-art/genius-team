@@ -1,0 +1,11 @@
+{
+  "version": "1.6.0",
+  "notes": "Full CRUD dashboard, auto-updater, Hub with 15 items",
+  "pub_date": "2026-03-25T21:44:05Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMms1ZUJNSGJ2TFIzMkpNTXd2Tk5LaDUwSThUL0d5a1NMbnBWb1dqOHFwMVAzTkRWc2VyVklWYkJmeENTOHRhN2VsZnlhSzQrbEJVN1d1TmwrSDNQbVFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NDUxOTYwCWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6CmVBTGRHM0xUMks3NUYzTkJvSGQxQ3lxVWl5UWtzV2pRVDFydlp6N3BkdUFZSW5BNGdnUGptMmhrZnZRZi9Zc1owN0VXL1lTR0tERWJ3R2NOZzlFQUFRPT0K",
+      "url": "https://genius.w3art.io/updates/Genius-Cortex.app.tar.gz"
+    }
+  }
+}
