@@ -7,11 +7,17 @@ description: >-
   Do NOT use for CSS implementation — that's genius-dev-frontend.
 ---
 
-## ⚠️ MANDATORY ARTIFACT
+## ⚠️ MANDATORY ARTIFACTS
 
 **This skill MUST generate:**
 - Config: `.genius/design-config.json`
 - Unified State: `.genius/outputs/state.json` (with `phases.design` populated)
+- **🎮 Interactive Playground HTML: `.genius/outputs/design-playground.html`**
+  - Dark theme, self-contained, zero dependencies
+  - Shows all 3 design options (A/B/C) side by side with live preview
+  - Color palette swatches, typography samples, spacing examples
+  - Interactive: user can click to compare options
+  - Announce to user: `open .genius/outputs/design-playground.html`
 
 **Before transitioning to next skill:**
 1. Verify design-config.json exists
@@ -25,7 +31,7 @@ description: >-
 
 ## Unified Dashboard Integration
 
-**DO NOT launch separate HTML files.** Update the unified state instead.
+Update the unified state AND generate an interactive playground HTML.
 
 ### On Phase Start
 Update `.genius/outputs/state.json`:

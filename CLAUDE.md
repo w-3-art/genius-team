@@ -328,14 +328,21 @@ For EVERY user request, route to the appropriate skill:
 - EVERY task goes through a skill. No exceptions.
 - After EVERY skill completes → update the playground dashboard tab
 
-### Playground Rules — MANDATORY
-- NEVER create a new playground file → update the existing genius-dashboard tab
-- Tabs for skills not yet executed → HIDDEN
-- After each skill → update tab with REAL project data, remove mock data
-- After each skill → remind user: `open .genius/DASHBOARD.html`
-- After /genius-start → ALWAYS mention playgrounds: "🎮 Run /genius-playground to generate your project dashboard"
-- When presenting results → ALWAYS offer: "Want me to update the playground with these results?"
-- Playgrounds are a CORE FEATURE — never skip, never forget to offer them
+### Playground Rules — MANDATORY — DO NOT SKIP
+- After EVERY skill that produces output → generate an interactive HTML playground in `.genius/outputs/`
+- The playground MUST be a self-contained HTML file: dark theme (#0F0F0F), zero external dependencies, interactive
+- After generating → tell user: `open .genius/outputs/<name>-playground.html`
+- Skills that MUST generate playgrounds:
+  - genius-specs → `specs-playground.html` (vision, features, user stories in interactive cards)
+  - genius-designer → `design-playground.html` (3 design options side-by-side, color swatches, typography)
+  - genius-architect → `architecture-playground.html` (interactive system diagram, stack explorer)
+  - genius-marketer → `marketing-playground.html` (market data, competitor comparison, positioning)
+  - genius-dev → `dev-playground.html` (component demos, API endpoints, live preview)
+  - genius-seo → `seo-playground.html` (scores, keyword analysis, recommendations)
+  - genius-deployer → `deploy-playground.html` (checklist, environment status, monitoring)
+- Also update the unified dashboard tab in `.genius/DASHBOARD.html`
+- When presenting ANY results → ALWAYS offer: "🎮 Want me to generate an interactive playground?"
+- Playgrounds are a CORE DIFFERENTIATOR of Genius Team — they make the output tangible and fun
 
 ### State
 - Read `.genius/state.json` before routing
