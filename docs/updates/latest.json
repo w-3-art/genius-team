@@ -1,6 +1,1 @@
-{
-  "version": "1.9.0",
-  "notes": "Full CRUD all views, tray mini-panel, home dashboard, QA audit fixes",
-  "pub_date": "2026-03-26T08:32:18Z",
-  "platforms": { "darwin-aarch64": { "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMmhZWm1FZ2VyV0oxZ2RtRUxST3VUUFVRUGhRL2c2Z0xGK3VYYVI1b2xtbm94WTYrSG5xZXhiU1J4Q2w1eWpqOE5QZHBwMXFJR2xIbnl0UWxYU25UOEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTEzOTE2CWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6CkhlSzdBT29rYnpjeTQ4L0NqUFRwNC8vUlRzOTVQNXNCWlZFelRyZXpOWjJCVURKc3J1WnFRVjRKYnVKY2I4a2V4QmpXdVBrVkY0ZXBLNUExMzJXZ0J3PT0K", "url": "https://genius.w3art.io/updates/Genius-Cortex.app.tar.gz" } }
-}
+{"version":"1.9.1","notes":"Codesigned with Apple Developer ID","pub_date":"2026-03-26T10:56:16Z","platforms":{"darwin-aarch64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMm5NSmtIS2pud2Rvcmh2VTI0dFF3d3AwRGI1WWJ4MmZXbWg5N1ZLYktGczVkOGpCZXl2QlU2Sk9OQTU1cHdkTm1XemZERGpEYUdScUxxSGd6aEUvZkF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTIyNTUzCWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6CjRSR3V1TkVZNXpxSHZqRklaK3FOeVhoQmRnTG4yZlJKd0xDN0VxOHdWdGI2SWN4L0VjUU04ZmZydlo4SG1qQkdrL1ZVTzcyVmJaNkVWZWhINGZIWUJRPT0K","url":"https://genius.w3art.io/updates/Genius-Cortex.app.tar.gz"}}}
