@@ -1,11 +1,6 @@
 {
-  "version": "1.8.0",
-  "notes": "Home dashboard with KPIs, embedded chat, quick actions, first-launch wizard",
-  "pub_date": "2026-03-26T06:50:11Z",
-  "platforms": {
-    "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMnM5QkF6eVZkMlFEMXNZNHE4eGgwdWlNRHd3Z213ZVU3Sjc1dFVwTzBnQnhIbHFFNHNMb08vemNNYnI5dzlXNUVUU1k4a2E5WURhak0ybGpqVmJsY0FzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTA3Nzk0CWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6CldKdEdlTGIyYlhDRklvOGlFZXhJdFRDVTNMUEUwaFpxM0tIcW52UENiOXlqVzNXU2lLMUhzZ0FuTnFFRitZcmxXcjYwNHd5QjNERHpySFk5ZE44TkJ3PT0K",
-      "url": "https://genius.w3art.io/updates/Genius-Cortex.app.tar.gz"
-    }
-  }
+  "version": "1.9.0",
+  "notes": "Full CRUD all views, tray mini-panel, home dashboard, QA audit fixes",
+  "pub_date": "2026-03-26T08:32:18Z",
+  "platforms": { "darwin-aarch64": { "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTSUtNRUpvTndXMmhZWm1FZ2VyV0oxZ2RtRUxST3VUUFVRUGhRL2c2Z0xGK3VYYVI1b2xtbm94WTYrSG5xZXhiU1J4Q2w1eWpqOE5QZHBwMXFJR2xIbnl0UWxYU25UOEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc0NTEzOTE2CWZpbGU6R2VuaXVzIENvcnRleC5hcHAudGFyLmd6CkhlSzdBT29rYnpjeTQ4L0NqUFRwNC8vUlRzOTVQNXNCWlZFelRyZXpOWjJCVURKc3J1WnFRVjRKYnVKY2I4a2V4QmpXdVBrVkY0ZXBLNUExMzJXZ0J3PT0K", "url": "https://genius.w3art.io/updates/Genius-Cortex.app.tar.gz" } }
 }
