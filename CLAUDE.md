@@ -328,11 +328,14 @@ For EVERY user request, route to the appropriate skill:
 - EVERY task goes through a skill. No exceptions.
 - After EVERY skill completes → update the playground dashboard tab
 
-### Playground Rules
+### Playground Rules — MANDATORY
 - NEVER create a new playground file → update the existing genius-dashboard tab
 - Tabs for skills not yet executed → HIDDEN
 - After each skill → update tab with REAL project data, remove mock data
 - After each skill → remind user: `open .genius/DASHBOARD.html`
+- After /genius-start → ALWAYS mention playgrounds: "🎮 Run /genius-playground to generate your project dashboard"
+- When presenting results → ALWAYS offer: "Want me to update the playground with these results?"
+- Playgrounds are a CORE FEATURE — never skip, never forget to offer them
 
 ### State
 - Read `.genius/state.json` before routing

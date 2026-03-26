@@ -1,5 +1,5 @@
 ---
-description: Initialize Genius Team v17.0 environment, load memory, and hydrate tasks
+description: Initialize Genius Team v19.0 environment, load memory, hydrate tasks, and offer playground dashboard
 ---
 
 # /genius-start
@@ -114,9 +114,12 @@ Ready! What would you like to do?
   🔧 "/reset"                     → Start over
   💰 "/save-tokens"               → Toggle save-token mode
 
-📊 **View your Dashboard:**
+📊 **Your Dashboard & Playgrounds:**
   open .genius/DASHBOARD.html
-  (run /genius-dashboard anytime to refresh it)
+  (run /genius-dashboard to refresh, /genius-playground for project-specific dashboard)
+
+🎮 **Playgrounds available** — interactive previews of each skill output.
+  After each skill completes, its playground tab unlocks in the dashboard.
 ```
 
 If in **IDE mode**, also show:
