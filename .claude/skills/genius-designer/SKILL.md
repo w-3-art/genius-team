@@ -7,25 +7,49 @@ description: >-
   Do NOT use for CSS implementation — that's genius-dev-frontend.
 ---
 
+## 🚨🚨🚨 CRITICAL: NEVER PRESENT DESIGN OPTIONS AS TEXT 🚨🚨🚨
+
+**STOP. READ THIS BEFORE DOING ANYTHING.**
+
+You MUST generate an **interactive HTML file** to present design options.
+DO NOT write colors/fonts as text in the chat. The user CANNOT see colors from hex codes.
+
+**The FIRST thing you do** after deciding on 3 design options:
+1. Write the file `.genius/outputs/design-playground.html`
+2. Tell the user: "Open the playground to see and compare the 3 options live:"
+3. `open .genius/outputs/design-playground.html`
+
+If you present design options as text instead of HTML → **you have failed this skill**.
+
+---
+
 ## ⚠️ MANDATORY ARTIFACTS
 
-**This skill MUST generate:**
-- Config: `.genius/design-config.json`
-- Unified State: `.genius/outputs/state.json` (with `phases.design` populated)
-- **🎮 Interactive Playground HTML: `.genius/outputs/design-playground.html`**
-  - Dark theme, self-contained, zero dependencies
-  - Shows all 3 design options (A/B/C) side by side with live preview
-  - Color palette swatches, typography samples, spacing examples
-  - Interactive: user can click to compare options
-  - Announce to user: `open .genius/outputs/design-playground.html`
+**This skill MUST generate (ALL of these, no exceptions):**
+
+### 1. Interactive Playground HTML: `.genius/outputs/design-playground.html`
+This is the **PRIMARY OUTPUT**. Not the config, not the state — the HTML.
+- Self-contained, zero external dependencies
+- Dark background (#0F0F0F)
+- 3 tabs or cards: Option A, Option B, Option C
+- Each option shows:
+  - **Live color swatches** (actual colored rectangles, not hex codes)
+  - **Typography samples** (load Google Fonts via `<link>`, show real text in the font)
+  - **Button examples** with the actual border-radius and colors
+  - **A mini mockup** showing how a dashboard/form would look with these colors
+- User clicks between options to compare
+- At the bottom: "Which option do you prefer? Tell Claude: I prefer option 1/2/3"
+
+### 2. Config: `.genius/design-config.json`
+### 3. Unified State: `.genius/outputs/state.json` (with `phases.design` populated)
 
 **Before transitioning to next skill:**
-1. Verify design-config.json exists
-2. Verify state.json has design phase complete
-3. Update `currentPhase` to next phase
-4. Announce transition
+1. Verify **design-playground.html EXISTS and was announced to user**
+2. Verify design-config.json exists
+3. Verify state.json has design phase complete
+4. User has CHOSEN an option from the playground
 
-**If artifacts missing:** DO NOT proceed. Generate them first.
+**If playground HTML is missing:** DO NOT proceed. Generate it first.
 
 ---
 
