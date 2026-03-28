@@ -180,6 +180,49 @@ memory:
 #   thread_id: string          # Codex thread ID for the current session
 #   forked_threads: {}         # Map of agent_id → thread_id for active forks
 #   parallel_tasks: []         # Tasks currently running in parallel threads
+# ── Model Picker — ANTHROPIC_CUSTOM_MODEL_OPTION (v19.1) ─────────────────────
+# Claude Code 2.1.x added ANTHROPIC_CUSTOM_MODEL_OPTION to inject a custom
+# entry into the /model picker UI. Genius Team uses this to expose a "Genius
+# Optimized" model preset — opusplan (Opus for planning, Sonnet for execution)
+# — directly in the picker without requiring users to remember aliases.
+#
+# Set these env vars in your shell (e.g. ~/.zshrc or .env.local):
+#
+#   ANTHROPIC_CUSTOM_MODEL_OPTION=opusplan
+#   ANTHROPIC_CUSTOM_MODEL_OPTION_NAME="Genius Optimized"
+#   ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="Opus for planning → Sonnet for execution (recommended for Genius Team)"
+#
+# How to set it per-project (in .claude/settings.json):
+#   {
+#     "env": {
+#       "ANTHROPIC_CUSTOM_MODEL_OPTION": "opusplan",
+#       "ANTHROPIC_CUSTOM_MODEL_OPTION_NAME": "Genius Optimized",
+#       "ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION": "Opus plans, Sonnet executes — best for Genius Team workflows"
+#     }
+#   }
+#
+# Why opusplan?
+#   - genius-orchestrator + genius-architect run on Opus (complex reasoning) ✓
+#   - genius-dev + genius-qa run on Sonnet (code tasks, efficient) ✓
+#   - opusplan auto-switches between both based on plan/execute mode
+#   - Users get Opus quality for architecture decisions at Sonnet cost for code
+#
+# Note: ANTHROPIC_CUSTOM_MODEL_OPTION_NAME and _DESCRIPTION are optional but
+# improve the /model picker UX. Without them, the model ID is shown raw.
+model_picker:
+  custom_option:
+    env_var: ANTHROPIC_CUSTOM_MODEL_OPTION
+    value: opusplan
+    name_env: ANTHROPIC_CUSTOM_MODEL_OPTION_NAME
+    name_value: "Genius Optimized"
+    description_env: ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION
+    description_value: "Opus for planning → Sonnet for execution (recommended for Genius Team)"
+  rationale: >
+    opusplan is the ideal model for Genius Team: Opus handles the orchestrator,
+    interviewer, and architect phases (complex reasoning), while Sonnet handles
+    dev and QA (efficient code tasks). This matches each agent's model_preference
+    field and minimizes cost without sacrificing quality.
+
 codex_thread_forking:
   enabled: true
   requires_codex_version: "0.107.0"
@@ -188,3 +231,64 @@ codex_thread_forking:
   state_sync_file: ".genius/state.json"
   default_model: "gpt-5.4"  # GPT-5.4 available in Codex CLI since 2026-03-05
   context_window: "1M tokens"  # enables full codebase ingestion
+
+# ── Claude Code HTTP Hooks (v19.1) ────────────────────────────────────────────
+# Genius Team integrates with Claude Code's native hook system to track tasks
+# and control worktree creation. Start the genius-server, then add these hooks
+# to your project's .claude/settings.json.
+#
+# Requirements:
+#   - genius-server running: node ~/genius-team/scripts/genius-server.js --port 3333
+#   - Claude Code 2.1.x+ (hooks stable since 2.0)
+#
+# Add to .claude/settings.json in your project:
+#
+#   {
+#     "hooks": {
+#       "TaskCreated": [
+#         {
+#           "hooks": [
+#             {
+#               "type": "http",
+#               "url": "http://localhost:3333/hooks/task-created",
+#               "timeout": 10
+#             }
+#           ]
+#         }
+#       ],
+#       "WorktreeCreate": [
+#         {
+#           "hooks": [
+#             {
+#               "type": "http",
+#               "url": "http://localhost:3333/hooks/worktree-create",
+#               "timeout": 15
+#             }
+#           ]
+#         }
+#       ]
+#     }
+#   }
+#
+# What each hook does:
+#   TaskCreated  — logs task to .genius/hooks.log.jsonl + updates .genius/state.json
+#                  (cc_tasks array). Lets the orchestrator know when CC spawns tasks.
+#   WorktreeCreate — overrides the default git worktree path to place new worktrees
+#                    under .genius/worktrees/<task-id>/. Returns hookSpecificOutput
+#                    with worktreePath per the Claude Code hooks API spec.
+#
+# Health check: GET http://localhost:3333/hooks → { ok: true, hooks_log_entries: N }
+cc_http_hooks:
+  supported_events:
+    - name: TaskCreated
+      endpoint: /hooks/task-created
+      purpose: "Track CC task creation in .genius/state.json → cc_tasks[]"
+      blocking: false
+    - name: WorktreeCreate
+      endpoint: /hooks/worktree-create
+      purpose: "Route worktrees to .genius/worktrees/<task-id>/"
+      blocking: true
+      returns: "hookSpecificOutput.worktreePath"
+  server_port: 3333
+  health_check: "GET http://localhost:3333/hooks"
+  log_file: ".genius/hooks.log.jsonl"

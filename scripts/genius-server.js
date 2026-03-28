@@ -103,10 +103,101 @@ function detectTunnel() {
 }
 
 // ─── HTTP SERVER ─────────────────────────────────────────────────────────────
-const server = http.createServer((req, res) => {
+// ─── CC HOOKS STATE ──────────────────────────────────────────────────────────
+// Tracks live CC hook events: task IDs, worktrees, etc.
+const hooksLogFile = path.join(cwd, '.genius', 'hooks.log.jsonl');
+
+function appendHookLog(entry) {
+  try {
+    fs.mkdirSync(path.dirname(hooksLogFile), { recursive: true });
+    fs.appendFileSync(hooksLogFile, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + '\n');
+  } catch (_) {}
+}
+
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.on('data', chunk => { data += chunk; });
+    req.on('end', () => {
+      try { resolve(JSON.parse(data)); } catch { resolve({}); }
+    });
+    req.on('error', reject);
+  });
+}
+
+const server = http.createServer(async (req, res) => {
   // Strip query string
   let urlPath = req.url.split('?')[0];
 
+  // ── CC Hook: TaskCreated ────────────────────────────────────────────────────
+  // Claude Code fires this HTTP hook when a task is created via TaskCreate.
+  // We log it to .genius/hooks.log.jsonl for orchestrator state tracking.
+  if (req.method === 'POST' && urlPath === '/hooks/task-created') {
+    const body = await readBody(req);
+    appendHookLog({ event: 'TaskCreated', ...body });
+    // Optional: update .genius/state.json with task info
+    const stateJsonPath = path.join(cwd, '.genius', 'state.json');
+    try {
+      let state = {};
+      if (fs.existsSync(stateJsonPath)) {
+        state = JSON.parse(fs.readFileSync(stateJsonPath, 'utf8'));
+      }
+      if (!state.cc_tasks) state.cc_tasks = [];
+      state.cc_tasks.push({
+        id: body.task_id || body.id,
+        description: body.task_description || body.description,
+        created_at: new Date().toISOString(),
+        session_id: body.session_id,
+      });
+      state.last_updated = new Date().toISOString();
+      fs.writeFileSync(stateJsonPath, JSON.stringify(state, null, 2));
+    } catch (_) {}
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
+  // ── CC Hook: WorktreeCreate ────────────────────────────────────────────────
+  // Claude Code fires this HTTP hook when creating a worktree (--worktree flag
+  // or isolation: "worktree"). The hook can return hookSpecificOutput.worktreePath
+  // to override the default git worktree path.
+  if (req.method === 'POST' && urlPath === '/hooks/worktree-create') {
+    const body = await readBody(req);
+    appendHookLog({ event: 'WorktreeCreate', ...body });
+
+    // Default: let genius-team manage the worktree under .genius/worktrees/
+    // Claude Code will use our returned path instead of the default.
+    const taskId = body.task_id || body.id || `task-${Date.now()}`;
+    const safeName = String(taskId).replace(/[^a-zA-Z0-9-_]/g, '-').substring(0, 40);
+    const worktreePath = path.join(cwd, '.genius', 'worktrees', safeName);
+
+    // Ensure parent dir exists
+    try {
+      fs.mkdirSync(path.join(cwd, '.genius', 'worktrees'), { recursive: true });
+    } catch (_) {}
+
+    appendHookLog({ event: 'WorktreeCreate:resolved', worktreePath, taskId });
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: 'WorktreeCreate',
+        worktreePath,
+      }
+    }));
+    return;
+  }
+
+  // ── CC Hook: Hooks health check ────────────────────────────────────────────
+  if (req.method === 'GET' && urlPath === '/hooks') {
+    const logExists = fs.existsSync(hooksLogFile);
+    const logLines = logExists ? fs.readFileSync(hooksLogFile, 'utf8').trim().split('\n').filter(Boolean).length : 0;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, hooks_log_entries: logLines, port }));
+    return;
+  }
+
+  // ── Static file serving ───────────────────────────────────────────────────
   // Sanitize path traversal
   const safePath = path.normalize(urlPath).replace(/^(\.\.[/\\])+/, '');
   let filePath = path.join(serveDir, safePath);
