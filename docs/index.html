@@ -426,9 +426,9 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <!-- UPDATE BANNER -->
 <div class="update-banner" id="updateBanner">
   <div class="banner-content">
-    <span class="banner-badge">🆕 NEW</span>
-    <span class="banner-text"><strong>Genius Team v19.0</strong> is here!</span>
-    <span class="banner-features">42 Skills • GEO-SEO • Crypto/Web3 • /challenge Dual Mode • Self-Extending</span>
+    <span class="banner-badge">🆕 v20</span>
+    <span class="banner-text"><strong>Genius Team v20.0</strong> is here!</span>
+    <span class="banner-features">47 Skills • Auto Mode • Computer Use UI Testing • CI Pipelines • Scheduled Tasks</span>
     <a href="#upgrade" class="banner-link">Upgrade now →</a>
     <button class="banner-close" onclick="closeBanner()" aria-label="Close">×</button>
   </div>
@@ -438,9 +438,9 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
-      <div class="hero-badge">✨ v19.0 — Claude Channels, Voice, 1M Context, 90% Routing Accuracy, Context Optimization</div>
+      <div class="hero-badge">✨ v20.0 — Auto Mode, Computer Use UI Testing, CI Pipelines, Scheduled Tasks, 47 Skills</div>
       <h1>Your <span class="grad">AI Product Team.</span><br>From Idea to Production.</h1>
-      <p>An open-source framework that orchestrates 42 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
+      <p>An open-source framework that orchestrates 47 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.</p>
       <div class="hero-btns">
         <a href="#quickstart" class="btn btn-primary">Get Started</a>
         <a href="https://github.com/w-3-art/genius-team" target="_blank" class="btn btn-secondary">⭐ View on GitHub</a>
@@ -607,7 +607,7 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
     <div class="fade-in">
       <div class="section-label">Features</div>
       <div class="section-title">Built for serious projects</div>
-      <div class="section-sub">Everything you need to go from zero to production. 42 skills, interactive playgrounds, persistent memory, anti-drift guard, GEO-SEO, Web3 intelligence, autonomous experiments, and true dual-engine mode.</div>
+      <div class="section-sub">Everything you need to go from zero to production. 47 skills, interactive playgrounds, persistent memory, anti-drift guard, Auto Mode safety profiles, Computer Use UI testing, CI pipelines, and scheduled tasks.</div>
     </div>
     <div class="features-grid fade-in">
       <div class="feature" onclick="openModal('feature-agent-teams')">
@@ -693,6 +693,31 @@ footer .footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:
         <div class="new-badge">✨ v19</div>
         <h3>🎮 Context-Aware Dashboards</h3>
         <p><strong>genius-playground-generator</strong> reads your real project data (specs, market analysis, dev progress, SEO scores) and generates a custom HTML dashboard — not a generic template.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-auto')">
+        <div class="new-badge">✨ v20</div>
+        <h3>🤖 Auto Mode Safety Profiles</h3>
+        <p><strong>genius-auto</strong> configures automatic approval policies per skill type — safe actions run hands-free while destructive operations stay gated. Unattended mode for trusted workflows.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-ui-tester')">
+        <div class="new-badge">✨ v20</div>
+        <h3>👁️ Computer Use UI Testing</h3>
+        <p><strong>genius-ui-tester</strong> uses Claude Code Computer Use to take screenshots, detect visual bugs, validate layouts, check responsive design, and generate visual regression reports.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-ci')">
+        <div class="new-badge">✨ v20</div>
+        <h3>🔄 CI Pipelines</h3>
+        <p><strong>genius-ci</strong> sets up GitHub Actions workflows with Claude Code <code>--bare</code> mode for scripted execution — automated PR review, quality gates, and continuous integration.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-scheduler')">
+        <div class="new-badge">✨ v20</div>
+        <h3>⏰ Scheduled Tasks</h3>
+        <p><strong>genius-scheduler</strong> configures recurring tasks via <code>/loop</code> — PR review cycles, deploy monitoring, daily summaries, test watching, and autoresearch loops on a schedule.</p>
+      </div>
+      <div class="feature new-feature" onclick="openModal('feature-cc-compat')">
+        <div class="new-badge">✨ v20</div>
+        <h3>⚡ Claude Code 2.1.86</h3>
+        <p>Full compatibility with Claude Code 2.1.86 — HTTP hooks for TaskCreated and WorktreeCreate events, model picker integration, and enhanced agent team coordination.</p>
       </div>
     </div>
   </div>
@@ -1054,16 +1079,14 @@ cd my-awesome-app
       </div>
       
       <div class="whats-new">
-        <h4>What's new in v18.0:</h4>
+        <h4>What's new in v20.0:</h4>
         <ul>
-          <li>🔬 <strong>Autoresearch framework</strong> — Karpathy-inspired autonomous optimization loop: modify → test → measure → keep/revert</li>
-          <li>📊 <strong>90% routing accuracy</strong> — Benchmark-validated skill routing with 30-task automated test suite</li>
-          <li>🗜️ <strong>-30KB context savings</strong> — All skills compressed: 0 files over 10KB (was 10). More room for your work.</li>
-          <li>🛡️ <strong>Session durability fix</strong> — Critical postCompactionSections bug fixed: context no longer lost after compaction</li>
-          <li>✅ <strong>42/42 Definition of Done</strong> — Every skill has quality gates, handoffs, and negative triggers</li>
-          <li>🎨 <strong>Shared design system</strong> — design-tokens.css unifies all 18 playground templates</li>
-          <li>🔍 <strong>validate-skills.sh</strong> — Automated quality checks for frontmatter, triggers, DoD, handoffs, and file size</li>
-          <li>🛡️ <strong>Anti-drift in all 4 modes</strong> — Core Rules injected in CLI, IDE, Omni, and Dual configs</li>
+          <li>🤖 <strong>genius-auto — Auto Mode safety profiles</strong> — Configure automatic approval policies per skill type. Safe actions run hands-free, destructive operations stay gated.</li>
+          <li>👁️ <strong>genius-ui-tester — Computer Use visual testing</strong> — Screenshots, visual bug detection, layout validation, responsive checks, and visual regression reports via Computer Use.</li>
+          <li>🔄 <strong>genius-ci — CI pipelines with --bare mode</strong> — GitHub Actions workflows, automated PR review in CI, and quality gates using Claude Code scripted execution.</li>
+          <li>⏰ <strong>genius-scheduler — /loop recurring tasks</strong> — PR review cycles, deploy monitoring, daily summaries, test watching, and autoresearch loops on a schedule.</li>
+          <li>⚡ <strong>Claude Code 2.1.86 support</strong> — HTTP hooks for TaskCreated + WorktreeCreate, model picker integration, enhanced agent team coordination.</li>
+          <li>📈 <strong>47 skills</strong> — 7 new specialized skills added (was 42), covering automation, visual QA, CI/CD, and scheduling.</li>
         </ul>
         <p style="margin-top:1rem;font-size:.85rem;color:var(--text2)">Run <code>/genius-upgrade</code> inside Claude Code.</p>
       </div>
@@ -1076,7 +1099,7 @@ cd my-awesome-app
   <div class="container">
     <div class="fade-in">
       <div class="section-label">Skills</div>
-      <div class="section-title">42 specialized skills</div>
+      <div class="section-title">47 specialized skills</div>
       <div class="section-sub">Each skill is a spawnable sub-agent — a domain expert with its own context, memory, and lifecycle. Together, they're your AI product team.</div>
     </div>
     <div class="skills-grid fade-in">
@@ -1215,7 +1238,7 @@ cd my-awesome-app
       <a href="https://github.com/w-3-art/genius-team/blob/main/LICENSE" target="_blank">MIT License</a>
       <a href="https://github.com/w-3-art/genius-team/blob/main/docs/GETTING-STARTED.md" target="_blank">Docs</a>
     </div>
-    <p>Built with 🧠 <strong>Genius Team v19.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
+    <p>Built with 🧠 <strong>Genius Team v20.0</strong> — Multi-Agent Orchestration: Spawn, Coordinate, Ship</p>
   </div>
 </footer>
 

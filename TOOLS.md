@@ -4,7 +4,7 @@
 
 | Engine | Min Version | Notes |
 |--------|-------------|-------|
-| Claude Code | 2.1.76+ | Default engine; Channels, Voice, 1M context, Agent Teams |
+| Claude Code | 2.1.86+ | Default engine; Auto Mode, Computer Use, Bare Mode, Plugins GA |
 | Codex CLI | 0.107.0+ | GPT-5.4 default; multi-agent orchestration |
 
 ## Codex Features (≥ 0.107.0)
@@ -15,19 +15,33 @@
 - **Configurable memories** — `codex debug clear-memories` to reset
 - **GPT-5.4 (05 Mar 2026)** — le modèle par défaut dans Codex CLI. Reasoning + coding + agentic en un modèle unifié. Contexte 1M tokens. Computer use natif.
 
-## Claude Code Features (≥ 2.1.76)
+## Claude Code Features (≥ 2.1.86)
 
-- **Claude Code Channels** — talk to your Genius Team session from Telegram or Discord (research preview, Mar 20 2026). Setup: install channel plugin → launch with `--channels` → pair your account. Full filesystem + MCP + git access from your phone.
-- **Voice Mode** — `/voice` to activate push-to-talk (spacebar). 20 languages. Great for brainstorming with genius-pm or quick commands.
-- **1M Token Context** — Opus 4.6 supports 1M tokens on Max/Team/Enterprise. Less compaction needed = better session continuity.
-- **/loop** — recurring tasks: `/loop 5m check deploy`, `/loop 30s run tests`. Replaces manual bash loops for autoresearch/monitoring.
-- **/effort** — control analysis depth: `low` (quick), `medium` (default), `high` (deep). Use "ultrathink" keyword for max depth on a single turn.
-- **/color** — color-code your session prompt when running multiple parallel sessions.
+### New in 2.1.80–2.1.86
+
+- **Computer Use** — control screen, click, browse, take screenshots. Pro/Max plans. Used by `genius-ui-tester` for visual testing. Enable via settings or `--computer-use`.
+- **Auto Mode** — automatically approve safe actions based on permission rules. Used by `genius-auto` to configure skill-aware safety profiles. Toggle with `/auto` or `--auto-approve`.
+- **--bare Mode** — scripted execution without hooks, UI, or interactivity. Designed for CI/CD. Used by `genius-ci` for GitHub Actions pipelines: `claude --bare -p "prompt" --output-format json`.
+- **Plugins GA** — official plugin marketplace. Install plugins via `claude plugins install <name>`. Genius-Claw available as plugin.
+- **Conditional Hooks** — `if` field in hook definitions for permission-based rules. Used by `genius-auto` for skill-aware auto-approval.
+- **MCP Elicitation** — MCP servers can ask users questions interactively to gather missing parameters.
+- **Background Agent + Worktree** — run agents in background with isolated git worktrees. `--background` flag for parallel task execution.
+- **Remote Triggers** — schedule agents to run on cron: `claude trigger create --schedule "0 9 * * *" --prompt "..."`. Used by `genius-scheduler`.
+- **Agent SDK renamed** — now `@anthropic-ai/claude-agent-sdk` (was `@anthropic-ai/agent-sdk`).
+
+### Existing (2.1.76+)
+
+- **Claude Code Channels** — talk to your session from Telegram or Discord. Full filesystem + MCP + git access from your phone.
+- **Voice Mode** — `/voice` push-to-talk (spacebar). 20 languages. Improved in 2.1.84 with better push-to-talk UX.
+- **1M Token Context** — Opus 4.6 supports 1M tokens on Max/Team/Enterprise. Less compaction needed.
+- **/loop** — recurring tasks: `/loop 5m check deploy`, `/loop 30s run tests`. Used by `genius-scheduler`.
+- **/effort** — control analysis depth: `low` (quick), `medium` (default), `high` (deep).
+- **/color** — color-code your session prompt for multiple parallel sessions.
 - **Agent Teams** — `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` for parallel genius-dev
 - **HTTP Hooks** — POST JSON to external URL on hook events (set `GENIUS_WEBHOOK_URL`)
 - **Shared project configs** — configs sync across git worktrees automatically
 - `/simplify`, `/batch` — built-in slash commands for context management
-- **MCP Elicitation** — tools can ask for missing parameters interactively
+- **Remote Control** — control your terminal session from your phone via Claude Code mobile app
 
 ## OpenClaw (Genius-Claw)
 

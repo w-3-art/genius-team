@@ -1,5 +1,34 @@
 # Changelog
 
+## [20.0.0] - 2026-03-29
+
+### Added — 4 New Skills (total: 47)
+- **genius-auto** — Configures Claude Code Auto Mode with skill-aware safety profiles. Permissive for content skills, standard for dev, restrictive for deploy/security, monitor for QA.
+- **genius-ui-tester** — Visual UI testing using Computer Use. Screenshots, layout validation, responsive checks across 4 viewports, interactive element testing, visual bug reports.
+- **genius-scheduler** — Configures /loop recurring tasks and remote triggers. Templates: PR review cycles, deploy watch, daily summaries, test watcher, autoresearch loops.
+- **genius-ci** — CI/CD pipelines using `claude --bare` mode. GitHub Actions workflows for PR auto-review, quality gates with AI security scanning, auto-fix lint.
+
+### Added — Claude Code 2.1.86 Integration
+- **Computer Use** — Screen control, clicking, browsing, screenshots (Pro/Max). Powering genius-ui-tester.
+- **Auto Mode** — Automatic approval of safe actions. genius-auto configures per-skill safety policies.
+- **--bare Mode** — Headless execution for CI. genius-ci generates GitHub Actions with `claude --bare`.
+- **Plugins GA** — Official marketplace. Genius-Claw available as plugin.
+- **Conditional Hooks** — `if` field in hook configs for permission-based rules.
+- **Background Agent + Worktree** — Parallel isolated task execution.
+- **Remote Triggers** — Cron-scheduled agents via `claude trigger create`.
+- **Agent SDK renamed** — `@anthropic-ai/claude-agent-sdk`
+
+### Improved — Configuration
+- All 4 mode configs updated: conditional hooks, auto mode env vars, v20 version refs
+- Compaction optimized for 1M context window
+- Claude Code minimum version: 2.1.76 → **2.1.86**
+
+### Improved — Documentation
+- TOOLS.md fully updated with 2.1.80–2.1.86 features
+- Website (genius.w3art.io) updated: v20 badge, What's New section, 47 skills
+
+---
+
 ## [19.0.0] - 2026-03-21
 
 ### Added — Claude Code Channels & Mobile Vibe Coding

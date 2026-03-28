@@ -1,14 +1,14 @@
-# Genius Team v19.0
+# Genius Team v20.0
 
-[![Version](https://img.shields.io/badge/version-19.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-20.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-1.0%2B-purple.svg)](https://docs.anthropic.com/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.86%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
 > Your AI product team. From idea to production.
 
 ## What is Genius Team?
 
-Genius Team is an open-source framework that orchestrates 42 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
+Genius Team is an open-source framework that orchestrates 47 specialized AI agents — each spawnable on demand — to take your idea from interview to production, with human checkpoints at every phase.
 
 ```
 genius-interviewer → genius-specs → genius-architect → genius-dev → genius-qa → genius-deploy
@@ -18,17 +18,17 @@ genius-interviewer → genius-specs → genius-architect → genius-dev → geni
 
 Every phase ends with a human checkpoint. You approve. Only then does the next agent spawn.
 
-## What's New in v19.0
+## What's New in v20.0
 
-- 🎯 **42 skills total** — genius-dev splits into 5 domain experts; 12 new standalone skills added
-- 🔍 **genius-code-review** — Multi-agent PR review: bugs + security + quality in parallel
-- 🛠️ **genius-skill-creator** — Framework creates new project-specific skills on demand (self-extending)
-- 🔬 **genius-experiments** — Autonomous overnight optimization loop (Karpathy autoresearch pattern)
-- 🌐 **genius-seo** — GEO-first: optimize for ChatGPT, Perplexity, Claude + traditional search
-- 🪙 **genius-crypto** — Web3 intelligence: DexScreener + OpenSea NFTs + Dune on-chain SQL
-- 📊 **Post-launch suite** — genius-analytics, genius-performance, genius-accessibility
-- 📝 **Project lifecycle** — genius-docs, genius-content, genius-template (SaaS/e-commerce/mobile/web3)
-- ✅ **Anthropic Skills Guide compliance** — All 42 skills follow official best practices
+- 🤖 **genius-auto** — Auto Mode with skill-aware safety profiles (permissive/standard/restrictive/monitor)
+- 👁️ **genius-ui-tester** — Visual UI testing via Computer Use (screenshots, responsive, interactive)
+- 🔧 **genius-ci** — CI/CD pipelines using `claude --bare` (GitHub Actions, PR auto-review, quality gates)
+- ⏰ **genius-scheduler** — /loop templates + remote triggers (PR review, deploy watch, daily summary)
+- 🖥️ **Computer Use** — Screen control, clicking, browsing for visual testing (Pro/Max)
+- 🔌 **Plugins GA** — Official Claude Code plugin marketplace
+- 📋 **Conditional hooks** — `if` field in hook configs for permission-based rules
+- 🚀 **Background agents** — Parallel isolated task execution with worktrees
+- ⬆️ **Claude Code 2.1.86** — 47 skills total, Auto Mode, --bare, remote triggers
 
 *Previous releases: see [CHANGELOG.md](./CHANGELOG.md)*
 

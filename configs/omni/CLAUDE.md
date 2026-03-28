@@ -1,4 +1,4 @@
-# Genius Team v18.0 — Omni Mode
+# Genius Team v20.0 — Omni Mode
 
 > Your AI product team. From idea to production. Multi-provider orchestration.
 
@@ -76,7 +76,7 @@ gemini login    # Gemini Advanced
 
 ## Agent Teams Protocol
 
-Genius Team v18.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v20.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Teammates** are spawned via Shift+Tab or Task() with natural language prompts
