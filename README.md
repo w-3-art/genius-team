@@ -24,7 +24,7 @@
 ## What's New in v21.0
 
 - **Mode System** — `/genius-mode` switches between beginner, builder, pro, and agency modes. Each adjusts validation strictness, explanation verbosity, and checkpoint behavior.
-- **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 51 skills. Prerequisites, outputs, categories.
+- **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 54 skills. Prerequisites, outputs, categories.
 - **Project Import** — `/genius-import` brings existing codebases into Genius Team. Auto-detects artifacts, sets checkpoints. Validators warn instead of block for imported projects.
 - **Session Recovery** — `.genius/session-log.jsonl` + `scripts/session-recover.sh` rebuilds state after crashes.
 - **Pre-transition Guards** — 3 micro-checklist skills auto-verify prerequisites before planning, coding, and deployment.
