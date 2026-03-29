@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genius Team v21 — Plan d'implémentation</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0f; color: #e8e4df; font-family: 'DM Sans', system-ui, sans-serif; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .5rem; background: linear-gradient(135deg, #D4A574, #B8956A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.3rem; font-weight: 700; margin: 2rem 0 .5rem; color: #D4A574; border-bottom: 1px solid rgba(212,165,116,.15); padding-bottom: .4rem; }
+h3 { font-size: 1rem; font-weight: 600; margin: 1.2rem 0 .4rem; color: #e8e4df; }
+.subtitle { font-size: .85rem; color: rgba(255,255,255,.35); margin-bottom: 2rem; }
+.phase { background: rgba(255,255,255,.02); border: 1px solid rgba(212,165,116,.08); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.phase-title { font-size: 1.1rem; font-weight: 700; }
+.phase-badge { background: rgba(212,165,116,.1); color: #D4A574; font-size: .7rem; padding: .2rem .6rem; border-radius: 4px; font-weight: 600; }
+.task-row { display: grid; grid-template-columns: 32px 1fr 200px 80px; gap: .5rem; align-items: start; padding: .6rem .4rem; border-bottom: 1px solid rgba(255,255,255,.03); }
+.task-row:hover { background: rgba(212,165,116,.03); }
+.task-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: #D4A574; cursor: pointer; margin-top: 2px; }
+.task-name { font-size: .82rem; line-height: 1.4; }
+.task-files { font-size: .68rem; color: rgba(255,255,255,.25); font-family: monospace; }
+.task-effort { font-size: .7rem; color: rgba(212,165,116,.5); text-align: right; }
+.comment-box { width: 100%; background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.06); border-radius: 6px; color: #e8e4df; font-size: .75rem; padding: .4rem .5rem; margin-top: .3rem; resize: vertical; min-height: 28px; font-family: inherit; }
+.comment-box::placeholder { color: rgba(255,255,255,.15); }
+.comment-box:focus { outline: none; border-color: rgba(212,165,116,.3); }
+.stats { display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+.stat { background: rgba(212,165,116,.06); border: 1px solid rgba(212,165,116,.1); border-radius: 8px; padding: .8rem 1rem; min-width: 120px; }
+.stat-value { font-size: 1.3rem; font-weight: 800; color: #D4A574; }
+.stat-label { font-size: .65rem; color: rgba(255,255,255,.3); margin-top: .1rem; }
+.positioning { background: rgba(212,165,116,.05); border-left: 3px solid #D4A574; padding: 1rem 1.2rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: .9rem; font-style: italic; }
+.section-comment { margin: .8rem 0; }
+.section-comment label { font-size: .7rem; color: rgba(255,255,255,.25); display: block; margin-bottom: .2rem; }
+.btn-export { position: fixed; bottom: 2rem; right: 2rem; background: linear-gradient(135deg, #D4A574, #B8956A); color: #0a0a0f; border: none; padding: .8rem 1.5rem; border-radius: 8px; font-weight: 700; font-size: .85rem; cursor: pointer; font-family: inherit; box-shadow: 0 4px 20px rgba(212,165,116,.3); z-index: 100; }
+.btn-export:hover { transform: scale(1.02); }
+.approved { background: rgba(52,211,153,.05) !important; }
+.tag { font-size: .6rem; padding: .1rem .35rem; border-radius: 3px; font-weight: 600; margin-left: .3rem; }
+.tag-new { background: rgba(52,211,153,.15); color: #34D399; }
+.tag-modify { background: rgba(251,191,36,.15); color: #FBBF24; }
+.tag-strategy { background: rgba(139,92,246,.15); color: #8B5CF6; }
+.tag-content { background: rgba(59,130,246,.15); color: #3B82F6; }
+.counter { position: fixed; top: 2rem; right: 2rem; background: rgba(0,0,0,.8); border: 1px solid rgba(212,165,116,.2); border-radius: 8px; padding: .6rem 1rem; font-size: .75rem; z-index: 100; }
+</style>
+</head>
+<body>
+
+<h1>🧠 Genius Team v21 — Plan d'implémentation</h1>
+<p class="subtitle">100 itérations d'autoresearch (Opus + GPT-5.4) → Plan final à valider<br>Coche les tâches approuvées, ajoute des commentaires si besoin, puis exporte.</p>
+
+<div class="positioning">
+<strong>Positionnement :</strong> "Genius Team is the operating system for vibecoding: it turns rough ideas and messy codebases into build-ready execution with enough guidance for first-time builders and enough discipline for expert shippers."
+</div>
+<div class="section-comment">
+<label>💬 Commentaire sur le positionnement :</label>
+<textarea class="comment-box" placeholder="Ton avis sur le positionnement..." data-section="positioning"></textarea>
+</div>
+
+<div class="positioning" style="border-color: #34D399;">
+<strong>Tagline :</strong> "Build your first app. Ship your tenth faster."
+</div>
+<div class="section-comment">
+<label>💬 Commentaire sur la tagline :</label>
+<textarea class="comment-box" placeholder="Ton avis sur la tagline..." data-section="tagline"></textarea>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="stat-value" id="total-tasks">0</div><div class="stat-label">Tâches totales</div></div>
+<div class="stat"><div class="stat-value" id="approved-tasks">0</div><div class="stat-label">Approuvées</div></div>
+<div class="stat"><div class="stat-value" id="commented-tasks">0</div><div class="stat-label">Avec commentaires</div></div>
+<div class="stat"><div class="stat-value">~59 jours</div><div class="stat-label">Effort total estimé</div></div>
+</div>
+
+<div class="counter" id="counter">✅ 0 / 0 approuvées</div>
+
+<!-- ============ PHASE 1 ============ -->
+<div class="phase">
+<div class="phase-header">
+<div class="phase-title">Phase 1 — Foundation (Semaines 1-3)</div>
+<div class="phase-badge">~15.5 jours</div>
+</div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make it work brilliantly for 10 people"</p>
+
+<h3>Semaine 1 : Core Architecture</h3>
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Définir et implémenter le système de modes <span class="tag tag-new">NEW</span></div><div class="task-files">core/modes/mode-presets.json, core/modes/mode-engine.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Beginner / Builder / Pro / Agency</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire le workflow registry v1 <span class="tag tag-new">NEW</span></div><div class="task-files">core/workflows/registry.json, core/workflows/registry-schema.json</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Définition formelle de chaque workflow</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Implémenter la state machine typée <span class="tag tag-new">NEW</span></div><div class="task-files">core/state/state-machine.ts, core/state/types.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">JSON + TypeScript interfaces</div><div class="task-effort">1 jour</div></div>
+
+<h3>Semaine 2 : Trust Layer</h3>
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire les validators (brief, spec, architecture, plan) <span class="tag tag-new">NEW</span></div><div class="task-files">core/validators/*.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Complétude, contradictions, dépendances</div><div class="task-effort">3 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Implémenter le session logging (JSONL) <span class="tag tag-new">NEW</span></div><div class="task-files">core/state/session-log.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Appendable, streamable</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire le recovery system (checkpoint-based) <span class="tag tag-new">NEW</span></div><div class="task-files">core/state/recovery.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Reprendre sans recommencer</div><div class="task-effort">1 jour</div></div>
+
+<h3>Semaine 3 : First Run Experience</h3>
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Réécrire le README (20 sections structurées) <span class="tag tag-modify">MODIFY</span></div><div class="task-files">README.md</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Hook → GIF → Install → Modes → Paths</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Refaire /genius-start comme entrypoint universel <span class="tag tag-modify">MODIFY</span></div><div class="task-files">packs/core/workflows/genius-start.md</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">1 question → auto-routing</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire le 5-minute challenge (3 variantes) <span class="tag tag-new">NEW</span></div><div class="task-files">docs/5-minute-challenge.md, examples/5-min-challenge/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Beginner / Builder / Pro</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Remplacer GENIUS_GUARD monolithique par micro-checklists <span class="tag tag-modify">MODIFY</span></div><div class="task-files">core/guards/pre-planning.md, pre-coding.md, pre-deploy.md</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Au point d'usage, pas un gros doc</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Réduire la surface visible à 3 entry paths <span class="tag tag-modify">MODIFY</span></div><div class="task-files">Registry + genius-start workflow</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Launch / Improve / Ship faster</div><div class="task-effort">0.5 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Réorganiser 48 skills en 4 packs <span class="tag tag-modify">MODIFY</span></div><div class="task-files">.claude/skills/ → packs/core/, packs/growth/, packs/quality/, packs/business/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Core / Growth / Quality / Business</div><div class="task-effort">1 jour</div></div>
+
+<div class="section-comment">
+<label>💬 Commentaire global Phase 1 :</label>
+<textarea class="comment-box" placeholder="Ton avis sur la Phase 1..." data-section="phase1"></textarea>
+</div>
+</div>
+
+<!-- ============ PHASE 2 ============ -->
+<div class="phase">
+<div class="phase-header">
+<div class="phase-title">Phase 2 — CLI + Testing + Proof (Semaines 4-6)</div>
+<div class="phase-badge">~13 jours</div>
+</div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make it provably reliable"</p>
+
+<h3>Semaine 4 : CLI</h3>
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">CLI scaffold TypeScript <span class="tag tag-new">NEW</span></div><div class="task-files">cli/genius.ts, cli/commands/*.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Commander.js</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Commandes : genius start, status, continue <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/start.ts, status.ts, continue.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Commandes de base</div><div class="task-effort">1.5 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">genius doctor (diagnostic environnement) <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/doctor.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Checks OS, Node, Claude Code</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">genius mode (switch modes) <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/mode.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Beginner ↔ Builder ↔ Pro</div><div class="task-effort">0.5 jour</div></div>
+
+<h3>Semaine 5 : Testing + Demos</h3>
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Tests automatisés (registry, state, modes, validators) <span class="tag tag-new">NEW</span></div><div class="task-files">tests/*.test.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Vitest</div><div class="task-effort">3 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">5 démos canoniques avec expected outputs <span class="tag tag-new">NEW</span></div><div class="task-files">examples/saas/, crud/, api/, internal-tool/, content-site/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Reproductibles, versionnées</div><div class="task-effort">2 jours</div></div>
+
+<h3>Semaine 6 : Proof + Installer</h3>
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">install.sh avec détection intelligente <span class="tag tag-new">NEW</span></div><div class="task-files">install.sh (hébergé sur genius-team.dev)</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">OS, shell, Node, Claude Code, mode</div><div class="task-effort">1.5 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Dry-run previews pour tous les workflows <span class="tag tag-new">NEW</span></div><div class="task-files">Registry enhancement</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Voir avant d'exécuter</div><div class="task-effort">1.5 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Anti-drift benchmark harness (20 scénarios) <span class="tag tag-new">NEW</span></div><div class="task-files">benchmarks/anti-drift/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">DDR >95%, RSR >90%, FPR <5%</div><div class="task-effort">2 jours</div></div>
+
+<div class="section-comment">
+<label>💬 Commentaire global Phase 2 :</label>
+<textarea class="comment-box" placeholder="Ton avis sur la Phase 2..." data-section="phase2"></textarea>
+</div>
+</div>
+
+<!-- ============ PHASE 3 ============ -->
+<div class="phase">
+<div class="phase-header">
+<div class="phase-title">Phase 3 — Playgrounds + Import + Templates (Semaines 7-9)</div>
+<div class="phase-badge">~15 jours</div>
+</div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make it delightful"</p>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Playground template engine (dark theme, composants) <span class="tag tag-new">NEW</span></div><div class="task-files">core/playgrounds/engine.ts, core/playgrounds/components/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Moteur de génération</div><div class="task-effort">3 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Playgrounds : Brief + Specs + Architecture (Mermaid) <span class="tag tag-new">NEW</span></div><div class="task-files">core/playgrounds/templates/*.html</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Self-contained HTML</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Template system (5 types × 3 modes) <span class="tag tag-new">NEW</span></div><div class="task-files">templates/saas/, landing/, api/, crud/, internal/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">SaaS, Landing, API, CRUD, Internal</div><div class="task-effort">2.5 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">genius import (adoption projet existant) <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/import.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Scan repo → draft brief + architecture</div><div class="task-effort">2.5 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Dashboard unifié "Control Room" <span class="tag tag-new">NEW</span></div><div class="task-files">core/playgrounds/templates/dashboard.html</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Tous les playgrounds liés</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Genius Score + Anti-Drift Score <span class="tag tag-new">NEW</span></div><div class="task-files">core/scoring/genius-score.ts, anti-drift-score.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Score santé projet 0-100</div><div class="task-effort">2 jours</div></div>
+
+<div class="section-comment">
+<label>💬 Commentaire global Phase 3 :</label>
+<textarea class="comment-box" placeholder="Ton avis sur la Phase 3..." data-section="phase3"></textarea>
+</div>
+</div>
+
+<!-- ============ PHASE 4 ============ -->
+<div class="phase">
+<div class="phase-header">
+<div class="phase-title">Phase 4 — Distribution + Content (Semaines 10-12)</div>
+<div class="phase-badge">~15 jours</div>
+</div>
+<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make the world know"</p>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Site genius-team.dev (Astro) <span class="tag tag-new">NEW</span></div><div class="task-files">site/src/pages/index.astro, docs/, compare.astro</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Homepage + Docs + Comparaison</div><div class="task-effort">4 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">3 case studies détaillées <span class="tag tag-content">CONTENT</span></div><div class="task-files">docs/case-studies/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Before/After avec métriques</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Killer demo vidéo "Dog Park in 5 min" <span class="tag tag-content">CONTENT</span></div><div class="task-files">Externe (YouTube)</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Screen recording, timer, dark theme</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Launch : HN, Reddit, Twitter, Product Hunt prep <span class="tag tag-strategy">STRATEGY</span></div><div class="task-files">Externe</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Article technique HN en priorité</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">OpenClaw package + Anthropic marketplace <span class="tag tag-strategy">STRATEGY</span></div><div class="task-files">Package files, manifest</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Distribution organique</div><div class="task-effort">1 jour</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">GitHub Action genius-validate <span class="tag tag-new">NEW</span></div><div class="task-files">.github/actions/genius-validate/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">QA + security auto sur PR</div><div class="task-effort">2 jours</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Extension SDK v0.1 <span class="tag tag-new">NEW</span></div><div class="task-files">sdk/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Pour skills communautaires</div><div class="task-effort">2 jours</div></div>
+
+<div class="section-comment">
+<label>💬 Commentaire global Phase 4 :</label>
+<textarea class="comment-box" placeholder="Ton avis sur la Phase 4..." data-section="phase4"></textarea>
+</div>
+</div>
+
+<!-- ============ STRATEGY ============ -->
+<div class="phase">
+<div class="phase-header">
+<div class="phase-title">Décisions stratégiques à valider</div>
+<div class="phase-badge">STRATÉGIE</div>
+</div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Cortex = gateway Beginner (desktop), CLI = Builder/Pro <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Architecture produit</div><div class="task-effort">—</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Monétisation : Free → Pro $29/mois → Enterprise $149/seat <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">À partir du mois 3</div><div class="task-effort">—</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Marketplace templates/extensions (30% commission) <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">À partir du mois 7</div><div class="task-effort">—</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Content : Blog 2x/sem + YouTube 1x/sem + Newsletter hebdo <span class="tag tag-content">CONTENT</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">"The Vibecoder's Playbook"</div><div class="task-effort">—</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Cible : 500 utilisateurs actifs/semaine à 6 mois <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Pas les stars GitHub</div><div class="task-effort">—</div></div>
+
+<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Multi-plateforme APRÈS PMF sur Claude Code <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Codex/Cursor = Phase 5+</div><div class="task-effort">—</div></div>
+
+<div class="section-comment">
+<label>💬 Commentaire global Stratégie :</label>
+<textarea class="comment-box" placeholder="Ton avis global sur la stratégie..." data-section="strategy"></textarea>
+</div>
+</div>
+
+<button class="btn-export" onclick="exportPlan()">📋 Exporter le plan validé</button>
+
+<script>
+const checkboxes = document.querySelectorAll('[data-task]');
+const totalEl = document.getElementById('total-tasks');
+const approvedEl = document.getElementById('approved-tasks');
+const commentedEl = document.getElementById('commented-tasks');
+const counterEl = document.getElementById('counter');
+
+totalEl.textContent = checkboxes.length;
+
+function updateCounts() {
+  const approved = document.querySelectorAll('[data-task]:checked').length;
+  const commented = [...document.querySelectorAll('[data-task-comment]')].filter(t => t.value.trim()).length;
+  approvedEl.textContent = approved;
+  commentedEl.textContent = commented;
+  counterEl.textContent = `✅ ${approved} / ${checkboxes.length} approuvées`;
+}
+
+checkboxes.forEach(cb => {
+  cb.addEventListener('change', function() {
+    this.closest('.task-row').classList.toggle('approved', this.checked);
+    updateCounts();
+  });
+});
+
+document.querySelectorAll('[data-task-comment]').forEach(ta => {
+  ta.addEventListener('input', updateCounts);
+});
+
+function exportPlan() {
+  let output = '# Plan Genius Team v21 — Validation Ben\n\n';
+  output += `Date: ${new Date().toISOString()}\n\n`;
+  
+  // Positioning comments
+  document.querySelectorAll('[data-section]').forEach(ta => {
+    if (ta.value.trim()) {
+      output += `## ${ta.dataset.section}\n${ta.value.trim()}\n\n`;
+    }
+  });
+  
+  output += '## Tâches\n\n';
+  output += '| Status | Tâche | Commentaire |\n|--------|-------|-------------|\n';
+  
+  document.querySelectorAll('.task-row').forEach(row => {
+    const cb = row.querySelector('[data-task]');
+    const name = row.querySelector('.task-name')?.textContent?.trim() || '';
+    const comment = row.querySelector('[data-task-comment]')?.value?.trim() || '';
+    const status = cb?.checked ? '✅' : '⬜';
+    output += `| ${status} | ${name} | ${comment} |\n`;
+  });
+  
+  const blob = new Blob([output], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'genius-team-v21-plan-validated.md';
+  a.click();
+}
+
+updateCounts();
+</script>
+</body>
+</html>
