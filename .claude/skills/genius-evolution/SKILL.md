@@ -95,26 +95,58 @@ When you notice a codebase pattern during work:
 
 ### Layer 3: Verification Sweep (at session start)
 
-At the start of complex tasks, silently verify all rules in learned-rules.md:
+At the start of EVERY session, run the verification sweep:
 
-1. Read each rule with a `verify:` line
-2. Run the check (Grep/Glob)
-3. **PASS** → silent. **FAIL** → log to `.genius/memory/violations.jsonl` and surface to user
-4. Track in `.genius/memory/sessions.jsonl`:
+1. Read `.genius/memory/learned-rules.md` — load all rules
+2. For each rule with a `verify:` line:
+   - If verify is a Grep pattern → run `Grep(pattern)` and check expected result
+   - If verify is a Glob pattern → run `Glob(pattern)` and check expected result
+   - If verify is "manual" → skip (cannot auto-verify)
+3. **PASS** → silent, increment pass counter
+4. **FAIL** → log to `.genius/memory/violations.jsonl`:
    ```json
-   {"date": "ISO", "rules_checked": 8, "rules_passed": 8, "rules_failed": 0, "corrections_received": 0}
+   {"timestamp": "ISO", "rule": "rule name", "verify": "the check", "expected": "what should have been", "actual": "what was found", "session": "session-id"}
    ```
+5. Surface ALL failures to user with: "Verification sweep found N violation(s):"
+6. Track session results in `.genius/memory/sessions.jsonl`:
+   ```json
+   {"date": "ISO", "rules_checked": 8, "rules_passed": 7, "rules_failed": 1, "corrections_received": 0, "observations_made": 0, "violations": ["rule-name"]}
+   ```
+7. **Trend detection**: Read last 5 entries in sessions.jsonl. If `corrections_received` is increasing across sessions, the rules aren't working — flag for `/genius-evolve`.
 
-### Layer 4: Evolution Audit (/genius-evolve)
+### Layer 4: Session Scoring (at session end)
+
+Before session ends, write a scorecard to `.genius/memory/sessions.jsonl`:
+
+```json
+{
+  "date": "ISO",
+  "rules_checked": 8,
+  "rules_passed": 7,
+  "rules_failed": 1,
+  "corrections_received": 2,
+  "observations_made": 1,
+  "new_rules_added": 0,
+  "rules_graduated": 0
+}
+```
+
+Trend analysis:
+- If `corrections_received` increasing over 3+ sessions → rules aren't preventing mistakes → flag for review
+- If `rules_failed` consistently > 0 for same rule → rule may be outdated → flag for pruning
+- If `rules_passed` consistently 100% for 10+ sessions → rules are stable → candidates for graduation
+
+### Layer 5: Evolution Audit (/genius-evolve)
 
 Run manually every ~10 sessions or when learned-rules.md gets full (max 50 lines):
 
-1. **Analyze corrections** — group by pattern, find repeats, identify missing rules
-2. **Analyze observations** — check convergent signals
+1. **Analyze corrections** — group by root cause, find repeats, identify missing rules
+2. **Analyze observations** — check convergent signals, verify hypotheses still hold
 3. **Audit learned rules** — still relevant? Should graduate to CLAUDE.md? Redundant?
-4. **Propose changes**: PROMOTE / GRADUATE / PRUNE / UPDATE / ADD
-5. **Wait for user approval** — apply only approved changes
-6. **Log everything** to `.genius/memory/evolution-log.md`
+4. **Check session trends** — read sessions.jsonl for patterns
+5. **Propose changes**: PROMOTE / GRADUATE / PRUNE / UPDATE / ADD
+6. **Wait for user approval** — apply only approved changes
+7. **Log everything** to `.genius/memory/evolution-log.md`
 
 ## RULES
 

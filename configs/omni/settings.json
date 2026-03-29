@@ -69,7 +69,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 21.0 | 51 skills | 4 modes (Omni Mode \u2014 Multi-Provider Orchestration)\"; echo \"\"; echo \"<omni_providers>\"; for cmd in codex kimi gemini; do if command -v $cmd &>/dev/null; then echo \"\u2713 $cmd: $($cmd --version 2>/dev/null | head -1 || echo installed)\"; else echo \"\u2717 $cmd: not found (fallback \u2192 Claude Code)\"; fi; done; echo \"</omni_providers>\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
+            "command": "bash -c 'echo \"<genius_team_context>\"; echo \"Version: 21.0 | 51 skills | 4 modes (Omni Mode — Multi-Provider Orchestration)\"; echo \"\"; echo \"<omni_providers>\"; for cmd in codex kimi gemini; do if command -v $cmd &>/dev/null; then echo \"✓ $cmd: $($cmd --version 2>/dev/null | head -1 || echo installed)\"; else echo \"✗ $cmd: not found (fallback → Claude Code)\"; fi; done; echo \"</omni_providers>\"; echo \"\"; bash scripts/memory-briefing.sh 2>/dev/null; echo \"\"; if [ -f .genius/memory/BRIEFING.md ]; then echo \"<briefing>\"; cat .genius/memory/BRIEFING.md; echo \"</briefing>\"; fi; echo \"\"; if [ -f .genius/state.json ]; then echo \"<state>\"; jq -r \".phase, .currentSkill\" .genius/state.json 2>/dev/null; echo \"</state>\"; fi; echo \"\"; STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown); CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo unknown); if [ \"$STORED_VER\" != \"$CURRENT_VER\" ] && [ \"$CURRENT_VER\" != \"unknown\" ]; then echo \"<version_change>Claude Code updated: $STORED_VER -> $CURRENT_VER. Consider running /update-check.</version_change>\"; fi; if [ -f .claude/plan.md ]; then echo \"<tasks>\"; total=$(grep -c \"^- \\\\[\" .claude/plan.md 2>/dev/null || echo 0); completed=$(grep -c \"^- \\\\[x\\\\]\" .claude/plan.md 2>/dev/null || echo 0); pending=$(grep -c \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null || echo 0); in_progress=$(grep -c \"^- \\\\[~\\\\]\" .claude/plan.md 2>/dev/null || echo 0); echo \"TASKS: $completed/$total complete ($pending pending, $in_progress in-progress)\"; next=$(grep -m1 \"^- \\\\[ \\\\]\" .claude/plan.md 2>/dev/null | sed \"s/^- \\\\[ \\\\] //\"); if [ -n \"$next\" ]; then echo \"NEXT: $next\"; fi; echo \"</tasks>\"; fi; echo \"</genius_team_context>\"'"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [ -f .genius/memory/learned-rules.md ]; then RULES=$(grep -c \"^- \" .genius/memory/learned-rules.md 2>/dev/null || echo 0); echo \"<evolution_sweep>\"; echo \"LEARNED_RULES: $RULES rules loaded\"; echo \"READ .genius/memory/learned-rules.md and RUN VERIFICATION SWEEP on all rules with verify: lines.\"; if [ -f .genius/memory/sessions.jsonl ]; then echo \"RECENT_SESSIONS: $(tail -3 .genius/memory/sessions.jsonl 2>/dev/null)\"; fi; echo \"</evolution_sweep>\"; fi'"
           }
         ]
       }
@@ -109,6 +117,14 @@
             "once": true
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [ -d .genius/memory ]; then CORR=$(wc -l < .genius/memory/corrections.jsonl 2>/dev/null || echo 0); OBS=$(wc -l < .genius/memory/observations.jsonl 2>/dev/null || echo 0); RULES=$(grep -c \"^- \" .genius/memory/learned-rules.md 2>/dev/null || echo 0); echo \"{\\\"date\\\":\\\"$(date -Iseconds)\\\",\\\"rules_checked\\\":$RULES,\\\"corrections_received\\\":$CORR,\\\"observations_made\\\":$OBS}\" >> .genius/memory/sessions.jsonl 2>/dev/null; fi || true'"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -138,6 +154,15 @@
             "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); FILE=\"${TOOL_INPUT:-unknown}\"; curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"file_modified\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"file\\\":\\\"$FILE\\\",\\\"agent\\\":\\\"$TOOL_NAME\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi'"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FILE=\"${TOOL_INPUT:-}\"; if [ -n \"$FILE\" ] && [ -d .claude/rules ]; then echo \"<path_rules_check>\"; for rule in .claude/rules/*.md; do if [ -f \"$rule\" ]; then RULENAME=$(basename \"$rule\"); echo \"Rule available: $RULENAME\"; fi; done; if [ -f .genius/memory/learned-rules.md ]; then echo \"Learned rules: $(wc -l < .genius/memory/learned-rules.md 2>/dev/null || echo 0) lines\"; fi; echo \"</path_rules_check>\"; fi 2>/dev/null || true'"
+          }
+        ]
       }
     ],
     "InstructionsLoaded": [
@@ -145,7 +170,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"\u2705\" || echo \"\u26a0\ufe0f MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"\u2705\" || echo \"\u26a0\ufe0f not generated yet\"); echo \"\ud83d\udee1\ufe0f Genius Team v21.0 loaded | Model: claude-opus-4-6 | Effort: high | Guard: $GUARD | Memory: $MEM\"'"
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v21.0 loaded | Model: claude-opus-4-6 | Effort: high | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }
@@ -162,12 +187,14 @@
   "compaction": {
     "postCompactionSections": [
       "## Genius Team Core Rules",
-      "## \ud83d\udea8 ANTI-DRIFT RULES",
-      "## \ud83e\udde0 Memory",
+      "## 🚨 ANTI-DRIFT RULES",
+      "## 🧠 Memory",
       "## Commands",
       "## Two Phases",
       "## Mode System",
-      "## Workflow Registry"
+      "## Workflow Registry",
+      "## Decision Framework",
+      "## Self-Evolution Protocol"
     ]
   }
 }

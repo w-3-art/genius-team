@@ -67,6 +67,33 @@ These rules are **NON-NEGOTIABLE**. Violating them breaks the entire workflow.
 
 ---
 
+## Decision Framework
+
+> Execute this checklist BEFORE writing any code. Every item is mandatory.
+
+1. **Grep first** — Search for existing patterns before creating anything new. Run `Grep` for the function name, component name, or pattern you're about to implement. If it exists, extend it — don't duplicate.
+
+2. **Blast radius** — What depends on what you're changing? Check imports (`Grep` for the filename), tests (`Grep` for the function name in test files), and consumers. List affected files before editing.
+
+3. **Ask don't assume** — Ambiguous request? Ask ONE clarifying question before proceeding. Don't guess intent, scope, or implementation approach when the request is unclear.
+
+4. **Smallest change** — Solve what was asked, nothing more. No bonus refactors, no "while I'm here" improvements, no extra error handling for impossible cases. Three similar lines > a premature abstraction.
+
+5. **Verification plan** — How will you prove this works? Answer before coding. Name the specific test, command, or manual check that will confirm success. If you can't name one, you don't understand the task yet.
+
+## Self-Evolution Protocol
+
+> The system learns from every session. Corrections become rules. Rules get verified. The system evolves.
+
+- **On correction**: Log to `.genius/memory/corrections.jsonl` with root cause and verify pattern
+- **On pattern discovery**: Log to `.genius/memory/observations.jsonl` with evidence
+- **On session start**: Run verification sweep on all rules in `.genius/memory/learned-rules.md`
+- **On session end**: Write scorecard to `.genius/memory/sessions.jsonl`
+- **On capacity limit**: When `learned-rules.md` approaches 50 lines, run `/genius-evolve` to graduate or prune
+- **Audit**: Run `/genius-evolve` every ~10 sessions for rule review
+
+---
+
 ## CLI Mode Features
 
 - **Full hook system**: SessionStart, PreCompact, Stop, PostToolUse
