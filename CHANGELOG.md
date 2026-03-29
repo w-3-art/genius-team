@@ -2,11 +2,17 @@
 
 ## [20.0.0] - 2026-03-29
 
-### Added — 4 New Skills (total: 47)
+### Added — 5 New Skills (total: 48)
 - **genius-auto** — Configures Claude Code Auto Mode with skill-aware safety profiles. Permissive for content skills, standard for dev, restrictive for deploy/security, monitor for QA.
 - **genius-ui-tester** — Visual UI testing using Computer Use. Screenshots, layout validation, responsive checks across 4 viewports, interactive element testing, visual bug reports.
 - **genius-scheduler** — Configures /loop recurring tasks and remote triggers. Templates: PR review cycles, deploy watch, daily summaries, test watcher, autoresearch loops.
 - **genius-ci** — CI/CD pipelines using `claude --bare` mode. GitHub Actions workflows for PR auto-review, quality gates with AI security scanning, auto-fix lint.
+- **genius-tips** — Contextual skill discovery tips during wait time. Shows 1-2 sentence tips about relevant skills while builds/deploys run. 30+ tips organized by context.
+
+### Improved — Auto Mode Integration
+- Auto Mode is now built INTO all 4 modes (not a separate mode). `CLAUDE_CODE_AUTO_MODE=skill-aware` in all configs.
+- genius-auto is a tuning skill that adjusts safety profiles, not a separate mode.
+- Three profiles: permissive (prototyping), standard (dev), restrictive (production).
 
 ### Added — Claude Code 2.1.86 Integration
 - **Computer Use** — Screen control, clicking, browsing, screenshots (Pro/Max). Powering genius-ui-tester.

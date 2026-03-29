@@ -321,6 +321,14 @@ For EVERY user request, route to the appropriate skill:
 - i18n/translations → genius-i18n
 - Documentation → genius-docs
 - Content/blog → genius-content
+- Auto mode/permissions → genius-auto
+- CI/CD pipeline → genius-ci
+- Scheduled tasks/recurring → genius-scheduler
+- Visual UI testing → genius-ui-tester
+- Tips/discover features → genius-tips
+
+### Auto-Tips (genius-tips)
+During any long-running operation (builds, deploys, tests >5s), show a contextual tip about a Genius Team skill the user might not know. This turns wait time into discovery time. genius-tips has a database of 30+ tips organized by context (dev, design, deploy, etc.).
 
 ### Anti-Drift
 - If you catch yourself coding directly → STOP → spawn genius-dev
