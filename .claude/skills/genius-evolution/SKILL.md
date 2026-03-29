@@ -33,22 +33,53 @@ Read `@.genius/memory/learned-rules.md` for existing rules.
 
 ## HOW IT WORKS
 
-### Layer 1: Correction Capture (auto-triggered)
+### Layer 1: Dissatisfaction Analysis (continuous, intelligent)
 
-When the user corrects you ("no", "wrong", "I told you", "we don't do that", "stop doing X"):
+This is NOT keyword matching. You must use your intelligence to detect ANY sign of user dissatisfaction, understand WHY they're unhappy, and extract the lesson.
 
-1. **Acknowledge** the correction naturally
-2. **Log** to `.genius/memory/corrections.jsonl`:
+**Signals to analyze (non-exhaustive — use judgment):**
+- Explicit corrections ("no", "wrong", "that's not what I asked")
+- Frustration ("this is terrible", "ça marche pas", "encore ?!", "t'es nul")
+- Repeated requests (user asks the same thing twice = you failed the first time)
+- Rewording (user rephrases their request = your interpretation was wrong)
+- Undoing your work (user reverts, deletes, or manually redoes what you did)
+- Silence after your output (long pause then topic change = output was useless)
+- Sarcasm or rhetorical questions ("tu crois vraiment que c'est bon ?")
+- Explicit rejection of approach ("pas comme ça", "c'est pas la bonne façon")
+- Quality complaints ("c'est moche", "c'est basique", "ça fait mal aux yeux")
+- Scope complaints ("c'est pas ce que j'ai demandé", "t'as rien compris")
+
+**For EACH detected dissatisfaction:**
+
+1. **Analyze the root cause** — don't just log what the user said. Understand WHY:
+   - Was it a wrong interpretation of the request?
+   - Was it a quality issue (too fast, too sloppy)?
+   - Was it a missing context (didn't read existing code)?
+   - Was it a process issue (skipped a step, didn't verify)?
+   - Was it a technical mistake (wrong approach, incompatible)?
+   - Was it a communication issue (too verbose, too terse, wrong language)?
+
+2. **Extract the lesson** — formulate as a concrete, actionable rule:
+   - Bad: "User was unhappy" (useless)
+   - Good: "When modifying UI code, always verify the result visually before declaring it done"
+   - Good: "Never propose a workaround (skip/bypass) when the real problem should be fixed"
+   - Good: "Check compatibility with Claude Code AND Codex before proposing structural changes"
+
+3. **Log** to `.genius/memory/corrections.jsonl`:
    ```json
-   {"timestamp": "ISO", "correction": "what", "context": "what you were doing", "category": "style|architecture|security|testing|naming|process", "times_corrected": 1, "verify": "Grep pattern or manual"}
+   {"timestamp": "ISO", "user_signal": "what the user said/did", "root_cause": "why they were unhappy", "lesson": "the actionable rule extracted", "context": "what you were doing", "category": "quality|interpretation|process|technical|communication", "verify": "how to check compliance", "severity": "minor|major|critical"}
    ```
-3. **Generate a verify pattern** immediately:
-   - "Don't do X" → `Grep("[X pattern]", path="src/") → 0 matches`
-   - Can't generate check → `"verify": "manual"` (debt for /genius-evolve)
-4. **Auto-promote on 2nd correction:**
-   - Same pattern corrected twice → auto-add to `.genius/memory/learned-rules.md` WITH verify line
-   - Tell the user: "Learned permanently: [rule]. Verification: [check]."
-5. **Apply the correction immediately**
+
+4. **Generate a verify pattern** when possible:
+   - Process issue → verify: "Check that [step] was completed before [next step]"
+   - Quality issue → verify: "manual — review output quality before presenting"
+   - Technical → verify: `Grep("[bad pattern]") → 0 matches`
+
+5. **Auto-promote on pattern detection:**
+   - Same ROOT CAUSE appearing twice (not same words — same underlying issue) → promote to learned-rules.md
+   - Tell the user: "I've learned: [lesson]. I'll verify this going forward."
+
+6. **Apply the lesson immediately** — and retroactively check if the same mistake exists elsewhere
 
 ### Layer 2: Hypothesis-Driven Observations
 
