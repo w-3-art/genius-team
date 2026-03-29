@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team v21 — Plan de validation</title>
+<title>Genius Team v21 — Plan v2 (post-feedback)</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0f;color:#e8e4df;font-family:'DM Sans',system-ui,sans-serif;padding:1.5rem;max-width:1000px;margin:0 auto}
@@ -26,11 +26,15 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 .tag-modify{background:rgba(251,191,36,.12);color:#FBBF24}
 .tag-strategy{background:rgba(139,92,246,.12);color:#8B5CF6}
 .tag-content{background:rgba(59,130,246,.12);color:#3B82F6}
+.tag-fixed{background:rgba(244,63,94,.12);color:#F43F5E}
 .detail{margin-top:.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem}
 .detail-box{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.04);border-radius:6px;padding:.5rem .6rem}
 .detail-label{font-size:.6rem;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.25rem;font-weight:600}
 .detail-text{font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.4}
 .detail-text code{color:#D4A574;font-size:.68rem;background:rgba(212,165,116,.08);padding:.05rem .2rem;border-radius:2px}
+.detail-text em{color:rgba(52,211,153,.6);font-style:normal;font-size:.65rem}
+.ben-feedback{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.12);border-radius:5px;padding:.4rem .5rem;margin-top:.4rem;font-size:.7rem;color:rgba(59,130,246,.7)}
+.ben-feedback::before{content:"💬 Ben : ";font-weight:700}
 .comment{margin-top:.5rem}
 .comment textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:5px;color:#e8e4df;font-size:.72rem;padding:.35rem .5rem;min-height:26px;resize:vertical;font-family:inherit}
 .comment textarea::placeholder{color:rgba(255,255,255,.12)}
@@ -50,31 +54,30 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 </head>
 <body>
 
-<h1>🧠 Genius Team v21 — Plan complet</h1>
-<p class="sub">100 itérations d'autoresearch (Opus 4.6 + GPT-5.4). Coche ✅ pour approuver, ajoute des commentaires, puis exporte.</p>
+<h1>🧠 Genius Team v21 — Plan v2 (post-feedback Ben)</h1>
+<p class="sub">Intégrant tous les retours de Ben du 29/03. Items corrigés marqués <span class="tag tag-fixed">CORRIGÉ</span></p>
 
 <div class="positioning">
-<strong>Positionnement proposé :</strong> "Genius Team is the operating system for vibecoding: it turns rough ideas and messy codebases into build-ready execution with enough guidance for first-time builders and enough discipline for expert shippers."
+<strong>Positionnement :</strong> "Genius Team is the operating system for vibecoding: it turns rough ideas and messy codebases into build-ready execution with enough guidance for first-time builders and enough discipline for expert shippers."
 </div>
-<div class="comment"><textarea placeholder="Ton avis sur le positionnement..." data-section="positioning"></textarea></div>
+<div class="comment"><textarea placeholder="Commentaire..." data-section="positioning"></textarea></div>
 
 <div class="positioning" style="border-color:#34D399;margin-top:.5rem">
-<strong>Tagline proposée :</strong> "Build your first app. Ship your tenth faster."
+<strong>Tagline :</strong> "Build your first app. Ship your tenth faster."
 </div>
-<div class="comment"><textarea placeholder="Ton avis sur la tagline..." data-section="tagline"></textarea></div>
+<div class="comment"><textarea placeholder="Commentaire..." data-section="tagline"></textarea></div>
 
 <div class="stats">
 <div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Tâches</div></div>
 <div class="stat"><div class="stat-val" id="s-approved">0</div><div class="stat-lbl">Approuvées</div></div>
 <div class="stat"><div class="stat-val" id="s-commented">0</div><div class="stat-lbl">Commentées</div></div>
-<div class="stat"><div class="stat-val">~59j</div><div class="stat-lbl">Effort total</div></div>
 </div>
 <div class="counter" id="counter">✅ 0 / 0</div>
 
 <!-- ==================== PHASE 1 ==================== -->
 <div class="phase">
-<div class="phase-hdr"><h2>Phase 1 — Foundation (Semaines 1-3)</h2><div class="phase-badge">~15.5 jours</div></div>
-<div class="phase-desc">"Make it work brilliantly for 10 people" — Architecture de base, trust layer, premier lancement</div>
+<div class="phase-hdr"><h2>Phase 1 — Foundation (Semaines 1-3)</h2><div class="phase-badge">~15 jours</div></div>
+<div class="phase-desc">"Make it work brilliantly for 10 people" — Attention : compatibilité projets existants, Claude Code + Codex, ne pas perdre en qualité</div>
 
 <div class="item" data-id="1.1">
 <div class="item-top">
@@ -82,9 +85,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Système de modes Beginner / Builder / Pro / Agency <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Créer un moteur de modes qui adapte le comportement de tous les skills : niveau de narration (verbose→terse), autonomie (block→warn→continue), visibilité des dashboards, et sévérité du guard. L'utilisateur choisit son mode au premier lancement et peut switcher à tout moment avec <code>/genius-mode</code>.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>.genius/mode.json</code> — mode actif + préférences (lu par les skills via <code>@.genius/mode.json</code>)<br><code>configs/modes/beginner.md</code>, <code>builder.md</code>, <code>pro.md</code>, <code>agency.md</code> — sections CLAUDE.md par mode<br><strong>Modifier :</strong><br><code>install.sh</code> — assemble le CLAUDE.md selon le mode choisi<br>Chaque SKILL.md lit <code>.genius/mode.json</code> pour adapter narration/strictness<br><em>⚠️ Pas de TypeScript runtime — tout via CLAUDE.md + JSON lus par Claude</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant absolu se sent guidé sans être submergé. Un expert a zéro friction. Résout la tension fondamentale "trop compliqué pour les uns, pas assez puissant pour les autres".</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Fichier <code>.genius/mode.json</code> lu par tous les skills pour adapter : narration (verbose→terse), autonomie (block→warn→continue), sévérité du guard. L'utilisateur choisit au premier lancement via <code>/genius-start</code> et switch avec <code>/genius-mode</code>. Tous les skills restent installés pour tout le monde — le mode change le comportement, pas l'accès.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>.genius/mode.json</code> — mode actif + préférences<br><code>configs/modes/beginner.md</code>, <code>builder.md</code>, <code>pro.md</code>, <code>agency.md</code> — sections CLAUDE.md par mode<br><strong>Modifier :</strong><br>Chaque SKILL.md — lire mode.json pour adapter comportement<br><code>CLAUDE.md</code> — section mode assemblée selon le choix<br><em>✅ Compatible Claude Code + Codex : fichier JSON lu nativement</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant se sent guidé. Un expert a zéro friction. Même accès aux 48 skills, UX différente. Résout la tension "trop compliqué / pas assez puissant".</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -98,9 +101,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Workflow registry <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Fichier JSON central qui définit formellement chaque workflow : nom, description, prérequis (quels artifacts doivent exister), outputs attendus, validators à appeler, modes compatibles, et enchaînement suivant. Remplace le routing implicite par du routing déclaratif vérifiable.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>.genius/workflows.json</code> — définition des workflows (lu par Claude via <code>@.genius/workflows.json</code>)<br><strong>Modifier :</strong><br><code>CLAUDE.md</code> — routing pointe vers le registry JSON<br><code>.claude/skills/genius-team/SKILL.md</code> — lit le registry pour le routing<br><em>⚠️ Fichier JSON, pas module TypeScript — Claude lit nativement les JSON</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le routing devient testable, versionnable, et modifiable sans toucher aux prompts. Réduit drastiquement les bugs de routing. Base pour le dry-run et la CLI.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Fichier <code>.genius/workflows.json</code> définissant chaque workflow : prérequis, outputs, validators, enchaînement. Remplace le routing implicite par du déclaratif vérifiable. Compatible avec les projets existants via détection automatique de l'état courant.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>.genius/workflows.json</code> — registre des workflows<br><strong>Modifier :</strong><br><code>.claude/skills/genius-team/SKILL.md</code> — lit le registry pour le routing<br><code>CLAUDE.md</code> — pointe vers le registry<br><em>✅ Compatible : JSON lu nativement par Claude Code et Codex</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Routing testable, versionnable. Base pour les validators, le dry-run, et l'import de projets existants.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -112,15 +115,16 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">State machine typée <span class="tag tag-new">NEW</span></div>
+<div class="item-title">State machine + migration projets existants <span class="tag tag-new">NEW</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Remplacer le <code>state.json</code> actuel (structure libre) par une state machine TypeScript avec des transitions validées. États : <code>init → brief_ready → spec_ready → design_ready → arch_ready → execution → qa → deploy → done</code>. Impossible de passer à l'état suivant sans validation.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><strong>Modifier :</strong><br><code>.genius/state.json</code> — nouveau format (phase, currentSkill, checkpoint, artifacts[])<br><code>scripts/validate-state.sh</code> — script bash vérifiant les transitions (appelé via hooks)<br><code>.genius/state-schema.json</code> — schéma de validation<br><em>⚠️ Pas de TypeScript — validation via bash script dans les hooks settings.json</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Élimine les corruptions d'état silencieuses. Le recovery system peut reprendre exactement là où on s'est arrêté. C'est la base technique de l'anti-drift programmatique.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Nouveau format <code>.genius/state.json</code> avec états typés. <strong>Crucial : script de migration</strong> qui détecte l'état d'un projet existant (ancienne version GT, ou projet sans GT) et initialise le state.json au bon endroit. Si SPECIFICATIONS.xml existe → <code>spec_ready</code>. Si ARCHITECTURE.md existe → <code>arch_ready</code>. Si plan.md avec tâches → <code>execution</code>. Ne jamais bloquer — en cas de doute, demander à l'utilisateur.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>.genius/state.json</code> — nouveau format (phase, currentSkill, checkpoint, artifacts[])<br><strong>Créer :</strong><br><code>scripts/migrate-state.sh</code> — détecte les artifacts existants et initialise l'état<br><code>scripts/validate-state.sh</code> — validation via hooks<br><em>✅ Le script de migration scanne les fichiers du projet pour déduire l'état — ne bloque jamais</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les projets existants (anciennes versions GT ou sans GT) sont adoptés proprement. Personne n'est bloqué par un état incohérent. Le /genius-start appelle la migration si nécessaire.</div></div>
 </div>
+<div class="ben-feedback">Bien prévoir la migration pour projets existants ou projets sans GT. Ne jamais bloquer.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">1j</div>
+<div class="effort">2j</div>
 </div>
 </div>
 
@@ -128,12 +132,13 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Validators pour brief, spec, architecture, plan <span class="tag tag-new">NEW</span></div>
+<div class="item-title">Validators non-bloquants pour projets existants <span class="tag tag-new">NEW</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">4 fonctions TypeScript qui vérifient la qualité de chaque artifact avant de passer à l'étape suivante. Vérifient : complétude (sections obligatoires présentes), cohérence (pas de contradictions), dépendances (refs qui existent), et readiness (tout ce qu'il faut pour continuer). Severity configurable par mode.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>scripts/validate-brief.sh</code>, <code>validate-spec.sh</code>, <code>validate-architecture.sh</code>, <code>validate-plan.sh</code> — scripts bash<br><strong>Modifier :</strong><br><code>configs/*/settings.json</code> — hooks PreToolUse appelant ces scripts aux bons moments<br><em>⚠️ Bash scripts via hooks natifs Claude Code, pas TypeScript</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Première couche de confiance exécutable. Les handoffs ratés (le problème #1 du framework actuel) sont détectés AVANT qu'ils ne causent des dégâts. En mode Beginner = bloque. En mode Pro = warning résumé.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Scripts bash vérifiant les artifacts à chaque transition. <strong>Comportement selon contexte :</strong> projet neuf = bloquer si artifact manquant. Projet importé/existant = avertir mais ne PAS bloquer — proposer de générer l'artifact manquant ou de continuer sans. Le mode (Beginner/Pro) ajuste aussi la sévérité.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>scripts/validate-brief.sh</code>, <code>validate-spec.sh</code>, <code>validate-architecture.sh</code>, <code>validate-plan.sh</code><br><strong>Modifier :</strong><br><code>configs/*/settings.json</code> — hooks PreToolUse<br><em>✅ Les validators détectent si le projet est "natif GT" ou "importé" via un flag dans state.json et adaptent leur sévérité</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les projets existants ne sont jamais bloqués. Un projet commencé sans GT peut être adopté à n'importe quel stade. Les validators guident au lieu de punir.</div></div>
 </div>
+<div class="ben-feedback">Ne doit JAMAIS bloquer un projet existant qui n'a pas commencé avec cette version.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 <div class="effort">3j</div>
@@ -144,12 +149,13 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Session logging JSONL + Recovery system <span class="tag tag-new">NEW</span></div>
+<div class="item-title">Session logging + Recovery + Post-compaction <span class="tag tag-new">NEW</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Logger chaque action dans un fichier JSONL (appendable, streamable) : quel workflow, quel mode, quels artifacts créés, quelles validations passées/échouées. Le recovery system lit ce log pour reprendre à l'état exact après un crash ou une fermeture de session.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><strong>Modifier :</strong><br><code>configs/*/settings.json</code> — enrichir hooks existants pour logger dans <code>.genius/session-log.jsonl</code><br><code>scripts/session-recover.sh</code> — lit JSONL et reconstruit state.json<br><code>.claude/commands/continue.md</code> — commande /continue avec recovery<br><em>⚠️ Logging via hooks natifs Claude Code (déjà en place). Recovery via bash.</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Plus de "je ne sais plus où j'en étais". Le framework peut reprendre après un crash, un reboot, ou un changement de session. Aussi base pour l'observabilité et le debugging.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Enrichir les hooks existants pour logger dans <code>.genius/session-log.jsonl</code>. Ajouter un recovery script. <strong>Ajout : logique post-compaction</strong> — quand Claude Code compacte le contexte, un hook PostCompact ré-injecte les informations critiques (état, mode, tâche en cours) pour que rien ne soit perdu.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>configs/*/settings.json</code> — enrichir hooks SessionStart, Stop, PostToolUse, <strong>PostCompact</strong><br><strong>Créer :</strong><br><code>scripts/session-recover.sh</code> — reconstruit state.json depuis le log<br><code>scripts/post-compact-reinject.sh</code> — réinjecte état + mode + tâche après compaction<br><em>✅ PostCompact hook déjà supporté par Claude Code (postCompactionSections dans settings.json)</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les sessions longues ne perdent plus de contexte après compaction. Le recovery marche après crash. L'anti-drift survit même aux sessions de 1M tokens.</div></div>
 </div>
+<div class="ben-feedback">Ajouter la logique post-compaction (manquait dans la v1).</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 <div class="effort">2j</div>
@@ -160,15 +166,16 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Réécrire le README en 20 sections structurées <span class="tag tag-modify">MODIFY</span></div>
+<div class="item-title">README + visibilité GitHub maximale <span class="tag tag-modify">MODIFY</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Le README actuel est un mur technique qui ne convertit pas. Le réécrire autour des outcomes : (1) Titre + 1 phrase, (2) Pour qui, (3) Ce qui se passe en 5 minutes, (4) Install, (5) Choisir son mode, (6) 3 façons de démarrer, (7) Exemples d'outputs, (8) Pourquoi pas juste ChatGPT?, (9) Workflows core, (10) Packs. GIF de démo en haut.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>README.md</code> — réécriture complète<br><strong>Créer :</strong><br><code>docs/images/demo.gif</code> — GIF de 15s montrant le flow</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Quelqu'un qui tombe sur le repo comprend en 90 secondes ce que c'est, pour qui, et comment commencer. C'est le premier point de contact — si ça ne convertit pas ici, rien d'autre ne compte.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Réécrire le README en sections orientées résultat. <strong>Au-delà du README :</strong> optimiser la fiche GitHub — description courte percutante, topics pertinents (vibecoding, claude-code, codex, ai-agents, developer-tools), social preview image (1280x640 branded), fichier .github/FUNDING.yml pour sponsor button, fichier SECURITY.md, templates d'issues.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>README.md</code> — réécriture complète<br><strong>Créer :</strong><br><code>.github/social-preview.png</code> — image 1280×640<br><code>.github/FUNDING.yml</code> — sponsor button<br><code>.github/ISSUE_TEMPLATE/</code> — templates bug/feature<br><code>SECURITY.md</code><br><strong>Configurer sur GitHub :</strong><br>Description, topics, social preview, about section</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le repo apparaît professionnel et complet sur GitHub. Les topics améliorent la découvrabilité. Le social preview rend les partages Twitter/LinkedIn visuels.</div></div>
 </div>
+<div class="ben-feedback">Au-delà du README, maximiser la visibilité GitHub (topics, description, social preview).</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">1j</div>
+<div class="effort">1.5j</div>
 </div>
 </div>
 
@@ -176,11 +183,11 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Micro-checklists au lieu de GENIUS_GUARD monolithique <span class="tag tag-modify">MODIFY</span></div>
+<div class="item-title">Micro-checklists guard (compatible Claude Code + Codex) <span class="tag tag-modify">MODIFY</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Remplacer le GENIUS_GUARD.md de 400 lignes par des micro-checklists injectées au point d'usage : <code>pre-planning.md</code> (avant de planifier), <code>pre-coding.md</code> (avant de coder), <code>pre-deploy.md</code> (avant de déployer). Chaque checklist = 10-15 lignes max. Plus digeste, plus actionnable.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/guards/pre-planning.md</code><br><code>core/guards/pre-coding.md</code><br><code>core/guards/pre-review.md</code><br><code>core/guards/pre-deploy.md</code><br><strong>Modifier :</strong><br><code>GENIUS_GUARD.md</code> — garder comme référence mais plus chargé au début de chaque session</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Moins intimidant pour les nouveaux. Les règles apparaissent au moment où elles comptent, pas en un bloc initial. Le guard est tout aussi efficace mais moins effrayant.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Remplacer GENIUS_GUARD.md monolithique par des micro-checklists au point d'usage. <strong>Compatibilité :</strong> les checklists sont des fichiers .md dans <code>.claude/skills/</code> (format standard) lisibles par Claude Code ET Codex. Chaque checklist est référencée dans le SKILL.md du workflow correspondant.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>.claude/skills/genius-guard-pre-planning/SKILL.md</code><br><code>.claude/skills/genius-guard-pre-coding/SKILL.md</code><br><code>.claude/skills/genius-guard-pre-deploy/SKILL.md</code><br><strong>Modifier :</strong><br><code>GENIUS_GUARD.md</code> — reste comme référence complète<br><em>✅ Format SKILL.md = compatible Claude Code + Codex nativement</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Moins intimidant. Les règles apparaissent au bon moment. Le guard est aussi efficace mais mieux distribué.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -192,15 +199,16 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Réorganiser 48 skills en 4 packs installables <span class="tag tag-modify">MODIFY</span></div>
+<div class="item-title">Catégoriser les 48 skills (sans restreindre l'accès) <span class="tag tag-modify">MODIFY</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Regrouper les 48 skills en 4 packs : <strong>Core</strong> (interviewer, specs, architect, dev, qa, deployer — le pipeline essentiel), <strong>Growth</strong> (marketer, copywriter, seo, content, analytics — croissance), <strong>Quality</strong> (code-review, security, performance, accessibility, tests — qualité), <strong>Business</strong> (market-analyst, crypto, i18n, onboarding — business). Core installé par défaut, les autres optionnels.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Les skills RESTENT dans <code>.claude/skills/</code></strong> (obligatoire pour Claude Code).<br><code>genius-packs.json</code> — définition des 4 packs avec liste des skills<br><code>scripts/pack-add.sh</code>, <code>pack-remove.sh</code> — copie/supprime skills dans .claude/skills/<br><code>install.sh</code> — installe seulement les skills du pack choisi<br><em>✅ COMPATIBLE : skills dans .claude/skills/ où Claude Code les attend. Packs = mécanisme d'installation sélective.</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant installe Core (12 skills) au lieu de 48. Moins de bruit, moins de confusion. Un expert installe tout. La modularité permet aussi la distribution individuelle sur les marketplaces.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Tous les 48 skills restent installés pour tout le monde.</strong> Pas de packs sélectifs. On ajoute juste une catégorisation dans la doc et le routing pour que l'utilisateur comprenne la structure (Core / Growth / Quality / Business). Le mode Beginner met en avant les skills Core, le mode Pro les montre tous à plat.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>.claude/skills/genius-team/SKILL.md</code> — routing organisé par catégorie<br><code>README.md</code> — skills listés par catégorie<br><code>.genius/workflows.json</code> — catégorie par workflow<br><strong>Rien à restructurer</strong> — les skills restent dans <code>.claude/skills/</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Meilleure compréhension de la structure sans perdre d'accès. Un débutant comprend que les Core skills sont son point de départ. Un expert a tout sous la main.</div></div>
 </div>
+<div class="ben-feedback">Tout doit être installé. Même un débutant peut avoir besoin de n'importe quel skill. Juste mieux guider.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">1j</div>
+<div class="effort">0.5j</div>
 </div>
 </div>
 
@@ -208,15 +216,16 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">3 entry paths au lieu de 48 skills visibles <span class="tag tag-modify">MODIFY</span></div>
+<div class="item-title">Améliorer les commandes existantes (/genius-start, /continue, etc.) <span class="tag tag-modify">MODIFY</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Au premier lancement, proposer 3 chemins clairs au lieu d'une liste de skills : <strong>"🚀 Lancer une app"</strong> (nouveau projet, démarre par genius-interviewer), <strong>"🔧 Améliorer un projet existant"</strong> (import + genius-architect), <strong>"⚡ Shipper plus vite"</strong> (genius-orchestrator direct). Les skills sont invoqués automatiquement en arrière-plan.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>.claude/skills/genius-start/SKILL.md</code> — nouveau flow avec 3 paths<br><code>.claude/skills/genius-team/SKILL.md</code> — routing simplifié par path</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">L'utilisateur pense en "jobs to be done", pas en noms de skills. Réduction massive de la charge cognitive au démarrage. Les skills sont toujours là, juste pas exposés frontalement.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Ce ne sont PAS de nouvelles commandes — elles existent déjà</strong> dans <code>.claude/commands/</code>. On les améliore : <code>/genius-start</code> détecte le mode + propose les chemins adaptés, <code>/continue</code> utilise le session log pour reprendre, <code>/status</code> affiche l'état + le dashboard. Pas de CLI TypeScript séparé — les commandes Claude Code/Codex suffisent.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>.claude/commands/genius-start.md</code> — ajouter détection mode + migration état<br><code>.claude/commands/continue.md</code> — intégrer recovery depuis session log<br><code>.claude/commands/status.md</code> — afficher état + scores<br><em>✅ Les commandes .claude/commands/ fonctionnent dans Claude Code ET Codex (même format)</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Pas de nouvel outil à installer. Les commandes existantes deviennent plus intelligentes. L'utilisateur garde ses habitudes.</div></div>
 </div>
+<div class="ben-feedback">/genius-start, /continue existent déjà. Pas de CLI supplémentaire, pas de réinvention de la roue.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">0.5j</div>
+<div class="effort">1j</div>
 </div>
 </div>
 
@@ -224,12 +233,13 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">5-minute challenge (3 variantes par mode) <span class="tag tag-new">NEW</span></div>
+<div class="item-title">Démo documentée qualité > vitesse + genius-tips amélioré <span class="tag tag-modify">MODIFY</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Un parcours reproductible qui prouve la valeur en 5 minutes. Même prompt de départ ("Je veux une app de dog parks"), mais traitement différent par mode : Beginner = guidé pas à pas avec explications, Builder = résumé concis avec confirmations, Pro = exécution rapide avec diffs. Sert de démo ET de test de régression.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>docs/5-minute-challenge.md</code> — guide<br><code>examples/5-min-challenge/prompt.txt</code> — le prompt standardisé<br><code>examples/5-min-challenge/expected-outputs/</code> — outputs attendus par mode</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le "wow moment". Quelqu'un installe, lance le challenge, et en 5 min il a un brief, des specs, un design system, et un plan de tâches — le tout en playgrounds interactifs. C'est le moment où il décide de rester ou partir.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Pas de "5-minute speed run" au détriment de la qualité.</strong> À la place : une démo documentée (README + expected outputs) montrant un flow complet sans précipitation. Pendant les temps d'attente (builds, génération), genius-tips affiche des tips contextuels utiles. L'utilisateur apprend en attendant au lieu de s'ennuyer. La qualité de l'output prime sur la vitesse.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>examples/demo-saas/README.md</code> — guide pas à pas<br><code>examples/demo-saas/expected-outputs/</code> — artifacts attendus à chaque étape<br><strong>Modifier :</strong><br><code>.claude/skills/genius-tips/SKILL.md</code> — enrichir avec plus de tips contextuels<br>Skills longs (genius-dev, genius-architect) — intégrer les appels à genius-tips pendant les pauses</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">L'utilisateur voit la qualité de l'output, pas juste la vitesse. Les temps d'attente deviennent éducatifs grâce aux tips. La démo sert de test de régression.</div></div>
 </div>
+<div class="ben-feedback">Qualité > vitesse. Montrer des tips pendant l'attente plutôt que bâcler.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 <div class="effort">2j</div>
@@ -238,40 +248,24 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 1 :</label>
-<textarea placeholder="Ton avis sur cette phase..." data-section="phase1"></textarea>
+<textarea placeholder="..." data-section="phase1"></textarea>
 </div>
 </div>
 
 <!-- ==================== PHASE 2 ==================== -->
 <div class="phase">
-<div class="phase-hdr"><h2>Phase 2 — CLI + Testing + Proof (Semaines 4-6)</h2><div class="phase-badge">~13 jours</div></div>
-<div class="phase-desc">"Make it provably reliable" — Un vrai CLI, des tests, et la preuve que l'anti-drift marche</div>
+<div class="phase-hdr"><h2>Phase 2 — Testing + Proof + Scripts (Semaines 4-6)</h2><div class="phase-badge">~11 jours</div></div>
+<div class="phase-desc">"Make it provably reliable" — Tests, installer, upgrade, benchmark anti-drift</div>
 
 <div class="item" data-id="2.1">
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">CLI TypeScript (genius start/status/continue/doctor/mode) <span class="tag tag-new">NEW</span></div>
+<div class="item-title">Tests automatisés (workflows, state, modes, validators) <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Un CLI en TypeScript (Commander.js) qui gère : <code>genius start</code> (entrypoint universel), <code>genius status</code> (où j'en suis), <code>genius continue</code> (reprendre), <code>genius doctor</code> (diagnostic), <code>genius mode</code> (changer de mode), <code>genius import</code> (adopter un projet existant). Installable via npm globalement.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>cli/genius.ts</code> — point d'entrée (Commander.js)<br><code>cli/commands/start.ts</code>, <code>status.ts</code>, <code>continue.ts</code>, <code>doctor.ts</code>, <code>mode.ts</code>, <code>import.ts</code><br><code>package.json</code> — bin: { "genius": "dist/genius.js" }<br><em>✅ COMPATIBLE : CLI tourne EN DEHORS de Claude Code. Prépare l'env, écrit les configs, lance Claude Code. Ne dépend pas de Claude Code pour fonctionner.</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Expérience "tool" au lieu de "collection de fichiers". Le CLI valide l'environnement, gère l'état, et lance Claude Code avec la bonne config. C'est ce qui transforme un repo de skills en un produit.</div></div>
-</div>
-<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
-</div>
-<div class="effort">5j</div>
-</div>
-</div>
-
-<div class="item" data-id="2.2">
-<div class="item-top">
-<input type="checkbox" data-task>
-<div class="item-content">
-<div class="item-title">Tests automatisés (registry, state, modes, validators) <span class="tag tag-new">NEW</span></div>
-<div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Suite de tests Vitest couvrant : parsing du workflow registry, transitions de state machine, application des modes, exécution des validators sur des inputs valides/invalides, et les 5 démos canoniques (tests de bout en bout sur les expected outputs).</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>tests/registry.test.ts</code><br><code>tests/state-machine.test.ts</code><br><code>tests/modes.test.ts</code><br><code>tests/validators.test.ts</code><br><code>vitest.config.ts</code><br><code>.github/workflows/test.yml</code> — CI</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Crédibilité technique. On peut modifier le framework sans craindre de tout casser. Les contributeurs externes peuvent soumettre des PR avec confiance. Le benchmark anti-drift devient automatisable.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Suite de tests vérifiant : le workflow registry est valide, les transitions d'état sont correctes, les modes sont bien appliqués, les validators détectent les bons problèmes. Pas besoin de Vitest — des tests bash avec des assertions simples suffisent pour valider les scripts et les JSON.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>tests/test-workflows.sh</code><br><code>tests/test-state.sh</code><br><code>tests/test-validators.sh</code><br><code>.github/workflows/test.yml</code> — CI GitHub Actions</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Crédibilité technique. On sait que les modifications ne cassent rien. Les contributeurs peuvent soumettre des PR en confiance.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -279,16 +273,33 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 </div>
 </div>
 
-<div class="item" data-id="2.3">
+<div class="item" data-id="2.2">
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
 <div class="item-title">5 démos canoniques avec expected outputs <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">5 projets de référence documentés de A à Z : SaaS (dog park finder), CRUD app (todo), API service (weather), internal tool (dashboard admin), content site (blog). Chacun a le prompt de départ, les outputs attendus à chaque étape, et les playgrounds résultants. Sert de démo ET de test de régression.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>examples/saas-dog-parks/</code><br><code>examples/crud-todo/</code><br><code>examples/api-weather/</code><br><code>examples/internal-admin/</code><br><code>examples/content-blog/</code><br>Chacun avec : <code>prompt.txt</code>, <code>expected/</code>, <code>README.md</code></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Preuve concrète que ça marche. Un nouveau utilisateur peut reproduire exactement la démo. Un contributeur peut vérifier qu'une modification ne casse rien. C'est du marketing ET de l'engineering.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">5 projets de référence documentés : SaaS, CRUD, API, internal tool, content site. Chacun avec prompt de départ, outputs attendus à chaque étape, playgrounds résultants. Sert de démo ET de test de régression.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>examples/saas-dog-parks/</code>, <code>crud-todo/</code>, <code>api-weather/</code>, <code>internal-admin/</code>, <code>content-blog/</code><br>Chacun avec : <code>prompt.txt</code>, <code>expected/</code>, <code>README.md</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Preuve concrète, reproductible. Marketing ET engineering. Un utilisateur peut reproduire exactement la démo.</div></div>
 </div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
+
+<div class="item" data-id="2.3">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">install.sh + upgrade.sh mis à jour <span class="tag tag-new">NEW</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><code>curl -fsSL https://genius.w3art.io/install | sh</code> — Détecte OS, vérifie Claude Code/Codex, copie tous les skills dans <code>.claude/skills/</code>, configure settings.json, demande le mode, lance genius doctor. <strong>ET met à jour upgrade.sh</strong> avec la logique de migration d'état pour les projets existants.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>install.sh</code> — installation complète<br><strong>Modifier :</strong><br><code>scripts/upgrade.sh</code> — ajouter migration state.json, mode.json, workflows.json pour les upgrades<br><em>✅ L'upgrade migre proprement les projets de v20 vers v21</em></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Installation + upgrade en une commande. Les projets existants migrent sans casse.</div></div>
+</div>
+<div class="ben-feedback">Ne pas oublier de mettre à jour upgrade.sh aussi.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 <div class="effort">2j</div>
@@ -299,27 +310,11 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">install.sh infaillible <span class="tag tag-new">NEW</span></div>
-<div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><code>curl -fsSL https://genius-team.dev/install | sh</code> — Détecte OS/shell, vérifie Node et Claude Code (propose l'install si manquant), installe le Core pack, demande le mode (Beginner/Builder/Pro), lance <code>genius doctor</code>, propose le 5-minute challenge. Support <code>--dry-run</code> et mode non-interactif. Messages d'erreur clairs, jamais d'écrasement silencieux.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>install.sh</code> — le script d'installation<br><strong>Héberger sur :</strong><br><code>genius-team.dev/install</code> (ou genius.w3art.io/install)</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">De "je clone le repo et je lis 3 fichiers" à "je colle une ligne et ça marche". C'est le goulot d'étranglement #1 de l'adoption. Chaque seconde de friction = un abandon.</div></div>
-</div>
-<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
-</div>
-<div class="effort">1.5j</div>
-</div>
-</div>
-
-<div class="item" data-id="2.5">
-<div class="item-top">
-<input type="checkbox" data-task>
-<div class="item-content">
 <div class="item-title">Anti-drift benchmark harness (20 scénarios) <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Suite de 20 scénarios testant l'anti-drift : routing drift (5), state corruption (5), checkpoint skipping (3), direct coding (3), artifact omission (2), recovery (2). Métriques : Drift Detection Rate >95%, Recovery Success Rate >90%, False Positive Rate <5%. Résultats publiés sur le site.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>benchmarks/anti-drift/scenarios/</code> — 20 fichiers de scénario<br><code>benchmarks/anti-drift/harness.ts</code> — le moteur de benchmark<br><code>benchmarks/anti-drift/results.json</code> — résultats publiables<br><code>docs/benchmark-results.md</code> — page de résultats lisible</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Transforme "notre anti-drift est meilleur" (claim marketing) en "notre anti-drift détecte 97% des dérives" (preuve mesurable). C'est ce qui convainc les sceptiques et les ingénieurs. Aucun concurrent ne publie ces chiffres.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">20 scénarios testant l'anti-drift : routing drift (5), state corruption (5), checkpoint skipping (3), direct coding (3), artifact omission (2), recovery (2). Métriques publiées. C'est la preuve mesurable que GT est meilleur que le prompting brut.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>benchmarks/anti-drift/scenarios/</code> — 20 scénarios<br><code>benchmarks/anti-drift/run.sh</code> — exécution<br><code>docs/benchmark-results.md</code> — résultats</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Transforme "notre anti-drift est meilleur" en "notre anti-drift détecte 97% des dérives". Aucun concurrent ne publie ça.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -329,28 +324,29 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 2 :</label>
-<textarea placeholder="Ton avis sur cette phase..." data-section="phase2"></textarea>
+<textarea placeholder="..." data-section="phase2"></textarea>
 </div>
 </div>
 
 <!-- ==================== PHASE 3 ==================== -->
 <div class="phase">
-<div class="phase-hdr"><h2>Phase 3 — Playgrounds + Import + Templates (Semaines 7-9)</h2><div class="phase-badge">~15 jours</div></div>
-<div class="phase-desc">"Make it delightful" — Le moat visuel, l'adoption de projets existants, les templates</div>
+<div class="phase-hdr"><h2>Phase 3 — Playgrounds + Import + Templates (Semaines 7-9)</h2><div class="phase-badge">~14 jours</div></div>
+<div class="phase-desc">"Make it delightful" — Le moat visuel, les projets existants, les templates</div>
 
 <div class="item" data-id="3.1">
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Playground template engine <span class="tag tag-new">NEW</span></div>
+<div class="item-title">Anti-drift sur les playgrounds <span class="tag tag-modify">MODIFY</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Moteur TypeScript qui génère des HTML self-contained (zero deps externes) à partir de données structurées. Composants réutilisables : cards, grids, tables, Mermaid diagrams, color swatches, priority matrices. Dark theme (#0F0F0F), responsive, imprimable. Chaque playground est partageable par simple envoi du fichier.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br>Les skills (genius-specs, genius-architect, etc.) génèrent directement le HTML self-contained via Write tool (comme actuellement)<br><strong>Optionnel :</strong><br><code>cli/commands/playground.ts</code> — <code>genius playground generate</code> comme fallback CLI<br><code>scripts/playground-templates/</code> — templates HTML réutilisables<br><em>✅ COMPATIBLE : Claude écrit les HTML via Write. Pas de runtime TS nécessaire dans Claude Code.</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les playgrounds deviennent le MOAT visuel : aucun concurrent ne génère des artifacts visuels interactifs. C'est aussi le contenu marketing : chaque playground est un screenshot tweetable. Et c'est la preuve pour les clients en Agency mode.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Problème actuel : Claude oublie de générer/mettre à jour les playgrounds après un moment.</strong> Fix : ajouter un hook PostToolUse qui vérifie si un artifact a été modifié sans que le playground correspondant soit mis à jour. Si oui → rappel automatique. Aussi : un skill genius-playground-refresh qui régénère tous les playgrounds d'un coup.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>configs/*/settings.json</code> — hook PostToolUse vérifiant la freshness des playgrounds<br><code>.claude/skills/genius-playground-generator/SKILL.md</code> — commande /genius-playground pour refresh<br><strong>Créer :</strong><br><code>scripts/check-playground-freshness.sh</code> — compare timestamps artifacts vs playgrounds</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les playgrounds restent à jour automatiquement. Le moat visuel ne se dégrade plus au fil des sessions.</div></div>
 </div>
+<div class="ben-feedback">Claude oublie les playgrounds après un moment. Besoin d'anti-drift spécifique.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">5j</div>
+<div class="effort">2j</div>
 </div>
 </div>
 
@@ -358,15 +354,16 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">genius import (adoption projet existant) <span class="tag tag-new">NEW</span></div>
+<div class="item-title">genius import + init workflow registry + state <span class="tag tag-new">NEW</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Commande qui scanne un repo existant (package.json, structure de fichiers, README, git history) et génère automatiquement : un draft de project brief, un snapshot d'architecture, un rapport "what's missing" (pas de specs, pas de tests, etc.), et un plan de cleanup priorisé. L'utilisateur entre dans Genius Team à partir de son projet existant, pas seulement pour des projets neufs.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>cli/commands/import.ts</code> — scan repo + génération du brief draft<br>Ou : <code>.claude/skills/genius-import/SKILL.md</code> — skill qui scanne le repo<br><em>✅ COMPATIBLE : soit via CLI (hors Claude Code), soit comme skill (dans .claude/skills/)</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Ouvre le marché des projets existants (99% des projets). Au lieu de "Genius Team c'est pour les nouveaux projets", ça devient "Genius Team améliore n'importe quel projet". Énorme pour l'adoption.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Skill qui scanne un repo existant et génère : draft brief, architecture snapshot, "what's missing" report. <strong>Aussi : initialise les fichiers .genius/ nécessaires</strong> — state.json (au bon état), mode.json, workflows.json. Le projet est immédiatement prêt pour Genius Team sans étape manuelle.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>.claude/skills/genius-import/SKILL.md</code> — scan repo + génération brief + init .genius/<br><code>.claude/commands/genius-import.md</code> — commande /genius-import<br>Le skill appelle <code>scripts/migrate-state.sh</code> pour initialiser l'état</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Ouvre le marché des projets existants (99% des projets). L'adoption est instantanée : /genius-import et c'est parti.</div></div>
 </div>
+<div class="ben-feedback">Doit aussi initialiser workflow registry et state, pas juste scanner.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">2.5j</div>
+<div class="effort">3j</div>
 </div>
 </div>
 
@@ -374,11 +371,11 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Templates de projet (5 types × modes) <span class="tag tag-new">NEW</span></div>
+<div class="item-title">Templates de projet (5 types) <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">5 templates pré-configurés : SaaS (Next.js + Supabase), Landing page (Astro), API (Express + Prisma), CRUD app (React + SQLite), Internal tool (Admin dashboard). Chaque template inclut : structure de fichiers, brief pré-rempli, specs de base, architecture par défaut. Adaptés par mode (Beginner = plus de guidance).</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>templates/saas/</code>, <code>templates/landing/</code>, <code>templates/api/</code>, <code>templates/crud/</code>, <code>templates/internal/</code><br>Chacun avec : <code>brief-template.md</code>, <code>specs-template.md</code>, <code>architecture-template.md</code>, <code>README.md</code></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant choisit "SaaS" et a déjà une base. Un expert gagne 30 minutes de setup. Les templates sont aussi le vecteur d'entrée pour la marketplace future (templates communautaires).</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">5 templates pré-configurés : SaaS (Next.js + Supabase), Landing (Astro), API (Express + Prisma), CRUD (React + SQLite), Internal tool (Admin). Chaque template = brief pré-rempli + specs de base + architecture par défaut. Le mode adapte la guidance, pas le template.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>templates/saas/</code>, <code>landing/</code>, <code>api/</code>, <code>crud/</code>, <code>internal/</code><br>Chacun avec : <code>brief-template.md</code>, <code>specs-template.md</code>, <code>architecture-template.md</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant choisit un template et a déjà une base solide. Un expert gagne 30 minutes de setup.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -392,36 +389,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Dashboard unifié "Control Room" + Genius Score <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Un dashboard HTML qui agrège tous les playgrounds, l'état du projet, les métriques de session, et un "Genius Score" (0-100) mesurant la santé du projet : complétude des specs, couverture tests, qualité d'architecture, anti-drift score. Visible dans Cortex et en CLI via <code>open .genius/DASHBOARD.html</code>.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br>Les skills génèrent le dashboard HTML via Write tool<br><code>scripts/genius-score.sh</code> — calcul du score (bash, appelable via hooks ou CLI)<br><code>scripts/anti-drift-score.sh</code> — sous-score anti-drift<br><code>.genius/scores.json</code> — résultats des scores<br><em>✅ COMPATIBLE : HTML généré par Claude, scores calculés en bash</em></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le "Control Room" est le cœur visuel de l'expérience. C'est là qu'on voit tout d'un coup d'œil. Le Genius Score crée de la gamification naturelle ("mon projet est à 78/100, comment monter à 90?"). Shareable pour le marketing.</div></div>
-</div>
-<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
-</div>
-<div class="effort">5j</div>
-</div>
-</div>
-
-<div class="section-comment">
-<label>💬 Commentaire global Phase 3 :</label>
-<textarea placeholder="Ton avis sur cette phase..." data-section="phase3"></textarea>
-</div>
-</div>
-
-<!-- ==================== PHASE 4 ==================== -->
-<div class="phase">
-<div class="phase-hdr"><h2>Phase 4 — Distribution + Content (Semaines 10-12)</h2><div class="phase-badge">~15 jours</div></div>
-<div class="phase-desc">"Make the world know" — Site, case studies, vidéo, launch, marketplace</div>
-
-<div class="item" data-id="4.1">
-<div class="item-top">
-<input type="checkbox" data-task>
-<div class="item-content">
-<div class="item-title">Site genius-team.dev (Astro) <span class="tag tag-new">NEW</span></div>
-<div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Site professionnel avec : homepage (hero + GIF + install CTA), docs (organisées par intent : "je démarre", "j'importe", "je configure"), page de comparaison (vs raw prompting, vs Superpowers, vs gstack), galerie de playgrounds, page de benchmarks anti-drift.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>site/</code> — nouveau projet Astro<br>Remplace ou complète <code>docs/index.html</code> actuel (genius.w3art.io)</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un site dédié = crédibilité. Les docs organisées par intent = moins d'abandon. La page de comparaison = conversion des indécis. La galerie de playgrounds = preuve visuelle.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Dashboard HTML agrégant tous les playgrounds + état du projet + Genius Score (0-100). Généré par les skills via Write tool. Visible dans Cortex et en CLI via <code>open .genius/DASHBOARD.html</code>. Le Genius Score mesure : complétude specs, tests, architecture, anti-drift.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>.claude/commands/genius-dashboard.md</code> — intègre le Genius Score<br><strong>Créer :</strong><br><code>scripts/genius-score.sh</code> — calcul du score<br><code>.genius/scores.json</code> — résultats</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Vue d'ensemble en un clic. Le score crée de la gamification naturelle. Les screenshots du dashboard = contenu marketing.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -429,16 +399,45 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 </div>
 </div>
 
+<div class="section-comment">
+<label>💬 Commentaire global Phase 3 :</label>
+<textarea placeholder="..." data-section="phase3"></textarea>
+</div>
+</div>
+
+<!-- ==================== PHASE 4 ==================== -->
+<div class="phase">
+<div class="phase-hdr"><h2>Phase 4 — Distribution + Content (Semaines 10-12)</h2><div class="phase-badge">~13 jours</div></div>
+<div class="phase-desc">"Make the world know" — Site, case studies, vidéo, launch, marketplace</div>
+
+<div class="item" data-id="4.1">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Adapter genius.w3art.io (pas nouveau site) <span class="tag tag-modify">MODIFY</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Pas de nouveau site Astro.</strong> Adapter le site existant genius.w3art.io (en cours de refonte) avec : page comparaison vs concurrents, galerie de playgrounds, résultats benchmark anti-drift, docs organisées par intent. Le site reste dans <code>docs/</code> et déployé via Vercel.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>docs/index.html</code> — intégrer comparaison, galerie, benchmark<br><strong>Créer :</strong><br><code>docs/compare.html</code> — page de comparaison<br><code>docs/playgrounds/</code> — galerie d'exemples<br><code>docs/benchmarks.html</code> — résultats anti-drift<br>Deploy : <code>cd /Users/benbot/genius-team && vercel --prod --yes</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le site existant devient plus complet sans casser ce qui marche. Pas de migration, pas de nouveau domaine.</div></div>
+</div>
+<div class="ben-feedback">On a déjà genius.w3art.io. Adapter, pas recréer.</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">3j</div>
+</div>
+</div>
+
 <div class="item" data-id="4.2">
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">3 case studies + Killer demo vidéo <span class="tag tag-content">CONTENT</span></div>
+<div class="item-title">3 case studies + vidéo enregistrée automatiquement <span class="tag tag-content">CONTENT</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">3 études de cas réelles avec Before/After et métriques. + 1 vidéo "Dog Park Finder en 5 minutes" : screen recording avec timer, dark theme, montrant le flow complet de l'idée au dashboard avec playgrounds. Distribuée sur YouTube, Twitter (version 60s), et en hero du site.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>docs/case-studies/saas-mvp.md</code><br><code>docs/case-studies/legacy-migration.md</code><br><code>docs/case-studies/landing-seo.md</code><br>Vidéo externe (YouTube)</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les gens veulent VOIR, pas lire. La vidéo est le meilleur outil de conversion. Les case studies prouvent que ça marche sur de vrais projets, pas juste des démos.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">3 études de cas avec Before/After. Pour la vidéo : <strong>oui, je peux m'enregistrer</strong> en train d'utiliser Genius Team via screen recording automatisé (asciinema pour le terminal, ou Peekaboo pour l'écran). Script la session, enregistre, accélère les temps morts, ajoute des annotations. Résultat : vidéo authentique d'une vraie session GT.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>docs/case-studies/</code> — 3 études<br><strong>Enregistrer :</strong><br>Session GT complète via asciinema ou screen recording<br>Montage avec annotations et timestamps</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Preuve visuelle authentique. Les gens voient une VRAIE session, pas un pitch marketing. Distribuable sur YouTube, Twitter, site.</div></div>
 </div>
+<div class="ben-feedback">La vidéo doit montrer une vraie utilisation, pas un montage marketing.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 <div class="effort">3j</div>
@@ -451,9 +450,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Launch (HN, Reddit, Twitter, Product Hunt) <span class="tag tag-strategy">STRAT</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Article technique HN : "How we built anti-drift governance for AI coding agents". Threads Twitter avec screenshots de playgrounds. Post Reddit r/ClaudeCode et r/vibecoding. Product Hunt prep (pas launch day 1 — attendre d'avoir les case studies).</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br>Article externe (HN, blog)<br>Assets marketing (screenshots, GIF)<br>Threads préparés</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Premier flux d'utilisateurs organiques. L'article HN sur l'anti-drift positionne Genius Team comme le framework "sérieux" face aux collections de prompts. Les playgrounds sont visuels = tweetables.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Article technique HN : "How we built anti-drift governance for AI coding agents". Threads Twitter avec screenshots de playgrounds. Reddit r/ClaudeCode et r/vibecoding. Product Hunt après les case studies.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Articles externes, threads, assets marketing (screenshots, GIF)</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Premier flux d'utilisateurs organiques. L'article HN positionne GT comme "sérieux".</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -467,13 +466,13 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">OpenClaw package + Anthropic marketplace + GitHub Action <span class="tag tag-strategy">STRAT</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Publier Genius Team sur 3 canaux de distribution : (1) OpenClaw skills hub, (2) Anthropic plugin marketplace (si ouvert), (3) GitHub Actions marketplace (<code>genius-validate</code> = QA + security auto sur chaque PR). Chaque canal a une audience différente et complémentaire.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>packages/openclaw/manifest.json</code><br><code>.github/actions/genius-validate/action.yml</code><br>Soumission marketplace Anthropic</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Distribution passive — les gens découvrent Genius Team en cherchant des skills/plugins. La GitHub Action est particulièrement forte : elle s'installe dans le CI de n'importe quel repo et expose le framework à toute l'équipe.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Publier sur 3 canaux de distribution : OpenClaw, Anthropic marketplace, GitHub Actions (genius-validate = QA auto sur PR).</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><code>.github/actions/genius-validate/action.yml</code>, manifests de distribution</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Distribution passive — les gens découvrent GT en cherchant des skills/plugins.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
-<div class="effort">5j</div>
+<div class="effort">3j</div>
 </div>
 </div>
 
@@ -483,9 +482,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Extension SDK v0.1 <span class="tag tag-new">NEW</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">SDK minimal pour que la communauté crée des skills, templates, et playgrounds. Inclut : <code>genius skill create</code> (scaffolding), documentation du format SKILL.md, guide de contribution, et un channel Discord dédié. Pas un SDK lourd — juste assez pour que quelqu'un puisse publier un skill en 30 minutes.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>sdk/create-skill.ts</code><br><code>sdk/skill-template/</code><br><code>docs/creating-skills.md</code><br><code>docs/contributing-templates.md</code></div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Début de l'effet réseau. Si 10 personnes créent des skills, le framework s'enrichit sans effort de notre part. C'est aussi un signal de maturité pour les décideurs.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Guide + template pour créer des skills communautaires. Format SKILL.md documenté, script de scaffolding, guide de contribution.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><code>docs/creating-skills.md</code>, <code>templates/skill-template/SKILL.md</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Début de l'effet réseau. Le framework s'enrichit par la communauté.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -495,25 +494,25 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 4 :</label>
-<textarea placeholder="Ton avis sur cette phase..." data-section="phase4"></textarea>
+<textarea placeholder="..." data-section="phase4"></textarea>
 </div>
 </div>
 
 <!-- ==================== STRATÉGIE ==================== -->
 <div class="phase">
 <div class="phase-hdr"><h2>Décisions stratégiques</h2><div class="phase-badge">À VALIDER</div></div>
-<div class="phase-desc">Choix qui impactent tout le reste — ton feu vert est nécessaire</div>
 
 <div class="item" data-id="S1">
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Cortex = gateway Beginner, CLI = Builder/Pro <span class="tag tag-strategy">STRAT</span></div>
+<div class="item-title">Cortex utile pour tout le monde (pas juste Beginner) <span class="tag tag-strategy">STRAT</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Les débutants absolus passent par Cortex (app desktop, pas de terminal). Les devs passent par le CLI. Cortex lit les mêmes fichiers (state, playgrounds, logs) et spawne Claude Code en arrière-plan. Pas 2 produits séparés — 2 interfaces sur le même moteur.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Cortex : ajouter projet creation wizard visuel, playground viewer natif, mode selector graphique. Le backend reste le CLI genius-team.</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">On adresse les non-devs (qui n'ouvrent pas un terminal) sans diluer l'expérience dev. Aucun concurrent n'a d'app desktop. C'est un différenciateur unique.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Cortex est utile pour TOUT LE MONDE</strong> : les débutants y trouvent une interface visuelle, les experts y voient le dashboard, les playgrounds, et le monitoring de leurs sessions. Pas une gateway débutant — un compagnon visuel pour tous les modes.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Cortex affiche : dashboard, playgrounds gallery, session timeline, Genius Score, état du projet — quel que soit le mode.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Cortex devient le "visage" de GT pour tous les utilisateurs, pas juste les novices. Différenciateur unique vs tous les concurrents CLI-only.</div></div>
 </div>
+<div class="ben-feedback">Cortex doit être utile pour tout le monde, pas juste les beginners.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 </div>
@@ -525,9 +524,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Monétisation : Free → Pro $29/mois → Enterprise $149/seat <span class="tag tag-strategy">STRAT</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Mois 0-2 : 100% gratuit. Mois 3 : lancer Pro ($29/mois) avec tous les packs, templates avancés, GitHub Action, team mode. Mois 5 : Enterprise ($149/seat) avec Agency mode, SSO, audit trail. Mois 7 : marketplace templates/extensions (30% commission). Objectif : $50K MRR à 12 mois.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Stripe integration, license key system, pack gating, site pricing page.</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Pérennité du projet. Un mainteneur solo ne peut pas tenir sans revenus. Le free core construit la communauté, Pro capture les power users, Enterprise capture les agences.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Mois 0-2 : gratuit. Mois 3 : Pro ($29/mois). Mois 5 : Enterprise ($149/seat). Mois 7 : marketplace (30% commission).</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Stripe, license keys, pricing page sur le site.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Pérennité du projet. Objectif : $50K MRR à 12 mois.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -540,9 +539,9 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-content">
 <div class="item-title">Content : Blog 2x/sem + YouTube 1x/sem + Newsletter <span class="tag tag-content">CONTENT</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Lundi : deep dive technique (anti-drift, workflow, architecture). Jeudi : case study / comparaison. YouTube : 1 vidéo/semaine (speed run, tutoriel, session live). Newsletter hebdo "The Vibecoder's Playbook" avec tip + playground de la semaine.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Blog sur le site Astro. Chaîne YouTube. Newsletter via Buttondown ou Resend.</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le flywheel : les playgrounds sont du contenu natif (screenshots tweetables). Chaque article = SEO. Chaque vidéo = preuve. La newsletter = rétention. Le contenu est le marketing le moins cher et le plus durable.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Lundi : deep dive technique. Jeudi : case study. YouTube : 1 vidéo/semaine. Newsletter "The Vibecoder's Playbook".</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Blog sur le site, chaîne YouTube, newsletter.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Flywheel : contenu → SEO → utilisateurs → contenu. Les playgrounds = screenshots tweetables naturellement.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -553,12 +552,13 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Multi-plateforme APRÈS product-market fit <span class="tag tag-strategy">STRAT</span></div>
+<div class="item-title">Claude Code + Codex (terminal + IDE) DÈS LE DÉBUT <span class="tag tag-strategy">STRAT</span> <span class="tag tag-fixed">CORRIGÉ</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Ne PAS supporter Codex, Cursor, Gemini maintenant. Se concentrer sur Claude Code jusqu'à avoir 500 utilisateurs actifs/semaine. Le support multi-plateforme est Phase 5+ (mois 4-6 au plus tôt). Raison : diluer les efforts maintenant = 5 versions à moitié fonctionnelles au lieu d'1 excellente.</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Rien pour l'instant. Le workflow registry est déjà agnostique — le support multi-plateforme sera plus facile quand le core sera stable.</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Focus = qualité. Mieux vaut être LE meilleur framework Claude Code que le 5ème meilleur framework multi-plateforme. Le PMF d'abord, l'expansion ensuite.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><strong>Claude Code ET Codex dès le jour 1.</strong> En mode terminal et en mode IDE (VS Code / Cursor). Les deux utilisent le format SKILL.md standard. Le CLAUDE.md et les commands sont compatibles. Pour les autres (Gemini CLI, OpenCode, etc.) → on peut attendre.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>AGENTS.md</code> ou <code>codex.md</code> — instructions Codex équivalentes au CLAUDE.md<br>Vérifier que tous les SKILL.md sont compatibles avec le format Codex<br>Tester l'install sur Codex + Cursor + VS Code</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Double l'audience adressable dès le lancement. Les vibecoders utilisent Claude Code OU Codex — on doit être sur les deux.</div></div>
 </div>
+<div class="ben-feedback">Claude Code ET Codex dès le début ! Terminal + IDE (VS Code/Cursor). Les autres peuvent attendre.</div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
 </div>
@@ -568,11 +568,11 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 <div class="item-top">
 <input type="checkbox" data-task>
 <div class="item-content">
-<div class="item-title">Cible : 500 utilisateurs actifs/semaine (pas stars GitHub) <span class="tag tag-strategy">STRAT</span></div>
+<div class="item-title">Cible : 500 utilisateurs actifs/semaine <span class="tag tag-strategy">STRAT</span></div>
 <div class="detail">
-<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Les stars GitHub sont une vanity metric. La vraie cible : 500 personnes qui utilisent Genius Team chaque semaine et complètent des workflows. Métriques secondaires : install curl uniques (2000), skills communautaires (10), case studies (5), mentions externes (10).</div></div>
-<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Tracking anonyme opt-in dans le CLI (nombre d'installs, mode choisi, workflow complété — pas de données personnelles).</div></div>
-<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">On optimise pour la rétention, pas pour le buzz. 500 vrais utilisateurs qui reviennent > 100K stars d'un tweet viral. C'est ce qui crée un vrai business.</div></div>
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Métrique principale : 500 personnes qui utilisent GT chaque semaine et complètent des workflows. Pas les stars GitHub. Secondaire : 2000 installs, 10 skills communautaires, 5 case studies.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Tracking anonyme opt-in (installs, mode, workflow complété).</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">On optimise pour la rétention, pas le buzz.</div></div>
 </div>
 <div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
 </div>
@@ -581,7 +581,7 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 
 <div class="section-comment">
 <label>💬 Commentaire global Stratégie :</label>
-<textarea placeholder="Ton avis global..." data-section="strategy"></textarea>
+<textarea placeholder="..." data-section="strategy"></textarea>
 </div>
 </div>
 
@@ -601,9 +601,8 @@ document.getElementById('counter').textContent=`✅ ${a} / ${n} approuvées`;
 qs('[data-task]').forEach(cb=>{cb.addEventListener('change',function(){this.closest('.item').classList.toggle('approved',this.checked);upd()})});
 qs('[data-task-comment]').forEach(t=>t.addEventListener('input',upd));
 upd();
-
 function exportPlan(){
-let o='# Plan Genius Team v21 — Validation\n\nDate: '+new Date().toISOString()+'\n\n';
+let o='# Plan Genius Team v21 — Validation v2\n\nDate: '+new Date().toISOString()+'\n\n';
 qs('[data-section]').forEach(t=>{if(t.value.trim())o+=`## ${t.dataset.section}\n${t.value.trim()}\n\n`});
 o+='## Tâches\n\n| # | Status | Tâche | Commentaire |\n|---|--------|-------|-------------|\n';
 qs('.item').forEach(row=>{
@@ -615,7 +614,7 @@ o+=`| ${id} | ${cb?.checked?'✅':'⬜'} | ${nm} | ${cm} |\n`;
 });
 const b=new Blob([o],{type:'text/markdown'});
 const u=URL.createObjectURL(b);
-const a=document.createElement('a');a.href=u;a.download='genius-team-v21-validated.md';a.click();
+const a=document.createElement('a');a.href=u;a.download='genius-team-v21-validated-v2.md';a.click();
 }
 </script>
 </body>
