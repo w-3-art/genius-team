@@ -3,291 +3,620 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team v21 — Plan d'implémentation</title>
+<title>Genius Team v21 — Plan de validation</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0a0f; color: #e8e4df; font-family: 'DM Sans', system-ui, sans-serif; padding: 2rem; max-width: 1100px; margin: 0 auto; }
-h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .5rem; background: linear-gradient(135deg, #D4A574, #B8956A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-h2 { font-size: 1.3rem; font-weight: 700; margin: 2rem 0 .5rem; color: #D4A574; border-bottom: 1px solid rgba(212,165,116,.15); padding-bottom: .4rem; }
-h3 { font-size: 1rem; font-weight: 600; margin: 1.2rem 0 .4rem; color: #e8e4df; }
-.subtitle { font-size: .85rem; color: rgba(255,255,255,.35); margin-bottom: 2rem; }
-.phase { background: rgba(255,255,255,.02); border: 1px solid rgba(212,165,116,.08); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-.phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.phase-title { font-size: 1.1rem; font-weight: 700; }
-.phase-badge { background: rgba(212,165,116,.1); color: #D4A574; font-size: .7rem; padding: .2rem .6rem; border-radius: 4px; font-weight: 600; }
-.task-row { display: grid; grid-template-columns: 32px 1fr 200px 80px; gap: .5rem; align-items: start; padding: .6rem .4rem; border-bottom: 1px solid rgba(255,255,255,.03); }
-.task-row:hover { background: rgba(212,165,116,.03); }
-.task-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: #D4A574; cursor: pointer; margin-top: 2px; }
-.task-name { font-size: .82rem; line-height: 1.4; }
-.task-files { font-size: .68rem; color: rgba(255,255,255,.25); font-family: monospace; }
-.task-effort { font-size: .7rem; color: rgba(212,165,116,.5); text-align: right; }
-.comment-box { width: 100%; background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.06); border-radius: 6px; color: #e8e4df; font-size: .75rem; padding: .4rem .5rem; margin-top: .3rem; resize: vertical; min-height: 28px; font-family: inherit; }
-.comment-box::placeholder { color: rgba(255,255,255,.15); }
-.comment-box:focus { outline: none; border-color: rgba(212,165,116,.3); }
-.stats { display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
-.stat { background: rgba(212,165,116,.06); border: 1px solid rgba(212,165,116,.1); border-radius: 8px; padding: .8rem 1rem; min-width: 120px; }
-.stat-value { font-size: 1.3rem; font-weight: 800; color: #D4A574; }
-.stat-label { font-size: .65rem; color: rgba(255,255,255,.3); margin-top: .1rem; }
-.positioning { background: rgba(212,165,116,.05); border-left: 3px solid #D4A574; padding: 1rem 1.2rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: .9rem; font-style: italic; }
-.section-comment { margin: .8rem 0; }
-.section-comment label { font-size: .7rem; color: rgba(255,255,255,.25); display: block; margin-bottom: .2rem; }
-.btn-export { position: fixed; bottom: 2rem; right: 2rem; background: linear-gradient(135deg, #D4A574, #B8956A); color: #0a0a0f; border: none; padding: .8rem 1.5rem; border-radius: 8px; font-weight: 700; font-size: .85rem; cursor: pointer; font-family: inherit; box-shadow: 0 4px 20px rgba(212,165,116,.3); z-index: 100; }
-.btn-export:hover { transform: scale(1.02); }
-.approved { background: rgba(52,211,153,.05) !important; }
-.tag { font-size: .6rem; padding: .1rem .35rem; border-radius: 3px; font-weight: 600; margin-left: .3rem; }
-.tag-new { background: rgba(52,211,153,.15); color: #34D399; }
-.tag-modify { background: rgba(251,191,36,.15); color: #FBBF24; }
-.tag-strategy { background: rgba(139,92,246,.15); color: #8B5CF6; }
-.tag-content { background: rgba(59,130,246,.15); color: #3B82F6; }
-.counter { position: fixed; top: 2rem; right: 2rem; background: rgba(0,0,0,.8); border: 1px solid rgba(212,165,116,.2); border-radius: 8px; padding: .6rem 1rem; font-size: .75rem; z-index: 100; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e8e4df;font-family:'DM Sans',system-ui,sans-serif;padding:1.5rem;max-width:1000px;margin:0 auto}
+h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B8956A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{font-size:.8rem;color:rgba(255,255,255,.3);margin:.3rem 0 1.5rem}
+.phase{margin-bottom:2rem}
+.phase-hdr{background:rgba(212,165,116,.06);border:1px solid rgba(212,165,116,.12);border-radius:10px 10px 0 0;padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center}
+.phase-hdr h2{font-size:1.05rem;font-weight:700;color:#D4A574;margin:0}
+.phase-badge{font-size:.7rem;color:#D4A574;background:rgba(212,165,116,.1);padding:.2rem .5rem;border-radius:4px}
+.phase-desc{font-size:.75rem;color:rgba(255,255,255,.25);padding:.5rem 1.2rem;background:rgba(255,255,255,.01);border-left:1px solid rgba(212,165,116,.12);border-right:1px solid rgba(212,165,116,.12)}
+.item{border:1px solid rgba(255,255,255,.04);border-top:none;padding:1rem 1.2rem;transition:background .2s}
+.item:last-child{border-radius:0 0 10px 10px}
+.item.approved{background:rgba(52,211,153,.03);border-color:rgba(52,211,153,.08)}
+.item-top{display:flex;gap:.8rem;align-items:flex-start}
+.item input[type=checkbox]{width:20px;height:20px;accent-color:#34D399;cursor:pointer;flex-shrink:0;margin-top:2px}
+.item-content{flex:1}
+.item-title{font-size:.88rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.tag{font-size:.55rem;padding:.1rem .35rem;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.tag-new{background:rgba(52,211,153,.12);color:#34D399}
+.tag-modify{background:rgba(251,191,36,.12);color:#FBBF24}
+.tag-strategy{background:rgba(139,92,246,.12);color:#8B5CF6}
+.tag-content{background:rgba(59,130,246,.12);color:#3B82F6}
+.detail{margin-top:.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem}
+.detail-box{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.04);border-radius:6px;padding:.5rem .6rem}
+.detail-label{font-size:.6rem;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.25rem;font-weight:600}
+.detail-text{font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.4}
+.detail-text code{color:#D4A574;font-size:.68rem;background:rgba(212,165,116,.08);padding:.05rem .2rem;border-radius:2px}
+.comment{margin-top:.5rem}
+.comment textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:5px;color:#e8e4df;font-size:.72rem;padding:.35rem .5rem;min-height:26px;resize:vertical;font-family:inherit}
+.comment textarea::placeholder{color:rgba(255,255,255,.12)}
+.comment textarea:focus{outline:none;border-color:rgba(212,165,116,.25)}
+.section-comment{padding:.8rem 1.2rem;border:1px solid rgba(212,165,116,.08);border-top:none;border-radius:0 0 10px 10px;background:rgba(212,165,116,.02)}
+.section-comment label{font-size:.65rem;color:rgba(212,165,116,.4);font-weight:600}
+.positioning{background:rgba(212,165,116,.04);border-left:3px solid #D4A574;padding:.8rem 1rem;margin:.8rem 0;border-radius:0 6px 6px 0;font-size:.85rem;font-style:italic}
+.stats{display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap}
+.stat{background:rgba(212,165,116,.05);border:1px solid rgba(212,165,116,.08);border-radius:8px;padding:.6rem .8rem;min-width:100px}
+.stat-val{font-size:1.2rem;font-weight:800;color:#D4A574}
+.stat-lbl{font-size:.6rem;color:rgba(255,255,255,.25)}
+.counter{position:fixed;top:1.5rem;right:1.5rem;background:rgba(0,0,0,.85);border:1px solid rgba(212,165,116,.15);border-radius:8px;padding:.5rem .8rem;font-size:.7rem;z-index:100;backdrop-filter:blur(10px)}
+.btn-export{position:fixed;bottom:1.5rem;right:1.5rem;background:linear-gradient(135deg,#D4A574,#B8956A);color:#0a0a0f;border:none;padding:.7rem 1.3rem;border-radius:8px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(212,165,116,.25);z-index:100}
+.effort{font-size:.65rem;color:rgba(212,165,116,.4);font-weight:600;flex-shrink:0}
+@media(max-width:700px){.detail{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<h1>🧠 Genius Team v21 — Plan d'implémentation</h1>
-<p class="subtitle">100 itérations d'autoresearch (Opus + GPT-5.4) → Plan final à valider<br>Coche les tâches approuvées, ajoute des commentaires si besoin, puis exporte.</p>
+<h1>🧠 Genius Team v21 — Plan complet</h1>
+<p class="sub">100 itérations d'autoresearch (Opus 4.6 + GPT-5.4). Coche ✅ pour approuver, ajoute des commentaires, puis exporte.</p>
 
 <div class="positioning">
-<strong>Positionnement :</strong> "Genius Team is the operating system for vibecoding: it turns rough ideas and messy codebases into build-ready execution with enough guidance for first-time builders and enough discipline for expert shippers."
+<strong>Positionnement proposé :</strong> "Genius Team is the operating system for vibecoding: it turns rough ideas and messy codebases into build-ready execution with enough guidance for first-time builders and enough discipline for expert shippers."
 </div>
-<div class="section-comment">
-<label>💬 Commentaire sur le positionnement :</label>
-<textarea class="comment-box" placeholder="Ton avis sur le positionnement..." data-section="positioning"></textarea>
-</div>
+<div class="comment"><textarea placeholder="Ton avis sur le positionnement..." data-section="positioning"></textarea></div>
 
-<div class="positioning" style="border-color: #34D399;">
-<strong>Tagline :</strong> "Build your first app. Ship your tenth faster."
+<div class="positioning" style="border-color:#34D399;margin-top:.5rem">
+<strong>Tagline proposée :</strong> "Build your first app. Ship your tenth faster."
 </div>
-<div class="section-comment">
-<label>💬 Commentaire sur la tagline :</label>
-<textarea class="comment-box" placeholder="Ton avis sur la tagline..." data-section="tagline"></textarea>
-</div>
+<div class="comment"><textarea placeholder="Ton avis sur la tagline..." data-section="tagline"></textarea></div>
 
 <div class="stats">
-<div class="stat"><div class="stat-value" id="total-tasks">0</div><div class="stat-label">Tâches totales</div></div>
-<div class="stat"><div class="stat-value" id="approved-tasks">0</div><div class="stat-label">Approuvées</div></div>
-<div class="stat"><div class="stat-value" id="commented-tasks">0</div><div class="stat-label">Avec commentaires</div></div>
-<div class="stat"><div class="stat-value">~59 jours</div><div class="stat-label">Effort total estimé</div></div>
+<div class="stat"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Tâches</div></div>
+<div class="stat"><div class="stat-val" id="s-approved">0</div><div class="stat-lbl">Approuvées</div></div>
+<div class="stat"><div class="stat-val" id="s-commented">0</div><div class="stat-lbl">Commentées</div></div>
+<div class="stat"><div class="stat-val">~59j</div><div class="stat-lbl">Effort total</div></div>
 </div>
+<div class="counter" id="counter">✅ 0 / 0</div>
 
-<div class="counter" id="counter">✅ 0 / 0 approuvées</div>
-
-<!-- ============ PHASE 1 ============ -->
+<!-- ==================== PHASE 1 ==================== -->
 <div class="phase">
-<div class="phase-header">
-<div class="phase-title">Phase 1 — Foundation (Semaines 1-3)</div>
-<div class="phase-badge">~15.5 jours</div>
+<div class="phase-hdr"><h2>Phase 1 — Foundation (Semaines 1-3)</h2><div class="phase-badge">~15.5 jours</div></div>
+<div class="phase-desc">"Make it work brilliantly for 10 people" — Architecture de base, trust layer, premier lancement</div>
+
+<div class="item" data-id="1.1">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Système de modes Beginner / Builder / Pro / Agency <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Créer un moteur de modes qui adapte le comportement de tous les skills : niveau de narration (verbose→terse), autonomie (block→warn→continue), visibilité des dashboards, et sévérité du guard. L'utilisateur choisit son mode au premier lancement et peut switcher à tout moment avec <code>/genius-mode</code>.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/modes/mode-presets.json</code> — définitions des 4 modes (seuils, flags, labels)<br><code>core/modes/mode-engine.ts</code> — logique de sélection et application du mode<br><strong>Modifier :</strong><br>Chaque SKILL.md existant — ajouter un bloc <code>mode-behavior</code> conditionnel</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant absolu se sent guidé sans être submergé. Un expert a zéro friction. Résout la tension fondamentale "trop compliqué pour les uns, pas assez puissant pour les autres".</div></div>
 </div>
-<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make it work brilliantly for 10 people"</p>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
-<h3>Semaine 1 : Core Architecture</h3>
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Définir et implémenter le système de modes <span class="tag tag-new">NEW</span></div><div class="task-files">core/modes/mode-presets.json, core/modes/mode-engine.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Beginner / Builder / Pro / Agency</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="1.2">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Workflow registry <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Fichier JSON central qui définit formellement chaque workflow : nom, description, prérequis (quels artifacts doivent exister), outputs attendus, validators à appeler, modes compatibles, et enchaînement suivant. Remplace le routing implicite par du routing déclaratif vérifiable.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/workflows/registry.json</code> — la définition de tous les workflows<br><code>core/workflows/registry-schema.json</code> — le schéma JSON pour valider le registry<br><strong>Modifier :</strong><br><code>CLAUDE.md</code> — le routing table pointe vers le registry au lieu de lister manuellement</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le routing devient testable, versionnable, et modifiable sans toucher aux prompts. Réduit drastiquement les bugs de routing. Base pour le dry-run et la CLI.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire le workflow registry v1 <span class="tag tag-new">NEW</span></div><div class="task-files">core/workflows/registry.json, core/workflows/registry-schema.json</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Définition formelle de chaque workflow</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="1.3">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">State machine typée <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Remplacer le <code>state.json</code> actuel (structure libre) par une state machine TypeScript avec des transitions validées. États : <code>init → brief_ready → spec_ready → design_ready → arch_ready → execution → qa → deploy → done</code>. Impossible de passer à l'état suivant sans validation.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/state/state-machine.ts</code> — transitions, validations, guards<br><code>core/state/types.ts</code> — interfaces TypeScript<br><strong>Modifier :</strong><br><code>.genius/state.json</code> — nouveau format avec état typé</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Élimine les corruptions d'état silencieuses. Le recovery system peut reprendre exactement là où on s'est arrêté. C'est la base technique de l'anti-drift programmatique.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">1j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Implémenter la state machine typée <span class="tag tag-new">NEW</span></div><div class="task-files">core/state/state-machine.ts, core/state/types.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">JSON + TypeScript interfaces</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="1.4">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Validators pour brief, spec, architecture, plan <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">4 fonctions TypeScript qui vérifient la qualité de chaque artifact avant de passer à l'étape suivante. Vérifient : complétude (sections obligatoires présentes), cohérence (pas de contradictions), dépendances (refs qui existent), et readiness (tout ce qu'il faut pour continuer). Severity configurable par mode.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/validators/brief-validator.ts</code><br><code>core/validators/spec-validator.ts</code><br><code>core/validators/architecture-validator.ts</code><br><code>core/validators/plan-validator.ts</code><br><code>core/validators/types.ts</code> — interface commune ValidationResult</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Première couche de confiance exécutable. Les handoffs ratés (le problème #1 du framework actuel) sont détectés AVANT qu'ils ne causent des dégâts. En mode Beginner = bloque. En mode Pro = warning résumé.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">3j</div>
+</div>
+</div>
 
-<h3>Semaine 2 : Trust Layer</h3>
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire les validators (brief, spec, architecture, plan) <span class="tag tag-new">NEW</span></div><div class="task-files">core/validators/*.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Complétude, contradictions, dépendances</div><div class="task-effort">3 jours</div></div>
+<div class="item" data-id="1.5">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Session logging JSONL + Recovery system <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Logger chaque action dans un fichier JSONL (appendable, streamable) : quel workflow, quel mode, quels artifacts créés, quelles validations passées/échouées. Le recovery system lit ce log pour reprendre à l'état exact après un crash ou une fermeture de session.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/state/session-log.ts</code> — écriture JSONL<br><code>core/state/recovery.ts</code> — lecture du log + rebuild d'état<br><strong>Modifier :</strong><br><code>.genius/session-log.jsonl</code> — nouveau fichier de log par session</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Plus de "je ne sais plus où j'en étais". Le framework peut reprendre après un crash, un reboot, ou un changement de session. Aussi base pour l'observabilité et le debugging.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Implémenter le session logging (JSONL) <span class="tag tag-new">NEW</span></div><div class="task-files">core/state/session-log.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Appendable, streamable</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="1.6">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Réécrire le README en 20 sections structurées <span class="tag tag-modify">MODIFY</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Le README actuel est un mur technique qui ne convertit pas. Le réécrire autour des outcomes : (1) Titre + 1 phrase, (2) Pour qui, (3) Ce qui se passe en 5 minutes, (4) Install, (5) Choisir son mode, (6) 3 façons de démarrer, (7) Exemples d'outputs, (8) Pourquoi pas juste ChatGPT?, (9) Workflows core, (10) Packs. GIF de démo en haut.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>README.md</code> — réécriture complète<br><strong>Créer :</strong><br><code>docs/images/demo.gif</code> — GIF de 15s montrant le flow</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Quelqu'un qui tombe sur le repo comprend en 90 secondes ce que c'est, pour qui, et comment commencer. C'est le premier point de contact — si ça ne convertit pas ici, rien d'autre ne compte.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">1j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire le recovery system (checkpoint-based) <span class="tag tag-new">NEW</span></div><div class="task-files">core/state/recovery.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Reprendre sans recommencer</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="1.7">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Micro-checklists au lieu de GENIUS_GUARD monolithique <span class="tag tag-modify">MODIFY</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Remplacer le GENIUS_GUARD.md de 400 lignes par des micro-checklists injectées au point d'usage : <code>pre-planning.md</code> (avant de planifier), <code>pre-coding.md</code> (avant de coder), <code>pre-deploy.md</code> (avant de déployer). Chaque checklist = 10-15 lignes max. Plus digeste, plus actionnable.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/guards/pre-planning.md</code><br><code>core/guards/pre-coding.md</code><br><code>core/guards/pre-review.md</code><br><code>core/guards/pre-deploy.md</code><br><strong>Modifier :</strong><br><code>GENIUS_GUARD.md</code> — garder comme référence mais plus chargé au début de chaque session</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Moins intimidant pour les nouveaux. Les règles apparaissent au moment où elles comptent, pas en un bloc initial. Le guard est tout aussi efficace mais moins effrayant.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">1j</div>
+</div>
+</div>
 
-<h3>Semaine 3 : First Run Experience</h3>
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Réécrire le README (20 sections structurées) <span class="tag tag-modify">MODIFY</span></div><div class="task-files">README.md</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Hook → GIF → Install → Modes → Paths</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="1.8">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Réorganiser 48 skills en 4 packs installables <span class="tag tag-modify">MODIFY</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Regrouper les 48 skills en 4 packs : <strong>Core</strong> (interviewer, specs, architect, dev, qa, deployer — le pipeline essentiel), <strong>Growth</strong> (marketer, copywriter, seo, content, analytics — croissance), <strong>Quality</strong> (code-review, security, performance, accessibility, tests — qualité), <strong>Business</strong> (market-analyst, crypto, i18n, onboarding — business). Core installé par défaut, les autres optionnels.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Restructurer :</strong><br><code>.claude/skills/</code> → <code>packs/core/skills/</code>, <code>packs/growth/skills/</code>, <code>packs/quality/skills/</code>, <code>packs/business/skills/</code><br><strong>Créer :</strong><br><code>packs/manifest.json</code> — liste des packs avec leurs skills<br><strong>Modifier :</strong><br><code>CLAUDE.md</code> routing — charger les skills selon les packs installés</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant installe Core (12 skills) au lieu de 48. Moins de bruit, moins de confusion. Un expert installe tout. La modularité permet aussi la distribution individuelle sur les marketplaces.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">1j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Refaire /genius-start comme entrypoint universel <span class="tag tag-modify">MODIFY</span></div><div class="task-files">packs/core/workflows/genius-start.md</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">1 question → auto-routing</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="1.9">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">3 entry paths au lieu de 48 skills visibles <span class="tag tag-modify">MODIFY</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Au premier lancement, proposer 3 chemins clairs au lieu d'une liste de skills : <strong>"🚀 Lancer une app"</strong> (nouveau projet, démarre par genius-interviewer), <strong>"🔧 Améliorer un projet existant"</strong> (import + genius-architect), <strong>"⚡ Shipper plus vite"</strong> (genius-orchestrator direct). Les skills sont invoqués automatiquement en arrière-plan.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Modifier :</strong><br><code>.claude/skills/genius-start/SKILL.md</code> — nouveau flow avec 3 paths<br><code>.claude/skills/genius-team/SKILL.md</code> — routing simplifié par path</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">L'utilisateur pense en "jobs to be done", pas en noms de skills. Réduction massive de la charge cognitive au démarrage. Les skills sont toujours là, juste pas exposés frontalement.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">0.5j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Construire le 5-minute challenge (3 variantes) <span class="tag tag-new">NEW</span></div><div class="task-files">docs/5-minute-challenge.md, examples/5-min-challenge/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Beginner / Builder / Pro</div><div class="task-effort">2 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Remplacer GENIUS_GUARD monolithique par micro-checklists <span class="tag tag-modify">MODIFY</span></div><div class="task-files">core/guards/pre-planning.md, pre-coding.md, pre-deploy.md</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Au point d'usage, pas un gros doc</div><div class="task-effort">1 jour</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Réduire la surface visible à 3 entry paths <span class="tag tag-modify">MODIFY</span></div><div class="task-files">Registry + genius-start workflow</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Launch / Improve / Ship faster</div><div class="task-effort">0.5 jour</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Réorganiser 48 skills en 4 packs <span class="tag tag-modify">MODIFY</span></div><div class="task-files">.claude/skills/ → packs/core/, packs/growth/, packs/quality/, packs/business/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Core / Growth / Quality / Business</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="1.10">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">5-minute challenge (3 variantes par mode) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Un parcours reproductible qui prouve la valeur en 5 minutes. Même prompt de départ ("Je veux une app de dog parks"), mais traitement différent par mode : Beginner = guidé pas à pas avec explications, Builder = résumé concis avec confirmations, Pro = exécution rapide avec diffs. Sert de démo ET de test de régression.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>docs/5-minute-challenge.md</code> — guide<br><code>examples/5-min-challenge/prompt.txt</code> — le prompt standardisé<br><code>examples/5-min-challenge/expected-outputs/</code> — outputs attendus par mode</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le "wow moment". Quelqu'un installe, lance le challenge, et en 5 min il a un brief, des specs, un design system, et un plan de tâches — le tout en playgrounds interactifs. C'est le moment où il décide de rester ou partir.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 1 :</label>
-<textarea class="comment-box" placeholder="Ton avis sur la Phase 1..." data-section="phase1"></textarea>
+<textarea placeholder="Ton avis sur cette phase..." data-section="phase1"></textarea>
 </div>
 </div>
 
-<!-- ============ PHASE 2 ============ -->
+<!-- ==================== PHASE 2 ==================== -->
 <div class="phase">
-<div class="phase-header">
-<div class="phase-title">Phase 2 — CLI + Testing + Proof (Semaines 4-6)</div>
-<div class="phase-badge">~13 jours</div>
+<div class="phase-hdr"><h2>Phase 2 — CLI + Testing + Proof (Semaines 4-6)</h2><div class="phase-badge">~13 jours</div></div>
+<div class="phase-desc">"Make it provably reliable" — Un vrai CLI, des tests, et la preuve que l'anti-drift marche</div>
+
+<div class="item" data-id="2.1">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">CLI TypeScript (genius start/status/continue/doctor/mode) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Un CLI en TypeScript (Commander.js) qui gère : <code>genius start</code> (entrypoint universel), <code>genius status</code> (où j'en suis), <code>genius continue</code> (reprendre), <code>genius doctor</code> (diagnostic), <code>genius mode</code> (changer de mode), <code>genius import</code> (adopter un projet existant). Installable via npm globalement.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>cli/genius.ts</code> — point d'entrée<br><code>cli/commands/start.ts</code>, <code>status.ts</code>, <code>continue.ts</code>, <code>doctor.ts</code>, <code>mode.ts</code><br><code>package.json</code> — bin: { "genius": "cli/genius.ts" }<br><code>tsconfig.json</code> pour le CLI</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Expérience "tool" au lieu de "collection de fichiers". Le CLI valide l'environnement, gère l'état, et lance Claude Code avec la bonne config. C'est ce qui transforme un repo de skills en un produit.</div></div>
 </div>
-<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make it provably reliable"</p>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">5j</div>
+</div>
+</div>
 
-<h3>Semaine 4 : CLI</h3>
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">CLI scaffold TypeScript <span class="tag tag-new">NEW</span></div><div class="task-files">cli/genius.ts, cli/commands/*.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Commander.js</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="2.2">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Tests automatisés (registry, state, modes, validators) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Suite de tests Vitest couvrant : parsing du workflow registry, transitions de state machine, application des modes, exécution des validators sur des inputs valides/invalides, et les 5 démos canoniques (tests de bout en bout sur les expected outputs).</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>tests/registry.test.ts</code><br><code>tests/state-machine.test.ts</code><br><code>tests/modes.test.ts</code><br><code>tests/validators.test.ts</code><br><code>vitest.config.ts</code><br><code>.github/workflows/test.yml</code> — CI</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Crédibilité technique. On peut modifier le framework sans craindre de tout casser. Les contributeurs externes peuvent soumettre des PR avec confiance. Le benchmark anti-drift devient automatisable.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">3j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Commandes : genius start, status, continue <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/start.ts, status.ts, continue.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Commandes de base</div><div class="task-effort">1.5 jours</div></div>
+<div class="item" data-id="2.3">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">5 démos canoniques avec expected outputs <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">5 projets de référence documentés de A à Z : SaaS (dog park finder), CRUD app (todo), API service (weather), internal tool (dashboard admin), content site (blog). Chacun a le prompt de départ, les outputs attendus à chaque étape, et les playgrounds résultants. Sert de démo ET de test de régression.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>examples/saas-dog-parks/</code><br><code>examples/crud-todo/</code><br><code>examples/api-weather/</code><br><code>examples/internal-admin/</code><br><code>examples/content-blog/</code><br>Chacun avec : <code>prompt.txt</code>, <code>expected/</code>, <code>README.md</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Preuve concrète que ça marche. Un nouveau utilisateur peut reproduire exactement la démo. Un contributeur peut vérifier qu'une modification ne casse rien. C'est du marketing ET de l'engineering.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">genius doctor (diagnostic environnement) <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/doctor.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Checks OS, Node, Claude Code</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="2.4">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">install.sh infaillible <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text"><code>curl -fsSL https://genius-team.dev/install | sh</code> — Détecte OS/shell, vérifie Node et Claude Code (propose l'install si manquant), installe le Core pack, demande le mode (Beginner/Builder/Pro), lance <code>genius doctor</code>, propose le 5-minute challenge. Support <code>--dry-run</code> et mode non-interactif. Messages d'erreur clairs, jamais d'écrasement silencieux.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>install.sh</code> — le script d'installation<br><strong>Héberger sur :</strong><br><code>genius-team.dev/install</code> (ou genius.w3art.io/install)</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">De "je clone le repo et je lis 3 fichiers" à "je colle une ligne et ça marche". C'est le goulot d'étranglement #1 de l'adoption. Chaque seconde de friction = un abandon.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">1.5j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">genius mode (switch modes) <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/mode.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Beginner ↔ Builder ↔ Pro</div><div class="task-effort">0.5 jour</div></div>
-
-<h3>Semaine 5 : Testing + Demos</h3>
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Tests automatisés (registry, state, modes, validators) <span class="tag tag-new">NEW</span></div><div class="task-files">tests/*.test.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Vitest</div><div class="task-effort">3 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">5 démos canoniques avec expected outputs <span class="tag tag-new">NEW</span></div><div class="task-files">examples/saas/, crud/, api/, internal-tool/, content-site/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Reproductibles, versionnées</div><div class="task-effort">2 jours</div></div>
-
-<h3>Semaine 6 : Proof + Installer</h3>
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">install.sh avec détection intelligente <span class="tag tag-new">NEW</span></div><div class="task-files">install.sh (hébergé sur genius-team.dev)</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">OS, shell, Node, Claude Code, mode</div><div class="task-effort">1.5 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Dry-run previews pour tous les workflows <span class="tag tag-new">NEW</span></div><div class="task-files">Registry enhancement</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Voir avant d'exécuter</div><div class="task-effort">1.5 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Anti-drift benchmark harness (20 scénarios) <span class="tag tag-new">NEW</span></div><div class="task-files">benchmarks/anti-drift/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">DDR >95%, RSR >90%, FPR <5%</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="2.5">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Anti-drift benchmark harness (20 scénarios) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Suite de 20 scénarios testant l'anti-drift : routing drift (5), state corruption (5), checkpoint skipping (3), direct coding (3), artifact omission (2), recovery (2). Métriques : Drift Detection Rate >95%, Recovery Success Rate >90%, False Positive Rate <5%. Résultats publiés sur le site.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>benchmarks/anti-drift/scenarios/</code> — 20 fichiers de scénario<br><code>benchmarks/anti-drift/harness.ts</code> — le moteur de benchmark<br><code>benchmarks/anti-drift/results.json</code> — résultats publiables<br><code>docs/benchmark-results.md</code> — page de résultats lisible</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Transforme "notre anti-drift est meilleur" (claim marketing) en "notre anti-drift détecte 97% des dérives" (preuve mesurable). C'est ce qui convainc les sceptiques et les ingénieurs. Aucun concurrent ne publie ces chiffres.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 2 :</label>
-<textarea class="comment-box" placeholder="Ton avis sur la Phase 2..." data-section="phase2"></textarea>
+<textarea placeholder="Ton avis sur cette phase..." data-section="phase2"></textarea>
 </div>
 </div>
 
-<!-- ============ PHASE 3 ============ -->
+<!-- ==================== PHASE 3 ==================== -->
 <div class="phase">
-<div class="phase-header">
-<div class="phase-title">Phase 3 — Playgrounds + Import + Templates (Semaines 7-9)</div>
-<div class="phase-badge">~15 jours</div>
+<div class="phase-hdr"><h2>Phase 3 — Playgrounds + Import + Templates (Semaines 7-9)</h2><div class="phase-badge">~15 jours</div></div>
+<div class="phase-desc">"Make it delightful" — Le moat visuel, l'adoption de projets existants, les templates</div>
+
+<div class="item" data-id="3.1">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Playground template engine <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Moteur TypeScript qui génère des HTML self-contained (zero deps externes) à partir de données structurées. Composants réutilisables : cards, grids, tables, Mermaid diagrams, color swatches, priority matrices. Dark theme (#0F0F0F), responsive, imprimable. Chaque playground est partageable par simple envoi du fichier.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/playgrounds/engine.ts</code><br><code>core/playgrounds/components/card.ts</code>, <code>grid.ts</code>, <code>diagram.ts</code>, <code>table.ts</code><br><code>core/playgrounds/templates/brief.html</code>, <code>specs.html</code>, <code>architecture.html</code>, <code>design.html</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les playgrounds deviennent le MOAT visuel : aucun concurrent ne génère des artifacts visuels interactifs. C'est aussi le contenu marketing : chaque playground est un screenshot tweetable. Et c'est la preuve pour les clients en Agency mode.</div></div>
 </div>
-<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make it delightful"</p>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">5j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Playground template engine (dark theme, composants) <span class="tag tag-new">NEW</span></div><div class="task-files">core/playgrounds/engine.ts, core/playgrounds/components/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Moteur de génération</div><div class="task-effort">3 jours</div></div>
+<div class="item" data-id="3.2">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">genius import (adoption projet existant) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Commande qui scanne un repo existant (package.json, structure de fichiers, README, git history) et génère automatiquement : un draft de project brief, un snapshot d'architecture, un rapport "what's missing" (pas de specs, pas de tests, etc.), et un plan de cleanup priorisé. L'utilisateur entre dans Genius Team à partir de son projet existant, pas seulement pour des projets neufs.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>cli/commands/import.ts</code> — scan + génération<br><code>core/import/scanner.ts</code> — analyse de la structure<br><code>core/import/brief-generator.ts</code> — génère le draft brief</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Ouvre le marché des projets existants (99% des projets). Au lieu de "Genius Team c'est pour les nouveaux projets", ça devient "Genius Team améliore n'importe quel projet". Énorme pour l'adoption.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2.5j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Playgrounds : Brief + Specs + Architecture (Mermaid) <span class="tag tag-new">NEW</span></div><div class="task-files">core/playgrounds/templates/*.html</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Self-contained HTML</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="3.3">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Templates de projet (5 types × modes) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">5 templates pré-configurés : SaaS (Next.js + Supabase), Landing page (Astro), API (Express + Prisma), CRUD app (React + SQLite), Internal tool (Admin dashboard). Chaque template inclut : structure de fichiers, brief pré-rempli, specs de base, architecture par défaut. Adaptés par mode (Beginner = plus de guidance).</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>templates/saas/</code>, <code>templates/landing/</code>, <code>templates/api/</code>, <code>templates/crud/</code>, <code>templates/internal/</code><br>Chacun avec : <code>brief-template.md</code>, <code>specs-template.md</code>, <code>architecture-template.md</code>, <code>README.md</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un débutant choisit "SaaS" et a déjà une base. Un expert gagne 30 minutes de setup. Les templates sont aussi le vecteur d'entrée pour la marketplace future (templates communautaires).</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2.5j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Template system (5 types × 3 modes) <span class="tag tag-new">NEW</span></div><div class="task-files">templates/saas/, landing/, api/, crud/, internal/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">SaaS, Landing, API, CRUD, Internal</div><div class="task-effort">2.5 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">genius import (adoption projet existant) <span class="tag tag-new">NEW</span></div><div class="task-files">cli/commands/import.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Scan repo → draft brief + architecture</div><div class="task-effort">2.5 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Dashboard unifié "Control Room" <span class="tag tag-new">NEW</span></div><div class="task-files">core/playgrounds/templates/dashboard.html</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Tous les playgrounds liés</div><div class="task-effort">2 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Genius Score + Anti-Drift Score <span class="tag tag-new">NEW</span></div><div class="task-files">core/scoring/genius-score.ts, anti-drift-score.ts</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Score santé projet 0-100</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="3.4">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Dashboard unifié "Control Room" + Genius Score <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Un dashboard HTML qui agrège tous les playgrounds, l'état du projet, les métriques de session, et un "Genius Score" (0-100) mesurant la santé du projet : complétude des specs, couverture tests, qualité d'architecture, anti-drift score. Visible dans Cortex et en CLI via <code>open .genius/DASHBOARD.html</code>.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>core/playgrounds/templates/dashboard.html</code><br><code>core/scoring/genius-score.ts</code> — calcul du score<br><code>core/scoring/anti-drift-score.ts</code> — sous-score anti-drift</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le "Control Room" est le cœur visuel de l'expérience. C'est là qu'on voit tout d'un coup d'œil. Le Genius Score crée de la gamification naturelle ("mon projet est à 78/100, comment monter à 90?"). Shareable pour le marketing.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">5j</div>
+</div>
+</div>
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 3 :</label>
-<textarea class="comment-box" placeholder="Ton avis sur la Phase 3..." data-section="phase3"></textarea>
+<textarea placeholder="Ton avis sur cette phase..." data-section="phase3"></textarea>
 </div>
 </div>
 
-<!-- ============ PHASE 4 ============ -->
+<!-- ==================== PHASE 4 ==================== -->
 <div class="phase">
-<div class="phase-header">
-<div class="phase-title">Phase 4 — Distribution + Content (Semaines 10-12)</div>
-<div class="phase-badge">~15 jours</div>
+<div class="phase-hdr"><h2>Phase 4 — Distribution + Content (Semaines 10-12)</h2><div class="phase-badge">~15 jours</div></div>
+<div class="phase-desc">"Make the world know" — Site, case studies, vidéo, launch, marketplace</div>
+
+<div class="item" data-id="4.1">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Site genius-team.dev (Astro) <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Site professionnel avec : homepage (hero + GIF + install CTA), docs (organisées par intent : "je démarre", "j'importe", "je configure"), page de comparaison (vs raw prompting, vs Superpowers, vs gstack), galerie de playgrounds, page de benchmarks anti-drift.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>site/</code> — nouveau projet Astro<br>Remplace ou complète <code>docs/index.html</code> actuel (genius.w3art.io)</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Un site dédié = crédibilité. Les docs organisées par intent = moins d'abandon. La page de comparaison = conversion des indécis. La galerie de playgrounds = preuve visuelle.</div></div>
 </div>
-<p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:1rem">"Make the world know"</p>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">4j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Site genius-team.dev (Astro) <span class="tag tag-new">NEW</span></div><div class="task-files">site/src/pages/index.astro, docs/, compare.astro</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Homepage + Docs + Comparaison</div><div class="task-effort">4 jours</div></div>
+<div class="item" data-id="4.2">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">3 case studies + Killer demo vidéo <span class="tag tag-content">CONTENT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">3 études de cas réelles avec Before/After et métriques. + 1 vidéo "Dog Park Finder en 5 minutes" : screen recording avec timer, dark theme, montrant le flow complet de l'idée au dashboard avec playgrounds. Distribuée sur YouTube, Twitter (version 60s), et en hero du site.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>docs/case-studies/saas-mvp.md</code><br><code>docs/case-studies/legacy-migration.md</code><br><code>docs/case-studies/landing-seo.md</code><br>Vidéo externe (YouTube)</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Les gens veulent VOIR, pas lire. La vidéo est le meilleur outil de conversion. Les case studies prouvent que ça marche sur de vrais projets, pas juste des démos.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">3j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">3 case studies détaillées <span class="tag tag-content">CONTENT</span></div><div class="task-files">docs/case-studies/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Before/After avec métriques</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="4.3">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Launch (HN, Reddit, Twitter, Product Hunt) <span class="tag tag-strategy">STRAT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Article technique HN : "How we built anti-drift governance for AI coding agents". Threads Twitter avec screenshots de playgrounds. Post Reddit r/ClaudeCode et r/vibecoding. Product Hunt prep (pas launch day 1 — attendre d'avoir les case studies).</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br>Article externe (HN, blog)<br>Assets marketing (screenshots, GIF)<br>Threads préparés</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Premier flux d'utilisateurs organiques. L'article HN sur l'anti-drift positionne Genius Team comme le framework "sérieux" face aux collections de prompts. Les playgrounds sont visuels = tweetables.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">1j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Killer demo vidéo "Dog Park in 5 min" <span class="tag tag-content">CONTENT</span></div><div class="task-files">Externe (YouTube)</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Screen recording, timer, dark theme</div><div class="task-effort">1 jour</div></div>
+<div class="item" data-id="4.4">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">OpenClaw package + Anthropic marketplace + GitHub Action <span class="tag tag-strategy">STRAT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Publier Genius Team sur 3 canaux de distribution : (1) OpenClaw skills hub, (2) Anthropic plugin marketplace (si ouvert), (3) GitHub Actions marketplace (<code>genius-validate</code> = QA + security auto sur chaque PR). Chaque canal a une audience différente et complémentaire.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>packages/openclaw/manifest.json</code><br><code>.github/actions/genius-validate/action.yml</code><br>Soumission marketplace Anthropic</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Distribution passive — les gens découvrent Genius Team en cherchant des skills/plugins. La GitHub Action est particulièrement forte : elle s'installe dans le CI de n'importe quel repo et expose le framework à toute l'équipe.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">5j</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Launch : HN, Reddit, Twitter, Product Hunt prep <span class="tag tag-strategy">STRATEGY</span></div><div class="task-files">Externe</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Article technique HN en priorité</div><div class="task-effort">1 jour</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">OpenClaw package + Anthropic marketplace <span class="tag tag-strategy">STRATEGY</span></div><div class="task-files">Package files, manifest</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Distribution organique</div><div class="task-effort">1 jour</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">GitHub Action genius-validate <span class="tag tag-new">NEW</span></div><div class="task-files">.github/actions/genius-validate/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">QA + security auto sur PR</div><div class="task-effort">2 jours</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Extension SDK v0.1 <span class="tag tag-new">NEW</span></div><div class="task-files">sdk/</div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Pour skills communautaires</div><div class="task-effort">2 jours</div></div>
+<div class="item" data-id="4.5">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Extension SDK v0.1 <span class="tag tag-new">NEW</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">SDK minimal pour que la communauté crée des skills, templates, et playgrounds. Inclut : <code>genius skill create</code> (scaffolding), documentation du format SKILL.md, guide de contribution, et un channel Discord dédié. Pas un SDK lourd — juste assez pour que quelqu'un puisse publier un skill en 30 minutes.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text"><strong>Créer :</strong><br><code>sdk/create-skill.ts</code><br><code>sdk/skill-template/</code><br><code>docs/creating-skills.md</code><br><code>docs/contributing-templates.md</code></div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Début de l'effet réseau. Si 10 personnes créent des skills, le framework s'enrichit sans effort de notre part. C'est aussi un signal de maturité pour les décideurs.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+<div class="effort">2j</div>
+</div>
+</div>
 
 <div class="section-comment">
 <label>💬 Commentaire global Phase 4 :</label>
-<textarea class="comment-box" placeholder="Ton avis sur la Phase 4..." data-section="phase4"></textarea>
+<textarea placeholder="Ton avis sur cette phase..." data-section="phase4"></textarea>
 </div>
 </div>
 
-<!-- ============ STRATEGY ============ -->
+<!-- ==================== STRATÉGIE ==================== -->
 <div class="phase">
-<div class="phase-header">
-<div class="phase-title">Décisions stratégiques à valider</div>
-<div class="phase-badge">STRATÉGIE</div>
+<div class="phase-hdr"><h2>Décisions stratégiques</h2><div class="phase-badge">À VALIDER</div></div>
+<div class="phase-desc">Choix qui impactent tout le reste — ton feu vert est nécessaire</div>
+
+<div class="item" data-id="S1">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Cortex = gateway Beginner, CLI = Builder/Pro <span class="tag tag-strategy">STRAT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Les débutants absolus passent par Cortex (app desktop, pas de terminal). Les devs passent par le CLI. Cortex lit les mêmes fichiers (state, playgrounds, logs) et spawne Claude Code en arrière-plan. Pas 2 produits séparés — 2 interfaces sur le même moteur.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Cortex : ajouter projet creation wizard visuel, playground viewer natif, mode selector graphique. Le backend reste le CLI genius-team.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">On adresse les non-devs (qui n'ouvrent pas un terminal) sans diluer l'expérience dev. Aucun concurrent n'a d'app desktop. C'est un différenciateur unique.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+</div>
 </div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Cortex = gateway Beginner (desktop), CLI = Builder/Pro <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Architecture produit</div><div class="task-effort">—</div></div>
+<div class="item" data-id="S2">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Monétisation : Free → Pro $29/mois → Enterprise $149/seat <span class="tag tag-strategy">STRAT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Mois 0-2 : 100% gratuit. Mois 3 : lancer Pro ($29/mois) avec tous les packs, templates avancés, GitHub Action, team mode. Mois 5 : Enterprise ($149/seat) avec Agency mode, SSO, audit trail. Mois 7 : marketplace templates/extensions (30% commission). Objectif : $50K MRR à 12 mois.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Stripe integration, license key system, pack gating, site pricing page.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Pérennité du projet. Un mainteneur solo ne peut pas tenir sans revenus. Le free core construit la communauté, Pro capture les power users, Enterprise capture les agences.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Monétisation : Free → Pro $29/mois → Enterprise $149/seat <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">À partir du mois 3</div><div class="task-effort">—</div></div>
+<div class="item" data-id="S3">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Content : Blog 2x/sem + YouTube 1x/sem + Newsletter <span class="tag tag-content">CONTENT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Lundi : deep dive technique (anti-drift, workflow, architecture). Jeudi : case study / comparaison. YouTube : 1 vidéo/semaine (speed run, tutoriel, session live). Newsletter hebdo "The Vibecoder's Playbook" avec tip + playground de la semaine.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Blog sur le site Astro. Chaîne YouTube. Newsletter via Buttondown ou Resend.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Le flywheel : les playgrounds sont du contenu natif (screenshots tweetables). Chaque article = SEO. Chaque vidéo = preuve. La newsletter = rétention. Le contenu est le marketing le moins cher et le plus durable.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Marketplace templates/extensions (30% commission) <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">À partir du mois 7</div><div class="task-effort">—</div></div>
+<div class="item" data-id="S4">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Multi-plateforme APRÈS product-market fit <span class="tag tag-strategy">STRAT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Ne PAS supporter Codex, Cursor, Gemini maintenant. Se concentrer sur Claude Code jusqu'à avoir 500 utilisateurs actifs/semaine. Le support multi-plateforme est Phase 5+ (mois 4-6 au plus tôt). Raison : diluer les efforts maintenant = 5 versions à moitié fonctionnelles au lieu d'1 excellente.</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Rien pour l'instant. Le workflow registry est déjà agnostique — le support multi-plateforme sera plus facile quand le core sera stable.</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">Focus = qualité. Mieux vaut être LE meilleur framework Claude Code que le 5ème meilleur framework multi-plateforme. Le PMF d'abord, l'expansion ensuite.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+</div>
+</div>
 
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Content : Blog 2x/sem + YouTube 1x/sem + Newsletter hebdo <span class="tag tag-content">CONTENT</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">"The Vibecoder's Playbook"</div><div class="task-effort">—</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Cible : 500 utilisateurs actifs/semaine à 6 mois <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Pas les stars GitHub</div><div class="task-effort">—</div></div>
-
-<div class="task-row"><input type="checkbox" data-task><div><div class="task-name">Multi-plateforme APRÈS PMF sur Claude Code <span class="tag tag-strategy">STRATEGY</span></div><textarea class="comment-box" placeholder="Commentaire..." data-task-comment></textarea></div><div class="task-files">Codex/Cursor = Phase 5+</div><div class="task-effort">—</div></div>
+<div class="item" data-id="S5">
+<div class="item-top">
+<input type="checkbox" data-task>
+<div class="item-content">
+<div class="item-title">Cible : 500 utilisateurs actifs/semaine (pas stars GitHub) <span class="tag tag-strategy">STRAT</span></div>
+<div class="detail">
+<div class="detail-box"><div class="detail-label">📝 Description</div><div class="detail-text">Les stars GitHub sont une vanity metric. La vraie cible : 500 personnes qui utilisent Genius Team chaque semaine et complètent des workflows. Métriques secondaires : install curl uniques (2000), skills communautaires (10), case studies (5), mentions externes (10).</div></div>
+<div class="detail-box"><div class="detail-label">📁 Modifications</div><div class="detail-text">Tracking anonyme opt-in dans le CLI (nombre d'installs, mode choisi, workflow complété — pas de données personnelles).</div></div>
+<div class="detail-box"><div class="detail-label">🎯 Impact attendu</div><div class="detail-text">On optimise pour la rétention, pas pour le buzz. 500 vrais utilisateurs qui reviennent > 100K stars d'un tweet viral. C'est ce qui crée un vrai business.</div></div>
+</div>
+<div class="comment"><textarea placeholder="Commentaire..." data-task-comment></textarea></div>
+</div>
+</div>
+</div>
 
 <div class="section-comment">
 <label>💬 Commentaire global Stratégie :</label>
-<textarea class="comment-box" placeholder="Ton avis global sur la stratégie..." data-section="strategy"></textarea>
+<textarea placeholder="Ton avis global..." data-section="strategy"></textarea>
 </div>
 </div>
 
 <button class="btn-export" onclick="exportPlan()">📋 Exporter le plan validé</button>
 
 <script>
-const checkboxes = document.querySelectorAll('[data-task]');
-const totalEl = document.getElementById('total-tasks');
-const approvedEl = document.getElementById('approved-tasks');
-const commentedEl = document.getElementById('commented-tasks');
-const counterEl = document.getElementById('counter');
-
-totalEl.textContent = checkboxes.length;
-
-function updateCounts() {
-  const approved = document.querySelectorAll('[data-task]:checked').length;
-  const commented = [...document.querySelectorAll('[data-task-comment]')].filter(t => t.value.trim()).length;
-  approvedEl.textContent = approved;
-  commentedEl.textContent = commented;
-  counterEl.textContent = `✅ ${approved} / ${checkboxes.length} approuvées`;
+function qs(s){return document.querySelectorAll(s)}
+function upd(){
+const cbs=qs('[data-task]'),n=cbs.length;
+const a=[...cbs].filter(c=>c.checked).length;
+const c=[...qs('[data-task-comment]')].filter(t=>t.value.trim()).length;
+document.getElementById('s-total').textContent=n;
+document.getElementById('s-approved').textContent=a;
+document.getElementById('s-commented').textContent=c;
+document.getElementById('counter').textContent=`✅ ${a} / ${n} approuvées`;
 }
+qs('[data-task]').forEach(cb=>{cb.addEventListener('change',function(){this.closest('.item').classList.toggle('approved',this.checked);upd()})});
+qs('[data-task-comment]').forEach(t=>t.addEventListener('input',upd));
+upd();
 
-checkboxes.forEach(cb => {
-  cb.addEventListener('change', function() {
-    this.closest('.task-row').classList.toggle('approved', this.checked);
-    updateCounts();
-  });
+function exportPlan(){
+let o='# Plan Genius Team v21 — Validation\n\nDate: '+new Date().toISOString()+'\n\n';
+qs('[data-section]').forEach(t=>{if(t.value.trim())o+=`## ${t.dataset.section}\n${t.value.trim()}\n\n`});
+o+='## Tâches\n\n| # | Status | Tâche | Commentaire |\n|---|--------|-------|-------------|\n';
+qs('.item').forEach(row=>{
+const id=row.dataset.id||'';
+const cb=row.querySelector('[data-task]');
+const nm=row.querySelector('.item-title')?.textContent?.trim()||'';
+const cm=row.querySelector('[data-task-comment]')?.value?.trim()||'';
+o+=`| ${id} | ${cb?.checked?'✅':'⬜'} | ${nm} | ${cm} |\n`;
 });
-
-document.querySelectorAll('[data-task-comment]').forEach(ta => {
-  ta.addEventListener('input', updateCounts);
-});
-
-function exportPlan() {
-  let output = '# Plan Genius Team v21 — Validation Ben\n\n';
-  output += `Date: ${new Date().toISOString()}\n\n`;
-  
-  // Positioning comments
-  document.querySelectorAll('[data-section]').forEach(ta => {
-    if (ta.value.trim()) {
-      output += `## ${ta.dataset.section}\n${ta.value.trim()}\n\n`;
-    }
-  });
-  
-  output += '## Tâches\n\n';
-  output += '| Status | Tâche | Commentaire |\n|--------|-------|-------------|\n';
-  
-  document.querySelectorAll('.task-row').forEach(row => {
-    const cb = row.querySelector('[data-task]');
-    const name = row.querySelector('.task-name')?.textContent?.trim() || '';
-    const comment = row.querySelector('[data-task-comment]')?.value?.trim() || '';
-    const status = cb?.checked ? '✅' : '⬜';
-    output += `| ${status} | ${name} | ${comment} |\n`;
-  });
-  
-  const blob = new Blob([output], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'genius-team-v21-plan-validated.md';
-  a.click();
+const b=new Blob([o],{type:'text/markdown'});
+const u=URL.createObjectURL(b);
+const a=document.createElement('a');a.href=u;a.download='genius-team-v21-validated.md';a.click();
 }
-
-updateCounts();
 </script>
 </body>
 </html>
