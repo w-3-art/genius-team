@@ -1,5 +1,73 @@
 # Changelog
 
+## [21.0.0] - 2026-03-29
+
+### Added — Mode System
+- **Experience modes** — `/genius-mode` switches between `beginner` (strict validation, verbose), `builder` (default), `pro` (permissive, terse), and `agency` (client-friendly, multi-project). Stored in `.genius/mode.json`.
+- **Mode configs** — `configs/modes/beginner.md`, `builder.md`, `pro.md`, `agency.md` define behavior adjustments per mode.
+
+### Added — Workflow Registry
+- **`.genius/workflows.json`** — Complete workflow dependency graph: prerequisites, outputs, next_workflow, category (core/quality/growth/business/infra/meta) for all 51 skills.
+
+### Added — State Migration
+- **`scripts/migrate-state.sh`** — Detects existing artifacts (DISCOVERY.xml, SPECIFICATIONS.xml, ARCHITECTURE.md, plan.md), sets phase/checkpoints, origin field. Never blocks.
+- **`/genius-import` command** — Import existing codebases into Genius Team workflow with `origin=imported` (validators warn instead of block).
+- **state.json enhanced** — New `mode` and `origin` fields (native/imported/upgraded).
+
+### Added — Non-blocking Validators
+- **`scripts/validate-brief.sh`** — Validates DISCOVERY.xml sections
+- **`scripts/validate-spec.sh`** — Validates SPECIFICATIONS.xml sections
+- **`scripts/validate-architecture.sh`** — Validates ARCHITECTURE.md sections
+- **`scripts/validate-plan.sh`** — Validates .claude/plan.md has tasks
+- Validators respect mode (beginner=strict, pro=permissive) and origin (imported=warn only).
+
+### Added — Session Logging + Recovery
+- **`.genius/session-log.jsonl`** — PostToolUse hook appends tool/skill/phase to JSONL log
+- **`scripts/session-recover.sh`** — Rebuilds state.json from session log after crashes
+- **`/continue` enhanced** — Integrates session recovery before resume
+
+### Added — Micro-checklists (Guard Skills)
+- **`genius-guard-pre-planning`** — Auto-invoked before genius-architect (verifies specs exist, checkpoint passed)
+- **`genius-guard-pre-coding`** — Auto-invoked before genius-dev (verifies architecture approved, plan exists)
+- **`genius-guard-pre-deploy`** — Auto-invoked before genius-deployer (verifies QA passed)
+
+### Added — 3 New Skills (total: 51)
+- **genius-guard-pre-planning** — Pre-planning validation checklist
+- **genius-guard-pre-coding** — Pre-coding validation checklist
+- **genius-guard-pre-deploy** — Pre-deployment validation checklist
+
+### Added — New Commands
+- **`/genius-mode`** — Switch experience mode (beginner/builder/pro/agency)
+- **`/genius-import`** — Import existing project into Genius Team workflow
+
+### Improved — Categorized Skill Routing
+- Router (`genius-team/SKILL.md`) now organizes skills by category: Core, Quality, Growth, Business, Infrastructure, Meta
+- `CLAUDE.md` routing section organized by category
+- All version refs updated to v21
+
+### Improved — Playground Freshness
+- **`scripts/check-playground-freshness.sh`** — Detects stale playgrounds (artifact newer than playground)
+
+### Improved — Post-Compaction
+- `postCompactionSections` now includes Mode System and Workflow Registry sections
+- PreCompact hook injects mode info into snapshot
+
+### Improved — Codex Compatibility
+- `AGENTS.md` updated to v21 with mode system references
+
+### Added — GitHub Visibility
+- `.github/ISSUE_TEMPLATE/bug.md` and `feature.md`
+- `SECURITY.md` — Security policy and reporting guidelines
+- `README.md` rewritten around outcomes
+
+### Changed
+- `VERSION` → 21.0.0
+- All 4 mode configs (cli/ide/omni/dual) updated to v21
+- `upgrade.sh` → `upgrade_to_v21()` function added
+- genius-tips updated with v21 tips (import, mode, session recovery, workflows)
+
+---
+
 ## [20.0.0] - 2026-03-29
 
 ### Added — 5 New Skills (total: 48)

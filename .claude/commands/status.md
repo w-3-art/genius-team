@@ -1,5 +1,5 @@
 ---
-description: Show current Genius Team v17.0 project status and progress
+description: Show current Genius Team v21.0 project status and progress
 ---
 
 # /status
@@ -45,6 +45,10 @@ ls -la DISCOVERY.xml MARKET-ANALYSIS.xml SPECIFICATIONS.xml DESIGN-SYSTEM.html A
 
 **Execution Progress:** (if in execution phase)
   Total: {X} | Done: {Y} ✅ | In Progress: {Z} ⏳ | Remaining: {W}
+
+**Mode:** {from .genius/mode.json — beginner/builder/pro/agency}
+
+**Origin:** {from state.json — native/imported/upgraded}
 
 **Save-Token Mode:** {on/off}
 

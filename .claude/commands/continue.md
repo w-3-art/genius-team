@@ -1,5 +1,5 @@
 ---
-description: Resume Genius Team project from where it was left off
+description: Resume Genius Team v21.0 project from where it was left off
 ---
 
 # /continue
@@ -14,6 +14,13 @@ Resume project from last known state.
 cat .genius/state.json 2>/dev/null
 cat .genius/memory/BRIEFING.md 2>/dev/null | head -40
 cat PROGRESS.md 2>/dev/null | head -50
+```
+
+### Step 1b: Session Recovery
+
+If state seems stale or inconsistent, try session recovery:
+```bash
+bash scripts/session-recover.sh 2>/dev/null || true
 ```
 
 ### Step 2: Determine Resume Point

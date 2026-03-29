@@ -15,7 +15,7 @@ allowed-tools:
   - Glob(*)
 ---
 
-# Genius Tips v20.0 — Contextual Skill Discovery
+# Genius Tips v21.0 — Contextual Skill Discovery
 
 **Shows short, useful tips about Genius Team skills while the user waits. Turns passive waiting time into learning time.**
 
@@ -77,11 +77,15 @@ Keep tips:
 - 💡 Auto Mode is built into all modes. Say "tune auto mode" to adjust what gets auto-approved.
 
 ### General Discovery
-- 💡 There are 47 specialized skills in Genius Team v20. Say "list skills" to see them all.
+- 💡 There are 51 specialized skills in Genius Team v21. Say "list skills" to see them all.
 - 💡 Skills chain automatically: genius-specs → genius-dev → genius-qa-micro → genius-code-review.
 - 💡 Use `/effort low` for quick answers, `/effort high` for deep analysis.
 - 💡 Voice mode works with all skills. Hold spacebar and talk instead of typing.
 - 💡 Computer Use lets genius-ui-tester click through your app and find visual bugs automatically.
+- 💡 `.genius/workflows.json` defines the entire workflow graph — prerequisites, outputs, and next steps for every skill.
+- 💡 Session logs in `.genius/session-log.jsonl` let you recover state after crashes. Run `scripts/session-recover.sh`.
+- 💡 `/genius-import` brings an existing codebase into Genius Team — detects artifacts and sets checkpoints automatically.
+- 💡 `/genius-mode` switches between beginner, builder, pro, and agency modes — each adjusts validation and verbosity.
 
 ## Memory Integration
 

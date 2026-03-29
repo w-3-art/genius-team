@@ -1,5 +1,5 @@
 ---
-description: Initialize Genius Team v19.0 environment, load memory, hydrate tasks, and offer playground dashboard
+description: Initialize Genius Team v21.0 environment, load memory, hydrate tasks, and offer playground dashboard
 ---
 
 # /genius-start
@@ -21,6 +21,29 @@ if [ "$MODE" = "null" ] || [ -z "$MODE" ]; then
   echo "  ./scripts/setup.sh --mode cli   (terminal)"
   echo "  ./scripts/setup.sh --mode ide   (VS Code / Cursor)"
   exit 1
+fi
+```
+
+### Step 1b: Detect Experience Mode
+
+```bash
+# Check if mode.json exists — first run asks user
+if [ ! -f .genius/mode.json ]; then
+  echo '{"mode": "builder", "set_at": "'"2026-03-29T16:02:43+02:00"'", "set_by": "default"}' > .genius/mode.json
+fi
+EXPERIENCE_MODE=$(jq -r '.mode // "builder"' .genius/mode.json 2>/dev/null || echo "builder")
+echo "Experience: $EXPERIENCE_MODE"
+```
+
+### Step 1c: Run Migration if Needed
+
+```bash
+# If state.json has no mode/origin fields, run migration
+if [ -f .genius/state.json ]; then
+  HAS_MODE=$(jq -r '.mode // "missing"' .genius/state.json 2>/dev/null)
+  if [ "$HAS_MODE" = "missing" ]; then
+    bash scripts/migrate-state.sh 2>/dev/null || true
+  fi
 fi
 ```
 
@@ -94,7 +117,7 @@ fi
 
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  🧠 Genius Team v17.0 — Environment Ready                   ║
+║  🧠 Genius Team v21.0 — Environment Ready                   ║
 ║  Mode: {MODE}                                               ║
 ╚════════════════════════════════════════════════════════════╝
 
