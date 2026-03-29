@@ -2,6 +2,16 @@
 
 ## [21.0.0] - 2026-03-29
 
+### Added — Self-Evolution Engine
+- **genius-evolution** — Captures corrections, verifies patterns, promotes learned rules. Auto-triggers on user corrections.
+- **genius-autoresearch** — Karpathy-inspired optimization loop. Modify → Test → Measure → Keep if better → Repeat.
+- **/genius-evolve** command — Manual evolution audit (run every ~10 sessions)
+- **/autoresearch** command — Launch optimization loop on any component
+- **`.genius/memory/learned-rules.md`** — Graduated rules with machine-checkable verify lines
+- **`.genius/memory/corrections.jsonl`** — Auto-captured user corrections
+- **`.genius/memory/observations.jsonl`** — Verified codebase patterns
+- **`.genius/memory/evolution-log.md`** — Audit trail of evolution decisions
+
 ### Added — Mode System
 - **Experience modes** — `/genius-mode` switches between `beginner` (strict validation, verbose), `builder` (default), `pro` (permissive, terse), and `agency` (client-friendly, multi-project). Stored in `.genius/mode.json`.
 - **Mode configs** — `configs/modes/beginner.md`, `builder.md`, `pro.md`, `agency.md` define behavior adjustments per mode.
