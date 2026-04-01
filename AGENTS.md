@@ -12,7 +12,13 @@
 
 ## Quick Start
 
-**First time?** Run `$genius-start` to initialize your environment.
+Add the local Genius commands to your shell PATH:
+
+```bash
+export PATH="$PWD/.genius/bin:$PATH"
+```
+
+**First time?** Run `genius-start` to initialize your environment.
 
 **Returning?** Just say what you want to do — your BRIEFING.md has the context.
 
@@ -245,15 +251,30 @@ Then: $genius-qa (full audit) → $genius-security → $genius-deployer
 
 ---
 
+## Direct Shell Commands (Codex / Dual)
+
+These wrappers are installed by `scripts/setup.sh` into `.genius/bin/` and can be run directly from the project shell once PATH includes that folder.
+
+| Command | What It Does |
+|---------|-------------|
+| `genius-start` | Initialize environment, load memory, show status |
+| `status` | Show current progress |
+| `continue` | Resume from last point |
+| `reset --yes` | Start over (with backup) |
+| `save-tokens` | Toggle save-token mode |
+| `update-check` | Compare stored vs installed Claude/Codex CLI versions |
+| `genius-dashboard` | Rebuild `.genius/DASHBOARD.html` |
+| `dual-status` | Show current dual-engine state |
+| `dual-challenge [profile]` | Prepare a manual challenger review request |
+| `genius-mode [beginner|builder|pro|agency]` | Switch experience mode |
+| `genius-switch-engine [claude|codex|dual]` | Switch engine configuration |
+| `genius-import` | Import an existing project into the workflow |
+| `playground-update` | Refresh dashboard / playground metadata |
+
 ## Commands (Codex Syntax)
 
 | Command | What It Does |
 |---------|-------------|
-| `$genius-start` | Initialize environment, load memory, show status |
-| `$status` | Show current progress |
-| `$continue` | Resume from last point |
-| `$reset` | Start over (with backup) |
-| `$hydrate-tasks` | Reload tasks from plan.md |
 | `/plan` | Create execution plan before complex tasks |
 | `/compact` | Compact context when it gets too large |
 | `STOP` / `PAUSE` | Halt autonomous execution |

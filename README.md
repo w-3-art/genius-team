@@ -84,7 +84,21 @@ bash <(curl -fsSL .../create.sh) my-app --env ide --engine=codex
 bash <(curl -fsSL .../create.sh) my-app --engine=dual
 ```
 
-After install, open your project in Claude Code or Codex and run `/genius-start`.
+After install:
+
+```bash
+cd my-project
+export PATH="$PWD/.genius/bin:$PATH"
+```
+
+Then you can use the local Genius shell commands directly in Codex / Dual projects:
+- `genius-start`
+- `status`
+- `genius-dashboard`
+- `dual-status`
+- `dual-challenge`
+
+You can still open Claude Code or Codex and use slash commands as before.
 
 ### Upgrade from any previous version
 
@@ -189,17 +203,23 @@ Memory persists across sessions and across projects. The more you build, the sma
 
 | Command | Description |
 |---------|-------------|
-| `/genius-start` | Initialize environment, load memory, begin interview |
-| `/genius-dashboard` | Open the master visual dashboard |
-| `/genius-upgrade` | Upgrade to latest version |
-| `/status` | Show current phase and progress |
-| `/continue` | Resume from last checkpoint |
-| `/reset` | Start over (with backup) |
-| `/save-tokens` | Toggle save-token mode (Sonnet for dev, Opus for lead) |
+| `/genius-start` / `genius-start` | Initialize environment, load memory, begin interview |
+| `/genius-dashboard` / `genius-dashboard` | Open or rebuild the master visual dashboard |
+| `/genius-upgrade` / `genius-upgrade` | Upgrade to latest version |
+| `/status` / `status` | Show current phase and progress |
+| `/continue` / `continue` | Resume from last checkpoint |
+| `/reset` / `reset --yes` | Start over (with backup) |
+| `/save-tokens` / `save-tokens` | Toggle save-token mode (Sonnet for dev, Opus for lead) |
 | `/guard-check` | Verify GENIUS_GUARD.md compliance |
 | `/guard-recover` | Recover from drift |
 | `/memory-status` | Show memory summary |
-| `/update-check` | Check for Claude Code + Genius Team updates |
+| `/update-check` / `update-check` | Check for Claude Code + Genius Team updates |
+| `dual-status` | Show current dual-engine state |
+| `dual-challenge [profile]` | Prepare a direct shell challenger review request |
+| `genius-mode [mode]` | Switch beginner/builder/pro/agency mode |
+| `genius-switch-engine [claude|codex|dual]` | Switch installed engine configuration |
+| `genius-import` | Import an existing project into the workflow |
+| `playground-update` | Refresh dashboard/playground metadata |
 
 ---
 
@@ -215,6 +235,7 @@ your-project/
 │   ├── skills/                  # 21+ Genius Team skill files
 │   └── plan.md                  # Task list (single source of truth)
 ├── .genius/
+│   ├── bin/                     # Local shell commands for Codex / Dual
 │   ├── state.json               # Current project phase & checkpoint
 │   ├── DASHBOARD.html           # Visual master dashboard
 │   └── memory/                  # File-based memory system

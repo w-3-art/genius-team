@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v18.0 — Setup Script
+# Genius Team v21.0 — Setup Script
 # No external MCPs required. Pure Claude Code + Agent Teams.
 # Supports multiple AI engines: Claude Code, Codex CLI, or both.
 set -e
@@ -50,7 +50,7 @@ if [[ ! "$ENGINE" =~ ^(claude|codex|dual)$ ]]; then
 fi
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║  🧠 Genius Team v18.0 — Setup                              ║"
+echo "║  🧠 Genius Team v21.0 — Setup                              ║"
 echo "║  Mode: ${MODE} | Engine: ${ENGINE}                                   ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
@@ -144,6 +144,7 @@ echo "📁 ${BLUE}Creating directory structure...${NC}"
 
 mkdir -p .genius/memory/session-logs
 mkdir -p .genius/backups
+mkdir -p .genius/bin
 
 # Engine-specific directories
 if [[ "$ENGINE" == "claude" || "$ENGINE" == "dual" ]]; then
@@ -169,6 +170,45 @@ if [[ "$ENGINE" == "codex" || "$ENGINE" == "dual" ]]; then
 fi
 
 echo -e "${GREEN}✓${NC} .genius/ directory structure created"
+
+install_local_commands() {
+  local commands=(
+    genius-start
+    genius-dashboard
+    genius-upgrade
+    dual-status
+    dual-challenge
+    status
+    continue
+    reset
+    save-tokens
+    update-check
+    genius-mode
+    genius-switch-engine
+    genius-import
+    playground-update
+  )
+
+  if [ ! -f "scripts/bin/genius-command" ]; then
+    echo -e "${YELLOW}⚠${NC} scripts/bin/genius-command not found, skipping local shell command install"
+    return
+  fi
+
+  cp "scripts/bin/genius-command" ".genius/bin/genius-command"
+  chmod +x ".genius/bin/genius-command"
+
+  for cmd in "${commands[@]}"; do
+    ln -sf "genius-command" ".genius/bin/${cmd}"
+  done
+
+  if [[ "$ENGINE" == "codex" || "$ENGINE" == "dual" ]]; then
+    ln -sfn ../.genius/bin .agents/bin
+  fi
+
+  echo -e "${GREEN}✓${NC} Installed local shell commands in .genius/bin/"
+}
+
+install_local_commands
 
 # ═══════════════════════════════════════════════════════════════
 # 4. Install Mode & Engine-Specific Configs
@@ -206,7 +246,7 @@ if [[ "$ENGINE" == "codex" || "$ENGINE" == "dual" ]]; then
   else
     # Create minimal AGENTS.md
     cat > AGENTS.md << 'AGENTSEOF'
-# Genius Team v18.0 — Codex Mode
+# Genius Team v21.0 — Codex Mode
 
 > Your AI product team. From idea to production.
 
@@ -237,6 +277,24 @@ Skills are located in `.agents/skills/`. Each skill has a `SKILL.md` with instru
 Run skills by reading their SKILL.md and following the workflow.
 AGENTSEOF
     echo -e "${GREEN}✓${NC} Created AGENTS.md"
+  fi
+
+  if [ -f "AGENTS.md" ]; then
+    python3 - <<'PY'
+from pathlib import Path
+p = Path('AGENTS.md')
+text = p.read_text()
+needle = "## Quick Start\n"
+insert = "## Quick Start\n\nAdd the local Genius commands to your shell PATH:\n\n```bash\nexport PATH=\"$PWD/.genius/bin:$PATH\"\n```\n\n"
+if needle in text and 'export PATH="$PWD/.genius/bin:$PATH"' not in text:
+    text = text.replace(needle, insert, 1)
+commands_marker = "## Commands"
+block = "## Direct Shell Commands (Codex / Dual)\n\nThese wrappers are installed by `scripts/setup.sh` into `.genius/bin/` and can be run directly from the project shell once PATH includes that folder.\n\n- `genius-start`, `status`, `continue`, `reset --yes`\n- `genius-dashboard`, `save-tokens`, `update-check`\n- `dual-status`, `dual-challenge [profile]`\n- `genius-mode`, `genius-switch-engine`, `genius-import`, `playground-update`\n\n"
+if commands_marker in text and '## Direct Shell Commands (Codex / Dual)' not in text:
+    text = text.replace(commands_marker, block + commands_marker, 1)
+p.write_text(text)
+PY
+    echo -e "${GREEN}✓${NC} Documented direct shell commands in AGENTS.md"
   fi
 fi
 
@@ -373,7 +431,7 @@ if [ ! -f ".genius/state.json" ]; then
   NOW=$(date -Iseconds 2>/dev/null || date '+%Y-%m-%dT%H:%M:%S')
   cat > .genius/state.json << EOF
 {
-  "version": "14.0.0",
+  "version": "21.0.0",
   "phase": "NOT_STARTED",
   "currentSkill": null,
   "skillHistory": [],
@@ -419,15 +477,15 @@ if [ ! -f ".genius/config.json" ]; then
 {
   "mode": "$MODE",
   "engine": "$ENGINE",
-  "version": "18.0.0",
+  "version": "21.0.0",
   "created_at": "$NOW",
   "updated_at": "$NOW"
 }
 CFGEOF
   echo -e "${GREEN}✓${NC} Created config.json (mode: ${MODE}, engine: ${ENGINE})"
 else
-  jq --arg mode "$MODE" --arg engine "$ENGINE" '.mode = $mode | .engine = $engine' .genius/config.json > .genius/config.json.tmp && mv .genius/config.json.tmp .genius/config.json
-  echo -e "${GREEN}✓${NC} Mode set to '${MODE}', engine set to '${ENGINE}' in config.json"
+  jq --arg mode "$MODE" --arg engine "$ENGINE" --arg version "21.0.0" '.mode = $mode | .engine = $engine | .version = $version' .genius/config.json > .genius/config.json.tmp && mv .genius/config.json.tmp .genius/config.json
+  echo -e "${GREEN}✓${NC} Mode set to '${MODE}', engine set to '${ENGINE}', version set to '21.0.0' in config.json"
 fi
 
 # Engine=dual specific: Initialize dual-engine coordination state
@@ -516,7 +574,7 @@ if [ $ERRORS -eq 0 ]; then
   echo "║  ✅ Setup Complete! (${MODE} mode, ${ENGINE} engine)           ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
-  echo "Genius Team v18.0 is ready."
+  echo "Genius Team v21.0 is ready."
   echo "  Mode:   ${MODE}"
   echo "  Engine: ${ENGINE}"
   echo ""
@@ -547,10 +605,12 @@ if [ $ERRORS -eq 0 ]; then
   elif [[ "$ENGINE" == "codex" ]]; then
     echo -e "  ${GREEN}✓${NC} Codex CLI integration (.agents/)"
     echo -e "  ${GREEN}✓${NC} AGENTS.md as primary instructions"
+    echo -e "  ${GREEN}✓${NC} Direct shell commands in .genius/bin/"
   elif [[ "$ENGINE" == "dual" ]]; then
     echo -e "  ${GREEN}✓${NC} Dual engine: Claude Code + Codex CLI"
     echo -e "  ${GREEN}✓${NC} Shared skills (\${CLAUDE_SKILL_DIR}/ ← .agents/skills/)"
     echo -e "  ${GREEN}✓${NC} Both CLAUDE.md and AGENTS.md installed"
+    echo -e "  ${GREEN}✓${NC} Direct shell commands in .genius/bin/"
   fi
   echo ""
   echo "Next steps:"
@@ -578,14 +638,18 @@ if [ $ERRORS -eq 0 ]; then
       echo -e "  4. Run: ${YELLOW}/genius-start${NC}"
     fi
   elif [[ "$ENGINE" == "codex" ]]; then
-    echo -e "  1. Run ${YELLOW}codex${NC} in this directory"
-    echo -e "  2. Codex will read AGENTS.md for instructions"
-    echo -e "  3. Say what you want to build!"
+    echo -e "  1. Add local commands to your PATH:"
+    echo -e "     ${YELLOW}export PATH=\"$PWD/.genius/bin:\$PATH\"${NC}"
+    echo -e "  2. Run ${YELLOW}genius-start${NC}, ${YELLOW}status${NC}, ${YELLOW}genius-dashboard${NC}, ${YELLOW}dual-status${NC}..."
+    echo -e "  3. Run ${YELLOW}codex${NC} in this directory when you want the agent to read AGENTS.md"
+    echo -e "  4. Say what you want to build!"
   elif [[ "$ENGINE" == "dual" ]]; then
-    echo -e "  1. For Claude Code: Run ${YELLOW}claude${NC} → ${YELLOW}/genius-start${NC}"
-    echo -e "  2. For Codex CLI:   Run ${YELLOW}codex${NC} (reads AGENTS.md)"
-    echo -e "  3. Both engines share skills in \${CLAUDE_SKILL_DIR}/"
-    echo -e "  4. State is coordinated via .genius/dual-engine-state.json"
+    echo -e "  1. Add local commands to your PATH:"
+    echo -e "     ${YELLOW}export PATH=\"$PWD/.genius/bin:\$PATH\"${NC}"
+    echo -e "  2. Shell commands now work directly: ${YELLOW}genius-start${NC}, ${YELLOW}dual-status${NC}, ${YELLOW}dual-challenge${NC}"
+    echo -e "  3. For Claude Code: Run ${YELLOW}claude${NC} → ${YELLOW}/genius-start${NC}"
+    echo -e "  4. For Codex CLI:   Run ${YELLOW}codex${NC} (reads AGENTS.md)"
+    echo -e "  5. State is coordinated via .genius/dual-engine-state.json"
   fi
 else
   echo "║  ❌ Setup has $ERRORS error(s)                              ║"

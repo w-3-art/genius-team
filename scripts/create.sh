@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# Genius Team v19.0 — One-Liner Install
+# Genius Team v21.0 — One-Liner Install
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) [project-name] [--mode cli|ide|omni|dual] [--engine claude|codex|dual]
 # ═══════════════════════════════════════════════════════════════
 set -e
@@ -65,7 +65,7 @@ fi
 # ── Banner ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v19.0 — Installer                ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v21.0 — Installer                ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Project: ${CYAN}${PROJECT_NAME}${NC}"
@@ -98,7 +98,7 @@ cd "$PROJECT_NAME"
 rm -rf .git
 git init --quiet
 git add -A &>/dev/null
-git commit -m "🧠 Initial commit — Genius Team v19.0 (${MODE} mode, ${ENGINE} engine)" --quiet &>/dev/null
+git commit -m "🧠 Initial commit — Genius Team v21.0 (${MODE} mode, ${ENGINE} engine)" --quiet &>/dev/null
 ok "Fresh git history initialized"
 
 # ── Run Setup ────────────────────────────────────────────────
@@ -110,7 +110,7 @@ echo ""
 
 # ── Dependency Check & Guide ─────────────────────────────────
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v19.0 — Ready!                   ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v21.0 — Ready!                   ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${DIM}Checking your environment...${NC}"
@@ -148,16 +148,18 @@ echo ""
 if [[ "$ENGINE" == "codex" ]]; then
   echo -e "  ${BOLD}Next steps (Codex):${NC}"
   echo -e "  1. ${CYAN}cd ${PROJECT_NAME}${NC}"
-  echo -e "  2. Run ${CYAN}codex${NC}"
-  echo -e "  3. Codex reads AGENTS.md automatically"
-  echo -e "  4. Tell it what you want to build! 🚀"
+  echo -e "  2. Add commands to PATH: ${CYAN}export PATH=\"$PWD/.genius/bin:\$PATH\"${NC}"
+  echo -e "  3. Try ${CYAN}genius-start${NC}, ${CYAN}status${NC}, ${CYAN}genius-dashboard${NC}"
+  echo -e "  4. Run ${CYAN}codex${NC} when you want Codex to read AGENTS.md"
+  echo -e "  5. Tell it what you want to build! 🚀"
 elif [[ "$ENGINE" == "dual" ]]; then
   echo -e "  ${BOLD}Next steps (Dual Engine):${NC}"
   echo -e "  1. ${CYAN}cd ${PROJECT_NAME}${NC}"
-  echo -e "  2. For Claude: Run ${CYAN}claude${NC} → ${CYAN}/genius-start${NC}"
-  echo -e "  3. For Codex:  Run ${CYAN}codex${NC} (reads AGENTS.md)"
-  echo -e "  4. Both engines share skills in \${CLAUDE_SKILL_DIR}/"
-  echo -e "  5. Tell it what you want to build! 🚀"
+  echo -e "  2. Add commands to PATH: ${CYAN}export PATH=\"$PWD/.genius/bin:\$PATH\"${NC}"
+  echo -e "  3. Try direct shell commands: ${CYAN}genius-start${NC}, ${CYAN}dual-status${NC}, ${CYAN}dual-challenge${NC}"
+  echo -e "  4. For Claude: Run ${CYAN}claude${NC} → ${CYAN}/genius-start${NC}"
+  echo -e "  5. For Codex:  Run ${CYAN}codex${NC} (reads AGENTS.md)"
+  echo -e "  6. Both engines share skills in \${CLAUDE_SKILL_DIR}/"
 else
   # Claude engine - mode-specific guidance
   case "$MODE" in
@@ -202,7 +204,7 @@ else
       echo -e "  1. ${CYAN}cd ${PROJECT_NAME}${NC}"
       echo -e "  2. Run ${CYAN}claude${NC}"
       echo -e "  3. Type ${CYAN}/genius-start${NC}"
-      echo -e "  4. Use ${CYAN}/dual-status${NC} and ${CYAN}/dual-challenge${NC}"
+      echo -e "  4. Or from the shell: ${CYAN}dual-status${NC} and ${CYAN}dual-challenge${NC}"
       echo -e "  5. Tell it what you want to build! 🚀"
       ;;
   esac

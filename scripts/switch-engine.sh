@@ -117,7 +117,7 @@ switch_to_codex() {
     log_info "Generating AGENTS.md from CLAUDE.md..."
     sed 's/CLAUDE\.md/AGENTS.md/g; s/claude code/codex/gi; s/Claude Code/Codex/g' CLAUDE.md > AGENTS.md
     # Add Codex-specific header
-    sed -i.bak '1s/^/# AGENTS.md — Genius Team v17 (Codex Engine)\n# Auto-generated from CLAUDE.md via genius-switch-engine\n# Do not edit manually — use \/genius-switch-engine to maintain\n\n/' AGENTS.md
+    sed -i.bak '1s/^/# AGENTS.md — Genius Team v21.0 (Codex Engine)\n# Auto-generated from CLAUDE.md via genius-switch-engine\n# Do not edit manually — use \/genius-switch-engine to maintain\n\n/' AGENTS.md
     rm -f AGENTS.md.bak
     log_ok "AGENTS.md generated"
   else
@@ -197,13 +197,15 @@ case "$TARGET_ENGINE" in
     echo "  2. Run: /genius-start"
     ;;
   codex)
-    echo "  1. Open project in Codex: codex"
-    echo "  2. The agent will read AGENTS.md automatically"
+    echo "  1. Add local commands to PATH: export PATH=\"$PWD/.genius/bin:$PATH\""
+    echo "  2. Open project in Codex: codex"
+    echo "  3. The agent will read AGENTS.md automatically"
     ;;
   dual)
-    echo "  1. Terminal 1: claude → /genius-start"
-    echo "  2. Terminal 2: codex  → reads AGENTS.md"
-    echo "  3. Use /challenge in either terminal to cross-review"
+    echo "  1. Add local commands to PATH: export PATH=\"$PWD/.genius/bin:$PATH\""
+    echo "  2. Terminal 1: claude → /genius-start"
+    echo "  3. Terminal 2: codex  → reads AGENTS.md"
+    echo "  4. Use dual-status / dual-challenge or /challenge for cross-review"
     ;;
 esac
 echo ""

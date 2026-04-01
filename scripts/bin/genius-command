@@ -1,0 +1,306 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SELF_DIR/../.." && pwd)"
+cd "$PROJECT_ROOT"
+
+CMD="$(basename "${0}")"
+ARGS=("$@")
+
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
+info(){ echo -e "${BLUE}ℹ${NC}  $*"; }
+ok(){ echo -e "${GREEN}✓${NC}  $*"; }
+warn(){ echo -e "${YELLOW}⚠${NC}  $*"; }
+die(){ echo -e "${RED}✗${NC}  $*" >&2; exit 1; }
+
+need_cmd(){ command -v "$1" >/dev/null 2>&1 || die "Missing required command: $1"; }
+need_file(){ [ -f "$1" ] || die "Missing file: $1"; }
+iso_now(){ date -Iseconds 2>/dev/null || date '+%Y-%m-%dT%H:%M:%S%z'; }
+json_get(){ jq -r "$2 // empty" "$1" 2>/dev/null; }
+ensure_genius_dirs(){ mkdir -p .genius/memory/session-logs .genius/backups .genius; }
+ensure_memory_files(){ ensure_genius_dirs; for f in decisions.json patterns.json progress.json errors.json; do [ -f ".genius/memory/$f" ] || echo '[]' > ".genius/memory/$f"; done; }
+count_json_items(){ jq 'length' "$1" 2>/dev/null || echo 0; }
+append_decision(){
+  local decision="$1" reason="$2" tag="$3"; ensure_memory_files; tmp=$(mktemp);
+  jq --arg id "d-$(date +%s)" --arg decision "$decision" --arg reason "$reason" --arg timestamp "$(iso_now)" --arg tag "$tag" '. += [{id:$id, decision:$decision, reason:$reason, timestamp:$timestamp, tags:[$tag]}]' .genius/memory/decisions.json > "$tmp" \
+    && mv "$tmp" .genius/memory/decisions.json
+}
+ensure_default_state(){
+  if [ ! -f .genius/state.json ]; then
+    bash scripts/setup.sh --mode "$(json_get .genius/config.json '.mode' || echo cli)" --engine "$(json_get .genius/config.json '.engine' || echo claude)" >/dev/null 2>&1 || true
+  fi
+}
+show_command_help(){
+  cat <<EOF
+Available local Genius commands:
+  genius-start genius-dashboard genius-upgrade dual-status dual-challenge
+  status continue reset save-tokens update-check genius-mode
+  genius-switch-engine genius-import playground-update
+EOF
+}
+render_status(){
+  ensure_memory_files
+  ensure_default_state
+  local phase current mode origin total done failed skipped decisions patterns errors
+  phase=$(json_get .genius/state.json '.phase'); phase=${phase:-NOT_STARTED}
+  current=$(json_get .genius/state.json '.currentSkill'); current=${current:-Ready to start}
+  mode=$(json_get .genius/mode.json '.mode'); mode=${mode:-builder}
+  origin=$(json_get .genius/state.json '.origin'); origin=${origin:-native}
+  total=$(json_get .genius/state.json '.tasks.total'); total=${total:-0}
+  done=$(json_get .genius/state.json '.tasks.completed'); done=${done:-0}
+  failed=$(json_get .genius/state.json '.tasks.failed'); failed=${failed:-0}
+  skipped=$(json_get .genius/state.json '.tasks.skipped'); skipped=${skipped:-0}
+  decisions=$(count_json_items .genius/memory/decisions.json)
+  patterns=$(count_json_items .genius/memory/patterns.json)
+  errors=$(count_json_items .genius/memory/errors.json)
+  echo "📊 Genius Team v21.0 — Project Status"
+  echo ""
+  echo "Phase:        $phase"
+  echo "Current Step: $current"
+  echo "Mode:         $mode"
+  echo "Origin:       $origin"
+  echo ""
+  echo "Memory:"
+  echo "  Decisions: $decisions"
+  echo "  Patterns:  $patterns"
+  echo "  Errors:    $errors"
+  echo ""
+  echo "Tasks:"
+  echo "  Total: $total | Done: $done | Failed: $failed | Skipped: $skipped"
+  echo ""
+  echo "Dashboard: open .genius/DASHBOARD.html"
+}
+command_genius_start(){
+  ensure_memory_files
+  if [ -f scripts/migrate-state.sh ] && [ -f .genius/state.json ]; then bash scripts/migrate-state.sh >/dev/null 2>&1 || true; fi
+  [ -f scripts/memory-briefing.sh ] && bash scripts/memory-briefing.sh >/dev/null 2>&1 || true
+  local mode exp phase current
+  mode=$(json_get .genius/config.json '.mode'); mode=${mode:-cli}
+  exp=$(json_get .genius/mode.json '.mode');
+  if [ -z "$exp" ]; then
+    cat > .genius/mode.json <<EOF
+{"mode":"builder","set_at":"$(iso_now)","set_by":"default"}
+EOF
+    exp=builder
+  fi
+  phase=$(json_get .genius/state.json '.phase'); phase=${phase:-NOT_STARTED}
+  current=$(json_get .genius/state.json '.currentSkill'); current=${current:-none}
+  echo "╔════════════════════════════════════════════════════╗"
+  echo "║  🧠 Genius Team v21.0 — Environment Ready         ║"
+  printf '║  Mode: %-44s║\n' "$mode / $exp"
+  echo "╚════════════════════════════════════════════════════╝"
+  echo ""
+  echo "Project State:"
+  echo "  Phase:   $phase"
+  echo "  Current: $current"
+  echo ""
+  if [ -f .genius/memory/BRIEFING.md ]; then
+    echo "Memory briefing:"
+    sed -n '1,20p' .genius/memory/BRIEFING.md
+    echo ""
+  fi
+  echo "Ready. Useful local commands:"
+  echo "  status | continue | genius-dashboard | save-tokens | update-check"
+}
+command_genius_dashboard(){
+  ensure_genius_dirs
+  local project files first count tabs tmpf file base label icon active
+  project=$(json_get .genius/state.json '.name'); project=${project:-$(basename "$PROJECT_ROOT")}
+  files=$(find .genius -maxdepth 1 -name '*.html' ! -name 'DASHBOARD.html' -print | sed 's#^./.genius/##' | sort || true)
+  count=$(printf '%s\n' "$files" | sed '/^$/d' | wc -l | tr -d ' ')
+  if [ "$count" = "0" ]; then die "No playground HTML files found in .genius/"; fi
+  first=$(printf '%s\n' "$files" | sed -n '1p')
+  tabs=""
+  while IFS= read -r file; do
+    [ -z "$file" ] && continue
+    base=${file%.html}
+    case "$base" in
+      DISCOVERY) icon='🔍'; label='Product Discovery' ;;
+      DESIGN-SYSTEM) icon='🎨'; label='Design System' ;;
+      SPECS|SPECIFICATIONS) icon='📋'; label='Specifications' ;;
+      COPY-SYSTEM) icon='✍️'; label='Copywriting' ;;
+      ARCHITECTURE) icon='🏗️'; label='Architecture' ;;
+      MARKET|MARKET-ANALYSIS) icon='📊'; label='Market Analysis' ;;
+      PROGRESS) icon='📈'; label='Sprint Progress' ;;
+      QA) icon='✅'; label='QA Report' ;;
+      SECURITY) icon='🔒'; label='Security Audit' ;;
+      *) icon='📄'; label="$base" ;;
+    esac
+    active='tab'; [ "$file" = "$first" ] && active='tab active'
+    tabs+="<button class=\"$active\" onclick=\"show('$file', this)\">$icon $label</button>"
+  done <<< "$files"
+  cat > .genius/DASHBOARD.html <<EOF
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${project} — Genius Team Dashboard</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e2e8f0;height:100vh;display:flex;flex-direction:column}header{padding:12px 20px;background:#13131a;border-bottom:1px solid #1e1e2e;display:flex;align-items:center;gap:12px;flex-shrink:0}header h1{font-size:1rem;font-weight:600;background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}header span{font-size:.8rem;color:#64748b}.tabs{display:flex;gap:4px;padding:8px 12px;background:#0d0d14;border-bottom:1px solid #1e1e2e;overflow-x:auto;flex-shrink:0;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{padding:6px 14px;border-radius:6px;border:1px solid #1e1e2e;background:#13131a;color:#94a3b8;font-size:.82rem;cursor:pointer;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:6px}.tab:hover{background:#1e1e2e;color:#e2e8f0}.tab.active{background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(6,182,212,.2));border-color:#7c3aed;color:#e2e8f0}.content{flex:1;overflow:hidden}iframe{width:100%;height:100%;border:none}.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:#64748b}.empty h2{font-size:1.1rem;color:#94a3b8}@media(max-width:600px){header{padding:8px 12px}header h1{font-size:.9rem}.tab{padding:5px 10px;font-size:.75rem}}</style></head><body><header><div><h1>🧠 ${project} — Genius Team Dashboard</h1><span>${count} playgrounds · v21.0</span></div></header><div class="tabs" id="tabs">${tabs}</div><div class="content"><iframe id="frame" src="${first}" title="Playground"></iframe></div><script>function show(src,el){document.getElementById('frame').src=src;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}</script></body></html>
+EOF
+  ok "Dashboard generated: .genius/DASHBOARD.html"
+  printf '%s
+' "$files" | sed 's/^/  - /'
+}
+command_dual_status(){
+  ensure_genius_dirs
+  if [ ! -f .genius/dual-state.json ]; then
+    cat > .genius/dual-state.json <<EOF
+{"active":false,"mode":null,"cycle":0,"max_rounds":3,"builder_model":"opus","challenger_model":"codex","challenger_profile":"balanced","current_task":null,"last_verdict":null,"history":[],"updated_at":"$(iso_now)"}
+EOF
+  fi
+  echo "╔══════════════════════════════════════════╗"
+  echo "║  🔄 Dual Engine Status                  ║"
+  echo "╚══════════════════════════════════════════╝"
+  echo ""
+  jq -r '"Active:     " + (if .active then "yes" else "no" end),
+         "Mode:       " + (.mode // "none"),
+         "Cycle:      " + ((.cycle // 0)|tostring) + " / " + ((.max_rounds // 3)|tostring),
+         "",
+         "Builder:    " + (.builder_model // "opus"),
+         "Challenger: " + (.challenger_model // "codex"),
+         "Profile:    " + (.challenger_profile // "balanced"),
+         "",
+         "Last Verdict: " + (.last_verdict // "none"),
+         "Current Task: " + (.current_task // "none")' .genius/dual-state.json
+  if [ -f .genius/dual-verdict.md ]; then
+    echo ""
+    echo "Latest verdict:"
+    sed -n '1,20p' .genius/dual-verdict.md
+  fi
+}
+command_dual_challenge(){
+  ensure_genius_dirs
+  local profile diff_summary files changed plan task
+  profile="${1:-$(json_get .genius/dual-state.json '.challenger_profile')}"; profile=${profile:-balanced}
+  files=$(git diff --name-only HEAD~1 2>/dev/null || git diff --name-only 2>/dev/null || true)
+  [ -z "$files" ] && files=$(git status --short 2>/dev/null | awk '{print $2}' || true)
+  diff_summary=$(git diff --stat HEAD~1 2>/dev/null || git diff --stat 2>/dev/null || echo "No diff available")
+  plan=$(sed -n '1,80p' .claude/plan.md 2>/dev/null || sed -n '1,80p' .agents/plan.md 2>/dev/null || echo "No plan found")
+  task=$(json_get .genius/dual-state.json '.current_task'); task=${task:-Manual challenge review}
+  cat > .genius/dual-review-request.md <<EOF
+# Dual Review Request
+
+- Requested at: $(iso_now)
+- Challenger profile: ${profile}
+- Current task: ${task}
+
+## Changed files
+$(printf '%s
+' "$files" | sed 's/^/- /')
+
+## Diff summary
+
+${diff_summary}
+
+## Plan context
+
+${plan}
+EOF
+  jq --arg profile "$profile" --arg now "$(iso_now)" '.active = true | .mode = "manual-challenge" | .challenger_profile = $profile | .updated_at = $now' .genius/dual-state.json 2>/dev/null > .genius/dual-state.json.tmp || echo '{"active":true,"mode":"manual-challenge","cycle":0,"max_rounds":3,"builder_model":"opus","challenger_model":"codex","challenger_profile":"'"$profile"'","current_task":"Manual challenge review","last_verdict":null,"history":[],"updated_at":"'"$(iso_now)"'"}' > .genius/dual-state.json.tmp
+  mv .genius/dual-state.json.tmp .genius/dual-state.json
+  ok "Wrote .genius/dual-review-request.md"
+  echo "Next: open Claude/Codex and run the challenger using that file as review context."
+}
+command_status(){ render_status; }
+command_continue(){
+  ensure_default_state
+  local phase current
+  phase=$(json_get .genius/state.json '.phase'); phase=${phase:-NOT_STARTED}
+  current=$(json_get .genius/state.json '.currentSkill'); current=${current:-none}
+  echo "▶ Continue"
+  echo "Phase:   $phase"
+  echo "Current: $current"
+  case "$phase" in
+    NOT_STARTED) echo "Suggested next step: genius-start" ;;
+    EXECUTION) echo "Suggested next step: review .claude/plan.md or .agents/plan.md and resume the next unchecked task" ;;
+    COMPLETE) echo "Project looks complete. Consider genius-dashboard, QA, or deployment follow-up." ;;
+    *) echo "Suggested next step: resume $current" ;;
+  esac
+}
+command_reset(){
+  local confirm="${1:-}"; [ "$confirm" = "--yes" ] || die "Reset is destructive. Re-run with: reset --yes"
+  ensure_memory_files
+  local backup=".genius/backups/$(date +%Y%m%d_%H%M%S)"
+  mkdir -p "$backup"
+  cp .genius/state.json "$backup/" 2>/dev/null || true
+  cp PROGRESS.md "$backup/" 2>/dev/null || true
+  cp .claude/plan.md "$backup/" 2>/dev/null || true
+  cp .agents/plan.md "$backup/" 2>/dev/null || true
+  cat > .genius/state.json <<EOF
+{"version":"21.0.0","phase":"NOT_STARTED","currentSkill":null,"skillHistory":[],"checkpoints":{},"tasks":{"total":0,"completed":0,"failed":0,"skipped":0},"artifacts":{},"agentTeams":{"active":false},"created_at":"$(iso_now)","updated_at":"$(iso_now)"}
+EOF
+  rm -f PROGRESS.md .claude/plan.md .agents/plan.md
+  [ -f scripts/memory-briefing.sh ] && bash scripts/memory-briefing.sh >/dev/null 2>&1 || true
+  append_decision "PROJECT RESET — backup saved" "user requested" "reset"
+  ok "Project reset complete. Backup: $backup"
+}
+command_save_tokens(){
+  need_cmd jq; need_file .genius/config.json
+  local current next dev_model
+  current=$(jq -r '.models.saveTokenMode // false' .genius/config.json)
+  if [ "$current" = "true" ]; then next=false; dev_model=opus; else next=true; dev_model=sonnet; fi
+  jq --argjson enabled "$next" '.models = (.models // {}) | .models.saveTokenMode = $enabled | .updated_at = now | .updated_at |= tostring' .genius/config.json > .genius/config.json.tmp && mv .genius/config.json.tmp .genius/config.json
+  append_decision "SAVE-TOKEN MODE: $next" "user toggled" "save-tokens"
+  echo "💰 Save-token mode: $( [ "$next" = true ] && echo ON || echo OFF )"
+  echo "Dev / QA-micro / Debugger / Reviewer → $dev_model"
+  echo "Lead / Architect / Interviewer → opus"
+}
+command_update_check(){
+  local stored_claude current_claude stored_codex current_codex
+  stored_claude=$(cat .genius/claude-code-version.txt 2>/dev/null || echo unknown)
+  current_claude=$(claude --version 2>/dev/null | head -1 || echo unknown)
+  stored_codex=$(cat .genius/codex-cli-version.txt 2>/dev/null || echo unknown)
+  current_codex=$(codex --version 2>/dev/null | head -1 || echo unknown)
+  echo "Claude Code:"
+  echo "  Stored:  $stored_claude"
+  echo "  Current: $current_claude"
+  echo "Codex CLI:"
+  echo "  Stored:  $stored_codex"
+  echo "  Current: $current_codex"
+}
+command_genius_mode(){
+  ensure_genius_dirs
+  local chosen="${1:-}" current
+  current=$(json_get .genius/mode.json '.mode'); current=${current:-builder}
+  if [ -z "$chosen" ]; then
+    echo "Current mode: $current"
+    echo "Available: beginner | builder | pro | agency"
+    exit 0
+  fi
+  [[ "$chosen" =~ ^(beginner|builder|pro|agency)$ ]] || die "Invalid mode: $chosen"
+  cat > .genius/mode.json <<EOF
+{"mode":"$chosen","set_at":"$(iso_now)","set_by":"user"}
+EOF
+  if [ -f .genius/state.json ]; then
+    jq --arg mode "$chosen" '.mode = $mode' .genius/state.json > .genius/state.json.tmp && mv .genius/state.json.tmp .genius/state.json
+  fi
+  ok "Mode switched to: $chosen"
+  [ -f "configs/modes/$chosen.md" ] && sed -n '1,60p' "configs/modes/$chosen.md"
+}
+command_genius_switch_engine(){ bash scripts/switch-engine.sh "$@"; }
+command_genius_upgrade(){ bash scripts/upgrade.sh "$@"; }
+command_genius_import(){
+  bash scripts/migrate-state.sh --imported "$@"
+  if [ ! -f .genius/mode.json ]; then echo '{"mode":"builder","set_at":"'"$(iso_now)"'","set_by":"default"}' > .genius/mode.json; fi
+  ok "Project imported into Genius Team workflow"
+}
+command_playground_update(){
+  ensure_genius_dirs
+  echo "$(iso_now) playground-update" >> .genius/playground.log
+  info "Refreshing dashboard from current .genius/*.html playgrounds"
+  command_genius_dashboard
+}
+
+case "$CMD" in
+  genius-start) command_genius_start "${ARGS[@]:-}" ;;
+  genius-dashboard) command_genius_dashboard "${ARGS[@]:-}" ;;
+  genius-upgrade) command_genius_upgrade "${ARGS[@]:-}" ;;
+  dual-status) command_dual_status "${ARGS[@]:-}" ;;
+  dual-challenge) command_dual_challenge "${ARGS[@]:-}" ;;
+  status) command_status "${ARGS[@]:-}" ;;
+  continue) command_continue "${ARGS[@]:-}" ;;
+  reset) command_reset "${ARGS[@]:-}" ;;
+  save-tokens) command_save_tokens "${ARGS[@]:-}" ;;
+  update-check) command_update_check "${ARGS[@]:-}" ;;
+  genius-mode) command_genius_mode "${ARGS[@]:-}" ;;
+  genius-switch-engine) command_genius_switch_engine "${ARGS[@]:-}" ;;
+  genius-import) command_genius_import "${ARGS[@]:-}" ;;
+  playground-update) command_playground_update "${ARGS[@]:-}" ;;
+  *) show_command_help; exit 1 ;;
+esac

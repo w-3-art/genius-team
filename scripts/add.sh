@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# Genius Team v18.0 — Add to Existing Project
+# Genius Team v21.0 — Add to Existing Project
 # Usage: cd your-project && bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh) [--mode cli|ide|omni|dual] [--engine claude|codex|dual]
 # ═══════════════════════════════════════════════════════════════
 set -e
@@ -58,7 +58,7 @@ fi
 # ── Banner ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v18.0 — Add to Existing Project  ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v21.0 — Add to Existing Project  ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Target:  ${CYAN}$(pwd)${NC}"
@@ -186,7 +186,7 @@ echo ""
 
 # ── Done ─────────────────────────────────────────────────────
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v18.0 — Ready!                   ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v21.0 — Ready!                   ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Genius Team has been added to your existing project."
@@ -200,22 +200,23 @@ if [[ "$ENGINE" == "codex" ]]; then
   echo -e "  3. Tell it what you want to build! 🚀"
 elif [[ "$ENGINE" == "dual" ]]; then
   echo -e "  ${BOLD}Next steps:${NC}"
-  echo -e "  1. For Claude: Run ${CYAN}claude${NC} → ${CYAN}/genius-start${NC}"
-  echo -e "  2. For Codex:  Run ${CYAN}codex${NC} (reads AGENTS.md)"
-  echo -e "  3. Tell it what you want to build! 🚀"
+  echo -e "  1. Add commands to PATH: ${CYAN}export PATH=\"$PWD/.genius/bin:\$PATH\"${NC}"
+  echo -e "  2. For Claude: Run ${CYAN}claude${NC} → ${CYAN}/genius-start${NC}"
+  echo -e "  3. For Codex:  Run ${CYAN}codex${NC} (reads AGENTS.md)"
+  echo -e "  4. Tell it what you want to build! 🚀"
 else
   case "$MODE" in
     cli|omni|dual)
       echo -e "  ${BOLD}Next steps:${NC}"
       echo -e "  1. Run ${CYAN}claude${NC}"
-      echo -e "  2. Type ${CYAN}/genius-start${NC}"
+      echo -e "  2. Or from the shell: ${CYAN}genius-start${NC}"
       echo -e "  3. Tell it what you want to build! 🚀"
       ;;
     ide)
       echo -e "  ${BOLD}Next steps:${NC}"
       echo -e "  1. Open this folder in ${CYAN}VS Code${NC} or ${CYAN}Cursor${NC}"
       echo -e "  2. Start Claude Code ${DIM}(Cmd+Shift+P → \"Claude Code: Open\")${NC}"
-      echo -e "  3. Type ${CYAN}/genius-start${NC}"
+      echo -e "  3. Type ${CYAN}/genius-start${NC} or run ${CYAN}genius-start${NC} from the shell"
       echo -e "  4. Tell it what you want to build! 🚀"
       ;;
   esac

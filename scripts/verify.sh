@@ -1,8 +1,8 @@
 #!/bin/bash
-# Genius Team v18.0 — Verification Script
+# Genius Team v21.0 — Verification Script
 # Verify that the environment is properly set up
 
-echo "🔍 Genius Team v18.0 — Environment Verification"
+echo "🔍 Genius Team v21.0 — Environment Verification"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
@@ -100,7 +100,9 @@ echo ""
 # ═══════════════════════════════════════════════════════════════
 echo "⚙️  Checking configuration..."
 
-check_json ".claude/settings.json"
+if [ "$ENGINE" = "claude" ] || [ "$ENGINE" = "dual" ]; then
+  check_json ".claude/settings.json"
+fi
 check_json ".genius/config.json"
 check_json ".genius/state.json"
 
@@ -208,18 +210,31 @@ fi
 echo ""
 
 # ═══════════════════════════════════════════════════════════════
-# 5. Commands (Claude Code only)
+# 5. Commands
 # ═══════════════════════════════════════════════════════════════
-if [ "$ENGINE" = "claude" ] || [ "$ENGINE" = "dual" ]; then
-  echo "⚡ Checking commands..."
+echo "⚡ Checking commands..."
 
+if [ "$ENGINE" = "claude" ] || [ "$ENGINE" = "dual" ]; then
   COMMANDS=("genius-start" "status" "continue" "reset" "hydrate-tasks" "save-tokens" "update-check")
   for cmd in "${COMMANDS[@]}"; do
     check_file ".claude/commands/$cmd.md"
   done
-
-  echo ""
 fi
+
+if [ "$ENGINE" = "codex" ] || [ "$ENGINE" = "dual" ]; then
+  check_file ".genius/bin/genius-command"
+  LOCAL_COMMANDS=("genius-start" "genius-dashboard" "genius-upgrade" "dual-status" "dual-challenge" "status" "continue" "reset" "save-tokens" "update-check" "genius-mode" "genius-switch-engine" "genius-import" "playground-update")
+  for cmd in "${LOCAL_COMMANDS[@]}"; do
+    if [ -x ".genius/bin/$cmd" ] || [ -L ".genius/bin/$cmd" ]; then
+      echo -e "  ${GREEN}✓${NC} .genius/bin/$cmd"
+    else
+      echo -e "  ${RED}✗${NC} .genius/bin/$cmd (missing)"
+      ERRORS=$((ERRORS + 1))
+    fi
+  done
+fi
+
+echo ""
 
 # ═══════════════════════════════════════════════════════════════
 # 6. Agents (Claude Code only)
@@ -262,7 +277,7 @@ else
 fi
 
 if [ -f ".mcp.json" ]; then
-  echo -e "  ${YELLOW}⚠${NC} .mcp.json exists (not needed in v17)"
+  echo -e "  ${YELLOW}⚠${NC} .mcp.json exists (not needed in v21)"
   WARNINGS=$((WARNINGS + 1))
 else
   echo -e "  ${GREEN}✓${NC} No .mcp.json"
@@ -309,13 +324,13 @@ echo "════════════════════════�
 
 if [ $ERRORS -eq 0 ]; then
   if [ $WARNINGS -eq 0 ]; then
-    echo -e "${GREEN}✅ All checks passed! Genius Team v18.0 is ready.${NC}"
+    echo -e "${GREEN}✅ All checks passed! Genius Team v21.0 is ready.${NC}"
     echo ""
-    echo "Run /genius-start to begin."
+    echo "Run /genius-start or genius-start to begin."
   else
     echo -e "${YELLOW}⚠️ $WARNINGS warning(s), but ready to use.${NC}"
     echo ""
-    echo "Genius Team v18.0 is functional. Warnings are non-blocking."
+    echo "Genius Team v21.0 is functional. Warnings are non-blocking."
   fi
 else
   echo -e "${RED}❌ $ERRORS error(s) found.${NC}"
