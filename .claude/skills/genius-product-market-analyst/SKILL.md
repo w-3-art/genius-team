@@ -14,7 +14,7 @@ description: >-
 ## ⚠️ MANDATORY ARTIFACT
 
 **This skill MUST generate:**
-- XML: `.claude/discovery/MARKET-ANALYSIS.xml`
+- XML: `.genius/discovery/MARKET-ANALYSIS.xml`
 - Unified State: `.genius/outputs/state.json` (with `phases.market` populated)
 
 **Before transitioning to next skill:**
@@ -53,7 +53,7 @@ Update state.json with:
 
 ---
 
-# Genius Product Market Analyst v17.0 — Strategic Intelligence
+# Genius Product Market Analyst v22.0 — Strategic Intelligence
 
 **Turn ideas into validated opportunities.**
 
@@ -200,10 +200,10 @@ The unified dashboard calculates:
 ## Handoffs
 
 ### From: genius-interviewer
-Receives: DISCOVERY.xml with project context
+Receives: `.genius/discovery/DISCOVERY.xml` with project context
 
 ### To: genius-specs
-Provides: MARKET-ANALYSIS.xml, competitive positioning, pricing recommendation
+Provides: `.genius/discovery/MARKET-ANALYSIS.xml`, competitive positioning, pricing recommendation
 
 ### To: genius-marketer
 Provides: Positioning map, target segments, competitive intelligence

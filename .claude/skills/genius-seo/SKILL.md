@@ -22,7 +22,7 @@ allowed-tools:
   - Bash(npx *)
 ---
 
-# Genius SEO v17 — GEO-first Optimization
+# Genius SEO v22 — GEO-first Optimization
 
 **AI search is eating traditional search. +527% AI-referred traffic YoY. 4.4x better conversion than organic. Optimize for where traffic is going.**
 

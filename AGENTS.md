@@ -1,4 +1,4 @@
-# Genius Team v21.0 — Codex CLI Mode
+# Genius Team v22.0 — Codex CLI Mode
 
 > ⚠️ **MANDATORY**: Read `GENIUS_GUARD.md` before ANY action.
 > This project uses Genius Team. You MUST use the skills, not work standalone.
@@ -82,7 +82,7 @@ The Lead reads `plan.md` + `BRIEFING.md` + `state.json` to reconstruct state.
 
 ## Agent Teams Protocol
 
-Genius Team v21.0 uses subagent delegation for parallel work.
+Genius Team v22.0 uses subagent delegation for parallel work.
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Subagents** are spawned with clear task descriptions
@@ -304,7 +304,8 @@ These wrappers are installed by `scripts/setup.sh` into `.genius/bin/` and can b
 | `.genius/state.json` | Project state tracking |
 | `.genius/config.json` | Team configuration (models, memory settings) |
 | `.genius/memory/BRIEFING.md` | Auto-generated project context |
-| `PROGRESS.md` | Real-time execution status |
+| `.genius/state.json` | Canonical runtime state |
+| `.genius/session-log.jsonl` | Session timeline and recovery log |
 
 ---
 
@@ -322,7 +323,7 @@ All other transitions happen automatically.
 
 1. **IDEATION Phase**: Ask questions, validate understanding, get approval at checkpoints
 2. **EXECUTION Phase**: Never stop, handle errors, keep going until ALL tasks complete
-3. **Always update** PROGRESS.md and plan.md after each task
+3. **Always update** `.genius/state.json` and `plan.md` after each task
 4. **Memory**: Read BRIEFING.md at session start, update JSON files during work
 5. **QA Loop**: Every task must pass genius-qa-micro before completion
 6. **Agent Teams**: Lead coordinates, subagents execute — never mix roles

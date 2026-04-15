@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex — See everything in one place</title>
+<meta name="description" content="See what is moving, what is blocked, and what matters next with Cortex.">
+<link rel="stylesheet" href="assets/editorial-site.css">
+<script defer src="assets/editorial-site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__fill" data-scroll-fill></span></div>
+<div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
+<div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
+<div class="cursor-glow" data-cursor-glow aria-hidden="true"></div>
+
+<div class="shell">
+  <header class="nav" data-site-nav>
+    <div class="nav__inner">
+      <a class="brand" href="./index.html" aria-label="Back to ecosystem home">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <span class="brand__text">Cortex <small>See everything in one place</small></span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="./index.html" data-page-link>Ecosystem</a>
+        <a href="./genius-team.html" data-page-link>Genius Team</a>
+        <a href="./cortex.html" data-page-link>Cortex</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a class="button button--ghost" href="https://github.com/w-3-art/genius-team" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="button button--primary" href="https://genius.w3art.io/updates/Genius-Cortex.dmg">Download the app</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <div class="hero__warmth" aria-hidden="true"></div>
+      <div class="hero__sweep" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <div class="hero__center reveal">
+          <div class="eyebrow">One clear view</div>
+          <h1 class="hero__title">See everything in one place</h1>
+          <p class="hero__lead">
+            See what is moving, what is blocked, and what matters next.
+          </p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="https://genius.w3art.io/updates/Genius-Cortex.dmg">Download the app</a>
+            <button class="button button--ghost" type="button" data-copy-command="npm install -g genius-cortex">Copy npm install</button>
+          </div>
+        </div>
+
+        <article class="preview-card reveal">
+          <div class="preview-card__eyebrow">Overview</div>
+          <h2 class="preview-card__title">A single view for the whole picture.</h2>
+          <div class="app-shot">
+            <img src="screenshots/cortex-tray-preview.png" alt="Cortex desktop screenshot" loading="lazy">
+          </div>
+          <div class="preview-list" aria-label="Cortex areas">
+            <span>Projects</span>
+            <span>Health</span>
+            <span>Behaviors</span>
+            <span>Memory</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="benefits">
+      <div class="section__inner">
+        <div class="section__intro reveal">
+          <div class="eyebrow">What you get</div>
+          <h2 class="section__title">A clearer view of what needs attention.</h2>
+        </div>
+
+        <div class="grid grid--3">
+          <article class="card reveal">
+            <div class="card__eyebrow">Active</div>
+            <h3 class="card__title">See what is moving.</h3>
+            <p class="card__body">Know which products are alive right now.</p>
+          </article>
+          <article class="card reveal">
+            <div class="card__eyebrow">Risk</div>
+            <h3 class="card__title">See what is blocked.</h3>
+            <p class="card__body">Catch weak spots before they become bigger problems.</p>
+          </article>
+          <article class="card reveal">
+            <div class="card__eyebrow">Focus</div>
+            <h3 class="card__title">See what matters next.</h3>
+            <p class="card__body">Put attention where it has the most impact.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-to-start">
+      <div class="section__inner">
+        <div class="grid grid--2">
+          <article class="preview-card reveal">
+            <div class="preview-card__eyebrow">Desktop</div>
+            <h2 class="preview-card__title">Open the Mac app.</h2>
+            <p class="preview-card__body">Get a quick overview of projects, health, behaviors, and memory.</p>
+            <div class="app-shot">
+              <img src="screenshots/cortex-tray-preview.png" alt="Cortex app screenshot" loading="lazy">
+            </div>
+          </article>
+
+          <article class="preview-card reveal">
+            <div class="preview-card__eyebrow">CLI</div>
+            <h2 class="preview-card__title">Install it in one command.</h2>
+            <div class="terminal-frame">
+              <div class="window-bar">
+                <span class="window-dot window-dot--red"></span>
+                <span class="window-dot window-dot--amber"></span>
+                <span class="window-dot window-dot--green"></span>
+                <span class="window-label">terminal</span>
+              </div>
+              <div class="terminal-lines">
+                <div class="terminal-line"><span class="terminal-prompt">$</span> npm install -g genius-cortex</div>
+                <div class="terminal-line terminal-line--dim">Install the CLI</div>
+                <div class="terminal-line"><span class="terminal-prompt">$</span> cortex init</div>
+                <div class="terminal-line terminal-line--dim">Connect your workspace</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="start">
+      <div class="section__inner">
+        <div class="proof-strip">
+          <article class="proof-card reveal">
+            <div class="proof-card__eyebrow">Desktop</div>
+            <div class="proof-card__metric" data-count="1">0</div>
+            <h3 class="proof-card__title">Mac app live</h3>
+            <p class="proof-card__body">Download the current build.</p>
+          </article>
+
+          <article class="proof-card reveal">
+            <div class="proof-card__eyebrow">CLI</div>
+            <div class="proof-card__metric">npm</div>
+            <h3 class="proof-card__title">Installable now</h3>
+            <p class="proof-card__body"><code>npm install -g genius-cortex</code></p>
+          </article>
+
+          <article class="proof-card reveal">
+            <div class="proof-card__eyebrow">Updates</div>
+            <div class="proof-card__metric" data-count="1">0</div>
+            <h3 class="proof-card__title">Update channel live</h3>
+            <p class="proof-card__body">The app already has a published update path.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__copy">Cortex. See everything in one place.</div>
+      <div class="footer__links">
+        <a href="./index.html">Ecosystem</a>
+        <a href="./genius-team.html">Genius Team</a>
+        <a href="./cortex.html">Cortex</a>
+        <a href="https://github.com/w-3-art/genius-team" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

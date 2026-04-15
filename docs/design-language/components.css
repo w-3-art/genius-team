@@ -1,0 +1,193 @@
+.dl-shell {
+  background: var(--dl-color-bg);
+  color: var(--dl-color-text);
+  font-family: var(--dl-font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.dl-surface,
+.dl-panel,
+.dl-card,
+.dl-sheet {
+  background: var(--dl-color-surface);
+  border: 1px solid var(--dl-color-border);
+  border-radius: var(--dl-radius-lg);
+  box-shadow: var(--dl-shadow-soft);
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+.dl-surface--strong {
+  background: var(--dl-color-surface-strong);
+  border-color: var(--dl-color-border-strong);
+  box-shadow: var(--dl-shadow-strong);
+}
+
+.dl-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.dl-hero::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle at 30% 25%, rgba(212, 165, 116, 0.18), transparent 38%),
+              radial-gradient(circle at 75% 40%, rgba(245, 158, 11, 0.09), transparent 32%),
+              radial-gradient(circle at 50% 70%, rgba(249, 115, 22, 0.06), transparent 30%);
+  pointer-events: none;
+}
+
+.dl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--dl-radius-pill);
+  border: 1px solid var(--dl-color-border);
+  background: rgba(245, 240, 235, 0.03);
+  color: var(--dl-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.dl-chip--gold {
+  color: var(--dl-color-gold-light);
+  border-color: rgba(212, 165, 116, 0.18);
+  background: rgba(212, 165, 116, 0.08);
+}
+
+.dl-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.85rem 1.3rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font: 700 0.92rem/1 var(--dl-font-sans);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition:
+    transform var(--dl-motion-fast) var(--dl-ease-standard),
+    box-shadow var(--dl-motion-fast) var(--dl-ease-standard),
+    background var(--dl-motion-fast) var(--dl-ease-standard),
+    border-color var(--dl-motion-fast) var(--dl-ease-standard);
+}
+
+.dl-button:hover {
+  transform: translateY(-2px);
+}
+
+.dl-button:focus-visible {
+  outline: none;
+  box-shadow: var(--dl-focus-ring);
+}
+
+.dl-button--primary {
+  color: var(--dl-color-text-inverse);
+  background: linear-gradient(135deg, var(--dl-color-gold), var(--dl-color-energy-strong));
+  box-shadow: 0 12px 30px rgba(212, 165, 116, 0.22);
+}
+
+.dl-button--secondary {
+  color: var(--dl-color-text);
+  background: rgba(245, 240, 235, 0.04);
+  border-color: var(--dl-color-border);
+}
+
+.dl-button--ghost {
+  color: var(--dl-color-text-muted);
+  background: transparent;
+  border-color: var(--dl-color-border);
+}
+
+.dl-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 240, 235, 0.08), transparent);
+}
+
+.dl-metric {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.dl-metric__value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--dl-color-text);
+}
+
+.dl-metric__label {
+  font-size: 0.72rem;
+  color: var(--dl-color-text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dl-kpi {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.dl-kpi__value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--dl-color-gold-light);
+}
+
+.dl-kpi__label {
+  font-size: 0.7rem;
+  color: var(--dl-color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dl-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dl-nav__brand {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.dl-nav__accent {
+  color: var(--dl-color-gold-light);
+}
+
+.dl-provenance {
+  font-size: 0.72rem;
+  color: var(--dl-color-text-dim);
+  letter-spacing: 0.04em;
+}
+
+.dl-diff {
+  padding: 1rem 1.1rem;
+  border-radius: var(--dl-radius-md);
+  border: 1px solid rgba(212, 165, 116, 0.14);
+  background: rgba(212, 165, 116, 0.06);
+}
+
+.dl-diff__title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--dl-color-gold-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.dl-diff__body {
+  color: var(--dl-color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+

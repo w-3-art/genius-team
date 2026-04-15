@@ -11,7 +11,7 @@ description: >-
 ## ⚠️ MANDATORY ARTIFACT
 
 **This skill MUST generate:**
-- XML: `.claude/discovery/SPECIFICATIONS.xml`
+- XML: `.genius/discovery/SPECIFICATIONS.xml`
 - Unified State: `.genius/outputs/state.json` (with `phases.specs` populated)
 
 **Before transitioning to next skill:**
@@ -50,7 +50,7 @@ Update state.json with:
 
 ---
 
-# Genius Specs v17.0 — Requirements Architect
+# Genius Specs v22.0 — Requirements Architect
 
 **Transforming discoveries into crystal-clear specifications.**
 
@@ -76,8 +76,8 @@ Append to `.genius/memory/decisions.json`:
 ## Prerequisites
 
 **REQUIRED before starting:**
-- `DISCOVERY.xml` from genius-interviewer
-- `MARKET-ANALYSIS.xml` from genius-product-market-analyst (optional)
+- `.genius/discovery/DISCOVERY.xml` from genius-interviewer
+- `.genius/discovery/MARKET-ANALYSIS.xml` from genius-product-market-analyst (optional)
 
 ---
 
@@ -121,7 +121,7 @@ Structured XML with:
 
 **MANDATORY. Do NOT continue automatically.**
 
-After generating SPECIFICATIONS.xml:
+After generating `.genius/discovery/SPECIFICATIONS.xml`:
 ```
 SPECIFICATIONS COMPLETE
 
@@ -226,13 +226,13 @@ After writing specs, scan for recurring project-specific workflows (e.g., "this 
 ## Handoffs
 
 ### From: genius-interviewer / genius-product-market-analyst
-Receives: DISCOVERY.xml, MARKET-ANALYSIS.xml
+Receives: `.genius/discovery/DISCOVERY.xml`, `.genius/discovery/MARKET-ANALYSIS.xml`
 
 ### To: genius-designer (after approval)
-Provides: SPECIFICATIONS.xml, screen definitions, component list
+Provides: `.genius/discovery/SPECIFICATIONS.xml`, screen definitions, component list
 
 ### To: genius-architect
-Provides: SPECIFICATIONS.xml, data model, API endpoints, NFRs
+Provides: `.genius/discovery/SPECIFICATIONS.xml`, data model, API endpoints, NFRs
 
 
 ---
@@ -249,7 +249,7 @@ When generating specifications, if an MCP server needs to collect structured req
 
 - MCP server shows a form mid-task with fields like `confirm_scope`, `priority_stories[]`, `target_launch_date`
 - User fills it in without leaving the workflow
-- genius-specs receives the result and adjusts the SPECIFICATIONS.xml accordingly
+- genius-specs receives the result and adjusts `.genius/discovery/SPECIFICATIONS.xml` accordingly
 
 **Practical use:** Connect a `genius-specs-validator` MCP tool that shows a review dialog before finalizing specs — user can approve/reject each user story without back-and-forth.
 
@@ -259,7 +259,7 @@ See `genius-dev/SKILL.md → MCP Elicitation Pattern` for the full technical ref
 
 ## Definition of Done
 
-- [ ] SPECIFICATIONS.xml generated with all stories
+- [ ] `.genius/discovery/SPECIFICATIONS.xml` generated with all stories
 - [ ] Every story has ≥2 testable acceptance criteria
 - [ ] NFRs have measurable targets
 - [ ] Data model covers all entities

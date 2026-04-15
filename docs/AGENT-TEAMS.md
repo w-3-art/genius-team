@@ -1,8 +1,8 @@
-# Agent Teams Guide
+# Agent Teams Guide (v22.0)
 
 ## Overview
 
-Genius Team v9.0 uses Claude Code's experimental Agent Teams feature (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) for parallel, coordinated execution.
+Genius Team v22.0 uses Claude Code's experimental Agent Teams feature (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) for parallel, coordinated execution.
 
 ## How It Works
 

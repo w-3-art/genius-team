@@ -1,45 +1,53 @@
 ---
-description: Switch Genius Team mode (beginner/builder/pro/agency)
+description: Switch the GT v22 experience mode while preserving the install/runtime config
 ---
 
 # /genius-mode
 
-Switch your Genius Team experience level.
+Switch the **experience mode** of the repo.
+
+In v22:
+
+- `.genius/mode.json` = experience mode
+- `.genius/config.json` = install/runtime config
+
+Do not confuse the two.
 
 ## Execution
 
-### Step 1: Show Current Mode
+### Step 1: Read current mode
 
-Read `.genius/mode.json` and display current mode.
+Run:
 
-### Step 2: Present Options
-
-```
-Current mode: {current}
-
-Available modes:
-  beginner  — Extra guidance, strict validation, step-by-step explanations
-  builder   — Standard workflow with balanced guidance (default)
-  pro       — Minimal hand-holding, fast transitions, permissive validation
-  agency    — Multi-project workflow, client-friendly outputs
+```bash
+cat .genius/mode.json 2>/dev/null
+cat .genius/config.json 2>/dev/null
 ```
 
-If user provided mode as argument (e.g., `/genius-mode pro`), skip to Step 3.
-Otherwise, ask: "Which mode would you like?"
+### Step 2: Present the available experience modes
 
-### Step 3: Switch Mode
-
-Update `.genius/mode.json`:
-```json
-{
-  "mode": "{chosen_mode}",
-  "set_at": "{ISO timestamp}",
-  "set_by": "user"
-}
+```text
+beginner  — more guidance
+builder   — balanced default
+pro       — less hand-holding
+agency    — more client / multi-project oriented
 ```
 
-Update `.genius/state.json` — set `mode` field to match.
+### Step 3: Update only the experience mode
 
-### Step 4: Confirm
+Do not overwrite install mode or engine.
 
-Read the mode description from `configs/modes/{mode}.md` and show the greeting.
+Run:
+
+```bash
+export PATH="$PWD/.genius/bin:$PATH"
+genius-mode <chosen_mode>
+```
+
+### Step 4: Confirm the split clearly
+
+Show:
+
+- new experience mode from `.genius/mode.json`
+- unchanged install mode from `.genius/config.json`
+- unchanged engine from `.genius/config.json`

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v9.0 — Memory Recovery Script
+# Genius Team v22.0 — Memory Recovery Script
 # Reconstruct lost context by scanning project artifacts
 # Usage: ./scripts/memory-recover.sh [--dry-run] [--verbose]
 # Compatible with bash 3.2+ (macOS default)
@@ -217,7 +217,7 @@ scan_artifacts() {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 2: Scan Discovery XMLs (.claude/discovery/*.xml)
+# Step 2: Scan Discovery XMLs (.genius/discovery/*.xml)
 # ══════════════════════════════════════════════════════════════════════════════
 
 scan_discovery() {
@@ -292,7 +292,7 @@ scan_plan() {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 4: Scan Technical Context (ARCHITECTURE.md, PROGRESS.md)
+# Step 4: Scan Technical Context (ARCHITECTURE.md, .genius/state.json, session log)
 # ══════════════════════════════════════════════════════════════════════════════
 
 scan_technical_context() {
@@ -306,16 +306,21 @@ scan_technical_context() {
     verbose "Found ARCHITECTURE.md → architecture_approved"
   fi
 
-  # PROGRESS.md
-  if [[ -f "PROGRESS.md" ]]; then
-    local mtime=$(get_mtime "PROGRESS.md")
-    add_artifact "PROGRESS.md ($mtime)"
-    verbose "Found PROGRESS.md"
+  if [[ -f "$GENIUS_DIR/state.json" ]]; then
+    local mtime=$(get_mtime "$GENIUS_DIR/state.json")
+    add_artifact ".genius/state.json ($mtime)"
+    verbose "Found .genius/state.json"
 
-    # Extract progress milestones
-    if grep -qi "completed\|done\|finished" "PROGRESS.md" 2>/dev/null; then
+    local phase=$(jq -r '.phase // "NOT_STARTED"' "$GENIUS_DIR/state.json" 2>/dev/null || echo "NOT_STARTED")
+    if [[ "$phase" == "EXECUTION" || "$phase" == "QA" || "$phase" == "DEPLOY" ]]; then
       set_checkpoint "execution_started"
     fi
+  fi
+
+  if [[ -f "$GENIUS_DIR/session-log.jsonl" ]]; then
+    local mtime=$(get_mtime "$GENIUS_DIR/session-log.jsonl")
+    add_artifact ".genius/session-log.jsonl ($mtime)"
+    verbose "Found .genius/session-log.jsonl"
   fi
 
   # Check for other common project files

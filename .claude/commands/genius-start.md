@@ -1,155 +1,98 @@
 ---
-description: Initialize Genius Team v21.0 environment, load memory, hydrate tasks, and offer playground dashboard
+description: Bootstrap or resume a Genius Team v22 repo using the canonical contract
 ---
 
 # /genius-start
 
-Initialize Genius Team environment, load file-based memory, and hydrate tasks.
+Bootstrap the current repo on the GT v22 contract, refresh the canonical state, and make the repo ready for work.
 
 ## Execution
 
-### Step 1: Detect Mode
+### Step 1: Validate minimum GT structure
+
+Run:
 
 ```bash
-# Read current mode from config
-MODE=$(jq -r '.mode // "cli"' .genius/config.json 2>/dev/null || echo "cli")
-echo "Mode: $MODE"
-
-# If no mode set, warn user
-if [ "$MODE" = "null" ] || [ -z "$MODE" ]; then
-  echo "⚠️  No mode configured. Run setup first:"
-  echo "  ./scripts/setup.sh --mode cli   (terminal)"
-  echo "  ./scripts/setup.sh --mode ide   (VS Code / Cursor)"
-  exit 1
-fi
+test -d .genius && test -d scripts && echo "GT repo detected"
 ```
 
-### Step 1b: Detect Experience Mode
+If GT is missing, explain that this repo must first be created with `create.sh` or equipped with GT using `add.sh`.
+
+### Step 2: Ensure contract files exist
+
+Run:
 
 ```bash
-# Check if mode.json exists — first run asks user
-if [ ! -f .genius/mode.json ]; then
-  echo '{"mode": "builder", "set_at": "'"2026-03-29T16:02:43+02:00"'", "set_by": "default"}' > .genius/mode.json
-fi
-EXPERIENCE_MODE=$(jq -r '.mode // "builder"' .genius/mode.json 2>/dev/null || echo "builder")
-echo "Experience: $EXPERIENCE_MODE"
+bash scripts/setup.sh --mode "$(jq -r '.installMode // .mode // "cli"' .genius/config.json 2>/dev/null || echo cli)" --engine "$(jq -r '.engine // "claude"' .genius/config.json 2>/dev/null || echo claude)"
 ```
 
-### Step 1c: Run Migration if Needed
+This guarantees the v22 contract skeleton exists:
+
+- `.genius/state.json`
+- `.genius/config.json`
+- `.genius/mode.json`
+- `.genius/outputs/state.json`
+- `.genius/session-log.jsonl`
+- `.genius/DASHBOARD.html`
+
+### Step 3: Refresh runtime state
+
+Run:
 
 ```bash
-# If state.json has no mode/origin fields, run migration
-if [ -f .genius/state.json ]; then
-  HAS_MODE=$(jq -r '.mode // "missing"' .genius/state.json 2>/dev/null)
-  if [ "$HAS_MODE" = "missing" ]; then
-    bash scripts/migrate-state.sh 2>/dev/null || true
-  fi
-fi
+bash scripts/migrate-state.sh
 ```
 
-### Step 2: Verify Environment
+### Step 4: Mark bootstrap completion
+
+Run:
 
 ```bash
-# Check for jq (required for memory system)
-which jq 2>/dev/null || echo "WARNING: jq not found — install with: brew install jq"
-
-# Check Claude Code
-claude --version 2>/dev/null || echo "WARNING: claude CLI not in PATH"
+export PATH="$PWD/.genius/bin:$PATH"
+genius-start
 ```
 
-### Step 3: Initialize if Needed
+If running the local wrapper from inside the slash command would recurse, reproduce its behavior:
+
+- append an event to `.genius/session-log.jsonl`
+- set `bootstrapStatus=completed`
+- refresh `.genius/outputs/state.json`
+- display the current status
+
+### Step 5: Show the repo status
+
+Read:
 
 ```bash
-# Create directories
-mkdir -p .genius/memory/session-logs .genius/backups
-
-# Initialize empty memory files if missing
-for f in decisions.json patterns.json progress.json errors.json; do
-  [ -f ".genius/memory/$f" ] || echo '[]' > ".genius/memory/$f"
-done
-
-# Initialize state if missing
-[ -f .genius/state.json ] || bash scripts/setup.sh --mode "$MODE" 2>/dev/null
+cat .genius/state.json
+cat .genius/outputs/state.json
 ```
 
-### Step 4: Load Memory
+Then summarize:
 
-```bash
-# Regenerate BRIEFING.md from memory files
-bash scripts/memory-briefing.sh 2>/dev/null
+- install mode
+- engine
+- experience mode
+- phase
+- current skill
+- migration status
+- bootstrap status
+- Cortex-ready status
 
-# Display briefing
-cat .genius/memory/BRIEFING.md 2>/dev/null
+### Step 6: Give next actions
+
+Always end with:
+
+```text
+Ready. Useful next actions:
+  /status
+  /continue
+  /genius-dashboard
 ```
 
-> 💡 **BRIEFING.md is auto-loaded via `@.genius/memory/BRIEFING.md` import in CLAUDE.md** — no manual load needed in most cases. This step regenerates it from the JSON memory files to keep it fresh.
+If the repo is not yet Cortex-ready, also mention:
 
-### Step 4b: Auto Memory Check
-
-Claude Code's native **Auto Memory** (`~/.claude/projects/<project>/memory/MEMORY.md`) is loaded automatically.
-
-On first run, tell Claude to bootstrap Auto Memory with key project facts:
+```text
+If this repo needs to be fully readable by Cortex:
+  bash scripts/migrate-cortex-ready.sh
 ```
-If .genius/state.json exists and Auto Memory MEMORY.md is empty or doesn't mention this project:
-→ Write a concise summary (5-10 lines) to Auto Memory:
-  - Project name and stack
-  - Current phase
-  - Key conventions (package manager, test command, etc.)
-  - Important paths
-
-Example: "remember: this project uses pnpm, runs on port 3001, tests with `pnpm test`"
-```
-
-On subsequent runs, Auto Memory is already populated — no action needed.
-
-### Step 5: Check for Version Updates
-
-```bash
-STORED_VER=$(cat .genius/claude-code-version.txt 2>/dev/null || echo "unknown")
-CURRENT_VER=$(claude --version 2>/dev/null | head -1 || echo "unknown")
-if [ "$STORED_VER" != "$CURRENT_VER" ] && [ "$CURRENT_VER" != "unknown" ]; then
-  echo "🔄 Claude Code updated: $STORED_VER → $CURRENT_VER"
-  echo "   Run /update-check for details."
-fi
-```
-
-### Step 6: Display Status
-
-```
-╔════════════════════════════════════════════════════════════╗
-║  🧠 Genius Team v21.0 — Environment Ready                   ║
-║  Mode: {MODE}                                               ║
-╚════════════════════════════════════════════════════════════╝
-
-Memory: {BRIEFING.md summary}
-
-Project State:
-  Phase: {from state.json}
-  Current: {currentSkill}
-
-Tasks: {if plan.md exists, show counts}
-
-Ready! What would you like to do?
-
-  💡 "I want to build [idea]"     → Start new project
-  📋 "/status"                    → See detailed progress
-  ▶️  "continue"                  → Resume where we left off
-  🔧 "/reset"                     → Start over
-  💰 "/save-tokens"               → Toggle save-token mode
-
-📊 **Your Dashboard & Playgrounds:**
-  open .genius/DASHBOARD.html
-  (run /genius-dashboard to refresh, /genius-playground for project-specific dashboard)
-
-🎮 **Playgrounds available** — interactive previews of each skill output.
-  After each skill completes, its playground tab unlocks in the dashboard.
-```
-
-If in **IDE mode**, also show:
-```
-  🔧 Run "Genius: Generate Memory Briefing" task in VS Code (Cmd+Shift+P → Tasks: Run Task)
-```
-
-### Step 7: Wait for User Input
-
-Route to appropriate skill based on response.

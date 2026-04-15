@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v9.0 — Extract memories from session context
+# Genius Team v22.0 — Extract memories from session context
 # Called by PreCompact and Stop hooks
 # Reads STDIN or arguments for context, extracts decisions/patterns/errors
 # Then regenerates BRIEFING.md
@@ -23,8 +23,10 @@ fi
 # If no context provided, try to gather from project state
 if [ -z "$CONTEXT" ]; then
   CONTEXT=""
-  [ -f PROGRESS.md ] && CONTEXT="$CONTEXT\n$(cat PROGRESS.md)"
+  [ -f .genius/state.json ] && CONTEXT="$CONTEXT\n$(jq -c '{phase, currentSkill, currentWorkflow, version, health, compatibility: .cortex.compatibility // null}' .genius/state.json 2>/dev/null || cat .genius/state.json)"
+  [ -f .genius/session-log.jsonl ] && CONTEXT="$CONTEXT\n$(tail -20 .genius/session-log.jsonl 2>/dev/null || true)"
   [ -f .claude/plan.md ] && CONTEXT="$CONTEXT\n$(grep -E "^\- \[" .claude/plan.md 2>/dev/null || true)"
+  [ -f .agents/plan.md ] && CONTEXT="$CONTEXT\n$(grep -E "^\- \[" .agents/plan.md 2>/dev/null || true)"
 fi
 
 if [ -z "$CONTEXT" ]; then

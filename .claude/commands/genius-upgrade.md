@@ -1,27 +1,50 @@
 ---
-description: Upgrade Genius Team to the latest version
+description: Upgrade Genius Team to the latest version, then apply the v22/Cortex migration steps if needed
 ---
 
 # /genius-upgrade
 
-**DO NOT search the web. DO NOT use `gh api`. DO NOT check GitHub releases.**
+Run the official GT upgrade script directly.
 
-Run this EXACT command immediately — no questions, no research:
+## Execution
+
+### Step 1: Run the upgrade
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)
 ```
 
-The script handles EVERYTHING: version detection, download, backup, upgrade.
+For dry-run:
 
-For dry-run (preview without changes):
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh) --dry-run
 ```
 
-For force re-download:
+### Step 2: Re-read repo state
+
+After completion, inspect:
+
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh) --force
+cat .genius/state.json 2>/dev/null
+cat .genius/config.json 2>/dev/null
 ```
 
-After completion: tell the user to run `/genius-start` to reinitialize.
+### Step 3: If the repo still needs Cortex compatibility, say it explicitly
+
+If `migrationStatus != cortex-ready`, tell the user to run:
+
+```bash
+bash scripts/migrate-cortex-ready.sh
+```
+
+### Step 4: If bootstrap is not complete, tell the user to run:
+
+```text
+/genius-start
+```
+
+Important:
+
+- upgrade GT first
+- then run the explicit Cortex-ready migration if required
+- then bootstrap the repo if required

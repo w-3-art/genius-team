@@ -1,0 +1,30 @@
+{
+  "role": "shared motion contract",
+  "durations": {
+    "instant": 80,
+    "fast": 160,
+    "base": 240,
+    "slow": 360,
+    "slowest": 520
+  },
+  "easings": {
+    "standard": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "entrance": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "exit": "cubic-bezier(0.4, 0, 0.2, 1)"
+  },
+  "patterns": {
+    "fadeUp": {
+      "from": { "opacity": 0, "transform": "translateY(14px)" },
+      "to": { "opacity": 1, "transform": "translateY(0)" }
+    },
+    "lift": {
+      "hoverTranslate": "-4px",
+      "shadow": "0 18px 50px rgba(0,0,0,0.35)"
+    },
+    "goldPulse": {
+      "glow": "0 0 30px rgba(212,165,116,0.18)",
+      "scale": 1.02
+    }
+  }
+}
+

@@ -28,7 +28,7 @@ hooks:
       once: true
 ---
 
-# Genius Skill Creator v17 — The Meta-Skill
+# Genius Skill Creator v22 — The Meta-Skill
 
 **Skills that spawn skills. Automate the automator.**
 
@@ -126,7 +126,7 @@ Follow **progressive disclosure** — most important info first, details later.
 [frontmatter]
 ---
 
-# {Skill Name} v17 — {Tagline}
+# {Skill Name} v22 — {Tagline}
 
 **{One powerful sentence describing the skill's value.}**
 

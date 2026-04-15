@@ -161,14 +161,14 @@ cat .genius/state.json
 
 | # | Skill | Mandatory Artifact | Playground | Checkpoint |
 |---|-------|---------------------|------------|------------|
-| 1 | `genius-interviewer` | `DISCOVERY.xml` | `playgrounds/DISCOVERY.html` | Auto |
-| 2 | `genius-product-market-analyst` | `MARKET-ANALYSIS.xml` | `playgrounds/MARKET-ANALYSIS.html` | Auto |
-| 3 | `genius-specs` | `SPECIFICATIONS.xml` | `playgrounds/SPECIFICATIONS.html` | ⚠️ **USER APPROVAL** |
-| 4 | `genius-designer` | `DESIGN-SYSTEM.html` + `design-config.json` | `playgrounds/DESIGN-SYSTEM.html` | ⚠️ **USER CHOICE** |
-| 5 | `genius-marketer` | `MARKETING-STRATEGY.xml` + `TRACKING-PLAN.xml` | `playgrounds/MARKETING.html` | Auto |
-| 6 | `genius-copywriter` | `COPY.md` | `playgrounds/COPY.html` | Auto |
-| 7 | `genius-integration-guide` | `INTEGRATIONS.md` + `.env.example` | `playgrounds/INTEGRATIONS.html` | Auto |
-| 8 | `genius-architect` | `ARCHITECTURE.md` + `.claude/plan.md` | `playgrounds/ARCHITECTURE.html` | ⚠️ **USER APPROVAL** |
+| 1 | `genius-interviewer` | `.genius/discovery/DISCOVERY.xml` + `.genius/outputs/state.json` | `.genius/DASHBOARD.html` | Auto |
+| 2 | `genius-product-market-analyst` | `.genius/discovery/MARKET-ANALYSIS.xml` + `.genius/outputs/state.json` | `.genius/DASHBOARD.html` | Auto |
+| 3 | `genius-specs` | `.genius/discovery/SPECIFICATIONS.xml` + `.genius/outputs/state.json` | `.genius/outputs/specs-playground.html` | ⚠️ **USER APPROVAL** |
+| 4 | `genius-designer` | `design-config.json` + `.genius/outputs/design-playground.html` | `.genius/DASHBOARD.html` | ⚠️ **USER CHOICE** |
+| 5 | `genius-marketer` | `.genius/discovery/MARKETING-PLAN.xml` | `.genius/outputs/GTM-STRATEGY.html` | Auto |
+| 6 | `genius-copywriter` | `.genius/discovery/COPY.xml` | `.genius/outputs/COPY-OPTIONS.html` | Auto |
+| 7 | `genius-integration-guide` | `.genius/discovery/INTEGRATIONS.xml` + `.env.example` | `.genius/outputs/STACK-CONFIG.html` | Auto |
+| 8 | `genius-architect` | `ARCHITECTURE.md` + `.claude/plan.md` | `.genius/outputs/architecture-playground.html` | ⚠️ **USER APPROVAL** |
 | 9 | `genius-orchestrator` | Coordination via Agent Teams | N/A | Auto |
 | 10 | `genius-dev` | Code implemented | N/A | QA-micro PASS |
 | 11 | `genius-qa-micro` | QA PASS/FAIL | N/A | Auto |
@@ -333,40 +333,44 @@ These 3 checkpoints REQUIRE explicit human approval:
 │                                                                             │
 │  ┌──────────────────┐    ┌────────────────────────────┐                    │
 │  │ genius-interviewer│───▶│ genius-product-market-analyst│                  │
-│  │  📄 DISCOVERY.xml │    │  📄 MARKET-ANALYSIS.xml      │                  │
-│  │  🎨 DISCOVERY.html│    │  🎨 MARKET-ANALYSIS.html     │                  │
+│  │📄 .genius/discovery│   │📄 .genius/discovery          │                  │
+│  │/DISCOVERY.xml      │   │/MARKET-ANALYSIS.xml         │                  │
+│  │🧠 outputs/state.json│  │🧠 outputs/state.json         │                  │
 │  └──────────────────┘    └──────────────┬─────────────┘                    │
 │                                         │                                   │
 │                          ┌──────────────▼──────────────┐                    │
 │                          │        genius-specs         │                    │
-│                          │   📄 SPECIFICATIONS.xml     │                    │
-│                          │   🎨 SPECIFICATIONS.html    │                    │
+│                          │📄 .genius/discovery/        │                    │
+│                          │   SPECIFICATIONS.xml        │                    │
+│                          │🎨 outputs/specs-playground │                    │
 │                          └──────────────┬──────────────┘                    │
 │                                         │                                   │
 │                          ⚠️ CHECKPOINT: USER APPROVAL ⚠️                    │
 │                                         │                                   │
 │                          ┌──────────────▼──────────────┐                    │
 │                          │       genius-designer       │                    │
-│                          │   📄 DESIGN-SYSTEM.html     │                    │
 │                          │   📄 design-config.json     │                    │
-│                          │   🎨 DESIGN-SYSTEM.html     │                    │
+│                          │   🎨 outputs/design-        │                    │
+│                          │      playground.html        │                    │
 │                          └──────────────┬──────────────┘                    │
 │                                         │                                   │
 │                          ⚠️ CHECKPOINT: USER CHOICE ⚠️                      │
 │                                         │                                   │
 │  ┌──────────────────┐    ┌──────────────▼──────────────┐                    │
 │  │ genius-copywriter │◀───│       genius-marketer       │                    │
-│  │    📄 COPY.md     │    │ 📄 MARKETING-STRATEGY.xml   │                    │
-│  │   🎨 COPY.html    │    │   📄 TRACKING-PLAN.xml      │                    │
-│  └────────┬─────────┘    │   🎨 MARKETING.html         │                    │
+│  │📄 .genius/discovery│   │📄 .genius/discovery/        │                    │
+│  │/COPY.xml          │    │   MARKETING-PLAN.xml       │                    │
+│  │🎨 COPY-OPTIONS.html│   │🎨 GTM-STRATEGY.html        │                    │
+│  └────────┬─────────┘    └──────────────────────────────┘                    │
 │           │              └──────────────────────────────┘                    │
 │           │                                                                 │
 │  ┌────────▼─────────┐    ┌──────────────────────────────┐                   │
 │  │genius-integration│───▶│       genius-architect        │                   │
 │  │    -guide        │    │    📄 ARCHITECTURE.md         │                   │
-│  │📄 INTEGRATIONS.md│    │    📄 .claude/plan.md         │                   │
-│  │📄 .env.example   │    │    🎨 ARCHITECTURE.html       │                   │
-│  │🎨INTEGRATIONS.html│   └──────────────┬───────────────┘                   │
+│  │📄 INTEGRATIONS.xml│   │    📄 .claude/plan.md         │                   │
+│  │📄 .env.example   │    │    🎨 architecture-           │                   │
+│  │🎨 STACK-CONFIG   │    │       playground.html         │                   │
+│  │   .html          │    └──────────────┬───────────────┘                   │
 │  └──────────────────┘                   │                                   │
 │                                         │                                   │
 │                          ⚠️ CHECKPOINT: USER APPROVAL ⚠️                    │

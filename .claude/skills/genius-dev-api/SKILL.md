@@ -31,7 +31,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev API v17 — Integration Specialist
+# Genius Dev API v22 — Integration Specialist
 
 **Third-party APIs are dependencies. Wrap them. Test them. Isolate them.**
 

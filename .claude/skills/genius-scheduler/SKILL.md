@@ -23,7 +23,7 @@ allowed-tools:
   - Bash(date *)
 ---
 
-# Genius Scheduler v20.0 — Recurring Task Configuration
+# Genius Scheduler v22.0 — Recurring Task Configuration
 
 **Sets up /loop tasks and remote triggers for automated recurring workflows. Templates for common patterns.**
 

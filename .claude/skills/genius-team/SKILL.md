@@ -64,7 +64,7 @@ hooks:
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] ROUTER: $TOOL_NAME\" >> .genius/router.log 2>/dev/null || true'"
 ---
 
-# Genius Team v21.0 — Your AI Product Team
+# Genius Team v22.0 — Your AI Product Team
 
 **From idea to production. Agent Teams. File-based memory. No fluff.**
 
@@ -161,18 +161,18 @@ Read `@.genius/memory/BRIEFING.md` at session start and check `plan.md` before r
 
 ## Context Detection
 
-Check both the phase artifact and any required playground before routing:
-- No project files: `genius-interviewer`
-- `DISCOVERY.xml` + `DISCOVERY.html`: `genius-product-market-analyst`
-- `MARKET-ANALYSIS.xml`: `genius-specs`
-- `SPECIFICATIONS.xml`: approval gate, then `genius-designer`
-- `DESIGN-SYSTEM.xml` + `DESIGN-SYSTEM.html`: choice gate, then `genius-marketer`
-- `MARKETING-PLAN.xml`: `genius-copywriter`
-- `COPY-SYSTEM.xml` + `COPY-SYSTEM.html`: `genius-integration-guide`
-- `INTEGRATIONS.xml`: `genius-architect`
-- `ARCHITECTURE.md`: approval gate, then `genius-orchestrator`
-- `.claude/plan.md` with active work: resume `genius-orchestrator`
-- `PROGRESS.md` complete: `genius-qa` or `genius-deployer`
+Check both the runtime state and required project artifacts before routing:
+- No `.genius/state.json`: `genius-interviewer`
+- `.genius/discovery/DISCOVERY.xml` present and market phase not complete: `genius-product-market-analyst`
+- `.genius/discovery/MARKET-ANALYSIS.xml` present and specs phase not complete: `genius-specs`
+- `.genius/discovery/SPECIFICATIONS.xml` present and specs checkpoint pending: approval gate, then `genius-designer`
+- Design phase complete in `.genius/outputs/state.json`: `genius-marketer`
+- `.genius/discovery/MARKETING-PLAN.xml` present: `genius-copywriter`
+- `.genius/discovery/COPY.xml` present: `genius-integration-guide`
+- `.genius/discovery/INTEGRATIONS.xml` present: `genius-architect`
+- Architecture checkpoint approved in `.genius/state.json`: `genius-orchestrator`
+- `.claude/plan.md` or `.agents/plan.md` with active work: resume `genius-orchestrator`
+- QA or deploy artifacts requested explicitly: `genius-qa`, `genius-security`, or `genius-deployer`
 
 If the previous artifact or required playground is missing, block routing and regenerate it first.
 
@@ -188,18 +188,18 @@ Before certain transitions, auto-invoke guard skills:
 ## ARTIFACT VALIDATION
 
 Required handoff artifacts are:
-- `genius-interviewer`: `DISCOVERY.xml` + `DISCOVERY.html`
-- `genius-product-market-analyst`: `MARKET-ANALYSIS.xml`
-- `genius-specs`: `SPECIFICATIONS.xml`
-- `genius-designer`: `DESIGN-SYSTEM.xml` + `DESIGN-SYSTEM.html`
-- `genius-marketer`: `MARKETING-PLAN.xml`
-- `genius-copywriter`: `COPY-SYSTEM.xml` + `COPY-SYSTEM.html`
-- `genius-integration-guide`: `INTEGRATIONS.xml`
-- `genius-architect`: `ARCHITECTURE.md`
-- `genius-orchestrator`: updated `plan.md`
-- `genius-qa`: `QA-REPORT.xml`
-- `genius-security`: `SECURITY-AUDIT.xml`
-- `genius-deployer`: `DEPLOYMENT.md`
+- `genius-interviewer`: `.genius/discovery/DISCOVERY.xml` + `.genius/outputs/state.json`
+- `genius-product-market-analyst`: `.genius/discovery/MARKET-ANALYSIS.xml` + `.genius/outputs/state.json`
+- `genius-specs`: `.genius/discovery/SPECIFICATIONS.xml` + `.genius/outputs/state.json`
+- `genius-designer`: `.genius/outputs/design-playground.html` + `.genius/outputs/state.json`
+- `genius-marketer`: `.genius/discovery/MARKETING-PLAN.xml` + `.genius/outputs/GTM-STRATEGY.html`
+- `genius-copywriter`: `.genius/discovery/COPY.xml` + `.genius/outputs/COPY-OPTIONS.html`
+- `genius-integration-guide`: `.genius/discovery/INTEGRATIONS.xml` + `.genius/outputs/STACK-CONFIG.html`
+- `genius-architect`: `.genius/ARCHITECTURE.md` or architecture phase data in `.genius/outputs/state.json`
+- `genius-orchestrator`: updated `.claude/plan.md` or `.agents/plan.md`
+- `genius-qa`: `.genius/QA-REPORT.xml`
+- `genius-security`: `.genius/SECURITY-AUDIT.xml`
+- `genius-deployer`: `.genius/DEPLOYMENT.md`
 
 See `GENIUS_GUARD.md` for full recovery protocol.
 
@@ -217,7 +217,7 @@ Update `.genius/state.json` on every successful handoff with the chosen skill an
 
 ## Handoff Protocol (BLOCKING)
 
-Before routing: required artifact exists, required checkpoint is validated, and required playground exists. On success, update `state.json`, pass context, and announce the transition briefly.
+Before routing: required artifact exists, the required checkpoint is validated in `.genius/state.json`, and `.genius/outputs/state.json` reflects the current phase. On success, update `state.json`, pass context, and announce the transition briefly.
 
 ---
 

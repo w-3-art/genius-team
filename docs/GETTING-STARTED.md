@@ -1,4 +1,4 @@
-# Getting Started with Genius Team v9.0
+# Getting Started with Genius Team v22.0
 
 ## Prerequisites
 
@@ -9,11 +9,18 @@
 
 ## Setup (2 minutes)
 
-### Step 1: Clone or Copy the Repository
+### Step 1: Bootstrap a New or Existing Repo
 
+New repo:
 ```bash
-git clone https://github.com/your-username/genius-team.git my-project
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project
 cd my-project
+```
+
+Existing repo:
+```bash
+cd my-existing-project
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)
 ```
 
 ### Step 2: Choose Your Mode
@@ -39,21 +46,21 @@ Best for: Developers who prefer working inside an editor. This installs:
 - VS Code tasks for memory operations (`Cmd+Shift+P` → `Tasks: Run Task`)
 - Cursor rules (`.cursorrules`) for Cursor IDE integration
 
-#### Omni Mode (coming soon)
+#### Omni Mode
 
 ```bash
 ./scripts/setup.sh --mode omni
 ```
 
-Multi-provider orchestration: Claude Code + Codex + Kimi Code + Gemini CLI. See `configs/omni/README.md` for the roadmap.
+Multi-provider orchestration: Claude Code + Codex + Kimi Code + Gemini CLI. See `configs/omni/README.md` for the setup details.
 
-#### Dual Mode (coming soon)
+#### Dual Mode
 
 ```bash
 ./scripts/setup.sh --mode dual
 ```
 
-Two models working together: one builds, one challenges. See `configs/dual/README.md` for the roadmap.
+Two models working together: one builds, one challenges. See `configs/dual/README.md` for the setup details.
 
 ### Step 3: Verify Installation
 

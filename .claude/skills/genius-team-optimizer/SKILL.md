@@ -8,7 +8,7 @@ description: >-
   Do NOT use for code review (use genius-reviewer or genius-code-review).
 ---
 
-# Genius Team Optimizer v17.0 — Self-Evolution Engine
+# Genius Team Optimizer v22.0 — Self-Evolution Engine
 
 **The skill that makes all other skills better.**
 
@@ -54,7 +54,7 @@ Append to `.genius/memory/decisions.json`:
 - `postCompactionSections` in all 4 configs reference existing CLAUDE.md headers
 - PostCompact hook fires to reinject anti-drift rules
 - PreCompact hook saves current state, BRIEFING.md, and plan status
-- GENIUS_GUARD.md is up to date with current skill list
+- GENIUS_GUARD.md is aligned with the current skill list
 
 ### Playground Health
 - All playgrounds link to `design-tokens.css`
@@ -67,7 +67,7 @@ Append to `.genius/memory/decisions.json`:
 - `CLAUDE_CODE_EFFORT_LEVEL` set to high
 - `compaction.postCompactionSections` headers exist in CLAUDE.md
 
-Run: `bash scripts/verify.sh` to check 43+ skills are present and correctly configured.
+Run: `bash scripts/verify.sh` to check the v22 skillset and contract are present and correctly configured.
 
 ---
 

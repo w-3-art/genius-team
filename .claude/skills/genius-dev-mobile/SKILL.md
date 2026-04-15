@@ -33,7 +33,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev Mobile v17 — Native Experience Builder
+# Genius Dev Mobile v22 — Native Experience Builder
 
 **One codebase, two platforms, zero compromises.**
 

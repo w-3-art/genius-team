@@ -38,7 +38,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev v17.0 — The Craftsman
+# Genius Dev v22.0 — The Craftsman
 
 **Real artists ship. But they ship when it's insanely great.**
 
@@ -160,7 +160,7 @@ npm run test 2>&1
 ```
 
 ### Phase 4: Document
-Update relevant documentation and PROGRESS.md.
+Update relevant documentation plus the runtime state/session log expected by Genius Team v22.
 
 ---
 
@@ -280,5 +280,5 @@ If `GENIUS_MCP_CODE_MODE=true` is set and a Cloudflare Code Mode MCP server is c
 - [ ] Code compiles/builds without errors
 - [ ] genius-qa-micro ran and passed
 - [ ] Changes committed with descriptive message
-- [ ] PROGRESS.md updated with completed task
+- [ ] `.genius/state.json` and/or `.genius/session-log.jsonl` updated with completed task context
 - [ ] No console.log or debug code left in production paths

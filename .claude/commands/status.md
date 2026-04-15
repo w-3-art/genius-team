@@ -1,61 +1,59 @@
 ---
-description: Show current Genius Team v21.0 project status and progress
+description: Show the canonical GT v22 repo status
 ---
 
 # /status
 
-Show current project status, memory state, and progress.
+Show the current GT repo status from the canonical v22 contract.
 
 ## Execution
 
-### Step 1: Read State & Memory
+### Step 1: Read the canonical state
+
+Run:
+
 ```bash
 cat .genius/state.json 2>/dev/null
+cat .genius/config.json 2>/dev/null
+cat .genius/mode.json 2>/dev/null
+cat .genius/outputs/state.json 2>/dev/null
+```
+
+### Step 2: Read the memory summary
+
+Run:
+
+```bash
 cat .genius/memory/BRIEFING.md 2>/dev/null | head -40
 ```
 
-### Step 2: Check Artifacts
-```bash
-ls -la DISCOVERY.xml MARKET-ANALYSIS.xml SPECIFICATIONS.xml DESIGN-SYSTEM.html ARCHITECTURE.md .claude/plan.md PROGRESS.md 2>/dev/null
-```
+### Step 3: Summarize the repo truthfully
 
-### Step 3: Display Status
+Display:
 
-```
-📊 **Project Status — Genius Team v17.0**
+- install mode
+- engine
+- experience mode
+- phase
+- current skill
+- current workflow
+- origin
+- migration status
+- bootstrap status
+- Cortex-ready status
 
-**Phase:** {Ideation / Execution / Complete}
-**Current Step:** {skill name or "Ready to start"}
+Also show:
 
-**Memory:**
-  • Decisions: {count from decisions.json}
-  • Patterns: {count from patterns.json}
-  • Errors: {count from errors.json}
-  • Session logs: {count}
+- tasks completed / total
+- dashboard path
+- available outputs count if present
 
-**Progress:**
-  Discovery       {✅ | ░░░░}
-  Market Analysis {✅ | ░░░░}
-  Specifications  {✅ | ░░░░}
-  Design          {✅ | ░░░░}
-  Architecture    {✅ | ░░░░}
-  Execution       {XX% | ░░░░}
-  QA              {Pending}
-  Deployment      {Pending}
+### Step 4: Avoid legacy reporting
 
-**Execution Progress:** (if in execution phase)
-  Total: {X} | Done: {Y} ✅ | In Progress: {Z} ⏳ | Remaining: {W}
+Do **not** build status around:
 
-**Mode:** {from .genius/mode.json — beginner/builder/pro/agency}
+- `PROGRESS.md`
+- `.genius/playgrounds/`
+- old v17 wording
 
-**Origin:** {from state.json — native/imported/upgraded}
-
-**Save-Token Mode:** {on/off}
-
-**Next Action:** {context-aware suggestion}
-
----
-
-📊 **Your Dashboard** → `open .genius/DASHBOARD.html`
-   Run `/genius-dashboard` to refresh it with the latest playgrounds.
-```
+The source of truth is `.genius/state.json` plus the companion contract files.

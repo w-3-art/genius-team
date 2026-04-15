@@ -24,7 +24,7 @@ hooks:
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] OMNI-ROUTER: $TOOL_NAME\" >> .genius/omni-router.log 2>/dev/null || true'"
 ---
 
-# Genius Omni Router v17.0 — Multi-Provider Orchestration
+# Genius Omni Router v22.0 — Multi-Provider Orchestration
 
 **Route tasks to the best AI provider. Claude Code leads. Others assist. Graceful fallback always.**
 

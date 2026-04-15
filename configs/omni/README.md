@@ -1,6 +1,6 @@
 # Omni Mode — Multi-Provider Orchestration
 
-**Status:** ✅ Available in Genius Team v9.0
+**Status:** ✅ Available in Genius Team v22.0
 
 ## What Is Omni Mode?
 

@@ -23,9 +23,11 @@ check_freshness() {
 
 # Check each skill's playground freshness
 check_freshness ".genius/discovery/SPECIFICATIONS.xml" ".genius/outputs/specs-playground.html" "genius-specs"
-check_freshness ".genius/discovery/DESIGN-SYSTEM.html" ".genius/outputs/design-playground.html" "genius-designer"
+check_freshness "design-config.json" ".genius/outputs/design-playground.html" "genius-designer"
+check_freshness ".genius/discovery/MARKETING-PLAN.xml" ".genius/outputs/GTM-STRATEGY.html" "genius-marketer"
+check_freshness ".genius/discovery/COPY.xml" ".genius/outputs/COPY-OPTIONS.html" "genius-copywriter"
+check_freshness ".genius/discovery/INTEGRATIONS.xml" ".genius/outputs/STACK-CONFIG.html" "genius-integration-guide"
 check_freshness "ARCHITECTURE.md" ".genius/outputs/architecture-playground.html" "genius-architect"
-check_freshness ".genius/discovery/MARKETING-STRATEGY.xml" ".genius/outputs/marketing-playground.html" "genius-marketer"
 
 if [ "$STALE" -gt 0 ]; then
   echo ""

@@ -1,8 +1,8 @@
-# Genius Team Skills Reference
+# Genius Team Skills Reference (v22.0)
 
 ## Overview
 
-Genius Team v9.0 consists of 21 core skills + 1 updater skill, organized into phases:
+Genius Team v22.0 consists of 54 specialized skills organized into workflow, validation, automation, and support phases:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -59,13 +59,13 @@ User stories, use cases, business rules. **CHECKPOINT: User approval required.**
 2-3 design options. **CHECKPOINT: User must choose.** Output: `DESIGN-SYSTEM.html`, `design-config.json`
 
 ### genius-marketer — Go-to-Market Strategy
-Audience, positioning, channels, launch plan. Output: `MARKETING-STRATEGY.xml`, `TRACKING-PLAN.xml`
+Audience, positioning, channels, launch plan. Output: `MARKETING-PLAN.xml`, `GTM-STRATEGY.html`
 
 ### genius-copywriter — Marketing Copy
-Landing page, emails, UI text, A/B variants. Output: `COPY.md`
+Landing page, emails, UI text, A/B variants. Output: `COPY.xml`, `COPY-OPTIONS.html`
 
 ### genius-integration-guide — Service Setup
-Step-by-step external service configuration. Output: `INTEGRATIONS.md`, `.env.example`
+Step-by-step external service configuration. Output: `INTEGRATIONS.xml`, `.env.example`, `STACK-CONFIG.html`
 
 ### genius-architect — Technical Planning
 Architecture decisions, task decomposition. **CHECKPOINT: User approval required.** Output: `ARCHITECTURE.md`, `.claude/plan.md`

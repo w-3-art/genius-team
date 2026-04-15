@@ -1,148 +1,258 @@
 #!/usr/bin/env bash
-# migrate-state.sh — Detect existing artifacts and populate state.json
-# Part of Genius Team v21.0 — NEVER blocks, always produces valid state
 set -euo pipefail
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+source "$ROOT_DIR/scripts/lib/contract.sh"
+
 STATE=".genius/state.json"
-NOW=$(date -Iseconds 2>/dev/null || date)
+OUTPUT_STATE=".genius/outputs/state.json"
+MODE_FILE=".genius/mode.json"
+CONFIG_FILE=".genius/config.json"
+IMPORT_MODE=false
+ORIGIN=""
+INSTALL_MODE=""
+ENGINE=""
 
-# Ensure .genius directory exists
-mkdir -p .genius
-
-# Detect origin
-ORIGIN="native"
-if [ "${1:-}" = "--imported" ] || [ "${1:-}" = "--import" ]; then
-  ORIGIN="imported"
-elif [ -f "$STATE" ]; then
-  EXISTING_ORIGIN=$(jq -r '.origin // "native"' "$STATE" 2>/dev/null || echo "native")
-  if [ "$EXISTING_ORIGIN" != "native" ]; then
-    ORIGIN="$EXISTING_ORIGIN"
-  else
-    ORIGIN="upgraded"
-  fi
-fi
-
-# Detect mode
-MODE="builder"
-if [ -f ".genius/mode.json" ]; then
-  MODE=$(jq -r '.mode // "builder"' .genius/mode.json 2>/dev/null || echo "builder")
-fi
-
-# Detect phase and checkpoints by scanning for artifacts
-PHASE="NOT_STARTED"
-SKILL="null"
-declare -A CHECKS=(
-  [discovery]=false
-  [market_analysis]=false
-  [specs_approved]=false
-  [design_chosen]=false
-  [marketing_done]=false
-  [integrations_done]=false
-  [architecture_approved]=false
-  [execution_started]=false
-  [qa_passed]=false
-  [security_passed]=false
-  [deployed]=false
-)
-
-# Scan for artifacts in common locations
-find_artifact() {
-  local name="$1"
-  [ -f "$name" ] || [ -f ".genius/discovery/$name" ] || [ -f ".genius/outputs/$name" ]
-}
-
-if find_artifact "DISCOVERY.xml"; then
-  CHECKS[discovery]=true
-  PHASE="IDEATION"
-  SKILL="genius-product-market-analyst"
-fi
-
-if find_artifact "MARKET-ANALYSIS.xml"; then
-  CHECKS[market_analysis]=true
-  PHASE="IDEATION"
-  SKILL="genius-specs"
-fi
-
-if find_artifact "SPECIFICATIONS.xml"; then
-  CHECKS[specs_approved]=true
-  PHASE="IDEATION"
-  SKILL="genius-designer"
-fi
-
-if find_artifact "DESIGN-SYSTEM.html" || find_artifact "design-config.json"; then
-  CHECKS[design_chosen]=true
-  PHASE="IDEATION"
-  SKILL="genius-marketer"
-fi
-
-if find_artifact "ARCHITECTURE.md"; then
-  CHECKS[architecture_approved]=true
-  PHASE="IDEATION"
-  SKILL="genius-orchestrator"
-fi
-
-if [ -f ".claude/plan.md" ]; then
-  TOTAL=$(grep -c "^- \[" .claude/plan.md 2>/dev/null || echo 0)
-  COMPLETED=$(grep -c "^- \[x\]" .claude/plan.md 2>/dev/null || echo 0)
-  if [ "$TOTAL" -gt 0 ]; then
-    CHECKS[execution_started]=true
-    PHASE="EXECUTION"
-    SKILL="genius-orchestrator"
-    if [ "$COMPLETED" -eq "$TOTAL" ] && [ "$TOTAL" -gt 0 ]; then
-      PHASE="COMPLETE"
-      SKILL="genius-qa"
-    fi
-  fi
-fi
-
-# Build artifacts map
-ARTIFACTS="{}"
-for f in DISCOVERY.xml MARKET-ANALYSIS.xml SPECIFICATIONS.xml DESIGN-SYSTEM.html ARCHITECTURE.md; do
-  if [ -f "$f" ]; then
-    ARTIFACTS=$(echo "$ARTIFACTS" | jq --arg k "$f" --arg v "$f" '. + {($k): $v}')
-  elif [ -f ".genius/discovery/$f" ]; then
-    ARTIFACTS=$(echo "$ARTIFACTS" | jq --arg k "$f" --arg v ".genius/discovery/$f" '. + {($k): $v}')
-  fi
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --import|--imported)
+      IMPORT_MODE=true
+      ORIGIN="imported"
+      shift
+      ;;
+    --native)
+      ORIGIN="native"
+      shift
+      ;;
+    --install-mode)
+      INSTALL_MODE="$2"
+      shift 2
+      ;;
+    --engine)
+      ENGINE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
 done
 
-# Build state.json
-cat > "$STATE" << ENDJSON
-{
-  "version": "21.0.0",
-  "phase": "$PHASE",
-  "mode": "$MODE",
-  "origin": "$ORIGIN",
-  "currentSkill": $([ "$SKILL" = "null" ] && echo "null" || echo "\"$SKILL\""),
-  "skillHistory": [],
-  "checkpoints": {
-    "discovery": ${CHECKS[discovery]},
-    "market_analysis": ${CHECKS[market_analysis]},
-    "specs_approved": ${CHECKS[specs_approved]},
-    "design_chosen": ${CHECKS[design_chosen]},
-    "marketing_done": ${CHECKS[marketing_done]},
-    "integrations_done": ${CHECKS[integrations_done]},
-    "architecture_approved": ${CHECKS[architecture_approved]},
-    "execution_started": ${CHECKS[execution_started]},
-    "qa_passed": ${CHECKS[qa_passed]},
-    "security_passed": ${CHECKS[security_passed]},
-    "deployed": ${CHECKS[deployed]}
-  },
-  "tasks": {
-    "total": 0,
-    "completed": 0,
-    "failed": 0,
-    "skipped": 0,
-    "current_task_id": null
-  },
-  "artifacts": $ARTIFACTS,
-  "agentTeams": {
-    "active": false,
-    "leadSessionId": null,
-    "teammates": []
-  },
-  "created_at": "$NOW",
-  "updated_at": "$NOW"
-}
-ENDJSON
+mkdir -p .genius/outputs .genius/memory
 
-echo "State migrated: phase=$PHASE origin=$ORIGIN mode=$MODE"
+detect_install_mode() {
+  if [ -n "$INSTALL_MODE" ]; then
+    echo "$INSTALL_MODE"
+  elif [ -f "$CONFIG_FILE" ]; then
+    jq -r '.installMode // .mode // "cli"' "$CONFIG_FILE" 2>/dev/null || echo "cli"
+  else
+    echo "cli"
+  fi
+}
+
+detect_engine() {
+  if [ -n "$ENGINE" ]; then
+    echo "$ENGINE"
+  elif [ -f "$CONFIG_FILE" ]; then
+    jq -r '.engine // "claude"' "$CONFIG_FILE" 2>/dev/null || echo "claude"
+  else
+    echo "claude"
+  fi
+}
+
+detect_experience_mode() {
+  if [ -f "$MODE_FILE" ]; then
+    jq -r '.mode // "builder"' "$MODE_FILE" 2>/dev/null || echo "builder"
+  else
+    echo "builder"
+  fi
+}
+
+detect_origin() {
+  if [ -n "$ORIGIN" ]; then
+    echo "$ORIGIN"
+  elif [ -f "$STATE" ]; then
+    jq -r '.origin // "upgraded"' "$STATE" 2>/dev/null || echo "upgraded"
+  else
+    echo "upgraded"
+  fi
+}
+
+find_artifact_path() {
+  local name="$1"
+  for candidate in \
+    "$name" \
+    ".genius/discovery/$name" \
+    ".genius/outputs/$name" \
+    ".genius/$name"
+  do
+    if [ -f "$candidate" ]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+artifact_value_or_null() {
+  local artifact
+  artifact="$(find_artifact_path "$1" || true)"
+  if [ -n "$artifact" ]; then
+    printf '%s' "$artifact"
+  else
+    printf ''
+  fi
+}
+
+EXPERIENCE_MODE="$(detect_experience_mode)"
+INSTALL_MODE="$(detect_install_mode)"
+ENGINE="$(detect_engine)"
+ORIGIN="$(detect_origin)"
+
+PHASE="NOT_STARTED"
+CURRENT_SKILL="null"
+CURRENT_WORKFLOW="null"
+BOOTSTRAP_STATUS="not_run"
+MIGRATION_STATUS="native-v22"
+CORTEX_READY="false"
+
+if [ "$IMPORT_MODE" = true ]; then
+  MIGRATION_STATUS="pending-cortex-ready"
+fi
+
+DISCOVERY_PATH="$(artifact_value_or_null "DISCOVERY.xml")"
+MARKET_PATH="$(artifact_value_or_null "MARKET-ANALYSIS.xml")"
+SPECS_PATH="$(artifact_value_or_null "SPECIFICATIONS.xml")"
+DESIGN_HTML_PATH="$(artifact_value_or_null "DESIGN-SYSTEM.html")"
+DESIGN_JSON_PATH="$(artifact_value_or_null "design-config.json")"
+ARCH_PATH="$(artifact_value_or_null "ARCHITECTURE.md")"
+
+DISCOVERY=false
+MARKET=false
+SPECS=false
+DESIGN=false
+ARCH=false
+EXECUTION=false
+
+if [ -n "$DISCOVERY_PATH" ]; then
+  DISCOVERY=true
+  PHASE="DISCOVERY"
+  CURRENT_SKILL='"genius-product-market-analyst"'
+  CURRENT_WORKFLOW='"discovery"'
+fi
+
+if [ -n "$MARKET_PATH" ]; then
+  MARKET=true
+  PHASE="IDEATION"
+  CURRENT_SKILL='"genius-specs"'
+  CURRENT_WORKFLOW='"market-analysis"'
+fi
+
+if [ -n "$SPECS_PATH" ]; then
+  SPECS=true
+  PHASE="IDEATION"
+  CURRENT_SKILL='"genius-designer"'
+  CURRENT_WORKFLOW='"specs"'
+fi
+
+if [ -n "$DESIGN_HTML_PATH" ] || [ -n "$DESIGN_JSON_PATH" ]; then
+  DESIGN=true
+  PHASE="DESIGN"
+  CURRENT_SKILL='"genius-architect"'
+  CURRENT_WORKFLOW='"design"'
+fi
+
+if [ -n "$ARCH_PATH" ]; then
+  ARCH=true
+  PHASE="ARCHITECTURE"
+  CURRENT_SKILL='"genius-orchestrator"'
+  CURRENT_WORKFLOW='"architecture"'
+fi
+
+TOTAL_TASKS=0
+COMPLETED_TASKS=0
+if [ -f ".claude/plan.md" ]; then
+  TOTAL_TASKS=$(grep -c "^- \[" .claude/plan.md 2>/dev/null || echo 0)
+  COMPLETED_TASKS=$(grep -c "^- \[x\]" .claude/plan.md 2>/dev/null || echo 0)
+elif [ -f ".agents/plan.md" ]; then
+  TOTAL_TASKS=$(grep -c "^- \[" .agents/plan.md 2>/dev/null || echo 0)
+  COMPLETED_TASKS=$(grep -c "^- \[x\]" .agents/plan.md 2>/dev/null || echo 0)
+fi
+
+if [ "$TOTAL_TASKS" -gt 0 ]; then
+  EXECUTION=true
+  PHASE="EXECUTION"
+  CURRENT_SKILL='"genius-orchestrator"'
+  CURRENT_WORKFLOW='"execution"'
+fi
+
+if [ -f ".genius/session-log.jsonl" ]; then
+  BOOTSTRAP_STATUS="completed"
+fi
+
+if [ -f "$STATE" ]; then
+  EXISTING_BOOTSTRAP="$(jq -r '.bootstrapStatus // empty' "$STATE" 2>/dev/null || true)"
+  EXISTING_MIGRATION="$(jq -r '.migrationStatus // empty' "$STATE" 2>/dev/null || true)"
+  EXISTING_READY="$(jq -r '.compatibility.cortexReady // empty' "$STATE" 2>/dev/null || true)"
+  [ -n "$EXISTING_BOOTSTRAP" ] && BOOTSTRAP_STATUS="$EXISTING_BOOTSTRAP"
+  [ -n "$EXISTING_MIGRATION" ] && MIGRATION_STATUS="$EXISTING_MIGRATION"
+  [ -n "$EXISTING_READY" ] && CORTEX_READY="$EXISTING_READY"
+fi
+
+gt_write_state_json "$STATE" \
+  "$EXPERIENCE_MODE" \
+  "$INSTALL_MODE" \
+  "$ENGINE" \
+  "$ORIGIN" \
+  "$MIGRATION_STATUS" \
+  "$BOOTSTRAP_STATUS" \
+  "$PHASE" \
+  "$CURRENT_SKILL" \
+  "$CURRENT_WORKFLOW" \
+  "null" \
+  "$CORTEX_READY"
+
+tmp_state="$(mktemp)"
+jq \
+  --argjson discovery "$DISCOVERY" \
+  --argjson market "$MARKET" \
+  --argjson specs "$SPECS" \
+  --argjson design "$DESIGN" \
+  --argjson arch "$ARCH" \
+  --argjson execution "$EXECUTION" \
+  --arg discoveryPath "$DISCOVERY_PATH" \
+  --arg marketPath "$MARKET_PATH" \
+  --arg specsPath "$SPECS_PATH" \
+  --arg designPath "${DESIGN_HTML_PATH:-$DESIGN_JSON_PATH}" \
+  --arg archPath "$ARCH_PATH" \
+  --argjson total "$TOTAL_TASKS" \
+  --argjson completed "$COMPLETED_TASKS" \
+  --arg updatedAt "$(gt_now)" '
+  .checkpoints.discovery = $discovery |
+  .checkpoints.market_analysis = $market |
+  .checkpoints.specs_approved = $specs |
+  .checkpoints.design_chosen = $design |
+  .checkpoints.architecture_approved = $arch |
+  .checkpoints.execution_started = $execution |
+  .tasks.total = $total |
+  .tasks.completed = $completed |
+  .artifacts = (
+    {}
+    + (if $discoveryPath != "" then {"DISCOVERY.xml": $discoveryPath} else {} end)
+    + (if $marketPath != "" then {"MARKET-ANALYSIS.xml": $marketPath} else {} end)
+    + (if $specsPath != "" then {"SPECIFICATIONS.xml": $specsPath} else {} end)
+    + (if $designPath != "" then {"DESIGN-SYSTEM.html": $designPath} else {} end)
+    + (if $archPath != "" then {"ARCHITECTURE.md": $archPath} else {} end)
+  ) |
+  .updated_at = $updatedAt' \
+  "$STATE" > "$tmp_state"
+mv "$tmp_state" "$STATE"
+
+if [ ! -f "$OUTPUT_STATE" ]; then
+  gt_write_outputs_state_json "$OUTPUT_STATE" "$PHASE"
+fi
+
+echo "State migrated: phase=$PHASE origin=$ORIGIN installMode=$INSTALL_MODE engine=$ENGINE"

@@ -21,7 +21,7 @@ echo "Current version: $CURRENT_VER"
 ### Step 2: If Same Version
 
 ```
-✅ Claude Code is up to date: $CURRENT_VER
+✅ Claude Code is aligned: $CURRENT_VER
 No changes needed.
 ```
 

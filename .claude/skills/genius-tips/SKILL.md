@@ -15,7 +15,7 @@ allowed-tools:
   - Glob(*)
 ---
 
-# Genius Tips v21.0 — Contextual Skill Discovery
+# Genius Tips v22.0 — Contextual Skill Discovery
 
 **Shows short, useful tips about Genius Team skills while the user waits. Turns passive waiting time into learning time.**
 
@@ -77,7 +77,7 @@ Keep tips:
 - 💡 Auto Mode is built into all modes. Say "tune auto mode" to adjust what gets auto-approved.
 
 ### General Discovery
-- 💡 There are 51 specialized skills in Genius Team v21. Say "list skills" to see them all.
+- 💡 There are 54 specialized skills in Genius Team v22. Say "list skills" to see them all.
 - 💡 Skills chain automatically: genius-specs → genius-dev → genius-qa-micro → genius-code-review.
 - 💡 Use `/effort low` for quick answers, `/effort high` for deep analysis.
 - 💡 Voice mode works with all skills. Hold spacebar and talk instead of typing.

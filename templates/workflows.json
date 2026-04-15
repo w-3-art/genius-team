@@ -1,0 +1,572 @@
+{
+  "version": "22.0.0",
+  "workflows": {
+    "core": [
+      {
+        "name": "genius-interviewer",
+        "description": "Requirements discovery interview",
+        "category": "core",
+        "prerequisites": [],
+        "outputs": [
+          "DISCOVERY.xml"
+        ],
+        "next_workflow": "genius-product-market-analyst",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-product-market-analyst",
+        "description": "Market validation and competitive analysis",
+        "category": "core",
+        "prerequisites": [
+          "DISCOVERY.xml"
+        ],
+        "outputs": [
+          "MARKET-ANALYSIS.xml"
+        ],
+        "next_workflow": "genius-specs",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-specs",
+        "description": "Formal product specifications",
+        "category": "core",
+        "prerequisites": [
+          "MARKET-ANALYSIS.xml"
+        ],
+        "outputs": [
+          "SPECIFICATIONS.xml"
+        ],
+        "next_workflow": "genius-designer",
+        "checkpoint": "user_approval"
+      },
+      {
+        "name": "genius-designer",
+        "description": "Brand and design system creation",
+        "category": "core",
+        "prerequisites": [
+          "SPECIFICATIONS.xml"
+        ],
+        "outputs": [
+          "DESIGN-SYSTEM.html",
+          "design-config.json"
+        ],
+        "next_workflow": "genius-marketer",
+        "checkpoint": "user_choice"
+      },
+      {
+        "name": "genius-marketer",
+        "description": "Go-to-market strategy",
+        "category": "core",
+        "prerequisites": [
+          "DESIGN-SYSTEM.html"
+        ],
+        "outputs": [
+          "MARKETING-PLAN.xml",
+          "GTM-STRATEGY.html"
+        ],
+        "next_workflow": "genius-copywriter",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-copywriter",
+        "description": "Marketing and product copy",
+        "category": "core",
+        "prerequisites": [
+          "MARKETING-PLAN.xml"
+        ],
+        "outputs": [
+          "COPY.xml",
+          "COPY-OPTIONS.html"
+        ],
+        "next_workflow": "genius-integration-guide",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-integration-guide",
+        "description": "Service integration setup guides",
+        "category": "core",
+        "prerequisites": [
+          "SPECIFICATIONS.xml",
+          "COPY.xml"
+        ],
+        "outputs": [
+          "INTEGRATIONS.xml",
+          ".env.example",
+          "STACK-CONFIG.html"
+        ],
+        "next_workflow": "genius-architect",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-architect",
+        "description": "Technical architecture and stack decisions",
+        "category": "core",
+        "prerequisites": [
+          "SPECIFICATIONS.xml",
+          "INTEGRATIONS.xml"
+        ],
+        "outputs": [
+          "ARCHITECTURE.md",
+          ".claude/plan.md"
+        ],
+        "next_workflow": "genius-orchestrator",
+        "checkpoint": "user_approval"
+      },
+      {
+        "name": "genius-orchestrator",
+        "description": "Autonomous execution coordinator",
+        "category": "core",
+        "prerequisites": [
+          "ARCHITECTURE.md",
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-dev",
+        "description": "Smart coding dispatcher",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
+        "name": "genius-dev-frontend",
+        "description": "React/Vue/Svelte frontend development",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
+        "name": "genius-dev-backend",
+        "description": "API/auth/middleware backend development",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
+        "name": "genius-dev-mobile",
+        "description": "React Native/Expo mobile development",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
+        "name": "genius-dev-database",
+        "description": "Schema design and migrations",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
+        "name": "genius-dev-api",
+        "description": "Third-party API integrations",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
+        "name": "genius-template",
+        "description": "Project template bootstrapper",
+        "category": "core",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": "genius-interviewer",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-import",
+        "description": "Import existing project into Genius Team",
+        "category": "core",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      }
+    ],
+    "quality": [
+      {
+        "name": "genius-qa-micro",
+        "description": "Quick per-task validation",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-qa",
+        "description": "Full quality audit",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [
+          "AUDIT-REPORT.md",
+          "CORRECTIONS.xml"
+        ],
+        "next_workflow": "genius-security",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-code-review",
+        "description": "Multi-agent PR code review",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-security",
+        "description": "OWASP security audit",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [
+          "SECURITY-AUDIT.md"
+        ],
+        "next_workflow": "genius-deployer",
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-reviewer",
+        "description": "Single-agent code review",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-debugger",
+        "description": "Error diagnosis and fixing",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-test-assistant",
+        "description": "Manual testing guide",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-ui-tester",
+        "description": "Visual UI testing via Computer Use",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-guard-pre-planning",
+        "description": "Pre-planning guard checklist",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-guard-pre-coding",
+        "description": "Pre-coding guard checklist",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-guard-pre-deploy",
+        "description": "Pre-deploy guard checklist",
+        "category": "quality",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      }
+    ],
+    "growth": [
+      {
+        "name": "genius-seo",
+        "description": "GEO-first SEO optimization",
+        "category": "growth",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-analytics",
+        "description": "Analytics setup and event tracking",
+        "category": "growth",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-performance",
+        "description": "Web performance optimization",
+        "category": "growth",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-accessibility",
+        "description": "WCAG 2.2 AA compliance",
+        "category": "growth",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-content",
+        "description": "Content creation (blog, newsletter, social)",
+        "category": "growth",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-i18n",
+        "description": "Internationalization and translations",
+        "category": "growth",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      }
+    ],
+    "business": [
+      {
+        "name": "genius-product-market-analyst",
+        "description": "Market research and business strategy",
+        "category": "business",
+        "prerequisites": [],
+        "outputs": [
+          "MARKET-ANALYSIS.xml"
+        ],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-crypto",
+        "description": "Web3 and blockchain analysis",
+        "category": "business",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      }
+    ],
+    "infra": [
+      {
+        "name": "genius-deployer",
+        "description": "Deployment and CI/CD",
+        "category": "infra",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-ci",
+        "description": "CI/CD pipeline setup",
+        "category": "infra",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-scheduler",
+        "description": "Recurring task configuration",
+        "category": "infra",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-experiments",
+        "description": "Autonomous optimization loop",
+        "category": "infra",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-docs",
+        "description": "Technical documentation",
+        "category": "infra",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      }
+    ],
+    "meta": [
+      {
+        "name": "genius-memory",
+        "description": "Project memory management",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-start",
+        "description": "Session initialization",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-updater",
+        "description": "Version tracking and updates",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-team-optimizer",
+        "description": "Team performance analysis",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-onboarding",
+        "description": "First-time setup wizard",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-tips",
+        "description": "Contextual skill discovery",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-skill-creator",
+        "description": "Creates project-specific skills",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-team",
+        "description": "Main intelligent router",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-auto",
+        "description": "Auto Mode configuration",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-evolution",
+        "description": "Self-evolving learning system",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-autoresearch",
+        "description": "Autonomous optimization loop",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-playground-generator",
+        "description": "Interactive playground generation",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-omni-router",
+        "description": "Omni mode router",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      },
+      {
+        "name": "genius-dual-engine",
+        "description": "Dual engine mode",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [],
+        "next_workflow": null,
+        "checkpoint": "auto"
+      }
+    ]
+  }
+}

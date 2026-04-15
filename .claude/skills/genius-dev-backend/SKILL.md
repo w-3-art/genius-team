@@ -32,7 +32,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev Backend v17 — API Architect
+# Genius Dev Backend v22 — API Architect
 
 **Reliable, secure, fast APIs. Build the server layer the frontend deserves.**
 

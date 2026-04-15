@@ -28,7 +28,7 @@ hooks:
       once: true
 ---
 
-# Genius Playground Generator v17 — Context-Aware Dashboards
+# Genius Playground Generator v22 — Context-Aware Dashboards
 
 **Not templates. Real project data. Real insights.**
 

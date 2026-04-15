@@ -26,7 +26,7 @@ hooks:
       once: true
 ---
 
-# Genius Reviewer v17.0 — Code Quality Guardian
+# Genius Reviewer v22.0 — Code Quality Guardian
 
 **Your code tells a story. I make sure it's a good one.**
 
@@ -64,7 +64,7 @@ Append to `.genius/memory/patterns.json` if new patterns discovered:
 ```markdown
 # Code Review: [File/Feature Name]
 Date: YYYY-MM-DD
-Reviewer: Genius Reviewer v17.0
+Reviewer: Genius Reviewer v22.0
 
 ## Score: XX/100
 | Dimension | Score | Notes |

@@ -26,7 +26,7 @@ allowed-tools:
   - Bash(jq *)
 ---
 
-# Genius CI v20.0 — CI/CD with Claude Code Bare Mode
+# Genius CI v22.0 — CI/CD with Claude Code Bare Mode
 
 **Automated CI pipelines using `claude --bare`. GitHub Actions workflows, PR auto-review, quality gates.**
 

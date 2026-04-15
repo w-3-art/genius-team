@@ -1,4 +1,4 @@
-# Genius Team v21.0
+# Genius Team v22.0
 
 [![Version](https://img.shields.io/badge/version-21.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -21,7 +21,7 @@
 - 84% bug detection rate on PR reviews (3 parallel reviewers)
 - Overnight autonomous code optimization via autoresearch loops
 
-## What's New in v21.0
+## What's New in v22.0
 
 - **Mode System** — `/genius-mode` switches between beginner, builder, pro, and agency modes. Each adjusts validation strictness, explanation verbosity, and checkpoint behavior.
 - **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 54 skills. Prerequisites, outputs, categories.
@@ -106,7 +106,7 @@ You can still open Claude Code or Codex and use slash commands as before.
 bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)
 ```
 
-The script auto-detects your current version and upgrades to v21. Your `.genius/memory/` data is preserved.
+The script auto-detects your current version and upgrades to v22. Your `.genius/memory/` data is preserved.
 
 ---
 
@@ -279,4 +279,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-**Built with Genius Team v21.0** — Agent Orchestration, File-Based Memory, Interactive Playgrounds
+**Built with Genius Team v22.0** — Agent Orchestration, File-Based Memory, Interactive Playgrounds

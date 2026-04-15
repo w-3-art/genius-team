@@ -1,74 +1,61 @@
 ---
-description: Resume Genius Team v21.0 project from where it was left off
+description: Resume a GT v22 repo from the canonical state instead of legacy progress files
 ---
 
 # /continue
 
-Resume project from last known state.
+Resume work from the current GT v22 contract.
 
 ## Execution
 
-### Step 1: Load Context
+### Step 1: Read the actual repo state
+
+Run:
 
 ```bash
 cat .genius/state.json 2>/dev/null
 cat .genius/memory/BRIEFING.md 2>/dev/null | head -40
-cat PROGRESS.md 2>/dev/null | head -50
+test -f .claude/plan.md && head -60 .claude/plan.md
+test -f .agents/plan.md && head -60 .agents/plan.md
+tail -20 .genius/session-log.jsonl 2>/dev/null
 ```
 
-### Step 1b: Session Recovery
+### Step 2: If state looks stale, recover
 
-If state seems stale or inconsistent, try session recovery:
+Run:
+
 ```bash
 bash scripts/session-recover.sh 2>/dev/null || true
 ```
 
-### Step 2: Determine Resume Point
+Then re-read `.genius/state.json`.
 
-Based on `.genius/state.json`:
+### Step 3: Determine the actual resume point
 
-| Phase | Action |
-|-------|--------|
-| NOT_STARTED | Start genius-interviewer |
-| IDEATION + genius-interviewer | Resume interview |
-| IDEATION + genius-specs | Check if awaiting approval |
-| IDEATION + genius-designer | Check if awaiting choice |
-| IDEATION + genius-architect | Check if awaiting approval |
-| EXECUTION | Resume genius-orchestrator from plan.md |
-| COMPLETE | Show completion summary |
+Use:
 
-### Step 3: Resume
+- `phase`
+- `currentSkill`
+- `currentWorkflow`
+- `bootstrapStatus`
+- plan file if execution has started
 
-**If IDEATION**: Load the appropriate skill and continue.
+### Step 4: Resume truthfully
 
-**If EXECUTION**: Read plan.md, find next `[ ]` or `[~]` task, invoke genius-orchestrator.
+If:
 
-**If COMPLETE**: Offer next steps (deploy, QA, security audit, new feature).
+- `phase = NOT_STARTED` -> tell the user to run `/genius-start`
+- ideation phase -> continue from the current skill
+- execution phase -> resume from the next unchecked task in plan
+- complete phase -> summarize and offer deployment / QA / follow-up work
 
-### Step 4: Log Resume
+### Step 5: Suggest dashboard refresh only if it makes sense
 
-Append to `.genius/memory/decisions.json`:
-```json
-{"id": "d-XXX", "decision": "SESSION RESUMED: Phase=[phase] Skill=[skill]", "reason": "user requested /continue", "timestamp": "ISO-date", "tags": ["session", "resume"]}
+If runtime outputs exist or changed materially, suggest:
+
+```text
+Run /genius-dashboard to refresh the project dashboard from .genius/outputs/.
 ```
 
----
-
-## Step 5: Playground Update Suggestion
-
-After resuming, check if a playground update would be valuable:
-
-```bash
-# Check last playground update
-last_pg=$(cat .genius/playground.log 2>/dev/null | tail -1 | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}" || echo "never")
-phase=$(cat .genius/state.json 2>/dev/null | python3 -c "import json,sys; print(json.load(sys.stdin).get('currentPhase',''))" 2>/dev/null || echo "")
-```
-
-**Show this suggestion if** the project is past Interview phase AND at least one of these files exists:
-`SPECIFICATIONS.xml`, `MARKET-ANALYSIS.xml`, `ARCHITECTURE.md`, `.claude/plan.md`, `.genius/seo-report.md`
-
-```
-🎮 Your playgrounds may be out of date.
-   Run /playground-update to sync templates with your current project data,
-   and discover which new playgrounds would be most useful right now.
-```
+Do not mention `.genius/playgrounds/`.
+Do not use `PROGRESS.md` as the main resume source.

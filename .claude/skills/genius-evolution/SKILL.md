@@ -21,7 +21,7 @@ allowed-tools:
   - Bash(tail *)
 ---
 
-# Genius Evolution v21.0 — Self-Evolving Learning System
+# Genius Evolution v22.0 — Self-Evolving Learning System
 
 **Genius Team gets smarter every session. Corrections become rules. Rules get verified. The system evolves.**
 
@@ -133,7 +133,7 @@ Before session ends, write a scorecard to `.genius/memory/sessions.jsonl`:
 
 Trend analysis:
 - If `corrections_received` increasing over 3+ sessions → rules aren't preventing mistakes → flag for review
-- If `rules_failed` consistently > 0 for same rule → rule may be outdated → flag for pruning
+- If `rules_failed` consistently > 0 for same rule → rule may be obsolete → flag for pruning
 - If `rules_passed` consistently 100% for 10+ sessions → rules are stable → candidates for graduation
 
 ### Layer 5: Evolution Audit (/genius-evolve)

@@ -57,7 +57,7 @@ hooks:
 
 ---
 
-# Genius Orchestrator v17.0 — Agent Teams Execution Engine
+# Genius Orchestrator v22.0 — Agent Teams Execution Engine
 
 **Build while you sleep. Agent Teams. Mandatory QA. No pauses.**
 
@@ -89,11 +89,11 @@ Maintain `playgrounds/templates/progress-dashboard.html` as `.genius/outputs/PRO
 
 ## CRITICAL: NEVER STOP RULE
 
-**AUTONOMOUS EXECUTION**: Never pause, never ask "should I proceed?", never wait for confirmation. Continue to next task immediately. Handle errors (retry 3x). Run genius-qa-micro after EVERY task. Update PROGRESS.md after each task. Report progress every 5 tasks.
+**AUTONOMOUS EXECUTION**: Never pause, never ask "should I proceed?", never wait for confirmation. Continue to next task immediately. Handle errors (retry 3x). Run genius-qa-micro after EVERY task. Update `.genius/state.json` and append to `.genius/session-log.jsonl` after each task. Report progress every 5 tasks.
 
 **ONLY STOP when**: (1) ALL tasks `[x]` complete, (2) user says STOP/PAUSE, (3) critical system error.
 
-**STATE CHECK every 5 tasks**: Verify `.genius/state.json` matches `PROGRESS.md` task counts. If mismatch, reconcile from PROGRESS.md (source of truth). Log discrepancies to `.genius/orchestrator.log`.
+**STATE CHECK every 5 tasks**: Verify `.genius/state.json` matches `.claude/plan.md` / `.agents/plan.md` task counts. If mismatch, reconcile from the plan file (source of truth). Log discrepancies to `.genius/orchestrator.log`.
 
 ---
 
@@ -163,7 +163,7 @@ Task markers:
 
 ### Sync-Back Protocol
 
-Before a task starts, move it to `[~]` in `.claude/plan.md`. After implementation plus QA pass, mark it `[x]` and append the completion to `PROGRESS.md`. After 3 failed attempts, mark it `[!]`.
+Before a task starts, move it to `[~]` in `.claude/plan.md`. After implementation plus QA pass, mark it `[x]`, update `.genius/state.json`, and append a completion event to `.genius/session-log.jsonl`. After 3 failed attempts, mark it `[!]`.
 
 ---
 
@@ -174,7 +174,7 @@ For each incomplete task:
 2. Delegate implementation with the most specific dev sub-skill.
 3. If implementation or QA fails, use `genius-debugger` and retry up to 3 times.
 4. Run `genius-qa-micro` before completion is allowed.
-5. Mark success as `[x]`, update `PROGRESS.md`, and append memory progress.
+5. Mark success as `[x]`, update `.genius/state.json`, and append memory/session progress.
 6. Every 5 tasks, run `genius-reviewer`.
 7. Continue immediately unless the user says `STOP`/`PAUSE` or a critical system error occurs.
 
@@ -205,14 +205,14 @@ Task(
 
 ## Completion Protocol
 
-When all tasks are done, mark `PROGRESS.md` complete with totals, surface skipped items, and point the user to the next sequence: full QA, security audit, then deploy. Always mention `.genius/DASHBOARD.html`.
+When all tasks are done, update `.genius/state.json` with final task totals, surface skipped items, and point the user to the next sequence: full QA, security audit, then deploy. Always mention `.genius/DASHBOARD.html`.
 
 ---
 
 ## Handoffs
 
 - From `genius-architect`: read `.claude/plan.md`, `ARCHITECTURE.md`, and approval state before starting.
-- To `genius-qa`: provide the `PROGRESS.md` summary, implemented files, and any skipped tasks.
+- To `genius-qa`: provide the plan summary, implemented files, and any skipped tasks.
 
 ---
 
@@ -235,7 +235,7 @@ When all tasks are done, mark `PROGRESS.md` complete with totals, surface skippe
 ## Definition of Done
 
 - [ ] All plan.md tasks marked `[x]` complete
-- [ ] PROGRESS.md reflects 100% completion
-- [ ] State.json matches PROGRESS.md (consistency verified)
+- [ ] `.genius/state.json` reflects 100% completion
+- [ ] State.json matches plan.md task counts (consistency verified)
 - [ ] Sprint summary report generated
 - [ ] No blocked tasks remaining

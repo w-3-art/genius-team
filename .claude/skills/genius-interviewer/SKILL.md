@@ -22,7 +22,7 @@ hooks:
 ## ⚠️ MANDATORY ARTIFACT
 
 **This skill MUST generate:**
-- XML: `.claude/discovery/DISCOVERY.xml`
+- XML: `.genius/discovery/DISCOVERY.xml`
 - Unified State: `.genius/outputs/state.json` (with `phases.discovery` populated)
 
 **Before transitioning to next skill:**
@@ -144,7 +144,7 @@ Summarize understanding and confirm.
 
 ## Output: DISCOVERY.xml
 
-Generate `.claude/discovery/DISCOVERY.xml` with full structured output including:
+Generate `.genius/discovery/DISCOVERY.xml` with full structured output including:
 - Executive summary
 - Problem space
 - Users/personas
@@ -167,7 +167,7 @@ Dashboard reads `.genius/outputs/state.json`. Key fields: `projectName`, `curren
 
 Always generate BOTH outputs at the end:
 1. `.genius/outputs/state.json` — Unified state for the project dashboard
-2. `.claude/discovery/DISCOVERY.xml` — Structured XML for agent handoffs
+2. `.genius/discovery/DISCOVERY.xml` — Structured XML for agent handoffs
 
 The **unified dashboard** shows all phases. User can navigate between them as the project progresses.
 
@@ -179,10 +179,10 @@ The **unified dashboard** shows all phases. User can navigate between them as th
 Receives: User profile, initial project idea
 
 ### To: genius-product-market-analyst
-Provides: DISCOVERY.xml with full context
+Provides: `.genius/discovery/DISCOVERY.xml` with full context
 
 ### To: genius-specs (if market analysis skipped)
-Provides: DISCOVERY.xml, user context, constraints
+Provides: `.genius/discovery/DISCOVERY.xml`, user context, constraints
 
 ---
 

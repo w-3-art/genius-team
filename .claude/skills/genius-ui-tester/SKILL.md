@@ -26,7 +26,7 @@ allowed-tools:
   - computer(*)
 ---
 
-# Genius UI Tester v20.0 — Visual Testing with Computer Use
+# Genius UI Tester v22.0 — Visual Testing with Computer Use
 
 **Uses Claude Code Computer Use to visually test UIs. Screenshots, layout validation, responsive checks, and visual bug reports.**
 

@@ -1,0 +1,58 @@
+{
+  "voice": {
+    "tone": [
+      "calm",
+      "precise",
+      "warm",
+      "technical",
+      "truthful"
+    ],
+    "rules": [
+      "Prefer concrete labels over hype.",
+      "Explain what the product does, not what it dreams of doing.",
+      "Use the same term for the same concept everywhere.",
+      "Keep Cortex as a control tower, not a primary builder."
+    ]
+  },
+  "brand": {
+    "productName": "Genius Team",
+    "ecosystemName": "Genius Cortex",
+    "tagline": "Warm control for serious builders.",
+    "heroLines": [
+      "Build in the repo.",
+      "Coordinate across repos.",
+      "Keep the intelligence visible."
+    ]
+  },
+  "siteLabels": {
+    "ctaPrimary": "Start Building",
+    "ctaSecondary": "See the system",
+    "siteSection": "Genius Team / Cortex ecosystem"
+  },
+  "intelligenceLabels": {
+    "behavior": "Behaviors",
+    "rules": "Rules",
+    "memoryBits": "Memory Bits",
+    "personas": "Personas",
+    "codeBits": "Code Bits",
+    "glossary": "Glossary"
+  },
+  "copyRules": {
+    "avoid": [
+      "generic AI hype",
+      "purple-first styling",
+      "overstated automation claims",
+      "launcher language for Cortex",
+      "confusing artifact names"
+    ],
+    "prefer": [
+      "shared language",
+      "provenance",
+      "scope",
+      "diffusion",
+      "portfolio view",
+      "truthful calls to action"
+    ]
+  }
+}
+

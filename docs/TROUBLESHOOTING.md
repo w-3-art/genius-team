@@ -43,7 +43,8 @@ bash scripts/setup.sh
 ### 4. Execution Stops Unexpectedly
 
 ```bash
-cat PROGRESS.md
+cat .genius/state.json
+tail -n 40 .genius/session-log.jsonl
 grep -c "\[ \]" .claude/plan.md  # Remaining tasks
 ```
 

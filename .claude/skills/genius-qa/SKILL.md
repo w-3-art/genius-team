@@ -55,7 +55,7 @@ Update state.json with:
 
 ---
 
-# Genius QA v17.0 — The Quality Guardian
+# Genius QA v22.0 — The Quality Guardian
 
 **Quality is not an act, it is a habit.**
 
@@ -120,7 +120,7 @@ Append to `.genius/memory/decisions.json`:
 ## Handoffs
 
 ### From genius-orchestrator
-Receives: PROGRESS.md, all implemented files
+Receives: `.claude/plan.md` / `.agents/plan.md`, `.genius/state.json`, and all implemented files
 
 ### To genius-dev
 Provides: CORRECTIONS.xml with prioritized fix prompts

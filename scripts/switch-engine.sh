@@ -41,6 +41,24 @@ detect_current_engine() {
   fi
 }
 
+update_engine_metadata() {
+  local engine="$1"
+  local ts
+  ts="$(date -Iseconds)"
+
+  if [ -f "$STATE_FILE" ]; then
+    jq --arg engine "$engine" --arg ts "$ts" \
+      '.engine = $engine | .engineSwitchedAt = $ts' \
+      "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+  fi
+
+  if [ -f "$GENIUS_DIR/config.json" ]; then
+    jq --arg engine "$engine" --arg ts "$ts" \
+      '.engine = $engine | .updated_at = $ts' \
+      "$GENIUS_DIR/config.json" > "$GENIUS_DIR/config.json.tmp" && mv "$GENIUS_DIR/config.json.tmp" "$GENIUS_DIR/config.json"
+  fi
+}
+
 CURRENT_ENGINE=$(detect_current_engine)
 log_info "Current engine: $CURRENT_ENGINE"
 
@@ -82,7 +100,7 @@ log_info "Backup saved to $BACKUP_DIR"
 switch_to_claude() {
   log_info "Configuring for Claude Code..."
 
-  # CLAUDE.md: ensure it exists and is up to date
+  # CLAUDE.md: ensure it exists and is aligned with the active engine
   if [ ! -f "CLAUDE.md" ]; then
     log_warn "No CLAUDE.md found. Generating from AGENTS.md..."
     if [ -f "AGENTS.md" ]; then
@@ -101,11 +119,7 @@ switch_to_claude() {
   fi
 
   # Update state
-  if [ -f "$STATE_FILE" ]; then
-    jq --arg engine "claude" --arg ts "$(date -Iseconds)" \
-      '.engine = $engine | .engineSwitchedAt = $ts' \
-      "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-  fi
+  update_engine_metadata "claude"
 }
 
 # Switch to codex
@@ -117,7 +131,7 @@ switch_to_codex() {
     log_info "Generating AGENTS.md from CLAUDE.md..."
     sed 's/CLAUDE\.md/AGENTS.md/g; s/claude code/codex/gi; s/Claude Code/Codex/g' CLAUDE.md > AGENTS.md
     # Add Codex-specific header
-    sed -i.bak '1s/^/# AGENTS.md — Genius Team v21.0 (Codex Engine)\n# Auto-generated from CLAUDE.md via genius-switch-engine\n# Do not edit manually — use \/genius-switch-engine to maintain\n\n/' AGENTS.md
+    sed -i.bak '1s/^/# AGENTS.md — Genius Team v22.0 (Codex Engine)\n# Auto-generated from CLAUDE.md via genius-switch-engine\n# Do not edit manually — use \/genius-switch-engine to maintain\n\n/' AGENTS.md
     rm -f AGENTS.md.bak
     log_ok "AGENTS.md generated"
   else
@@ -146,11 +160,7 @@ switch_to_codex() {
   fi
 
   # Update state
-  if [ -f "$STATE_FILE" ]; then
-    jq --arg engine "codex" --arg ts "$(date -Iseconds)" \
-      '.engine = $engine | .engineSwitchedAt = $ts' \
-      "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-  fi
+  update_engine_metadata "codex"
 }
 
 # Switch to dual
@@ -173,11 +183,7 @@ switch_to_dual() {
   echo "  Command: /challenge (works in both terminals)"
 
   # Update state
-  if [ -f "$STATE_FILE" ]; then
-    jq --arg engine "dual" --arg ts "$(date -Iseconds)" \
-      '.engine = $engine | .engineSwitchedAt = $ts' \
-      "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-  fi
+  update_engine_metadata "dual"
 }
 
 # Execute switch

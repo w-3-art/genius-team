@@ -1,11 +1,11 @@
-# Genius Team v9.0 — Cursor Rules
+# Genius Team v22.0 — Cursor Rules
 
 ## Project Context
 Read `CLAUDE.md` at the project root for full instructions and conventions.
 
 ## Genius Team Conventions
-- This project uses **Genius Team v9.0**, a structured AI product team framework
-- 21+ specialized skills live in `.claude/skills/` — each has a `SKILL.md`
+- This project uses **Genius Team v22.0**, a structured AI product team framework
+- 54 specialized skills live in `.claude/skills/` — each has a `SKILL.md`
 - Subagent definitions are in `.claude/agents/`
 - Slash commands are in `.claude/commands/`
 
@@ -24,7 +24,8 @@ Read `CLAUDE.md` at the project root for full instructions and conventions.
 ## Task Tracking
 - Tasks live in `.claude/plan.md` (checkbox format)
 - State is tracked in `.genius/state.json`
-- Progress summaries go in `PROGRESS.md`
+- Session history lives in `.genius/session-log.jsonl`
+- Output summaries live in `.genius/outputs/state.json`
 
 ## Key Rules
 - Every code change must pass QA (Dev → QA-micro → Fix → Re-QA → ✅)

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Genius Team v21 — Plan v2 (post-feedback)</title>
+<title>Genius Team v22 — Plan v2 (post-feedback)</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0f;color:#e8e4df;font-family:'DM Sans',system-ui,sans-serif;padding:1.5rem;max-width:1000px;margin:0 auto}
@@ -54,7 +54,7 @@ h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#D4A574,#B
 </head>
 <body>
 
-<h1>🧠 Genius Team v21 — Plan v2 (post-feedback Ben)</h1>
+<h1>🧠 Genius Team v22 — Plan v2 (post-feedback Ben)</h1>
 <p class="sub">Intégrant tous les retours de Ben du 29/03. Items corrigés marqués <span class="tag tag-fixed">CORRIGÉ</span></p>
 
 <div class="positioning">
@@ -602,7 +602,7 @@ qs('[data-task]').forEach(cb=>{cb.addEventListener('change',function(){this.clos
 qs('[data-task-comment]').forEach(t=>t.addEventListener('input',upd));
 upd();
 function exportPlan(){
-let o='# Plan Genius Team v21 — Validation v2\n\nDate: '+new Date().toISOString()+'\n\n';
+let o='# Plan Genius Team v22 — Validation v2\n\nDate: '+new Date().toISOString()+'\n\n';
 qs('[data-section]').forEach(t=>{if(t.value.trim())o+=`## ${t.dataset.section}\n${t.value.trim()}\n\n`});
 o+='## Tâches\n\n| # | Status | Tâche | Commentaire |\n|---|--------|-------|-------------|\n';
 qs('.item').forEach(row=>{
@@ -614,7 +614,7 @@ o+=`| ${id} | ${cb?.checked?'✅':'⬜'} | ${nm} | ${cm} |\n`;
 });
 const b=new Blob([o],{type:'text/markdown'});
 const u=URL.createObjectURL(b);
-const a=document.createElement('a');a.href=u;a.download='genius-team-v21-validated-v2.md';a.click();
+const a=document.createElement('a');a.href=u;a.download='genius-team-v22-validated-v2.md';a.click();
 }
 </script>
 </body>

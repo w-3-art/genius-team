@@ -1,8 +1,8 @@
-# Claude Code + Opus 4 Features Used in Genius Team v9.0
+# Claude Code + Opus 4 Features Used in Genius Team v22.0
 
 ## Overview
 
-Genius Team v9.0 is built on Claude Code's latest features, with Opus 4 as the default model for all roles.
+Genius Team v22.0 is built on Claude Code's latest features, with Opus 4 as the default model for all roles.
 
 ---
 

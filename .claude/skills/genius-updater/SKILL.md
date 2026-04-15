@@ -19,7 +19,7 @@ allowed-tools:
   - Bash(curl *)
 ---
 
-# Genius Updater v17.0 — Self-Update Protocol
+# Genius Updater v22.0 — Self-Update Protocol
 
 **Keep your repo in sync with Claude Code AND Genius Team evolution.**
 
@@ -96,7 +96,7 @@ fi
 ```
 🔄 Update Check
 
-Claude Code: v1.0.50 ✅ (up to date)
+Claude Code: v1.0.50 ✅ (aligned)
 
 Genius Team: v13.0.0 → v14.0.0 available! 🆕
 What's new:
@@ -107,14 +107,14 @@ What's new:
 Run /genius-upgrade to update.
 ```
 
-If both are up-to-date:
+If both are aligned:
 ```
 🔄 Update Check
 
-Claude Code: v1.0.50 ✅ (up to date)
-Genius Team: v14.0.0 ✅ (up to date)
+Claude Code: v1.0.50 ✅ (aligned)
+Genius Team: v22.0.0 ✅ (aligned)
 
-Everything is up to date! 🎉
+Everything is aligned! 🎉
 ```
 
 ---

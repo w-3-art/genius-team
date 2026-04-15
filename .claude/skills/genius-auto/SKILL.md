@@ -20,7 +20,7 @@ allowed-tools:
   - Bash(cat *)
 ---
 
-# Genius Auto v20.0 — Auto Mode Tuning
+# Genius Auto v22.0 — Auto Mode Tuning
 
 **Tunes Auto Mode safety profiles within your current mode. Auto Mode is ON by default in all modes — this skill adjusts how aggressive it is.**
 

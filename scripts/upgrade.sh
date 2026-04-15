@@ -1,7 +1,7 @@
 #!/bin/bash
 #═══════════════════════════════════════════════════════════════════════════════
 # Genius Team Universal Upgrade Script
-# Upgrades from any previous version to v20.0
+# Upgrades from any previous version to v22.0.0
 #═══════════════════════════════════════════════════════════════════════════════
 
 set -e
@@ -17,13 +17,43 @@ NC='\033[0m'
 
 # Config
 REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
-TARGET_VERSION="21.0.0"
+TARGET_VERSION="22.0.0"
 CLAUDE_SKILL_DIR=".claude/skills"
+LOCAL_SOURCE_ROOT=""
+USE_LOCAL_SOURCE=false
 
-# ── Self-Healing: re-exec from GitHub if this script is outdated ─────────────
+resolve_local_source() {
+  if [ -n "${GENIUS_TEAM_SOURCE_DIR:-}" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/VERSION" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/scripts/setup.sh" ]; then
+    printf '%s' "$GENIUS_TEAM_SOURCE_DIR"
+    return 0
+  fi
+
+  case "${BASH_SOURCE[0]}" in
+    /dev/fd/*|/proc/self/fd/*) return 1 ;;
+  esac
+
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -f "${script_dir}/../VERSION" ] && [ -f "${script_dir}/setup.sh" ]; then
+    (cd "${script_dir}/.." && pwd)
+    return 0
+  fi
+
+  return 1
+}
+
+if LOCAL_SOURCE_ROOT="$(resolve_local_source)"; then
+  USE_LOCAL_SOURCE=true
+  REPO_URL="$LOCAL_SOURCE_ROOT"
+fi
+
+# ── Self-Healing: re-exec from GitHub if this script is older than the source ─
 # This runs even when the local upgrade.sh targets an old version
-_REMOTE_VER=$(curl -sfL --max-time 5 "https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION" 2>/dev/null || echo "")
-if [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$TARGET_VERSION" ]; then
+_REMOTE_VER=""
+if [ "$USE_LOCAL_SOURCE" = false ]; then
+  _REMOTE_VER=$(curl -sfL --max-time 5 "https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION" 2>/dev/null || echo "")
+fi
+if [ "$USE_LOCAL_SOURCE" = false ] && [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$TARGET_VERSION" ]; then
   echo -e "⚠️  This upgrade script targets v$TARGET_VERSION but latest Genius Team is v$_REMOTE_VER."
   echo -e "   Fetching the latest upgrade script from GitHub..."
   echo ""
@@ -46,7 +76,7 @@ FILES_SKIPPED=0
 print_banner() {
   echo ""
   echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v21.0${NC}                           ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}  ${BOLD}🚀 Genius Team Upgrade → v22.0${NC}                           ${CYAN}║${NC}"
   echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
 }
@@ -67,7 +97,7 @@ show_usage() {
   echo "  --verbose   Show detailed file download output"
   echo "  --help      Show this help"
   echo ""
-  echo "Upgrades your Genius Team project to v20.0 from any previous version."
+  echo "Upgrades your Genius Team project to v22.0.0 from any previous version."
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
@@ -194,11 +224,22 @@ download_file() {
   local dir; dir=$(dirname "$local_path")
   [ -d "$dir" ] || mkdir -p "$dir"
 
-  if curl -fsSL "$REPO_URL/$remote" -o "$local_path" 2>/dev/null; then
-    log_verbose "✓ $local_path"
-    FILES_DOWNLOADED=$((FILES_DOWNLOADED + 1))
+  if [ "$USE_LOCAL_SOURCE" = true ]; then
+    local source_path="${REPO_URL}/${remote}"
+    if [ -f "$source_path" ]; then
+      cp "$source_path" "$local_path"
+      log_verbose "✓ $local_path"
+      FILES_DOWNLOADED=$((FILES_DOWNLOADED + 1))
+    else
+      log_warning "Missing local source file: $remote"
+    fi
   else
-    log_warning "Failed to download: $remote"
+    if curl -fsSL "$REPO_URL/$remote" -o "$local_path" 2>/dev/null; then
+      log_verbose "✓ $local_path"
+      FILES_DOWNLOADED=$((FILES_DOWNLOADED + 1))
+    else
+      log_warning "Failed to download: $remote"
+    fi
   fi
 }
 
@@ -306,7 +347,7 @@ upgrade_to_v17() {
     rm -f .genius/state.json.tmp
   fi
 
-  log_success "v17.0.0 upgrade complete — 42 skills, 7 new playgrounds, /challenge, engine-switch"
+  log_success "Legacy dual-engine compatibility step complete — bridge, challenge flow, engine switch"
 }
 
 upgrade_to_v19() {
@@ -377,7 +418,7 @@ upgrade_to_v20() {
     rm -f .genius/state.json.tmp
   fi
 
-  log_success "v20.0.0 upgrade complete — Auto Mode, Computer Use, CI pipelines, Scheduler (47 skills)"
+  log_success "Legacy automation compatibility step complete — auto mode, UI testing, CI, scheduler"
 }
 
 upgrade_to_v21() {
@@ -464,7 +505,49 @@ MODEJSON
     rm -f .genius/state.json.tmp
   fi
 
-  log_success "v21.0.0 upgrade complete — Mode System, Workflow Registry, Validators, Session Recovery (51 skills)"
+  log_success "Legacy runtime compatibility step complete — mode system, workflow registry, validators, session recovery"
+}
+
+upgrade_to_v22() {
+  upgrade_to_v21
+
+  log_info "v22: Cortex-ready contract, normalized setup pipeline, output contract..."
+
+  download_file "CLAUDE.md"       "CLAUDE.md"
+  download_file "AGENTS.md"       "AGENTS.md"
+  download_file "CHANGELOG.md"    "CHANGELOG.md"
+  download_file "README.md"       "README.md"
+  download_file "VERSION"         "VERSION"
+
+  local v22_scripts=(
+    "setup.sh" "create.sh" "add.sh" "upgrade.sh" "verify.sh"
+    "migrate-state.sh" "migrate-cortex-ready.sh"
+    "bin/genius-command" "lib/contract.sh"
+  )
+  for s in "${v22_scripts[@]}"; do
+    download_file "scripts/$s" "scripts/$s"
+  done
+  [ "$DRY_RUN" = false ] && chmod +x scripts/*.sh scripts/bin/genius-command 2>/dev/null || true
+
+  if [ "$DRY_RUN" = false ] && [ -f "scripts/migrate-state.sh" ]; then
+    bash scripts/migrate-state.sh 2>/dev/null || true
+  fi
+
+  if [ "$DRY_RUN" = false ] && [ -f ".genius/state.json" ]; then
+    python3 - <<'PY'
+import json
+from pathlib import Path
+
+path = Path(".genius/state.json")
+if path.exists():
+    data = json.loads(path.read_text())
+    data["version"] = "22.0.0"
+    data["contractVersion"] = "22.0"
+    path.write_text(json.dumps(data, indent=2) + "\n")
+PY
+  fi
+
+  log_success "v22.0.0 upgrade complete — contract normalization, migration pipeline, Cortex-ready groundwork"
 }
 
 upgrade_to_v18() {
@@ -657,26 +740,24 @@ print_summary() {
   local from=$1 backup=$2
   echo ""
   echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║${NC}  ${BOLD}Upgrade Complete! v$from → v21.0${NC}                        ${GREEN}║${NC}"
+  echo -e "${GREEN}║${NC}  ${BOLD}Upgrade Complete! v$from → v22.0${NC}                        ${GREEN}║${NC}"
   echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files downloaded:${NC} $FILES_DOWNLOADED"
   echo -e "  ${BOLD}Files skipped:${NC}    $FILES_SKIPPED (already present, not overwritten)"
   echo -e "  ${BOLD}Backup:${NC}           $backup"
   echo ""
-  echo -e "${CYAN}New in v21.0:${NC}"
-  echo "  • Mode System — beginner/builder/pro/agency (/genius-mode)"
-  echo "  • Workflow Registry — .genius/workflows.json (full dependency graph)"
-  echo "  • Project Import — /genius-import (auto-detect artifacts)"
-  echo "  • Session Recovery — session-log.jsonl + session-recover.sh"
-  echo "  • Pre-transition Guards — 3 micro-checklist skills"
-  echo "  • Non-blocking Validators — mode-aware + origin-aware"
-  echo "  • 51 skills total"
+  echo -e "${CYAN}New in v22.0:${NC}"
+  echo "  • Canonical GT repo contract in .genius/"
+  echo "  • setup/add/create normalized around the v22 state model"
+  echo "  • migrate-cortex-ready.sh for explicit Cortex compatibility"
+  echo "  • session-log.jsonl and outputs/state.json normalized"
+  echo "  • genius-command aligned on the new contract groundwork"
   echo ""
   echo -e "${YELLOW}Next steps:${NC}"
-  echo "  1. Run ${BOLD}/genius-start${NC} to re-initialize with v20 features"
-  echo "  2. Open the dashboard: ${BOLD}open .genius/DASHBOARD.html${NC}"
-  echo "  3. See ${BOLD}CHANGELOG.md${NC} for full details"
+  echo "  1. Run ${BOLD}genius-start${NC} or ${BOLD}/genius-start${NC} to bootstrap the repo"
+  echo "  2. If Cortex compatibility is needed, run ${BOLD}bash scripts/migrate-cortex-ready.sh${NC}"
+  echo "  3. Open the dashboard: ${BOLD}open .genius/DASHBOARD.html${NC}"
   echo ""
 }
 
@@ -684,7 +765,7 @@ print_dry_run_summary() {
   local from=$1
   echo ""
   echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${YELLOW}║${NC}  ${BOLD}Dry Run — v$from → v21.0${NC}                                ${YELLOW}║${NC}"
+  echo -e "${YELLOW}║${NC}  ${BOLD}Dry Run — v$from → v22.0${NC}                                ${YELLOW}║${NC}"
   echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
   echo ""
   echo -e "  ${BOLD}Files that would be downloaded:${NC} $FILES_DOWNLOADED"
@@ -718,7 +799,7 @@ main() {
   if ! version_lt "$CURRENT_VERSION" "$TARGET_VERSION"; then
     log_success "Already at v$CURRENT_VERSION — nothing to do."
     echo ""
-    echo "Your Genius Team is up to date! 🎉"
+    echo "Your Genius Team is already aligned with the latest version. 🎉"
     echo "To force a re-download of all files: $0 --force"
     exit 0
   fi
@@ -738,8 +819,8 @@ main() {
   [ "$DRY_RUN" = false ] && log_success "Backup: $BACKUP_DIR"
 
   # ── Step 4: Download ───────────────────────────────────────────────────────
-  log_step 4 5 "Downloading v21.0 files..."
-  upgrade_to_v21
+  log_step 4 5 "Downloading v22.0 files..."
+  upgrade_to_v22
   log_success "$FILES_DOWNLOADED files downloaded"
 
   # ── Step 5: Verify ─────────────────────────────────────────────────────────

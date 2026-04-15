@@ -7,7 +7,7 @@ description: >-
   automatically.
 ---
 
-# Genius Memory v17.0 — The Knowledge Keeper
+# Genius Memory v22.0 — The Knowledge Keeper
 
 > **File-based memory system. No external MCPs required.**
 

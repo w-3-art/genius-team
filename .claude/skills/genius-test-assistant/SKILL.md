@@ -6,7 +6,7 @@ description: >-
   Do NOT use for automated QA — use genius-qa or genius-qa-micro.
 ---
 
-# Genius Test Assistant v17.0 — Live Testing Companion
+# Genius Test Assistant v22.0 — Live Testing Companion
 
 **Your pair tester who never misses an error.**
 

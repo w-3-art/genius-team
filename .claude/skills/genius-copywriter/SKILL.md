@@ -11,7 +11,7 @@ description: >-
 ## ⚠️ MANDATORY ARTIFACT
 
 **This skill MUST generate:**
-- XML: `.claude/discovery/COPY.xml`
+- XML: `.genius/discovery/COPY.xml`
 - HTML Playground: `.genius/outputs/COPY-OPTIONS.html`
 
 **Before transitioning to next skill:**
@@ -24,7 +24,7 @@ description: >-
 
 ---
 
-# Genius Copywriter v17.0 — Words That Convert
+# Genius Copywriter v22.0 — Words That Convert
 
 **Every word either sells or it doesn't.**
 
@@ -49,7 +49,7 @@ Append to `.genius/memory/decisions.json`:
 
 ## Prerequisites
 
-**REQUIRED:** MARKETING-STRATEGY.xml, messaging framework, target personas
+**REQUIRED:** `.genius/discovery/MARKETING-PLAN.xml`, messaging framework, target personas
 
 ---
 
@@ -72,9 +72,9 @@ Append to `.genius/memory/decisions.json`:
 
 ---
 
-## Output: COPY.md
+## Output: `.genius/discovery/COPY.xml`
 
-Component-mapped copy with A/B variants for key sections.
+Component-mapped copy with A/B variants for key sections, mirrored in the repo handoff XML.
 
 ---
 
@@ -149,7 +149,7 @@ The playground allows users to:
 
 ## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
 
-After generating any `.genius/*.html` playground file:
+After generating any `.genius/outputs/*.html` playground file:
 1. Follow `.claude/commands/genius-dashboard.md` instructions to regenerate `.genius/DASHBOARD.html`
 2. Open it immediately:
    ```bash
@@ -160,10 +160,10 @@ After generating any `.genius/*.html` playground file:
 ## Handoffs
 
 ### From: genius-marketer
-Receives: MARKETING-STRATEGY.xml, messaging framework, personas
+Receives: `.genius/discovery/MARKETING-PLAN.xml`, messaging framework, personas
 
 ### To: genius-dev
-Provides: COPY.md with component-mapped copy, all UI text strings
+Provides: `.genius/discovery/COPY.xml` with component-mapped copy and UI text strings
 
 ### To: genius-integration-guide (parallel)
 Coordinates: CTA tracking, email service setup

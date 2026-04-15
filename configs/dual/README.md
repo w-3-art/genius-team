@@ -1,6 +1,6 @@
 # Dual Mode — Builder + Challenger
 
-**Status:** ✅ Available in Genius Team v9.0
+**Status:** ✅ Available in Genius Team v22.0
 
 Two AI models working in complementary roles: one builds, one challenges. The result is code that's been adversarially reviewed before you even see it.
 

@@ -1,230 +1,171 @@
 #!/bin/bash
 #
-# guard-validate.sh - Validate checkpoints and artifacts coherence
-# Part of the Genius Team guard system
+# guard-validate.sh - Validate Genius Team v22 checkpoints and runtime artifacts
 # Compatible with bash 3.2+ (macOS default)
 #
 
 set -e
 
-# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Find project root (where .genius exists)
 find_project_root() {
-    local dir="$PWD"
-    while [[ "$dir" != "/" ]]; do
-        if [[ -d "$dir/.genius" ]]; then
-            echo "$dir"
-            return 0
-        fi
-        dir="$(dirname "$dir")"
-    done
-    return 1
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -d "$dir/.genius" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
 }
 
 PROJECT_ROOT=$(find_project_root) || {
-    echo -e "${RED}ERROR: No .genius directory found. Run from a genius project.${NC}" >&2
-    exit 1
+  echo -e "${RED}ERROR: No .genius directory found. Run from a Genius Team project.${NC}" >&2
+  exit 1
 }
 
 STATE_FILE="$PROJECT_ROOT/.genius/state.json"
-OUTPUTS_DIR="$PROJECT_ROOT/.genius/outputs"
-PLAYGROUNDS_DIR="$PROJECT_ROOT/.genius/playgrounds"
+OUTPUT_STATE="$PROJECT_ROOT/.genius/outputs/state.json"
+SESSION_LOG="$PROJECT_ROOT/.genius/session-log.jsonl"
+DASHBOARD_FILE="$PROJECT_ROOT/.genius/DASHBOARD.html"
 
-# Check dependencies
-if ! command -v jq &> /dev/null; then
-    echo -e "${RED}ERROR: jq is required but not installed.${NC}" >&2
-    exit 1
+if ! command -v jq >/dev/null 2>&1; then
+  echo -e "${RED}ERROR: jq is required but not installed.${NC}" >&2
+  exit 1
 fi
 
-# Check state file exists
 if [[ ! -f "$STATE_FILE" ]]; then
-    echo -e "${RED}ERROR: state.json not found at $STATE_FILE${NC}" >&2
-    exit 1
+  echo -e "${RED}ERROR: state.json not found at $STATE_FILE${NC}" >&2
+  exit 1
 fi
 
-# ============================================================================
-# MAPPING FUNCTIONS (bash 3.2 compatible)
-# ============================================================================
-
-# Checkpoint to artifact mapping
-get_artifact_for_checkpoint() {
-    case "$1" in
-        discovery) echo "DISCOVERY.html" ;;
-        market_analysis) echo "MARKET-ANALYSIS.html" ;;
-        specs_approved) echo "SPECIFICATIONS.html" ;;
-        design_chosen) echo "DESIGN-SYSTEM.html" ;;
-        marketing_done) echo "MARKETING-BRIEF.html" ;;
-        integrations_done) echo "INTEGRATIONS.html" ;;
-        architecture_approved) echo "ARCHITECTURE.html" ;;
-        execution_started) echo "EXECUTION-PLAN.html" ;;
-        qa_passed) echo "QA-REPORT.html" ;;
-        security_passed) echo "SECURITY-AUDIT.html" ;;
-        deployed) echo "DEPLOYMENT-REPORT.html" ;;
-        *) echo "" ;;
-    esac
+artifact_for_checkpoint() {
+  case "$1" in
+    discovery) echo "$PROJECT_ROOT/.genius/discovery/DISCOVERY.xml" ;;
+    market_analysis) echo "$PROJECT_ROOT/.genius/discovery/MARKET-ANALYSIS.xml" ;;
+    specs_approved) echo "$PROJECT_ROOT/.genius/discovery/SPECIFICATIONS.xml" ;;
+    design_chosen) echo "$PROJECT_ROOT/.genius/outputs/design-playground.html" ;;
+    marketing_done) echo "$PROJECT_ROOT/.genius/discovery/MARKETING-PLAN.xml" ;;
+    integrations_done) echo "$PROJECT_ROOT/.genius/discovery/INTEGRATIONS.xml" ;;
+    architecture_approved)
+      if [[ -f "$PROJECT_ROOT/ARCHITECTURE.md" ]]; then
+        echo "$PROJECT_ROOT/ARCHITECTURE.md"
+      else
+        echo "$PROJECT_ROOT/.genius/ARCHITECTURE.md"
+      fi
+      ;;
+    execution_started)
+      if [[ -f "$PROJECT_ROOT/.claude/plan.md" ]]; then
+        echo "$PROJECT_ROOT/.claude/plan.md"
+      else
+        echo "$PROJECT_ROOT/.agents/plan.md"
+      fi
+      ;;
+    qa_passed) echo "$PROJECT_ROOT/.genius/QA-REPORT.xml" ;;
+    security_passed) echo "$PROJECT_ROOT/.genius/SECURITY-AUDIT.xml" ;;
+    deployed) echo "$PROJECT_ROOT/.genius/DEPLOYMENT.md" ;;
+    *) echo "" ;;
+  esac
 }
 
-# Checkpoint to phase mapping
-get_phase_for_checkpoint() {
-    case "$1" in
-        discovery|market_analysis|specs_approved) echo "ideation" ;;
-        design_chosen|marketing_done|integrations_done) echo "design" ;;
-        architecture_approved) echo "planning" ;;
-        execution_started) echo "execution" ;;
-        qa_passed|security_passed) echo "validation" ;;
-        deployed) echo "deployment" ;;
-        *) echo "" ;;
-    esac
+skill_for_checkpoint() {
+  case "$1" in
+    discovery) echo "genius-interviewer" ;;
+    market_analysis) echo "genius-product-market-analyst" ;;
+    specs_approved) echo "genius-specs" ;;
+    design_chosen) echo "genius-designer" ;;
+    marketing_done) echo "genius-marketer" ;;
+    integrations_done) echo "genius-integration-guide" ;;
+    architecture_approved) echo "genius-architect" ;;
+    execution_started) echo "genius-orchestrator" ;;
+    qa_passed) echo "genius-qa" ;;
+    security_passed) echo "genius-security" ;;
+    deployed) echo "genius-deployer" ;;
+    *) echo "" ;;
+  esac
 }
 
-# Skill to checkpoint mapping
-get_checkpoint_for_skill() {
-    case "$1" in
-        genius-discovery) echo "discovery" ;;
-        genius-market) echo "market_analysis" ;;
-        genius-specs) echo "specs_approved" ;;
-        genius-design) echo "design_chosen" ;;
-        genius-marketing) echo "marketing_done" ;;
-        genius-integrations) echo "integrations_done" ;;
-        genius-architect) echo "architecture_approved" ;;
-        genius-dev) echo "execution_started" ;;
-        genius-qa) echo "qa_passed" ;;
-        genius-security) echo "security_passed" ;;
-        genius-deploy) echo "deployed" ;;
-        *) echo "" ;;
-    esac
-}
+CHECKPOINTS="discovery market_analysis specs_approved design_chosen marketing_done integrations_done architecture_approved execution_started qa_passed security_passed deployed"
 
-# Checkpoint to skill mapping
-get_skill_for_checkpoint() {
-    case "$1" in
-        discovery) echo "genius-discovery" ;;
-        market_analysis) echo "genius-market" ;;
-        specs_approved) echo "genius-specs" ;;
-        design_chosen) echo "genius-design" ;;
-        marketing_done) echo "genius-marketing" ;;
-        integrations_done) echo "genius-integrations" ;;
-        architecture_approved) echo "genius-architect" ;;
-        execution_started) echo "genius-dev" ;;
-        qa_passed) echo "genius-qa" ;;
-        security_passed) echo "genius-security" ;;
-        deployed) echo "genius-deploy" ;;
-        *) echo "" ;;
-    esac
-}
-
-# ============================================================================
-# READ STATE
-# ============================================================================
 PHASE=$(jq -r '.phase // "NOT_STARTED"' "$STATE_FILE")
 CURRENT_SKILL=$(jq -r '.currentSkill // "null"' "$STATE_FILE")
 [[ "$CURRENT_SKILL" == "null" ]] && CURRENT_SKILL=""
 
-# ============================================================================
-# COLLECT DATA
-# ============================================================================
 ERRORS=""
 WARNINGS=""
-MISSING_PLAYGROUNDS=""
 CHECKPOINT_STATUS=""
 ARTIFACT_STATUS=""
 
-# Ordered list of checkpoints
-CHECKPOINTS="discovery market_analysis specs_approved design_chosen marketing_done integrations_done architecture_approved execution_started qa_passed security_passed deployed"
-
-# Check each checkpoint
 for checkpoint in $CHECKPOINTS; do
-    is_validated=$(jq -r ".checkpoints.$checkpoint // false" "$STATE_FILE")
-    artifact=$(get_artifact_for_checkpoint "$checkpoint")
-    artifact_path="$OUTPUTS_DIR/$artifact"
-    
-    if [[ "$is_validated" == "true" ]]; then
-        # Checkpoint is validated - artifact MUST exist
-        if [[ -f "$artifact_path" ]]; then
-            CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}✓"
-            ARTIFACT_STATUS="$ARTIFACT_STATUS
-  ✓ .genius/outputs/$artifact"
-        else
-            CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}✗"
-            ARTIFACT_STATUS="$ARTIFACT_STATUS
-  ✗ .genius/outputs/$artifact (MISSING - checkpoint validated!)"
-            ERRORS="$ERRORS
-  ERROR: Checkpoint '$checkpoint' is validated but artifact '$artifact' is MISSING"
-        fi
+  validated=$(jq -r ".checkpoints.$checkpoint // false" "$STATE_FILE")
+  artifact_path=$(artifact_for_checkpoint "$checkpoint")
+
+  if [[ "$validated" == "true" ]]; then
+    if [[ -n "$artifact_path" && -f "$artifact_path" ]]; then
+      CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}✓"
+      ARTIFACT_STATUS="$ARTIFACT_STATUS
+  ✓ ${artifact_path#$PROJECT_ROOT/}"
     else
-        # Checkpoint not validated
-        if [[ -f "$artifact_path" ]]; then
-            # Artifact exists but checkpoint not validated - warning
-            CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}⚠"
-            ARTIFACT_STATUS="$ARTIFACT_STATUS
-  ⚠ .genius/outputs/$artifact (exists but checkpoint not validated)"
-            WARNINGS="$WARNINGS
-  WARNING: Artifact '$artifact' exists but checkpoint '$checkpoint' is not validated"
-        else
-            CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}⏳"
-            ARTIFACT_STATUS="$ARTIFACT_STATUS
-  ⏳ .genius/outputs/$artifact (pending)"
-        fi
+      CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}✗"
+      ARTIFACT_STATUS="$ARTIFACT_STATUS
+  ✗ ${artifact_path#$PROJECT_ROOT/} (missing)"
+      ERRORS="$ERRORS
+  ERROR: checkpoint '$checkpoint' is validated but its runtime artifact is missing"
     fi
+  else
+    if [[ -n "$artifact_path" && -f "$artifact_path" ]]; then
+      CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}⚠"
+      ARTIFACT_STATUS="$ARTIFACT_STATUS
+  ⚠ ${artifact_path#$PROJECT_ROOT/} (exists before checkpoint validation)"
+      WARNINGS="$WARNINGS
+  WARNING: artifact for '$checkpoint' exists but checkpoint is not validated"
+    else
+      CHECKPOINT_STATUS="$CHECKPOINT_STATUS ${checkpoint}⏳"
+      ARTIFACT_STATUS="$ARTIFACT_STATUS
+  ⏳ ${artifact_path#$PROJECT_ROOT/}"
+    fi
+  fi
 done
 
-# Check skill/phase coherence
-if [[ -n "$CURRENT_SKILL" && "$PHASE" != "NOT_STARTED" ]]; then
-    skill_checkpoint=$(get_checkpoint_for_skill "$CURRENT_SKILL")
-    if [[ -n "$skill_checkpoint" ]]; then
-        expected_phase=$(get_phase_for_checkpoint "$skill_checkpoint")
-        if [[ "$expected_phase" != "$PHASE" ]]; then
-            WARNINGS="$WARNINGS
-  WARNING: Current skill '$CURRENT_SKILL' belongs to phase '$expected_phase' but current phase is '$PHASE'"
-        fi
-    fi
+if [[ ! -f "$OUTPUT_STATE" ]]; then
+  WARNINGS="$WARNINGS
+  WARNING: missing .genius/outputs/state.json"
 fi
 
-# Check playgrounds
-EXPECTED_PLAYGROUNDS="discovery market specs design marketing integrations architecture dev qa security deploy"
+if [[ ! -f "$DASHBOARD_FILE" ]]; then
+  WARNINGS="$WARNINGS
+  WARNING: missing .genius/DASHBOARD.html"
+fi
 
-for pg in $EXPECTED_PLAYGROUNDS; do
-    pg_dir="$PLAYGROUNDS_DIR/$pg"
-    if [[ ! -d "$pg_dir" ]]; then
-        MISSING_PLAYGROUNDS="$MISSING_PLAYGROUNDS $pg"
-    fi
-done
+if [[ ! -f "$SESSION_LOG" ]]; then
+  WARNINGS="$WARNINGS
+  WARNING: missing .genius/session-log.jsonl"
+fi
 
-# ============================================================================
-# DETERMINE NEXT ACTION
-# ============================================================================
 determine_next_action() {
-    # If there are errors, suggest recovery first
-    if [[ -n "$ERRORS" ]]; then
-        echo "⚠️  FIX ISSUES FIRST: Run recovery to regenerate missing artifacts"
-        return
+  if [[ -n "$ERRORS" ]]; then
+    echo "Fix missing runtime artifacts before continuing."
+    return
+  fi
+
+  for checkpoint in $CHECKPOINTS; do
+    validated=$(jq -r ".checkpoints.$checkpoint // false" "$STATE_FILE")
+    if [[ "$validated" != "true" ]]; then
+      echo "Continue with $(skill_for_checkpoint "$checkpoint") → generate $(artifact_for_checkpoint "$checkpoint" | sed "s|$PROJECT_ROOT/||")"
+      return
     fi
-    
-    # Find the first incomplete checkpoint
-    for checkpoint in $CHECKPOINTS; do
-        is_validated=$(jq -r ".checkpoints.$checkpoint // false" "$STATE_FILE")
-        if [[ "$is_validated" != "true" ]]; then
-            artifact=$(get_artifact_for_checkpoint "$checkpoint")
-            skill=$(get_skill_for_checkpoint "$checkpoint")
-            echo "Continue with $skill → generate $artifact"
-            return
-        fi
-    done
-    
-    echo "All checkpoints complete! 🎉"
+  done
+
+  echo "All checkpoints complete."
 }
 
 NEXT_ACTION=$(determine_next_action)
 
-# ============================================================================
-# OUTPUT
-# ============================================================================
 echo "<guard_status>"
 echo "PHASE: $PHASE"
 echo "CURRENT_SKILL: ${CURRENT_SKILL:-none}"
@@ -234,89 +175,42 @@ echo ""
 echo "ARTIFACTS:$ARTIFACT_STATUS"
 echo ""
 
-# Issues section
 if [[ -z "$ERRORS" && -z "$WARNINGS" ]]; then
-    echo "ISSUES: none"
+  echo "ISSUES: none"
 else
-    echo "ISSUES:$ERRORS$WARNINGS"
-fi
-
-# Missing playgrounds
-if [[ -n "$MISSING_PLAYGROUNDS" ]]; then
-    echo ""
-    echo "MISSING_PLAYGROUNDS:$MISSING_PLAYGROUNDS"
+  echo "ISSUES:$ERRORS$WARNINGS"
 fi
 
 echo ""
 echo "NEXT_ACTION: $NEXT_ACTION"
 echo "</guard_status>"
 
-# ============================================================================
-# RECOVERY SUGGESTIONS
-# ============================================================================
 if [[ -n "$ERRORS" || -n "$WARNINGS" ]]; then
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "${BLUE}RECOVERY SUGGESTIONS:${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    
-    # Parse errors for missing artifacts
-    for checkpoint in $CHECKPOINTS; do
-        is_validated=$(jq -r ".checkpoints.$checkpoint // false" "$STATE_FILE")
-        artifact=$(get_artifact_for_checkpoint "$checkpoint")
-        artifact_path="$OUTPUTS_DIR/$artifact"
-        
-        if [[ "$is_validated" == "true" && ! -f "$artifact_path" ]]; then
-            skill=$(get_skill_for_checkpoint "$checkpoint")
-            echo ""
-            echo -e "${YELLOW}Issue:${NC} Checkpoint '$checkpoint' validated but '$artifact' missing"
-            echo -e "${GREEN}Fix options:${NC}"
-            echo "  1. Re-run the skill to regenerate the artifact:"
-            echo "     genius run $skill"
-            echo "  2. Or reset the checkpoint if artifact shouldn't exist:"
-            echo "     jq '.checkpoints.$checkpoint = false' \"$STATE_FILE\" | sponge \"$STATE_FILE\""
-            echo "     # Or: jq '.checkpoints.$checkpoint = false' \"$STATE_FILE\" > tmp.json && mv tmp.json \"$STATE_FILE\""
-        fi
-        
-        if [[ "$is_validated" != "true" && -f "$artifact_path" ]]; then
-            echo ""
-            echo -e "${YELLOW}Issue:${NC} Artifact '$artifact' exists but checkpoint '$checkpoint' not validated"
-            echo -e "${GREEN}Fix:${NC} Validate the checkpoint if artifact is correct:"
-            echo "     jq '.checkpoints.$checkpoint = true' \"$STATE_FILE\" | sponge \"$STATE_FILE\""
-        fi
-    done
-    
-    # Skill/phase mismatch
-    if [[ -n "$CURRENT_SKILL" && "$PHASE" != "NOT_STARTED" ]]; then
-        skill_checkpoint=$(get_checkpoint_for_skill "$CURRENT_SKILL")
-        if [[ -n "$skill_checkpoint" ]]; then
-            expected_phase=$(get_phase_for_checkpoint "$skill_checkpoint")
-            if [[ "$expected_phase" != "$PHASE" ]]; then
-                echo ""
-                echo -e "${YELLOW}Issue:${NC} Skill/phase mismatch"
-                echo -e "${GREEN}Fix:${NC} Update phase in state.json:"
-                echo "     jq '.phase = \"$expected_phase\"' \"$STATE_FILE\" | sponge \"$STATE_FILE\""
-                echo "  Or switch to a skill appropriate for phase '$PHASE'"
-            fi
-        fi
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo -e "${BLUE}RECOVERY SUGGESTIONS:${NC}"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  for checkpoint in $CHECKPOINTS; do
+    validated=$(jq -r ".checkpoints.$checkpoint // false" "$STATE_FILE")
+    artifact_path=$(artifact_for_checkpoint "$checkpoint")
+
+    if [[ "$validated" == "true" && ! -f "$artifact_path" ]]; then
+      echo ""
+      echo -e "${YELLOW}Issue:${NC} Checkpoint '$checkpoint' is validated but its artifact is missing"
+      echo -e "${GREEN}Fix:${NC} Re-run $(skill_for_checkpoint "$checkpoint") or clear the checkpoint in state.json"
     fi
-    
-    # Missing playgrounds
-    if [[ -n "$MISSING_PLAYGROUNDS" ]]; then
-        echo ""
-        echo -e "${YELLOW}Issue:${NC} Missing playground directories"
-        echo -e "${GREEN}Fix:${NC} Create missing playgrounds:"
-        for pg in $MISSING_PLAYGROUNDS; do
-            echo "     mkdir -p \"$PLAYGROUNDS_DIR/$pg\""
-        done
+
+    if [[ "$validated" != "true" && -f "$artifact_path" ]]; then
+      echo ""
+      echo -e "${YELLOW}Issue:${NC} Artifact exists before checkpoint '$checkpoint' is validated"
+      echo -e "${GREEN}Fix:${NC} Validate the checkpoint if the artifact is correct, or regenerate the phase cleanly"
     fi
-    
-    echo ""
+  done
 fi
 
-# Exit code based on errors
 if [[ -n "$ERRORS" ]]; then
-    exit 1
-else
-    exit 0
+  exit 1
 fi
+
+exit 0

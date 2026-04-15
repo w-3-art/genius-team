@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# Genius Team v21.0 — Add to Existing Project
+# Genius Team v22.0 — Add to Existing Project
 # Usage: cd your-project && bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh) [--mode cli|ide|omni|dual] [--engine claude|codex|dual]
 # ═══════════════════════════════════════════════════════════════
 set -e
@@ -20,6 +20,26 @@ ok()    { echo -e "${GREEN}✓${NC}  $1"; }
 warn()  { echo -e "${YELLOW}⚠${NC}  $1"; }
 fail()  { echo -e "${RED}✗${NC}  $1"; }
 die()   { echo -e "\n${RED}ERROR:${NC} $1" >&2; exit 1; }
+
+resolve_local_source() {
+  if [ -n "${GENIUS_TEAM_SOURCE_DIR:-}" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/VERSION" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/scripts/setup.sh" ]; then
+    printf '%s' "$GENIUS_TEAM_SOURCE_DIR"
+    return 0
+  fi
+
+  case "${BASH_SOURCE[0]}" in
+    /dev/fd/*|/proc/self/fd/*) return 1 ;;
+  esac
+
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -f "${script_dir}/../VERSION" ] && [ -f "${script_dir}/setup.sh" ]; then
+    (cd "${script_dir}/.." && pwd)
+    return 0
+  fi
+
+  return 1
+}
 
 # ── Parse Arguments ──────────────────────────────────────────
 MODE="cli"
@@ -58,7 +78,7 @@ fi
 # ── Banner ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v21.0 — Add to Existing Project  ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v22.0 — Add to Existing Project  ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Target:  ${CYAN}$(pwd)${NC}"
@@ -81,25 +101,31 @@ if ! git rev-parse --git-dir &>/dev/null 2>&1; then
   echo ""
 fi
 
-# Quick connectivity check
-if ! git ls-remote https://github.com/w-3-art/genius-team.git HEAD &>/dev/null 2>&1; then
-  die "Cannot reach GitHub. Check your internet connection."
-fi
+# ── Resolve Genius Team source ──────────────────────────────
+GENIUS_SRC=""
+TMPDIR_GT=""
+if GENIUS_SRC="$(resolve_local_source)"; then
+  info "Using local Genius Team source: ${GENIUS_SRC}"
+  ok "Local source ready"
+else
+  # Quick connectivity check
+  if ! git ls-remote https://github.com/w-3-art/genius-team.git HEAD &>/dev/null 2>&1; then
+    die "Cannot reach GitHub. Check your internet connection."
+  fi
 
-# ── Download Genius Team files ───────────────────────────────
-TMPDIR_GT=$(mktemp -d)
-trap "rm -rf ${TMPDIR_GT}" EXIT
+  TMPDIR_GT=$(mktemp -d)
+  trap 'rm -rf "${TMPDIR_GT}"' EXIT
 
-info "Downloading Genius Team files..."
-if ! git clone --quiet https://github.com/w-3-art/genius-team.git "${TMPDIR_GT}/genius" 2>/dev/null; then
-  die "Git clone failed. Check your internet connection and try again."
+  info "Downloading Genius Team files..."
+  if ! git clone --quiet https://github.com/w-3-art/genius-team.git "${TMPDIR_GT}/genius" 2>/dev/null; then
+    die "Git clone failed. Check your internet connection and try again."
+  fi
+  ok "Downloaded Genius Team"
+  GENIUS_SRC="${TMPDIR_GT}/genius"
 fi
-ok "Downloaded Genius Team"
 
 # ── Copy files (without overwriting) ────────────────────────
 info "Copying Genius Team files to your project..."
-
-GENIUS_SRC="${TMPDIR_GT}/genius"
 COPIED=0
 SKIPPED=0
 
@@ -186,7 +212,7 @@ echo ""
 
 # ── Done ─────────────────────────────────────────────────────
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v21.0 — Ready!                   ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v22.0 — Ready!                   ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Genius Team has been added to your existing project."

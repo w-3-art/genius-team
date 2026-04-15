@@ -1,0 +1,67 @@
+{
+  "canvas": {
+    "base": "bg",
+    "raised": "bgElevated",
+    "veil": "rgba(15,15,15,0.72)"
+  },
+  "surface": {
+    "default": "surface",
+    "strong": "surfaceStrong",
+    "panel": "rgba(245,240,235,0.04)",
+    "panelBorder": "border"
+  },
+  "text": {
+    "primary": "text",
+    "secondary": "textMuted",
+    "tertiary": "textDim",
+    "inverse": "#0F0F0F"
+  },
+  "accent": {
+    "primary": "gold",
+    "secondary": "goldLight",
+    "energy": "energy",
+    "energyStrong": "energyStrong"
+  },
+  "action": {
+    "primaryBg": "linear-gradient(135deg, #D4A574, #F97316)",
+    "primaryText": "#0F0F0F",
+    "ghostBg": "rgba(245,240,235,0.03)",
+    "ghostBorder": "rgba(245,240,235,0.08)"
+  },
+  "intelligence": {
+    "behavior": {
+      "chip": "gold",
+      "scope": "repository | portfolio | global"
+    },
+    "rules": {
+      "chip": "energy",
+      "scope": "repository | portfolio | global"
+    },
+    "memoryBits": {
+      "chip": "info",
+      "scope": "scoped"
+    },
+    "personas": {
+      "chip": "secondary",
+      "scope": "shared"
+    },
+    "codeBits": {
+      "chip": "warning",
+      "scope": "linked"
+    },
+    "glossary": {
+      "chip": "primary",
+      "scope": "shared"
+    }
+  },
+  "artifact": {
+    "base": "surface",
+    "status": {
+      "draft": "textDim",
+      "ready": "success",
+      "drift": "warning",
+      "broken": "danger"
+    }
+  }
+}
+

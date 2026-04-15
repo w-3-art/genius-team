@@ -19,7 +19,7 @@ allowed-tools:
   - Bash(jq *)
 ---
 
-# Genius Crypto v17 — Blockchain Intelligence
+# Genius Crypto v22 — Blockchain Intelligence
 
 **On-chain data + market signals + NFT analytics. Due diligence before you build.**
 

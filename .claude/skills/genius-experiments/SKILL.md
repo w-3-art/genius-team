@@ -33,7 +33,7 @@ hooks:
       once: true
 ---
 
-# Genius Experiments v17 — Autonomous Optimizer
+# Genius Experiments v22 — Autonomous Optimizer
 
 **Define the goal. Let the agent find the best path. Review the results in the morning.**
 

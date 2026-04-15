@@ -19,7 +19,7 @@ allowed-tools:
   - Task(*)
 ---
 
-# Genius Autoresearch v21.0 — Autonomous Optimization Loop
+# Genius Autoresearch v22.0 — Autonomous Optimization Loop
 
 **Karpathy's autoresearch pattern applied to any project component. Modify → Test → Measure → Keep if better → Repeat.**
 

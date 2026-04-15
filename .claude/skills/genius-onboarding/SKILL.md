@@ -6,7 +6,7 @@ description: >-
   "configure genius team". Do NOT use on projects already initialized — use genius-start instead.
 ---
 
-# Genius Onboarding v17.0 — Welcome Experience
+# Genius Onboarding v22.0 — Welcome Experience
 
 **Making every first interaction memorable and productive.**
 
@@ -52,7 +52,7 @@ Activate when:
     "stack": { "frontend": "...", "backend": "...", "styling": "...", "deployment": "..." }
   },
   "onboarded_at": "ISO-date",
-  "genius_team_version": "14.0.0"
+  "genius_team_version": "22.0.0"
 }
 ```
 

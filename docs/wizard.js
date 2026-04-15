@@ -1,226 +1,411 @@
-// ═══════════════════════════════════════════════════════════
-// Genius Team — Getting Started Wizard (shared component)
-// Include this script + call GeniusWizard.init() after DOM ready
-// ═══════════════════════════════════════════════════════════
+// Genius Team / Cortex onboarding wizard
+// Uses the shared design language classes from docs/design-language/**.
 
-const GeniusWizard = {
-  state: { step: 0, project: 'my-app', env: 'cli', engine: 'claude', type: 'new' },
+const GeniusWizard = (() => {
+  const state = {
+    open: false,
+    step: 0,
+    product: 'gt',
+    projectType: 'new',
+    project: 'my-project',
+    mode: 'cli',
+    engine: 'claude',
+    cortexAction: 'init',
+    reposDir: '~/Projects',
+  };
 
-  init() {
-    // Inject modal HTML
-    const modal = document.createElement('div');
-    modal.id = 'gw-overlay';
-    modal.className = 'gw-overlay';
-    modal.innerHTML = `
-      <div class="gw-card">
-        <button class="gw-close" onclick="GeniusWizard.close()">&times;</button>
-        <div class="gw-progress" id="gwProgress">
-          <div class="gw-dot active" data-step="0"></div>
-          <div class="gw-line"><div class="gw-line-fill" id="gwLineFill1"></div></div>
-          <div class="gw-dot" data-step="1"></div>
-          <div class="gw-line"><div class="gw-line-fill" id="gwLineFill2"></div></div>
-          <div class="gw-dot" data-step="2"></div>
-          <div class="gw-line"><div class="gw-line-fill" id="gwLineFill3"></div></div>
-          <div class="gw-dot" data-step="3"></div>
+  let root = null;
+  let escapeHandler = null;
+
+  function el(selector) {
+    return root?.querySelector(selector) || document.querySelector(selector);
+  }
+
+  function inject() {
+    if (root) return;
+
+    root = document.createElement('div');
+    root.id = 'geniusWizard';
+    root.className = 'wizard-overlay';
+    root.dataset.open = 'false';
+    root.setAttribute('role', 'dialog');
+    root.setAttribute('aria-modal', 'true');
+    root.setAttribute('aria-hidden', 'true');
+    root.innerHTML = `
+      <div class="wizard-card dl-surface dl-surface--strong">
+        <div class="wizard-card__head">
+          <div>
+            <div class="dl-chip dl-chip--gold">Quick start</div>
+            <h2 class="wizard-card__title">Choose your path</h2>
+            <p class="wizard-card__desc">Genius Team builds inside a repo. Cortex coordinates a portfolio of GT repos. The wizard keeps both paths truthful.</p>
+          </div>
+          <button class="wizard-card__close" type="button" aria-label="Close" data-wizard-close>×</button>
         </div>
 
-        <!-- Step 0: Project name -->
-        <div class="gw-step active" id="gwStep0">
-          <div class="gw-icon">🚀</div>
-          <h3>What's your project called?</h3>
-          <p>Pick a name — you can always change it later.</p>
-          <input type="text" class="gw-input" id="gwName" value="my-app" placeholder="my-app"
-                 oninput="GeniusWizard.state.project=this.value.replace(/[^a-z0-9-]/g,'')">
-          <div class="gw-nav"><div></div><button class="gw-btn primary" onclick="GeniusWizard.next()">Next →</button></div>
+        <div class="wizard-progress" aria-hidden="true">
+          <div class="wizard-progress__dot" data-progress-dot="0"></div>
+          <div class="wizard-progress__line"></div>
+          <div class="wizard-progress__dot" data-progress-dot="1"></div>
+          <div class="wizard-progress__line"></div>
+          <div class="wizard-progress__dot" data-progress-dot="2"></div>
+          <div class="wizard-progress__line"></div>
+          <div class="wizard-progress__dot" data-progress-dot="3"></div>
         </div>
 
-        <!-- Step 1: Environment -->
-        <div class="gw-step" id="gwStep1">
-          <div class="gw-icon">💻</div>
-          <h3>How do you prefer to work?</h3>
-          <p>Both work great — pick what feels right.</p>
-          <div class="gw-options">
-            <button class="gw-opt selected" onclick="GeniusWizard.select(this,'env','cli')">
-              <span class="gw-opt-icon">⌨️</span>
-              <span class="gw-opt-title">Terminal</span>
-              <span class="gw-opt-desc">Type commands</span>
+        <div class="wizard-step is-active" data-step="0">
+          <h3 class="wizard-step__title">What are you setting up?</h3>
+          <p class="wizard-step__desc">Pick the surface that matches your next move.</p>
+          <div class="wizard-options wizard-options--2">
+            <button class="wizard-option is-active" type="button" data-choice="product" data-value="gt">
+              <span class="dl-chip dl-chip--gold">Genius Team</span>
+              <span class="wizard-option__title">Per-repo build framework</span>
+              <span class="wizard-option__desc">Install or add GT to a codebase, then run the repository flow.</span>
             </button>
-            <button class="gw-opt" onclick="GeniusWizard.select(this,'env','ide')">
-              <span class="gw-opt-icon">🖥️</span>
-              <span class="gw-opt-title">VS Code</span>
-              <span class="gw-opt-desc">Visual editor</span>
+            <button class="wizard-option" type="button" data-choice="product" data-value="cortex">
+              <span class="dl-chip">Cortex</span>
+              <span class="wizard-option__title">Portfolio control tower</span>
+              <span class="wizard-option__desc">Bootstrap the multi-repo workspace, scan repos, and align the portfolio.</span>
             </button>
           </div>
-          <div class="gw-nav">
-            <button class="gw-btn ghost" onclick="GeniusWizard.prev()">← Back</button>
-            <button class="gw-btn primary" onclick="GeniusWizard.next()">Next →</button>
-          </div>
-        </div>
-
-        <!-- Step 2: Engine -->
-        <div class="gw-step" id="gwStep2">
-          <div class="gw-icon">🤖</div>
-          <h3>Which AI engine?</h3>
-          <p>Claude is recommended for beginners.</p>
-          <div class="gw-options three">
-            <button class="gw-opt selected" onclick="GeniusWizard.select(this,'engine','claude')">
-              <span class="gw-opt-icon">🟣</span>
-              <span class="gw-opt-title">Claude</span>
-              <span class="gw-opt-desc">Recommended</span>
-            </button>
-            <button class="gw-opt" onclick="GeniusWizard.select(this,'engine','codex')">
-              <span class="gw-opt-icon">🟢</span>
-              <span class="gw-opt-title">Codex</span>
-              <span class="gw-opt-desc">OpenAI</span>
-            </button>
-            <button class="gw-opt" onclick="GeniusWizard.select(this,'engine','dual')">
-              <span class="gw-opt-icon">🔀</span>
-              <span class="gw-opt-title">Both</span>
-              <span class="gw-opt-desc">Dual mode</span>
-            </button>
-          </div>
-          <div class="gw-nav">
-            <button class="gw-btn ghost" onclick="GeniusWizard.prev()">← Back</button>
-            <button class="gw-btn primary" onclick="GeniusWizard.next()">Next →</button>
+          <div class="wizard-actions">
+            <span class="dl-provenance">The wizard only suggests commands that exist in the current toolchain.</span>
+            <button class="dl-button dl-button--primary" type="button" data-wizard-next>Next</button>
           </div>
         </div>
 
-        <!-- Step 3: Result -->
-        <div class="gw-step" id="gwStep3">
-          <div class="gw-icon">✅</div>
-          <h3>You're all set!</h3>
-          <p>Copy this command and paste it in your terminal:</p>
-          <div class="gw-result" id="gwResult">
-            <code id="gwCmd"></code>
-            <button class="gw-copy" onclick="GeniusWizard.copy()">📋 Copy</button>
-          </div>
-          <div class="gw-then">
-            <strong>Then run:</strong>
-            <code>cd <span id="gwCdName"></span> && claude</code>
-            <div class="gw-then-sub">Type <code>/genius-start</code> to begin building!</div>
-          </div>
-          <div class="gw-nav">
-            <button class="gw-btn ghost" onclick="GeniusWizard.prev()">← Back</button>
-            <a href="https://github.com/w-3-art/genius-team" target="_blank" class="gw-btn primary">⭐ Star on GitHub</a>
-          </div>
-        </div>
+        <div class="wizard-step" data-step="1"></div>
+        <div class="wizard-step" data-step="2"></div>
+        <div class="wizard-step" data-step="3"></div>
       </div>
     `;
-    document.body.appendChild(modal);
 
-    // Inject styles
-    const style = document.createElement('style');
-    style.textContent = `
-      .gw-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(12px); z-index:9999; display:flex; align-items:center; justify-content:center; padding:1.5rem; opacity:0; pointer-events:none; transition:opacity .3s; }
-      .gw-overlay.open { opacity:1; pointer-events:all; }
-      .gw-card { background:#161616; border:1px solid rgba(212,165,116,.12); border-radius:24px; padding:2.5rem; max-width:520px; width:100%; position:relative; transform:translateY(20px) scale(.97); transition:transform .3s; font-family:'DM Sans','Inter',system-ui,sans-serif; }
-      .gw-overlay.open .gw-card { transform:none; }
-      .gw-close { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,.06); border:none; color:rgba(255,255,255,.5); font-size:1.4rem; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
-      .gw-close:hover { background:rgba(255,255,255,.12); color:#fff; }
-      .gw-progress { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:2rem; }
-      .gw-dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.15); transition:all .3s; }
-      .gw-dot.active { background:#D4A574; box-shadow:0 0 10px rgba(212,165,116,.4); }
-      .gw-dot.done { background:#22c55e; }
-      .gw-line { width:40px; height:2px; background:rgba(255,255,255,.08); margin:0 4px; overflow:hidden; border-radius:1px; }
-      .gw-line-fill { height:100%; width:0; background:linear-gradient(90deg,#D4A574,#F5F0EB); transition:width .4s; border-radius:1px; }
-      .gw-step { display:none; flex-direction:column; align-items:center; text-align:center; min-height:280px; animation:gwFadeIn .3s ease; }
-      .gw-step.active { display:flex; }
-      @keyframes gwFadeIn { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:none; } }
-      .gw-icon { font-size:2.5rem; margin-bottom:.75rem; }
-      .gw-step h3 { font-size:1.4rem; font-weight:700; margin-bottom:.4rem; color:#fff; }
-      .gw-step p { color:rgba(255,255,255,.45); font-size:.9rem; margin-bottom:1.5rem; }
-      .gw-input { width:100%; max-width:280px; padding:.9rem 1.2rem; border-radius:12px; border:2px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03); color:#fff; font-family:monospace; font-size:1.1rem; text-align:center; transition:border-color .2s; margin-bottom:1.5rem; }
-      .gw-input:focus { outline:none; border-color:#D4A574; }
-      .gw-options { display:flex; gap:.75rem; margin-bottom:1.5rem; flex-wrap:wrap; justify-content:center; }
-      .gw-options.three { gap:.6rem; }
-      .gw-opt { display:flex; flex-direction:column; align-items:center; gap:.3rem; padding:1.1rem 1.4rem; min-width:120px; border-radius:16px; background:rgba(255,255,255,.03); border:2px solid rgba(255,255,255,.08); cursor:pointer; transition:all .25s; color:#fff; }
-      .gw-opt:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.15); transform:translateY(-2px); }
-      .gw-opt.selected { background:rgba(212,165,116,.12); border-color:#D4A574; }
-      .gw-opt-icon { font-size:1.5rem; }
-      .gw-opt-title { font-weight:600; font-size:.9rem; }
-      .gw-opt-desc { font-size:.72rem; color:rgba(255,255,255,.4); }
-      .gw-nav { display:flex; justify-content:space-between; width:100%; margin-top:auto; padding-top:1rem; }
-      .gw-btn { padding:.7rem 1.6rem; border-radius:12px; font-weight:600; font-size:.9rem; cursor:pointer; border:none; transition:all .25s; text-decoration:none; display:inline-block; }
-      .gw-btn.primary { background:linear-gradient(135deg,#D4A574,#C4956A); color:#fff; box-shadow:0 4px 15px rgba(212,165,116,.3); }
-      .gw-btn.primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(212,165,116,.4); }
-      .gw-btn.ghost { background:rgba(255,255,255,.05); color:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.1); }
-      .gw-btn.ghost:hover { background:rgba(255,255,255,.08); color:#fff; }
-      .gw-result { background:rgba(0,0,0,.4); border:1px solid rgba(212,165,116,.2); border-radius:12px; padding:1rem 1.2rem; width:100%; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
-      .gw-result code { font-size:.82rem; color:#F5F0EB; word-break:break-all; text-align:left; flex:1; }
-      .gw-copy { padding:.4rem .8rem; border-radius:8px; background:rgba(212,165,116,.15); border:1px solid rgba(212,165,116,.2); color:#D4A574; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
-      .gw-copy:hover { background:rgba(212,165,116,.25); }
-      .gw-then { background:rgba(34,197,94,.06); border:1px solid rgba(34,197,94,.15); border-radius:12px; padding:1rem; width:100%; text-align:left; margin-bottom:1rem; }
-      .gw-then strong { color:#22c55e; font-size:.85rem; }
-      .gw-then code { background:rgba(0,0,0,.3); padding:.15rem .4rem; border-radius:4px; font-size:.82rem; color:rgba(255,255,255,.7); }
-      .gw-then-sub { margin-top:.5rem; font-size:.78rem; color:rgba(255,255,255,.4); }
-      @media(max-width:640px) { .gw-card { padding:1.5rem; } .gw-opt { min-width:100px; padding:.9rem 1rem; } .gw-result code { font-size:.72rem; } }
-    `;
-    document.head.appendChild(style);
-  },
-
-  open() {
-    document.getElementById('gw-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  },
-
-  close() {
-    document.getElementById('gw-overlay').classList.remove('open');
-    document.body.style.overflow = '';
-  },
-
-  select(btn, key, value) {
-    this.state[key] = value;
-    btn.parentElement.querySelectorAll('.gw-opt').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-  },
-
-  next() {
-    const curr = document.getElementById(`gwStep${this.state.step}`);
-    curr.classList.remove('active');
-    this.state.step++;
-    if (this.state.step === 3) this.generateResult();
-    const next = document.getElementById(`gwStep${this.state.step}`);
-    next.classList.add('active');
-    this.updateProgress();
-  },
-
-  prev() {
-    const curr = document.getElementById(`gwStep${this.state.step}`);
-    curr.classList.remove('active');
-    this.state.step--;
-    document.getElementById(`gwStep${this.state.step}`).classList.add('active');
-    this.updateProgress();
-  },
-
-  updateProgress() {
-    const dots = document.querySelectorAll('.gw-dot');
-    const fills = [document.getElementById('gwLineFill1'), document.getElementById('gwLineFill2'), document.getElementById('gwLineFill3')];
-    dots.forEach((d, i) => {
-      d.classList.remove('active', 'done');
-      if (i < this.state.step) d.classList.add('done');
-      if (i === this.state.step) d.classList.add('active');
+    document.body.appendChild(root);
+    root.addEventListener('click', handleClick);
+    root.addEventListener('click', event => {
+      if (event.target === root) close();
     });
-    fills.forEach((f, i) => { f.style.width = i < this.state.step ? '100%' : '0'; });
-  },
-
-  generateResult() {
-    const s = this.state;
-    const name = s.project || 'my-app';
-    const mode = s.env === 'ide' ? ' --mode ide' : '';
-    const engine = s.engine !== 'claude' ? ` --engine ${s.engine}` : '';
-    const cmd = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) ${name}${mode}${engine}`;
-    document.getElementById('gwCmd').textContent = cmd;
-    document.getElementById('gwCdName').textContent = name;
-  },
-
-  copy() {
-    const cmd = document.getElementById('gwCmd').textContent;
-    navigator.clipboard.writeText(cmd);
-    const btn = document.querySelector('.gw-copy');
-    btn.textContent = '✓ Copied!';
-    btn.style.background = 'rgba(34,197,94,.2)';
-    btn.style.borderColor = 'rgba(34,197,94,.3)';
-    btn.style.color = '#22c55e';
-    setTimeout(() => { btn.textContent = '📋 Copy'; btn.style.cssText = ''; }, 2000);
+    render();
   }
-};
+
+  function handleClick(event) {
+    const closeBtn = event.target.closest('[data-wizard-close]');
+    if (closeBtn) {
+      close();
+      return;
+    }
+
+    const choice = event.target.closest('[data-choice]');
+    if (choice) {
+      const key = choice.getAttribute('data-choice');
+      const value = choice.getAttribute('data-value') || '';
+      state[key] = value;
+      render();
+      return;
+    }
+
+    if (event.target.closest('[data-wizard-next]')) {
+      advance();
+      return;
+    }
+
+    if (event.target.closest('[data-wizard-back]')) {
+      back();
+      return;
+    }
+
+    if (event.target.closest('[data-wizard-copy]')) {
+      const code = el('[data-wizard-result-code]')?.textContent || '';
+      navigator.clipboard?.writeText(code);
+      const btn = event.target.closest('[data-wizard-copy]');
+      if (btn) {
+        const previous = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(() => {
+          btn.textContent = previous || 'Copy';
+        }, 1200);
+      }
+    }
+  }
+
+  function open() {
+    inject();
+    root.dataset.open = 'true';
+    state.open = true;
+    render();
+    const current = el('[data-step="0"].is-active [data-choice]');
+    current?.focus();
+  }
+
+  function close() {
+    if (!root) return;
+    root.dataset.open = 'false';
+    state.open = false;
+  }
+
+  function advance() {
+    if (state.step < 3) state.step += 1;
+    if (state.step === 3) generate();
+    render();
+  }
+
+  function back() {
+    if (state.step > 0) state.step -= 1;
+    render();
+  }
+
+  function setStepContent(stepIndex, html) {
+    const step = el(`[data-step="${stepIndex}"]`);
+    if (step) step.innerHTML = html;
+  }
+
+  function render() {
+    if (!root) return;
+
+    qsa('[data-choice]').forEach(button => {
+      const key = button.getAttribute('data-choice');
+      const value = button.getAttribute('data-value');
+      button.classList.toggle('is-active', state[key] === value);
+    });
+
+    qsa('[data-step]').forEach(step => {
+      const index = Number(step.getAttribute('data-step') || '0');
+      step.classList.toggle('is-active', index === state.step);
+    });
+
+    qsa('[data-progress-dot]').forEach(dot => {
+      const index = Number(dot.getAttribute('data-progress-dot') || '0');
+      dot.classList.toggle('is-active', index <= state.step);
+    });
+
+    if (state.step === 1) {
+      if (state.product === 'gt') {
+        setStepContent(1, `
+          <h3 class="wizard-step__title">How are you starting with Genius Team?</h3>
+          <p class="wizard-step__desc">Choose whether you are creating a new repo or adopting an existing one.</p>
+          <div class="wizard-options wizard-options--2">
+            <button class="wizard-option ${state.projectType === 'new' ? 'is-active' : ''}" type="button" data-choice="projectType" data-value="new">
+              <span class="dl-chip dl-chip--gold">New repo</span>
+              <span class="wizard-option__title">Create a project</span>
+              <span class="wizard-option__desc">Clone Genius Team into a fresh repo and initialize the runtime.</span>
+            </button>
+            <button class="wizard-option ${state.projectType === 'existing' ? 'is-active' : ''}" type="button" data-choice="projectType" data-value="existing">
+              <span class="dl-chip">Existing repo</span>
+              <span class="wizard-option__title">Add GT to a codebase</span>
+              <span class="wizard-option__desc">Keep the repo, add GT files, and align it to the v22 contract.</span>
+            </button>
+          </div>
+          <div class="wizard-field">
+            <label for="wizardProject">Project name</label>
+            <input id="wizardProject" type="text" value="${escapeHtml(state.project)}" placeholder="my-project" data-wizard-project>
+          </div>
+          <div class="wizard-actions">
+            <button class="dl-button dl-button--ghost" type="button" data-wizard-back>Back</button>
+            <button class="dl-button dl-button--primary" type="button" data-wizard-next>Next</button>
+          </div>
+        `);
+      } else {
+        setStepContent(1, `
+          <h3 class="wizard-step__title">What do you want Cortex to do?</h3>
+          <p class="wizard-step__desc">Cortex is the transverse control tower. Start with the action that matches your portfolio.</p>
+          <div class="wizard-options wizard-options--3">
+            <button class="wizard-option ${state.cortexAction === 'init' ? 'is-active' : ''}" type="button" data-choice="cortexAction" data-value="init">
+              <span class="dl-chip dl-chip--gold">Bootstrap</span>
+              <span class="wizard-option__title">Initialize workspace</span>
+              <span class="wizard-option__desc">Create the Cortex home directories and starter state.</span>
+            </button>
+            <button class="wizard-option ${state.cortexAction === 'scan' ? 'is-active' : ''}" type="button" data-choice="cortexAction" data-value="scan">
+              <span class="dl-chip">Scan</span>
+              <span class="wizard-option__title">Discover repos</span>
+              <span class="wizard-option__desc">Find Genius Team projects in your workspace and classify them.</span>
+            </button>
+            <button class="wizard-option ${state.cortexAction === 'upgrade' ? 'is-active' : ''}" type="button" data-choice="cortexAction" data-value="upgrade">
+              <span class="dl-chip">Align</span>
+              <span class="wizard-option__title">Upgrade portfolio</span>
+              <span class="wizard-option__desc">Bring repos toward the current GT contract and Cortex-ready state.</span>
+            </button>
+          </div>
+          <div class="wizard-actions">
+            <button class="dl-button dl-button--ghost" type="button" data-wizard-back>Back</button>
+            <button class="dl-button dl-button--primary" type="button" data-wizard-next>Next</button>
+          </div>
+        `);
+      }
+    }
+
+    if (state.step === 2) {
+      if (state.product === 'gt') {
+        setStepContent(2, `
+          <h3 class="wizard-step__title">Which mode and engine do you want?</h3>
+          <p class="wizard-step__desc">Pick the execution mode and engine for the install command.</p>
+          <div class="wizard-options wizard-options--2" style="margin-bottom:0.75rem">
+            <button class="wizard-option ${state.mode === 'cli' ? 'is-active' : ''}" type="button" data-choice="mode" data-value="cli">
+              <span class="dl-chip dl-chip--gold">CLI</span>
+              <span class="wizard-option__title">Terminal first</span>
+              <span class="wizard-option__desc">Claude Code in the terminal.</span>
+            </button>
+            <button class="wizard-option ${state.mode === 'ide' ? 'is-active' : ''}" type="button" data-choice="mode" data-value="ide">
+              <span class="dl-chip">IDE</span>
+              <span class="wizard-option__title">Editor first</span>
+              <span class="wizard-option__desc">VS Code or Cursor with the same GT contract.</span>
+            </button>
+          </div>
+          <div class="wizard-options wizard-options--3">
+            <button class="wizard-option ${state.engine === 'claude' ? 'is-active' : ''}" type="button" data-choice="engine" data-value="claude">
+              <span class="dl-chip dl-chip--gold">Claude</span>
+              <span class="wizard-option__title">Default engine</span>
+              <span class="wizard-option__desc">Best fit for the current GT site and repo flow.</span>
+            </button>
+            <button class="wizard-option ${state.engine === 'codex' ? 'is-active' : ''}" type="button" data-choice="engine" data-value="codex">
+              <span class="dl-chip">Codex</span>
+              <span class="wizard-option__title">Codex CLI</span>
+              <span class="wizard-option__desc">Use the same repo contract from the OpenAI engine.</span>
+            </button>
+            <button class="wizard-option ${state.engine === 'dual' ? 'is-active' : ''}" type="button" data-choice="engine" data-value="dual">
+              <span class="dl-chip">Dual</span>
+              <span class="wizard-option__title">Builder + challenger</span>
+              <span class="wizard-option__desc">Two-engine mode for paired checks.</span>
+            </button>
+          </div>
+          <div class="wizard-actions">
+            <button class="dl-button dl-button--ghost" type="button" data-wizard-back>Back</button>
+            <button class="dl-button dl-button--primary" type="button" data-wizard-next>Generate command</button>
+          </div>
+        `);
+      } else {
+        setStepContent(2, `
+          <h3 class="wizard-step__title">Where are the repositories?</h3>
+          <p class="wizard-step__desc">Cortex can bootstrap the workspace, scan repos, or align the portfolio from a directory.</p>
+          <div class="wizard-field">
+            <label for="wizardReposDir">Projects directory</label>
+            <input id="wizardReposDir" type="text" value="${escapeHtml(state.reposDir)}" placeholder="~/Projects" data-wizard-reposdir>
+          </div>
+          <div class="wizard-actions">
+            <button class="dl-button dl-button--ghost" type="button" data-wizard-back>Back</button>
+            <button class="dl-button dl-button--primary" type="button" data-wizard-next>Generate command</button>
+          </div>
+        `);
+      }
+    }
+
+    if (state.step === 3) {
+      generate();
+      setStepContent(3, `
+        <h3 class="wizard-step__title">Your command is ready</h3>
+        <p class="wizard-step__desc">Copy the command, run it in your terminal, then follow the next step shown below.</p>
+        <div class="wizard-result">
+          <div class="wizard-result__code" data-wizard-result-code></div>
+          <div class="wizard-result__meta">
+            <button class="dl-button dl-button--secondary" type="button" data-wizard-copy>Copy command</button>
+            <button class="dl-button dl-button--ghost" type="button" data-wizard-back>Back</button>
+          </div>
+          <div class="wizard-result__note" data-wizard-next-step></div>
+        </div>
+      `);
+    }
+  }
+
+  function qsa(selector, rootNode = document) {
+    return Array.from(rootNode.querySelectorAll(selector));
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  function readInputs() {
+    const projectInput = el('[data-wizard-project]');
+    if (projectInput) state.project = projectInput.value.trim() || 'my-project';
+
+    const reposInput = el('[data-wizard-reposdir]');
+    if (reposInput) state.reposDir = reposInput.value.trim() || '~/Projects';
+  }
+
+  function generate() {
+    readInputs();
+
+    let command = '';
+    let note = '';
+
+    if (state.product === 'gt') {
+      const flags = [];
+      if (state.mode && state.mode !== 'cli') flags.push(`--mode ${state.mode}`);
+      if (state.engine && state.engine !== 'claude') flags.push(`--engine ${state.engine}`);
+      const suffix = flags.length ? ` ${flags.join(' ')}` : '';
+
+      if (state.projectType === 'existing') {
+        command = `cd ${state.project} && bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)${suffix}`;
+      } else {
+        command = `bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) ${state.project}${suffix}`;
+      }
+
+      note = state.engine === 'codex'
+        ? `Then open the repo with <code>codex</code> and run <code>/genius-start</code>.`
+        : `Then open the repo with <code>claude</code> and run <code>/genius-start</code>.`;
+    } else {
+      const dir = state.reposDir || '~/Projects';
+      if (state.cortexAction === 'upgrade') {
+        command = `cortex upgrade --all`;
+        note = `Use <code>cortex status</code> afterwards to confirm the portfolio is aligned.`;
+      } else if (state.cortexAction === 'scan') {
+        command = `cortex scan ${dir}`;
+        note = `Then run <code>cortex status</code> to review compatibility and readiness.`;
+      } else {
+        command = `npm install -g genius-cortex && cortex init`;
+        note = `After init, run <code>cortex scan ${dir}</code> to discover your repos.`;
+      }
+    }
+
+    const result = el('[data-wizard-result-code]');
+    const noteEl = el('[data-wizard-next-step]');
+    if (result) result.textContent = command;
+    if (noteEl) noteEl.innerHTML = note;
+  }
+
+  function open() {
+    inject();
+    state.step = 0;
+    state.product = 'gt';
+    state.projectType = 'new';
+    state.project = 'my-project';
+    state.mode = 'cli';
+    state.engine = 'claude';
+    state.cortexAction = 'init';
+    state.reposDir = '~/Projects';
+    root.dataset.open = 'true';
+    root.setAttribute('aria-hidden', 'false');
+    state.open = true;
+    document.documentElement.style.overflow = 'hidden';
+    if (!escapeHandler) {
+      escapeHandler = event => {
+        if (event.key === 'Escape') close();
+      };
+    }
+    document.addEventListener('keydown', escapeHandler);
+    render();
+  }
+
+  function close() {
+    if (!root) return;
+    root.dataset.open = 'false';
+    root.setAttribute('aria-hidden', 'true');
+    state.open = false;
+    document.documentElement.style.overflow = '';
+    if (escapeHandler) {
+      document.removeEventListener('keydown', escapeHandler);
+    }
+  }
+
+  return {
+    state,
+    init: inject,
+    open,
+    close,
+  };
+})();
+
+window.GeniusWizard = GeniusWizard;

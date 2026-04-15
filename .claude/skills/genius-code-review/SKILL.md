@@ -30,7 +30,7 @@ hooks:
       once: true
 ---
 
-# Genius Code Review v17 — Multi-Agent PR Reviewer
+# Genius Code Review v22 — Multi-Agent PR Reviewer
 
 **Three reviewers. One report. Zero bugs missed.**
 

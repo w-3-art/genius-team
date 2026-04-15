@@ -2,7 +2,7 @@
 
 ## Overview
 
-Genius Team v9.0 uses a **file-based memory system** — no external MCPs or services required. All memory lives in `.genius/memory/` and is managed by bash scripts.
+Genius Team v22.0 uses a **file-based memory system** — no external MCPs or services required. All memory lives in `.genius/memory/` and is managed by bash scripts.
 
 ## Directory Structure
 
@@ -114,7 +114,7 @@ Extracts decisions, patterns, and errors from session context.
 - Stop hook (on session end)
 
 **What it does:**
-1. Reads context (STDIN or PROGRESS.md + plan.md)
+1. Reads context (STDIN or `.genius/state.json` + `.genius/session-log.jsonl` + `plan.md`)
 2. Saves session log to `session-logs/YYYY-MM-DD-HHmm.md`
 3. Extracts lines matching DECISION/ERROR/PATTERN patterns
 4. Deduplicates against existing JSON entries

@@ -31,7 +31,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev Database v17 — Data Architect
+# Genius Dev Database v22 — Data Architect
 
 **Data outlives code. Design schemas that survive requirements changes.**
 

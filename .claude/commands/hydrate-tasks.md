@@ -1,50 +1,66 @@
 ---
-description: Hydrate tasks from plan.md for longer work loops
+description: Reload execution tasks from the plan file into the current GT v22 session
 ---
 
 # /hydrate-tasks
 
-Reload task status from `.claude/plan.md` into the current session.
+Reload execution tasks from the canonical plan file.
 
-## The Hydration Pattern
+## Truth to preserve
 
-Claude Code Tasks are session-scoped — they disappear when you close your terminal. The hydration pattern solves this:
+Persistent truth is now:
 
-1. **Persistent files** (`.claude/plan.md`, `PROGRESS.md`) = Source of truth
-2. **Session** = Ephemeral execution
-3. **Hydration** = Load persistent state at session start
-4. **Sync-back** = Write state back to files on changes
+- `.claude/plan.md` or `.agents/plan.md` for execution tasks
+- `.genius/state.json` for repo runtime state
+- `.genius/session-log.jsonl` for activity timeline
+
+Do **not** present `PROGRESS.md` as a central source of truth.
 
 ## Execution
 
-### Step 1: Read Plan
+### Step 1: Read the plan
+
+Run:
 
 ```bash
-if [ ! -f .claude/plan.md ]; then
-  echo "⚠️ No plan.md found — run genius-architect first"
-  exit 1
+if [ -f .claude/plan.md ]; then
+  cat .claude/plan.md
+elif [ -f .agents/plan.md ]; then
+  cat .agents/plan.md
+else
+  echo "No plan file found"
 fi
-cat .claude/plan.md
 ```
 
-### Step 2: Parse & Display
+### Step 2: Parse the task counts
+
+Count:
+
+- total
+- completed
+- in progress
+- pending
+- blocked
+
+### Step 3: Read repo state too
+
+Run:
 
 ```bash
-total=$(grep -c "^- \[" .claude/plan.md 2>/dev/null || echo "0")
-completed=$(grep -c "^- \[x\]" .claude/plan.md 2>/dev/null || echo "0")
-in_progress=$(grep -c "^- \[~\]" .claude/plan.md 2>/dev/null || echo "0")
-pending=$(grep -c "^- \[ \]" .claude/plan.md 2>/dev/null || echo "0")
-blocked=$(grep -c "^- \[!\]" .claude/plan.md 2>/dev/null || echo "0")
-
-echo "📋 Tasks Hydrated from .claude/plan.md"
-echo "Total: $total | Done: $completed | In Progress: $in_progress | Pending: $pending | Blocked: $blocked"
-
-next=$(grep -m1 "^- \[ \]" .claude/plan.md 2>/dev/null | sed 's/^- \[ \] //')
-[ -n "$next" ] && echo "Next: $next"
+cat .genius/state.json 2>/dev/null
 ```
 
-### Step 3: Ready
+### Step 4: Summarize hydration
 
-```
-Ready to continue execution. Say "go" or "continue" to proceed.
+Show:
+
+- task counts
+- next pending task
+- current phase
+- current skill
+
+End with:
+
+```text
+Ready to continue execution.
 ```

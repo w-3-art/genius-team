@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v9.0 — Memory Rollup & Condensation
+# Genius Team v22.0 — Memory Rollup & Condensation
 # Condenses detailed events into summaries to prevent memory explosion
 # Usage: ./scripts/memory-rollup.sh [--force] [--days N]
 

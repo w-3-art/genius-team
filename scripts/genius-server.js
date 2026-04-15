@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Genius Team Playground Server
- * Serves .genius/playgrounds/ locally and optionally via tunnel
- * Usage: node genius-server.js [--port 3333] [--dir .genius/playgrounds] [--tunnel]
+ * Genius Team Output Server
+ * Serves .genius/outputs/ locally and optionally via tunnel
+ * Usage: node genius-server.js [--port 3333] [--dir .genius/outputs] [--tunnel]
  */
 
 const http = require('http');
@@ -23,14 +23,14 @@ for (let i = 0; i < args.length; i++) {
   if (args[i] === '--tunnel') enableTunnel = true;
   if (args[i] === '--help') {
     console.log(`
-Genius Team Playground Server
+Genius Team Output Server
 
 Usage:
   node genius-server.js [options]
 
 Options:
   --port <n>     Port to listen on (default: 3333)
-  --dir <path>   Directory to serve (default: .genius/playgrounds)
+  --dir <path>   Directory to serve (default: .genius/outputs)
   --tunnel       Auto-start a local tunnel for remote access
   --help         Show this help
 
@@ -46,7 +46,7 @@ Remote access (auto-detected in order):
 // ─── PATHS ───────────────────────────────────────────────────────────────────
 const cwd = process.cwd();
 if (!serveDir) {
-  serveDir = path.join(cwd, '.genius', 'playgrounds');
+  serveDir = path.join(cwd, '.genius', 'outputs');
 }
 serveDir = path.resolve(serveDir);
 
@@ -78,7 +78,7 @@ function writeState(remoteUrl) {
       localUrl: `http://localhost:${port}`,
       remoteUrl: remoteUrl || null,
       startedAt: new Date().toISOString(),
-      playgroundsDir: serveDir,
+      outputsDir: serveDir,
     }, null, 2));
   } catch (_) {}
 }
@@ -245,20 +245,20 @@ const server = http.createServer(async (req, res) => {
 // ─── STARTUP ─────────────────────────────────────────────────────────────────
 server.listen(port, () => {
   const line = '─'.repeat(40);
-  console.log(`\n🧠 Genius Team Playground Server`);
+  console.log(`\n🧠 Genius Team Output Server`);
   console.log(line);
 
   // Check if serve dir exists
   if (!fs.existsSync(serveDir)) {
-    console.log(`\n⚠️  Playgrounds directory not found: ${serveDir}`);
+    console.log(`\n⚠️  Outputs directory not found: ${serveDir}`);
     console.log(`   Run genius-team setup first, then re-launch this server.`);
-    console.log(`   (Default path: .genius/playgrounds in your project root)\n`);
+    console.log(`   (Default path: .genius/outputs in your project root)\n`);
   }
 
   // Check if dashboard exists
-  const dashFile = path.join(serveDir, 'genius-dashboard.html');
+  const dashFile = path.join(cwd, '.genius', 'DASHBOARD.html');
   if (fs.existsSync(serveDir) && !fs.existsSync(dashFile)) {
-    console.log(`⚠️  genius-dashboard.html not found — run genius-team to generate it.\n`);
+    console.log(`⚠️  .genius/DASHBOARD.html not found — run genius-dashboard to generate it.\n`);
   }
 
   console.log(`\n🌐 Local:   http://localhost:${port}`);

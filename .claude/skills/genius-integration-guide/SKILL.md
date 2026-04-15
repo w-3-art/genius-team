@@ -11,7 +11,7 @@ description: >-
 ## ⚠️ MANDATORY ARTIFACT
 
 **This skill MUST generate:**
-- XML: `.claude/discovery/INTEGRATIONS.xml`
+- XML: `.genius/discovery/INTEGRATIONS.xml`
 - HTML Playground: `.genius/outputs/STACK-CONFIG.html`
 
 **Before transitioning to next skill:**
@@ -24,7 +24,7 @@ description: >-
 
 ---
 
-# Genius Integration Guide v17.0 — Service Setup Wizard
+# Genius Integration Guide v22.0 — Service Setup Wizard
 
 **Making external service integration painless.**
 
@@ -70,7 +70,7 @@ Append to `.genius/memory/decisions.json`:
 
 ## Output
 
-- `INTEGRATIONS.md` — Configured services, status, credentials summary
+- `.genius/discovery/INTEGRATIONS.xml` — Configured services, status, credentials summary
 - `.env.example` — Template for team (committed)
 - `.env.local` — Actual values (gitignored)
 
@@ -182,7 +182,7 @@ Use this output to proceed with service configuration and `.env` file generation
 
 ## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
 
-After generating any `.genius/*.html` playground file:
+After generating any `.genius/outputs/*.html` playground file:
 1. Follow `.claude/commands/genius-dashboard.md` instructions to regenerate `.genius/DASHBOARD.html`
 2. Open it immediately:
    ```bash
@@ -193,10 +193,10 @@ After generating any `.genius/*.html` playground file:
 ## Handoffs
 
 ### From: genius-marketer + genius-copywriter
-Receives: TRACKING-PLAN.xml, project requirements
+Receives: tracking guidance from `.genius/discovery/MARKETING-PLAN.xml`, project requirements
 
 ### To: genius-architect
-Provides: INTEGRATIONS.md, .env.example, configured services list, STACK-CONFIG.html playground
+Provides: `.genius/discovery/INTEGRATIONS.xml`, `.env.example`, configured services list, `STACK-CONFIG.html` playground
 
 
 ---

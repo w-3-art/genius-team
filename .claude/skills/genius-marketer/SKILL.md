@@ -2,8 +2,9 @@
 name: genius-marketer
 description: >-
   Go-to-market strategy skill. Defines audience segments, positioning, acquisition
-  channels, launch plans, and success metrics. Creates MARKETING-STRATEGY.xml and
-  TRACKING-PLAN.xml. Use when user says "marketing strategy", "go-to-market", "GTM",
+  channels, launch plans, and success metrics. Writes the repo handoff into
+  `.genius/discovery/MARKETING-PLAN.xml`, including tracking guidance. Use when user
+  says "marketing strategy", "go-to-market", "GTM",
   "launch plan", "growth strategy", "acquisition channels", "user acquisition",
   "retention strategy". Do NOT use for content creation (genius-content), copywriting
   (genius-copywriter), or product-market fit analysis (genius-product-market-analyst).
@@ -12,7 +13,7 @@ description: >-
 ## ⚠️ MANDATORY ARTIFACT
 
 **This skill MUST generate:**
-- XML: `.claude/discovery/MARKETING-PLAN.xml`
+- XML: `.genius/discovery/MARKETING-PLAN.xml`
 - HTML Playground: `.genius/outputs/GTM-STRATEGY.html`
 
 **Before transitioning to next skill:**
@@ -25,7 +26,7 @@ description: >-
 
 ---
 
-# Genius Marketer v17.0 — Growth Strategist
+# Genius Marketer v22.0 — Growth Strategist
 
 **From zero to traction with data-driven marketing.**
 
@@ -50,7 +51,7 @@ Append to `.genius/memory/decisions.json`:
 
 ## Prerequisites
 
-**REQUIRED:** DISCOVERY.xml, MARKET-ANALYSIS.xml, design-config.json
+**REQUIRED:** `.genius/discovery/DISCOVERY.xml`, `.genius/discovery/MARKET-ANALYSIS.xml`, design-config.json
 
 ---
 
@@ -68,7 +69,7 @@ Append to `.genius/memory/decisions.json`:
 
 ### GTM Simulator Flow
 
-1. **Analyze Context** — Read DISCOVERY.xml and MARKET-ANALYSIS.xml to understand the product, target market, and competitive landscape
+1. **Analyze Context** — Read `.genius/discovery/DISCOVERY.xml` and `.genius/discovery/MARKET-ANALYSIS.xml` to understand the product, target market, and competitive landscape
 
 2. **Propose Initial Strategy** — Based on analysis, recommend:
    - Budget tier (Bootstrap/Seed/Series A)
@@ -145,20 +146,19 @@ The playground generates a complete GTM strategy prompt including:
 - 12-month projections (users, revenue, ROI)
 - Actionable recommendations
 
-This validated output becomes the basis for MARKETING-STRATEGY.xml.
+This validated output becomes the basis for `.genius/discovery/MARKETING-PLAN.xml`.
 
 ---
 
 ## Output
 
-- `MARKETING-STRATEGY.xml` — Full strategy with audience, positioning, channels, launch plan, metrics
-- `TRACKING-PLAN.xml` — Events, funnels, analytics tools
+- `.genius/discovery/MARKETING-PLAN.xml` — Full strategy with audience, positioning, channels, launch plan, metrics, and tracking guidance
 
 ---
 
 ## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
 
-After generating any `.genius/*.html` playground file:
+After generating any `.genius/outputs/*.html` playground file:
 1. Follow `.claude/commands/genius-dashboard.md` instructions to regenerate `.genius/DASHBOARD.html`
 2. Open it immediately:
    ```bash
@@ -172,10 +172,10 @@ After generating any `.genius/*.html` playground file:
 Receives: design-config.json, brand personality
 
 ### To: genius-copywriter (parallel)
-Provides: MARKETING-STRATEGY.xml, messaging framework, target personas
+Provides: `.genius/discovery/MARKETING-PLAN.xml`, messaging framework, target personas
 
 ### To: genius-integration-guide
-Provides: TRACKING-PLAN.xml, analytics tool recommendations
+Provides: tracking guidance embedded in `.genius/discovery/MARKETING-PLAN.xml`, plus analytics tool recommendations
 
 ## Handoff to genius-content
 

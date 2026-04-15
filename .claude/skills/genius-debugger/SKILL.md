@@ -30,7 +30,7 @@ hooks:
       once: true
 ---
 
-# Genius Debugger v17.0 — Error Terminator
+# Genius Debugger v22.0 — Error Terminator
 
 **Every bug has a story. I find it and end it.**
 
@@ -115,4 +115,4 @@ Provides: If fix needs comprehensive testing
 - [ ] Fix applied and verified (bug no longer reproduces)
 - [ ] Error logged in `.genius/memory/errors.json`
 - [ ] Regression test added to prevent recurrence
-- [ ] PROGRESS.md updated
+- [ ] `.genius/state.json` and/or `.genius/session-log.jsonl` updated

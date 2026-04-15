@@ -25,7 +25,7 @@ description: >-
 
 ---
 
-# Genius Architect v17.0 — The Master Blueprint
+# Genius Architect v22.0 — The Master Blueprint
 
 **Breaking down the vision into executable tasks for Agent Teams.**
 
@@ -54,14 +54,14 @@ Append to `.genius/memory/decisions.json`:
 **REQUIRED before starting:**
 - `SPECIFICATIONS.xml` from genius-specs (approved)
 - `design-config.json` from genius-designer
-- `INTEGRATIONS.md` from genius-integration-guide (optional)
+- `INTEGRATIONS.xml` from genius-integration-guide (optional)
 
 ---
 
 ## Playground Integration
 
 ### Architecture Explorer
-Use the interactive playground at `.genius/outputs/ARCHITECTURE.html` for visual architecture design.
+Use the interactive playground at `.genius/outputs/architecture-playground.html` for visual architecture design.
 
 **Template:** `playgrounds/templates/architecture-explorer.html`
 
@@ -69,7 +69,7 @@ Use the interactive playground at `.genius/outputs/ARCHITECTURE.html` for visual
 1. **Design initial architecture** based on specifications
 2. **Generate playground** with initial components:
    ```bash
-   cp playgrounds/templates/architecture-explorer.html .genius/outputs/ARCHITECTURE.html
+   cp playgrounds/templates/architecture-explorer.html .genius/outputs/architecture-playground.html
    ```
 3. **User explores and adjusts:**
    - Drag & drop nodes onto the canvas
@@ -197,7 +197,7 @@ When creating tasks for the orchestrator:
 
 ## 🗂️ Post-Output: Refresh Dashboard (MANDATORY)
 
-After generating any `.genius/*.html` playground file:
+After generating any `.genius/outputs/*.html` playground file:
 1. Follow `.claude/commands/genius-dashboard.md` instructions to regenerate `.genius/DASHBOARD.html`
 2. Open it immediately:
    ```bash
@@ -208,7 +208,7 @@ After generating any `.genius/*.html` playground file:
 ## Handoffs
 
 ### From: genius-integration-guide + genius-specs
-Receives: SPECIFICATIONS.xml, INTEGRATIONS.md, design-config.json
+Receives: SPECIFICATIONS.xml, INTEGRATIONS.xml, design-config.json
 
 ### To: genius-orchestrator (after approval)
 Provides: .claude/plan.md (SINGLE SOURCE OF TRUTH), ARCHITECTURE.md

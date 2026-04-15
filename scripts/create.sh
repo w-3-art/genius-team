@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-# Genius Team v21.0 — One-Liner Install
+# Genius Team v22.0 — One-Liner Install
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) [project-name] [--mode cli|ide|omni|dual] [--engine claude|codex|dual]
 # ═══════════════════════════════════════════════════════════════
 set -e
@@ -20,6 +20,26 @@ ok()    { echo -e "${GREEN}✓${NC}  $1"; }
 warn()  { echo -e "${YELLOW}⚠${NC}  $1"; }
 fail()  { echo -e "${RED}✗${NC}  $1"; }
 die()   { echo -e "\n${RED}ERROR:${NC} $1" >&2; exit 1; }
+
+resolve_local_source() {
+  if [ -n "${GENIUS_TEAM_SOURCE_DIR:-}" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/VERSION" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/scripts/setup.sh" ]; then
+    printf '%s' "$GENIUS_TEAM_SOURCE_DIR"
+    return 0
+  fi
+
+  case "${BASH_SOURCE[0]}" in
+    /dev/fd/*|/proc/self/fd/*) return 1 ;;
+  esac
+
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -f "${script_dir}/../VERSION" ] && [ -f "${script_dir}/setup.sh" ]; then
+    (cd "${script_dir}/.." && pwd)
+    return 0
+  fi
+
+  return 1
+}
 
 # ── Parse Arguments ──────────────────────────────────────────
 PROJECT_NAME=""
@@ -65,7 +85,7 @@ fi
 # ── Banner ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v21.0 — Installer                ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v22.0 — Installer                ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  Project: ${CYAN}${PROJECT_NAME}${NC}"
@@ -80,25 +100,36 @@ if [ -d "$PROJECT_NAME" ]; then
   die "Directory '${PROJECT_NAME}' already exists. Choose a different name or remove it first."
 fi
 
-# Quick connectivity check
-if ! git ls-remote https://github.com/w-3-art/genius-team.git HEAD &>/dev/null 2>&1; then
-  die "Cannot reach GitHub. Check your internet connection."
-fi
+# ── Get source ───────────────────────────────────────────────
+LOCAL_GT_SOURCE=""
+if LOCAL_GT_SOURCE="$(resolve_local_source)"; then
+  info "Copying Genius Team from local source..."
+  mkdir -p "$PROJECT_NAME"
+  cp -R "${LOCAL_GT_SOURCE}/." "$PROJECT_NAME"
+  rm -rf "$PROJECT_NAME/.git"
+  ok "Copied local Genius Team into ${CYAN}${PROJECT_NAME}${NC}"
+else
+  # Quick connectivity check
+  if ! git ls-remote https://github.com/w-3-art/genius-team.git HEAD &>/dev/null 2>&1; then
+    die "Cannot reach GitHub. Check your internet connection."
+  fi
 
-# ── Clone ────────────────────────────────────────────────────
-info "Cloning Genius Team..."
-if ! git clone --quiet https://github.com/w-3-art/genius-team.git "$PROJECT_NAME" 2>/dev/null; then
-  die "Git clone failed. Check your internet connection and try again."
+  # ── Clone ────────────────────────────────────────────────────
+  info "Cloning Genius Team..."
+  if ! git clone --quiet https://github.com/w-3-art/genius-team.git "$PROJECT_NAME" 2>/dev/null; then
+    die "Git clone failed. Check your internet connection and try again."
+  fi
+  ok "Cloned into ${CYAN}${PROJECT_NAME}${NC}"
 fi
-ok "Cloned into ${CYAN}${PROJECT_NAME}${NC}"
 
 cd "$PROJECT_NAME"
 
 # ── Fresh Git History ────────────────────────────────────────
+rm -rf .genius
 rm -rf .git
 git init --quiet
 git add -A &>/dev/null
-git commit -m "🧠 Initial commit — Genius Team v21.0 (${MODE} mode, ${ENGINE} engine)" --quiet &>/dev/null
+git commit -m "🧠 Initial commit — Genius Team v22.0 (${MODE} mode, ${ENGINE} engine)" --quiet &>/dev/null
 ok "Fresh git history initialized"
 
 # ── Run Setup ────────────────────────────────────────────────
@@ -110,7 +141,7 @@ echo ""
 
 # ── Dependency Check & Guide ─────────────────────────────────
 echo -e "${BOLD}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║  🧠 Genius Team v21.0 — Ready!                   ║${NC}"
+echo -e "${BOLD}║  🧠 Genius Team v22.0 — Ready!                   ║${NC}"
 echo -e "${BOLD}╚═══════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${DIM}Checking your environment...${NC}"

@@ -1,4 +1,4 @@
-# Genius Team v21.0 — Dual Mode
+# Genius Team v22.0 — Dual Mode
 
 > Your AI product team. Builder + Challenger adversarial workflow.
 
@@ -112,7 +112,7 @@ Claude Code ≥ 1.0.0 supports project configs shared across git worktrees. In d
 
 ## Agent Teams Protocol
 
-Genius Team v21.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+Genius Team v22.0 uses Claude Code Agent Teams (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 
 - **Lead** (you, the main session) coordinates — never codes directly
 - **Builder** is the primary implementation agent (Claude Opus)
@@ -239,7 +239,8 @@ Then: genius-qa → genius-security → genius-deployer
 | `.genius/dual-state.json` | Dual engine state |
 | `.genius/config.json` | Team configuration (models, memory settings) |
 | `.genius/memory/BRIEFING.md` | Auto-generated project context |
-| `PROGRESS.md` | Real-time execution status |
+| `.genius/state.json` | Canonical runtime state |
+| `.genius/session-log.jsonl` | Session timeline and recovery log |
 
 ---
 
@@ -257,7 +258,7 @@ All other transitions happen automatically.
 
 1. **IDEATION Phase**: Ask questions, validate understanding, get approval at checkpoints
 2. **EXECUTION Phase**: Never stop, handle errors, keep going until ALL tasks complete
-3. **Always update** PROGRESS.md and plan.md after each task
+3. **Always update** `.genius/state.json` and `plan.md` after each task
 4. **Memory**: Read BRIEFING.md at session start, update JSON files during work
 5. **QA Loop**: Every task must pass genius-qa-micro before completion
 6. **Agent Teams**: Lead coordinates, teammates execute — never mix roles

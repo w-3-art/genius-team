@@ -17,7 +17,7 @@ Initialize Genius Team environment, load memory, and **hydrate tasks** for longe
 
 Claude Code Tasks are session-scoped (disappear when you close terminal). Genius Team uses the **hydration pattern**:
 - `.claude/plan.md` = Persistent task source of truth
-- `PROGRESS.md` = Persistent progress tracking
+- `.genius/state.json` + `.genius/session-log.jsonl` = Persistent runtime tracking
 - `.genius/memory/` = File-based memory (survives sessions)
 
 ## Execution
@@ -36,6 +36,7 @@ The SessionStart hook automatically:
 cat .genius/state.json 2>/dev/null || echo "No state yet"
 cat .genius/memory/BRIEFING.md 2>/dev/null || echo "No memory yet"
 ls DISCOVERY.xml SPECIFICATIONS.xml ARCHITECTURE.md .claude/plan.md 2>/dev/null
+ls .genius/discovery/*.xml .claude/plan.md .agents/plan.md 2>/dev/null
 ```
 
 ### Step 3: Initialize State if Needed
@@ -47,7 +48,7 @@ Run `bash scripts/setup.sh` if needed.
 
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  🧠 Genius Team v17.0 — Environment Ready                   ║
+║  🧠 Genius Team v22.0 — Environment Ready                   ║
 ╚════════════════════════════════════════════════════════════╝
 
 Memory:

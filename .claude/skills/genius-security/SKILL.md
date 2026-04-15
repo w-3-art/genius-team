@@ -23,7 +23,7 @@ description: >-
 
 ---
 
-# Genius Security v17.0 — The Guardian
+# Genius Security v22.0 — The Guardian
 
 **Security is not a feature, it's a requirement.**
 

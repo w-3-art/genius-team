@@ -32,7 +32,7 @@ hooks:
       once: true
 ---
 
-# Genius Dev Frontend v17 — UI Craftsman
+# Genius Dev Frontend v22 — UI Craftsman
 
 **The UI is the product. Build it pixel-perfect, fast, and accessible.**
 

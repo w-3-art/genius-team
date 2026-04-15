@@ -1,5 +1,5 @@
 #!/bin/bash
-# Genius Team v9.0 — Generate BRIEFING.md from memory JSON files + events system
+# Genius Team v22.0 — Generate BRIEFING.md from memory JSON files + events system
 # Called by SessionStart hook and after memory-extract.sh
 # Now supports: events/*.jsonl (new) + legacy JSON files (backwards compatible)
 
