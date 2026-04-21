@@ -103,26 +103,79 @@ echo ""
 info "Installing configs and commands..."
 
 if [[ "$ENGINE" == "claude" || "$ENGINE" == "dual" ]]; then
+  # settings.json is framework-owned — safe to overwrite; user overrides live in settings.local.json
   if [ -f "configs/${MODE}/settings.json" ]; then
+    # Preserve previous for user diffing, if any
+    if [ -f .claude/settings.json ] && [ ! -f .claude/settings.json.previous ]; then
+      cp .claude/settings.json .claude/settings.json.previous
+    fi
     cp "configs/${MODE}/settings.json" .claude/settings.json
-    ok ".claude/settings.json installed"
+    ok ".claude/settings.json installed (previous saved as .claude/settings.json.previous)"
   else
     warn "configs/${MODE}/settings.json missing"
   fi
 
-  if [ -f "configs/${MODE}/CLAUDE.md" ]; then
-    cp "configs/${MODE}/CLAUDE.md" CLAUDE.md
-    ok "CLAUDE.md installed"
+  # Ensure user overlay exists (gitignored, never overwritten)
+  if [ ! -f .claude/settings.local.json ]; then
+    mkdir -p .claude
+    cat > .claude/settings.local.json <<'LOCAL_JSON'
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$comment": "Your personal overrides. Never overwritten by upgrades. Gitignored by default.",
+  "permissions": { "allow": [], "deny": [] },
+  "hooks": {},
+  "env": {}
+}
+LOCAL_JSON
+    ok ".claude/settings.local.json created (your overlay, gitignored)"
+  fi
+  if [ -f .gitignore ] && ! grep -qE "^\\.claude/settings\\.local\\.json$" .gitignore 2>/dev/null; then
+    printf "\n# Genius Team user overlay\n.claude/settings.local.json\n.claude/settings.json.previous\n" >> .gitignore
+  fi
+
+  # CLAUDE.md: NEVER overwrite. Install framework doctrine as .genius/GT-WORKFLOW.md
+  # (CLAUDE.md should have `@.genius/GT-WORKFLOW.md` at top — handled by add.sh / create.sh).
+  mkdir -p .genius
+  if [ -f ".genius/GT-WORKFLOW.md" ]; then
+    ok ".genius/GT-WORKFLOW.md already present (framework doctrine)"
+  elif [ -f "configs/${MODE}/CLAUDE.md" ]; then
+    cp "configs/${MODE}/CLAUDE.md" .genius/GT-WORKFLOW.md
+    ok ".genius/GT-WORKFLOW.md installed from configs/${MODE}/CLAUDE.md"
   else
-    warn "configs/${MODE}/CLAUDE.md missing"
+    warn ".genius/GT-WORKFLOW.md missing — neither prior file nor configs/${MODE}/CLAUDE.md available"
+  fi
+
+  # Install the project-facing template ONLY if user has no CLAUDE.md yet
+  if [ ! -f CLAUDE.md ]; then
+    if [ -f "templates/CLAUDE.project.md" ]; then
+      cp templates/CLAUDE.project.md CLAUDE.md
+      ok "CLAUDE.md installed from project template"
+    elif [ -f "configs/${MODE}/CLAUDE.md" ]; then
+      # Legacy fallback: prepend the import line so the new model still works
+      {
+        printf "@.genius/GT-WORKFLOW.md\n\n# Project\n\n"
+      } > CLAUDE.md
+      ok "CLAUDE.md created with @.genius/GT-WORKFLOW.md import (legacy fallback)"
+    fi
+  else
+    if ! grep -q "^@\\.genius/GT-WORKFLOW\\.md" CLAUDE.md 2>/dev/null; then
+      tmp=$(mktemp)
+      printf "@.genius/GT-WORKFLOW.md\n\n" > "$tmp"
+      cat CLAUDE.md >> "$tmp"
+      mv "$tmp" CLAUDE.md
+      ok "CLAUDE.md preserved — prepended @.genius/GT-WORKFLOW.md import"
+    else
+      ok "CLAUDE.md already imports GT-WORKFLOW — left untouched"
+    fi
   fi
 fi
 
 if [[ "$ENGINE" == "codex" || "$ENGINE" == "dual" ]]; then
-  if [ -f "configs/${MODE}/CLAUDE.md" ]; then
+  # AGENTS.md mirrors the framework doctrine for Codex — derive from GT-WORKFLOW.md
+  if [ -f ".genius/GT-WORKFLOW.md" ]; then
+    sed 's/Claude Code/Codex CLI/g; s/\.claude\//.agents\//g' .genius/GT-WORKFLOW.md > AGENTS.md
+  elif [ -f "configs/${MODE}/CLAUDE.md" ]; then
     sed 's/Claude Code/Codex CLI/g; s/\.claude\//.agents\//g' "configs/${MODE}/CLAUDE.md" > AGENTS.md
-  elif [ -f "CLAUDE.md" ]; then
-    sed 's/Claude Code/Codex CLI/g; s/\.claude\//.agents\//g' CLAUDE.md > AGENTS.md
   else
     cat > AGENTS.md <<'EOF'
 # Genius Team v22.0 — Codex Mode
