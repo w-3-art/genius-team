@@ -45,6 +45,7 @@ resolve_local_source() {
 PROJECT_NAME=""
 MODE="cli"
 ENGINE="claude"
+BRANCH="${GENIUS_TEAM_BRANCH:-main}"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -52,17 +53,22 @@ while [[ $# -gt 0 ]]; do
     --mode=*) MODE="${1#*=}"; shift ;;
     --engine)   ENGINE="$2"; shift 2 ;;
     --engine=*) ENGINE="${1#*=}"; shift ;;
+    --branch)   BRANCH="$2"; shift 2 ;;
+    --branch=*) BRANCH="${1#*=}"; shift ;;
     -h|--help)
-      echo "Usage: bash <(curl -fsSL URL) [project-name] [--mode cli|ide|omni|dual] [--engine claude|codex|dual]"
+      echo "Usage: bash <(curl -fsSL URL) [project-name] [--mode cli|ide|omni|dual] [--engine claude|codex|dual] [--branch BRANCH]"
       echo ""
       echo "  project-name     Directory name (default: genius-project)"
       echo "  --mode MODE      Setup mode: cli (default), ide, omni, dual"
       echo "  --engine ENGINE  AI engine: claude (default), codex, dual"
+      echo "  --branch BRANCH  GT branch to install from (default: main)"
+      echo "                   Also settable via GENIUS_TEAM_BRANCH env var"
       echo ""
       echo "Examples:"
-      echo "  bash <(curl ...) my-project                      # Claude Code, CLI mode"
+      echo "  bash <(curl ...) my-project                      # Claude Code, CLI mode (main)"
       echo "  bash <(curl ...) my-project --engine=codex       # Codex CLI only"
       echo "  bash <(curl ...) my-project --engine=dual        # Both engines"
+      echo "  bash <(curl ...) my-project --branch=feat/v22    # Install from a feature branch"
       exit 0
       ;;
     -*)       die "Unknown option: $1" ;;
@@ -91,6 +97,7 @@ echo ""
 echo -e "  Project: ${CYAN}${PROJECT_NAME}${NC}"
 echo -e "  Mode:    ${CYAN}${MODE}${NC}"
 echo -e "  Engine:  ${CYAN}${ENGINE}${NC}"
+echo -e "  Branch:  ${CYAN}${BRANCH}${NC}"
 echo ""
 
 # ── Pre-flight Checks ───────────────────────────────────────
@@ -115,11 +122,11 @@ else
   fi
 
   # ── Clone ────────────────────────────────────────────────────
-  info "Cloning Genius Team..."
-  if ! git clone --quiet https://github.com/w-3-art/genius-team.git "$PROJECT_NAME" 2>/dev/null; then
-    die "Git clone failed. Check your internet connection and try again."
+  info "Cloning Genius Team (branch: ${BRANCH})..."
+  if ! git clone --quiet --branch "$BRANCH" --single-branch https://github.com/w-3-art/genius-team.git "$PROJECT_NAME" 2>/dev/null; then
+    die "Git clone failed. Either the branch '${BRANCH}' does not exist on the remote, or there is no internet connection."
   fi
-  ok "Cloned into ${CYAN}${PROJECT_NAME}${NC}"
+  ok "Cloned branch ${CYAN}${BRANCH}${NC} into ${CYAN}${PROJECT_NAME}${NC}"
 fi
 
 cd "$PROJECT_NAME"
