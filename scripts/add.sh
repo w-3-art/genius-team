@@ -44,6 +44,7 @@ resolve_local_source() {
 # ── Parse Arguments ──────────────────────────────────────────
 MODE="cli"
 ENGINE="claude"
+BRANCH="${GENIUS_TEAM_BRANCH:-main}"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -51,11 +52,15 @@ while [[ $# -gt 0 ]]; do
     --mode=*) MODE="${1#*=}"; shift ;;
     --engine)   ENGINE="$2"; shift 2 ;;
     --engine=*) ENGINE="${1#*=}"; shift ;;
+    --branch)   BRANCH="$2"; shift 2 ;;
+    --branch=*) BRANCH="${1#*=}"; shift ;;
     -h|--help)
-      echo "Usage: cd your-project && bash <(curl -fsSL URL) [--mode cli|ide|omni|dual] [--engine claude|codex|dual]"
+      echo "Usage: cd your-project && bash <(curl -fsSL URL) [--mode cli|ide|omni|dual] [--engine claude|codex|dual] [--branch BRANCH]"
       echo ""
       echo "  --mode MODE      Setup mode: cli (default), ide, omni, dual"
       echo "  --engine ENGINE  AI engine: claude (default), codex, dual"
+      echo "  --branch BRANCH  GT branch to install from (default: main)"
+      echo "                   Also settable via GENIUS_TEAM_BRANCH env var"
       echo ""
       echo "Run this from INSIDE your existing project directory."
       exit 0
@@ -84,6 +89,7 @@ echo ""
 echo -e "  Target:  ${CYAN}$(pwd)${NC}"
 echo -e "  Mode:    ${CYAN}${MODE}${NC}"
 echo -e "  Engine:  ${CYAN}${ENGINE}${NC}"
+echo -e "  Branch:  ${CYAN}${BRANCH}${NC}"
 echo ""
 
 # ── Pre-flight Checks ───────────────────────────────────────
@@ -116,11 +122,11 @@ else
   TMPDIR_GT=$(mktemp -d)
   trap 'rm -rf "${TMPDIR_GT}"' EXIT
 
-  info "Downloading Genius Team files..."
-  if ! git clone --quiet https://github.com/w-3-art/genius-team.git "${TMPDIR_GT}/genius" 2>/dev/null; then
-    die "Git clone failed. Check your internet connection and try again."
+  info "Downloading Genius Team files (branch: ${BRANCH})..."
+  if ! git clone --quiet --branch "$BRANCH" --single-branch https://github.com/w-3-art/genius-team.git "${TMPDIR_GT}/genius" 2>/dev/null; then
+    die "Git clone failed. Either branch '${BRANCH}' does not exist on the remote, or there is no internet connection."
   fi
-  ok "Downloaded Genius Team"
+  ok "Downloaded Genius Team (branch: ${BRANCH})"
   GENIUS_SRC="${TMPDIR_GT}/genius"
 fi
 
