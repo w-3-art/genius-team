@@ -6,6 +6,7 @@ description: >-
   "connect to [API]", "third-party setup guide".
   Do NOT use for coding the integration (use genius-dev-api).
   Do NOT use for architecture decisions (use genius-architect).
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

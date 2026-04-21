@@ -4,6 +4,7 @@ description: >-
   First-time setup wizard for new Genius Team installations. Use when the .genius/ directory
   doesn't exist, or user says "setup genius", "initialize", "first time setup",
   "configure genius team". Do NOT use on projects already initialized — use genius-start instead.
+context: fork
 ---
 
 # Genius Onboarding v22.0 — Welcome Experience

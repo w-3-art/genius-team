@@ -17,6 +17,7 @@ hooks:
     - type: command
       command: "bash -c 'echo \"INTERVIEW COMPLETE: $(date)\" >> .genius/interview.log 2>/dev/null || true'"
       once: true
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

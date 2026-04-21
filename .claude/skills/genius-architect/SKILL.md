@@ -7,6 +7,7 @@ description: >-
   "stack, database schema, API structure", "database schema", "API structure", "technical stack".
   SPECIFICATIONS.xml is preferred but not required — if user explicitly requests architecture, proceed.
   Do NOT use for building code (genius-dev-backend/frontend) or writing feature specs (genius-specs).
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

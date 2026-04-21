@@ -62,6 +62,7 @@ hooks:
   PreToolUse:
     - type: command
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] ROUTER: $TOOL_NAME\" >> .genius/router.log 2>/dev/null || true'"
+context: fork
 ---
 
 # Genius Team v22.0 — Your AI Product Team

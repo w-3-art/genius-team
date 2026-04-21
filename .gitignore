@@ -64,3 +64,8 @@ credentials.json
 token.json
 .genius/
 .vercel
+.railway/
+
+# Debug screenshots (not for prod)
+docs/screenshots/scroll-test/
+docs/screenshots/audit/

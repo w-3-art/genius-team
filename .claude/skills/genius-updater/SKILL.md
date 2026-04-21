@@ -17,6 +17,7 @@ allowed-tools:
   - Bash(cat *)
   - Bash(echo *)
   - Bash(curl *)
+context: fork
 ---
 
 # Genius Updater v22.0 — Self-Update Protocol

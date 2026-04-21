@@ -35,6 +35,7 @@ hooks:
     - type: command
       command: "bash -c 'echo \"\\n=== ORCHESTRATION ENDED: $(date) ===\" >> .genius/orchestrator.log 2>/dev/null || true'"
       once: true
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT
@@ -163,7 +164,21 @@ Task markers:
 
 ### Sync-Back Protocol
 
-Before a task starts, move it to `[~]` in `.claude/plan.md`. After implementation plus QA pass, mark it `[x]`, update `.genius/state.json`, and append a completion event to `.genius/session-log.jsonl`. After 3 failed attempts, mark it `[!]`.
+Before a task starts:
+- Move it to `[~]` in `.claude/plan.md`
+- Call `TaskUpdate` with `status: "in_progress"` to sync Native Tasks
+
+After implementation plus QA pass:
+- Mark it `[x]` in `.claude/plan.md`
+- Call `TaskUpdate` with `status: "completed"` to sync Native Tasks
+- Update `.genius/state.json`
+- Append a completion event to `.genius/session-log.jsonl`
+
+After 3 failed attempts:
+- Mark it `[!]` in `.claude/plan.md`
+- Call `TaskUpdate` with `status: "completed"` and a metadata note to flag the block
+
+Native Tasks (created by genius-start hydration) and plan.md stay in lockstep.
 
 ---
 

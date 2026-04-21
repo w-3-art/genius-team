@@ -5,6 +5,7 @@ description: >-
   and produces DESIGN-SYSTEM.html. Use when SPECIFICATIONS.xml exists and user says
   "design the brand", "create design system", "design options", "visual identity", "UI design".
   Do NOT use for CSS implementation — that's genius-dev-frontend.
+context: fork
 ---
 
 ## 🚨🚨🚨 CRITICAL: NEVER PRESENT DESIGN OPTIONS AS TEXT 🚨🚨🚨

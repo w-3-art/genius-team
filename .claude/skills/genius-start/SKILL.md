@@ -74,16 +74,23 @@ Ready! What would you like to do?
   🔧 "/reset"                     → Start over
 ```
 
-### Step 5: Hydrate Tasks (If Execution Phase)
+### Step 5: Hydrate Native Tasks (If Execution Phase)
 
-If `.claude/plan.md` exists and phase is EXECUTION:
+If `.claude/plan.md` exists and phase is EXECUTION, hydrate Claude Code's Native Tasks:
+
+1. Parse each `- [ ] task name` line from plan.md
+2. Call `TaskCreate` for each pending (`[ ]`) and in-progress (`[~]`) task
+3. Call `TaskUpdate` to mark in-progress tasks as `in_progress`
+4. Skip completed (`[x]`) and blocked (`[!]`) tasks — they're done
+
+This gives the user a live task tracker in their terminal that mirrors plan.md.
 
 ```
-Tasks (from .claude/plan.md):
-  ├── ✅ Completed: {completed}
-  ├── 🔄 In Progress: {in_progress}
-  ├── ⏳ Pending: {pending}
-  └── ⚠️ Blocked: {blocked}
+Tasks hydrated from .claude/plan.md:
+  ├── Completed: {completed} (not hydrated)
+  ├── In Progress: {in_progress} (hydrated as in_progress)
+  ├── Pending: {pending} (hydrated as pending)
+  └── Blocked: {blocked} (not hydrated)
 
 Next: {next_pending_task}
 ```

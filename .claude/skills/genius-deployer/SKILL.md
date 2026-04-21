@@ -7,6 +7,7 @@ description: >-
   Do NOT use for development/coding (use genius-dev skills).
   Do NOT use for testing (use genius-qa).
   After deployment, suggest genius-seo and genius-analytics for post-launch optimization.
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

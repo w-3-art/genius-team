@@ -7,6 +7,7 @@ description: >-
   or when /genius-start detects a project without .genius/ directory.
   Do NOT use for new projects (use genius-interviewer).
 user-invocable: true
+context: fork
 ---
 
 # Genius Import — Adopt Existing Projects

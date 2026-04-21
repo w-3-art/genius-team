@@ -5,6 +5,7 @@ description: >-
   and exposed secrets. Use when user says "security audit", "check for vulnerabilities",
   "OWASP scan", "is this secure", "security review".
   Do NOT use for general code review — use genius-reviewer instead.
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

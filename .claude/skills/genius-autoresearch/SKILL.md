@@ -7,6 +7,7 @@ description: >-
   "run autoresearch", "make this better autonomously".
   Do NOT use for initial implementation (use genius-dev).
   Do NOT use for simple fixes (use genius-debugger).
+when_to_use: optimization, overnight, autonomous, iterative, karpathy
 user-invocable: true
 context: fork
 allowed-tools:
@@ -22,6 +23,23 @@ allowed-tools:
 # Genius Autoresearch v22.0 — Autonomous Optimization Loop
 
 **Karpathy's autoresearch pattern applied to any project component. Modify → Test → Measure → Keep if better → Repeat.**
+
+## Running with `/loop`
+
+For continuous autonomous optimization, use Claude Code's native `/loop` command:
+
+```
+/loop 5m /skill genius-autoresearch
+```
+
+The skill self-paces iterations. For overnight optimization, combine with safe stop conditions (max iterations, max time, metric target).
+
+Self-paced variant (skill picks next wake-up):
+```
+/loop /skill genius-autoresearch
+```
+
+---
 
 ## Memory Integration
 Read `@.genius/memory/BRIEFING.md` for project context.

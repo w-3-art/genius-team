@@ -6,6 +6,7 @@ description: >-
   "headlines", "email copy", "button text", "CTA", "marketing copy", "UX writing",
   "tagline", "value proposition". Do NOT use for long-form blog posts or newsletters
   (genius-content), technical documentation (genius-docs), or i18n translations (genius-i18n).
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

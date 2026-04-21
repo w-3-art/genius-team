@@ -22,6 +22,7 @@ hooks:
   PreToolUse:
     - type: command
       command: "bash -c 'echo \"[$(date +%H:%M:%S)] OMNI-ROUTER: $TOOL_NAME\" >> .genius/omni-router.log 2>/dev/null || true'"
+context: fork
 ---
 
 # Genius Omni Router v22.0 — Multi-Provider Orchestration

@@ -5,6 +5,7 @@ description: >-
   and produces a QA report. Use when implementation is complete and user says "run QA",
   "test everything", "quality audit", "validate the build", "check if it works".
   Do NOT use for micro-validation during coding — use genius-qa-micro instead.
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

@@ -80,6 +80,41 @@ Every 10min. Run optimization cycle, evaluate, keep or revert.
 
 ---
 
+## Cortex-Managed Schedules
+
+When Cortex is available (MCP server), use it to schedule cross-repo recurring tasks. These run across all tracked repos.
+
+### Nightly QA (cron: `0 2 * * *`)
+Runs genius-qa on every tracked repo at 2 AM daily.
+
+```bash
+claude trigger create --name "cortex-nightly-qa" \
+  --schedule "0 2 * * *" \
+  --prompt "For each repo listed by cortex_status, run genius-qa full audit and post summary."
+```
+
+### Weekly Evolution (cron: `0 9 * * 1`)
+Runs genius-evolution audit every Monday at 9 AM — graduates learned rules, prunes stale ones.
+
+```bash
+claude trigger create --name "cortex-weekly-evolution" \
+  --schedule "0 9 * * 1" \
+  --prompt "Run genius-evolution audit across all repos: graduate corrections to rules, prune stale entries."
+```
+
+### Health Check (every 6 hours)
+Calls `cortex_health` on every repo — surfaces outdated deps, failing CI, stale branches.
+
+```bash
+claude trigger create --name "cortex-health-check" \
+  --schedule "0 */6 * * *" \
+  --prompt "Call cortex_health on every tracked repo. Alert on any score < 70."
+```
+
+Configure these via Cortex UI or by running the commands above. Cortex persists the schedule and reports results to the dashboard.
+
+---
+
 ## Configuration Protocol
 
 1. Identify task type: what, how often, session-only or persistent?

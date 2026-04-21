@@ -8,6 +8,7 @@ description: >-
   "launch plan", "growth strategy", "acquisition channels", "user acquisition",
   "retention strategy". Do NOT use for content creation (genius-content), copywriting
   (genius-copywriter), or product-market fit analysis (genius-product-market-analyst).
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

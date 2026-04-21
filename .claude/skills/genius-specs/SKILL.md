@@ -6,6 +6,7 @@ description: >-
   "create specifications", "formalize requirements", "document features", "based on what we discussed".
   Do NOT use for market/competitor analysis (genius-product-market-analyst) or design (genius-designer).
   Do NOT use before the interview phase is complete unless user explicitly requests specs.
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

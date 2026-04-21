@@ -9,6 +9,7 @@ description: >-
   Do NOT use for writing technical specs (genius-specs).
   Do NOT use for building the product (genius-dev skills) or tracking post-launch metrics
   (genius-analytics).
+context: fork
 ---
 
 ## ⚠️ MANDATORY ARTIFACT

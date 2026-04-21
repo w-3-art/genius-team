@@ -7,6 +7,7 @@ description: >-
   handles the rest. Use when user says "run experiments", "optimize overnight",
   "autonomous optimization", "A/B test implementations", "find the best approach".
   Do NOT use for regular feature implementation — use genius-dev skills instead.
+when_to_use: optimization, overnight, autonomous, iterative, A/B test
 context: fork
 agent: genius-experiments
 user-invocable: true
@@ -38,6 +39,23 @@ hooks:
 **Define the goal. Let the agent find the best path. Review the results in the morning.**
 
 Inspired by Andrej Karpathy's autoresearch approach: autonomous iteration over a well-defined metric, keeping improvements and discarding regressions.
+
+---
+
+## Running with `/loop`
+
+For overnight or long-running experiments, use Claude Code's native `/loop` command:
+
+```
+/loop 10m /skill genius-experiments
+```
+
+This re-invokes the skill every 10 minutes, allowing iterative improvement without manual intervention. Combine with `experiment.md` stop conditions for safe autonomous runs.
+
+For self-paced loops (skill decides cadence), omit the interval:
+```
+/loop /skill genius-experiments
+```
 
 ---
 
