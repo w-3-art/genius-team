@@ -172,9 +172,77 @@ copy_dir() {
   fi
 }
 
-# Core files
+# ── GT-WORKFLOW.md (framework doctrine — GT-owned, always overwritten) ──
+mkdir -p .genius
+if [ -f "${GENIUS_SRC}/.genius/GT-WORKFLOW.md" ]; then
+  cp "${GENIUS_SRC}/.genius/GT-WORKFLOW.md" ".genius/GT-WORKFLOW.md"
+  ok "Installed ${CYAN}.genius/GT-WORKFLOW.md${NC} (framework doctrine, auto-updated)"
+  ((COPIED++)) || true
+fi
+
+# ── CLAUDE.md (project-owned — NEVER overwritten after first install) ──
+if [ -f "./CLAUDE.md" ]; then
+  if grep -q "^@\\.genius/GT-WORKFLOW\\.md" CLAUDE.md; then
+    ok "CLAUDE.md already imports GT-WORKFLOW — left untouched"
+    ((SKIPPED++)) || true
+  else
+    # Non-destructive: inject the import line at the very top.
+    tmp=$(mktemp)
+    printf "@.genius/GT-WORKFLOW.md\n\n" > "$tmp"
+    cat CLAUDE.md >> "$tmp"
+    mv "$tmp" CLAUDE.md
+    ok "CLAUDE.md preserved — prepended ${CYAN}@.genius/GT-WORKFLOW.md${NC} import"
+    ((COPIED++)) || true
+  fi
+else
+  # Fresh project: install the project-facing template
+  if [ -f "${GENIUS_SRC}/templates/CLAUDE.project.md" ]; then
+    cp "${GENIUS_SRC}/templates/CLAUDE.project.md" "./CLAUDE.md"
+    ok "Installed ${CYAN}CLAUDE.md${NC} (project template with GT-WORKFLOW import)"
+    ((COPIED++)) || true
+  else
+    # Legacy fallback (should not happen in v22+)
+    cp "${GENIUS_SRC}/CLAUDE.md" "./CLAUDE.md"
+    ok "Installed legacy CLAUDE.md (framework + project merged)"
+    ((COPIED++)) || true
+  fi
+fi
+
+# ── .claude (skills, rules, agents — GT-owned files + user overlay) ──
 copy_dir  "${GENIUS_SRC}/.claude"         "./.claude"
-copy_file "${GENIUS_SRC}/CLAUDE.md"       "./CLAUDE.md"
+
+# ── .claude/settings.local.json (user overlay — GITIGNORED, never touched) ──
+if [ ! -f ".claude/settings.local.json" ]; then
+  mkdir -p .claude
+  cat > .claude/settings.local.json <<'LOCAL_JSON'
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$comment": "Your personal overrides. Never overwritten by upgrades. Gitignored by default. Claude Code auto-merges this with .claude/settings.json at runtime.",
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "hooks": {},
+  "env": {}
+}
+LOCAL_JSON
+  ok "Created ${CYAN}.claude/settings.local.json${NC} (your overlay, gitignored)"
+  ((COPIED++)) || true
+fi
+
+# Ensure settings.local.json is gitignored
+if [ -f ".gitignore" ]; then
+  if ! grep -qE "^\\.claude/settings\\.local\\.json$" .gitignore 2>/dev/null; then
+    printf "\n# Genius Team user overlay (personal customizations)\n.claude/settings.local.json\n" >> .gitignore
+    ok "Added ${CYAN}.claude/settings.local.json${NC} to .gitignore"
+  fi
+else
+  cat > .gitignore <<'GITIGN'
+# Genius Team user overlay (personal customizations)
+.claude/settings.local.json
+GITIGN
+  ok "Created .gitignore with ${CYAN}.claude/settings.local.json${NC} entry"
+fi
 # Scripts: ALWAYS overwrite (critical for upgrades to work)
 if [ -d "./scripts" ]; then
   cp -r "${GENIUS_SRC}/scripts/"* "./scripts/"

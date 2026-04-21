@@ -62,7 +62,8 @@ coverage/
 *.key
 credentials.json
 token.json
-.genius/
+.genius/*
+!.genius/GT-WORKFLOW.md
 .vercel
 .railway/
 

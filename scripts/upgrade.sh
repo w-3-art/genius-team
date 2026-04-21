@@ -275,6 +275,83 @@ download_file() {
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
+# CLAUDE.md / GT-WORKFLOW.md split (v22+):
+# - CLAUDE.md is user-owned (never overwritten)
+# - .genius/GT-WORKFLOW.md is framework-owned (always overwritten by upgrade)
+# - CLAUDE.md imports the workflow via `@.genius/GT-WORKFLOW.md`
+# - .claude/settings.local.json is user-owned (never overwritten, gitignored)
+#═══════════════════════════════════════════════════════════════════════════════
+
+sync_gt_workflow() {
+  # Always refresh framework doctrine
+  [ "$DRY_RUN" = false ] && mkdir -p .genius
+  download_file ".genius/GT-WORKFLOW.md" ".genius/GT-WORKFLOW.md"
+
+  if [ "$DRY_RUN" = true ]; then
+    log_verbose "[DRY-RUN] Would ensure CLAUDE.md imports @.genius/GT-WORKFLOW.md"
+    return 0
+  fi
+
+  if [ -f "CLAUDE.md" ]; then
+    if ! grep -q "^@\\.genius/GT-WORKFLOW\\.md" CLAUDE.md 2>/dev/null; then
+      local tmp; tmp=$(mktemp)
+      printf "@.genius/GT-WORKFLOW.md\n\n" > "$tmp"
+      cat CLAUDE.md >> "$tmp"
+      mv "$tmp" CLAUDE.md
+      log_verbose "Prepended @.genius/GT-WORKFLOW.md import to existing CLAUDE.md"
+    fi
+  else
+    # Fresh project: use the template if available
+    local tpl=""
+    if [ "$USE_LOCAL_SOURCE" = true ]; then
+      tpl="${REPO_URL}/templates/CLAUDE.project.md"
+      [ -f "$tpl" ] && cp "$tpl" CLAUDE.md
+    else
+      download_file "templates/CLAUDE.project.md" "CLAUDE.md"
+    fi
+  fi
+}
+
+sync_settings_local() {
+  [ "$DRY_RUN" = true ] && return 0
+  [ -d ".claude" ] || mkdir -p .claude
+  if [ ! -f ".claude/settings.local.json" ]; then
+    cat > .claude/settings.local.json <<'LOCAL_JSON'
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$comment": "Your personal overrides. Never overwritten by upgrades. Gitignored by default.",
+  "permissions": { "allow": [], "deny": [] },
+  "hooks": {},
+  "env": {}
+}
+LOCAL_JSON
+    log_verbose "Created .claude/settings.local.json"
+  fi
+  if [ -f ".gitignore" ]; then
+    if ! grep -qE "^\\.claude/settings\\.local\\.json$" .gitignore 2>/dev/null; then
+      printf "\n# Genius Team user overlay\n.claude/settings.local.json\n" >> .gitignore
+    fi
+  fi
+}
+
+# Save the current settings.json as .previous before the framework version
+# overwrites it. Gives the user a concrete diff target for migrating any
+# project-specific hooks/permissions into settings.local.json.
+snapshot_settings() {
+  [ "$DRY_RUN" = true ] && return 0
+  if [ -f ".claude/settings.json" ]; then
+    cp .claude/settings.json .claude/settings.json.previous
+    log_verbose "Snapshotted current settings.json → .claude/settings.json.previous"
+  fi
+  # Ensure gitignore excludes the snapshot (it's a diff artifact)
+  if [ -f ".gitignore" ]; then
+    if ! grep -qE "^\\.claude/settings\\.json\\.previous$" .gitignore 2>/dev/null; then
+      printf ".claude/settings.json.previous\n" >> .gitignore
+    fi
+  fi
+}
+
+#═══════════════════════════════════════════════════════════════════════════════
 # Stubs for v10→v14 (these versions didn't change the upgrade infrastructure;
 # jumping straight to v15 downloads everything needed to reach v17)
 #═══════════════════════════════════════════════════════════════════════════════
@@ -303,7 +380,7 @@ upgrade_to_v17() {
 
   # ── Core files ──────────────────────────────────────────────────────────
   log_info "Core files (v17)..."
-  download_file "CLAUDE.md"    "CLAUDE.md"
+  sync_gt_workflow
   download_file "README.md"    "README.md"
   download_file "CHANGELOG.md" "CHANGELOG.md"
   download_file "VERSION"      "VERSION"
@@ -388,7 +465,7 @@ upgrade_to_v19() {
   log_info "v19: Claude Channels, Voice, 1M context, subagent fix..."
 
   # ── Re-download core files (v19 refs + subagent fix) ──────────────────────
-  download_file "CLAUDE.md"       "CLAUDE.md"
+  sync_gt_workflow
   download_file "TOOLS.md"        "TOOLS.md"
   download_file "CHANGELOG.md"    "CHANGELOG.md"
   download_file "README.md"       "README.md"
@@ -419,7 +496,7 @@ upgrade_to_v20() {
   log_info "v20: Auto Mode, Computer Use, Bare Mode CI, Scheduler..."
 
   # ── Re-download core files (v20 refs) ──────────────────────────────────────
-  download_file "CLAUDE.md"       "CLAUDE.md"
+  sync_gt_workflow
   download_file "TOOLS.md"        "TOOLS.md"
   download_file "CHANGELOG.md"    "CHANGELOG.md"
   download_file "README.md"       "README.md"
@@ -459,7 +536,7 @@ upgrade_to_v21() {
   log_info "v21: Mode System, Workflow Registry, Validators, Session Recovery..."
 
   # ── Re-download core files (v21 refs) ──────────────────────────────────────
-  download_file "CLAUDE.md"       "CLAUDE.md"
+  sync_gt_workflow
   download_file "CHANGELOG.md"    "CHANGELOG.md"
   download_file "README.md"       "README.md"
   download_file "VERSION"         "VERSION"
@@ -544,7 +621,8 @@ upgrade_to_v22() {
 
   log_info "v22: Cortex-ready contract, normalized setup pipeline, output contract..."
 
-  download_file "CLAUDE.md"       "CLAUDE.md"
+  sync_gt_workflow
+  sync_settings_local
   download_file "AGENTS.md"       "AGENTS.md"
   download_file "CHANGELOG.md"    "CHANGELOG.md"
   download_file "README.md"       "README.md"
@@ -597,7 +675,7 @@ upgrade_to_v18() {
   done
 
   # ── Re-download core files (v18 refs) ─────────────────────────────────────
-  download_file "CLAUDE.md"       "CLAUDE.md"
+  sync_gt_workflow
   download_file "GENIUS_GUARD.md" "GENIUS_GUARD.md"
   download_file "CHANGELOG.md"    "CHANGELOG.md"
   download_file "README.md"       "README.md"
@@ -614,9 +692,11 @@ upgrade_to_v18() {
 
 upgrade_to_v15() {
   upgrade_to_v14
+  # Snapshot user's current .claude/settings.json BEFORE anything overwrites it
+  snapshot_settings
   # ── Core ──────────────────────────────────────────────────────────────────
   log_info "Core files..."
-  download_file "CLAUDE.md"       "CLAUDE.md"
+  sync_gt_workflow
   download_file "GENIUS_GUARD.md" "GENIUS_GUARD.md"
   download_file "README.md"       "README.md"
   download_file "CHANGELOG.md"    "CHANGELOG.md"
@@ -778,16 +858,24 @@ print_summary() {
   echo -e "  ${BOLD}Files skipped:${NC}    $FILES_SKIPPED (already present, not overwritten)"
   echo -e "  ${BOLD}Backup:${NC}           $backup"
   echo ""
-  echo -e "${CYAN}New in v22.0:${NC}"
-  echo "  • Canonical GT repo contract in .genius/"
-  echo "  • setup/add/create normalized around the v22 state model"
-  echo "  • migrate-cortex-ready.sh for explicit Cortex compatibility"
-  echo "  • session-log.jsonl and outputs/state.json normalized"
-  echo "  • genius-command aligned on the new contract groundwork"
+  echo -e "${BOLD}Ownership model (v22):${NC}"
+  echo -e "  ${GREEN}✓ Preserved${NC}  CLAUDE.md                      — your project content (imports @.genius/GT-WORKFLOW.md)"
+  echo -e "  ${GREEN}✓ Preserved${NC}  .claude/settings.local.json    — your overrides (gitignored)"
+  echo -e "  ${GREEN}✓ Preserved${NC}  .genius/memory/*                — runtime memory"
+  echo -e "  ${YELLOW}↻ Refreshed${NC}  .genius/GT-WORKFLOW.md          — framework doctrine (auto-imported)"
+  echo -e "  ${YELLOW}↻ Refreshed${NC}  .claude/settings.json           — framework hooks & permissions"
+  echo -e "  ${YELLOW}↻ Refreshed${NC}  .claude/skills/*, rules/*       — framework skills & rules"
   echo ""
+  if [ -f ".claude/settings.json.previous" ]; then
+    echo -e "${CYAN}  💡 Your previous settings.json saved at:${NC}"
+    echo -e "     ${BOLD}.claude/settings.json.previous${NC}"
+    echo -e "     Compare with: ${BOLD}diff .claude/settings.json.previous .claude/settings.json${NC}"
+    echo -e "     Move your custom hooks/permissions into ${BOLD}.claude/settings.local.json${NC}"
+    echo ""
+  fi
   echo -e "${YELLOW}Next steps:${NC}"
-  echo "  1. Run ${BOLD}genius-start${NC} or ${BOLD}/genius-start${NC} to bootstrap the repo"
-  echo "  2. If Cortex compatibility is needed, run ${BOLD}bash scripts/migrate-cortex-ready.sh${NC}"
+  echo "  1. Run ${BOLD}/genius-start${NC} to bootstrap or resume the project"
+  echo "  2. Review ${BOLD}.claude/settings.json.previous${NC} if you had customizations"
   echo "  3. Open the dashboard: ${BOLD}open .genius/DASHBOARD.html${NC}"
   echo ""
 }
