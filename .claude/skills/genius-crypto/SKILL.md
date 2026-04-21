@@ -1,12 +1,14 @@
 ---
 name: genius-crypto
 description: >-
-  Blockchain and Web3 analysis skill. Scans tokens via DexScreener, analyzes NFT
-  collections via OpenSea, and runs on-chain SQL analytics via Dune MCP.
-  Use for Web3 project due diligence, tokenomics analysis, DeFi protocol research,
-  portfolio tracking, or when user says "check this token", "analyze NFT collection",
-  "on-chain analytics", "DeFi analysis", "crypto research", "blockchain data".
-  Do NOT use for implementing Web3 smart contracts — use genius-dev-backend for that.
+  Blockchain and Web3 ANALYSIS skill (read-only, on-chain intelligence). Scans tokens
+  via DexScreener, analyzes NFT collections via OpenSea, and runs on-chain SQL analytics
+  via Dune MCP. Use for Web3 project due diligence, tokenomics analysis, DeFi protocol
+  research, portfolio tracking, or when user says "check this token", "analyze NFT
+  collection", "on-chain analytics", "DeFi analysis", "crypto research", "blockchain data".
+  Do NOT use for WRITING smart contracts, dApp wallet wiring, or anything that ships
+  on-chain — use genius-dev-web3 (Solidity, Vyper, Foundry, Hardhat, ethers/viem/wagmi).
+  Do NOT use for UI of the dApp — use genius-dev-frontend.
 context: fork
 agent: genius-crypto
 user-invocable: true
@@ -170,6 +172,7 @@ Crypto/Web3 implementation MUST be:
 Never deploy to mainnet without testnet verification.
 
 ## Handoffs
-- → **genius-dev-backend**: For implementing smart contracts or blockchain integrations
+- → **genius-dev-web3**: For implementing smart contracts, dApp wiring, deployments
+- → **genius-dev-backend**: For off-chain services (indexer, webhooks, RPC proxy)
 - → **genius-security**: For security audit of crypto implementations
-- → **genius-deployer**: For deploying Web3 applications
+- → **genius-deployer**: For deploying dApp frontends and off-chain services

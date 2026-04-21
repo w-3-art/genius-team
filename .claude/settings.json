@@ -59,6 +59,16 @@
     ]
   },
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'PROMPT=\"$CLAUDE_USER_PROMPT\"; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); CODING_RX=\"\\\\b(implement|code|coder|build|builds?|fix|fixes?|add|adds?|create|creates?|debug|debugs?|deploy|deploys?|refactor|refactors?|write|writes?|ecris?|corriges?|ajoutes?|cr[ée]es?|implemente|impl[ée]mente|contract|contrat|solidity|vyper|token|ERC-?[0-9]|dApp|smart ?contract)\\\\b\"; WEB3_RX=\"\\\\b(solidity|vyper|cairo|foundry|hardhat|anchor|smart ?contract|ERC-?(20|721|1155|4626)|dApp|onchain|on-chain|reentrancy|uniswap|EVM)\\\\b\"; if echo \"$PROMPT\" | grep -qEi \"$CODING_RX\"; then echo \"<genius_reminder>\"; echo \"⚠️ GT LEAD INVARIANTS (this prompt looks like a coding task)\"; echo \"\"; echo \"1. NEVER code directly. You are the Lead. Route every change through a Genius Team skill.\"; echo \"2. Check .genius/state.json BEFORE any action (current skill/phase/checkpoint).\"; echo \"3. Pick the RIGHT skill for the task type:\"; echo \"   - smart contracts / Solidity / Vyper / Foundry / Hardhat / Anchor → genius-dev-web3\"; echo \"   - React/Vue/CSS/UI → genius-dev-frontend\"; echo \"   - API/server/auth/middleware → genius-dev-backend\"; echo \"   - SQL/schema/migrations → genius-dev-database\"; echo \"   - React Native/Expo → genius-dev-mobile\"; echo \"   - Third-party SDK wrapper → genius-dev-api\"; echo \"   - Token/NFT due diligence (analysis, not dev) → genius-crypto\"; echo \"   - Full-stack / unclassified → genius-dev (dispatcher)\"; echo \"4. Current skill in state.json: $SKILL\"; if echo \"$PROMPT\" | grep -qEi \"$WEB3_RX\"; then echo \"\"; echo \"🔗 WEB3/SMART-CONTRACT SIGNAL DETECTED → prefer genius-dev-web3 over genius-dev-backend.\"; fi; echo \"</genius_reminder>\"; fi'"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
@@ -84,7 +94,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'INPUT=\"$TOOL_INPUT\"; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); if echo \"$INPUT\" | grep -qE \"\\\\.(ts|js|tsx|jsx|py|go|rs)$\"; then if [ \"$SKILL\" != \"genius-dev\" ] && [ \"$SKILL\" != \"genius-refactor\" ] && [ \"$SKILL\" != \"genius-fix\" ]; then echo \"GUARD: Writing code outside dev skill ($SKILL). Use genius-dev.\"; fi; fi'"
+            "command": "bash -c 'INPUT=\"$TOOL_INPUT\"; SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); DEV_SKILLS=\"genius-dev genius-dev-frontend genius-dev-backend genius-dev-mobile genius-dev-database genius-dev-api genius-dev-web3 genius-debugger genius-refactor genius-fix genius-orchestrator\"; if echo \"$INPUT\" | grep -qE \"\\\\.(ts|tsx|js|jsx|mjs|cjs|py|go|rs|sol|vy|cairo|move|java|kt|swift|rb|php|c|cpp|h|hpp)$\"; then if ! echo \" $DEV_SKILLS \" | grep -qE \" $SKILL \"; then echo \"⚠️ GUARD: Writing code with skill=$SKILL — NOT a dev skill. Invoke the right genius-dev-* sub-skill first (web3/frontend/backend/mobile/database/api).\"; fi; if echo \"$INPUT\" | grep -qE \"\\\\.(sol|vy|cairo|move)$\"; then if [ \"$SKILL\" != \"genius-dev-web3\" ] && [ \"$SKILL\" != \"genius-dev\" ] && [ \"$SKILL\" != \"genius-orchestrator\" ]; then echo \"🔗 GUARD: Editing a smart-contract file (.sol/.vy/.cairo/.move) with skill=$SKILL. Use genius-dev-web3.\"; fi; fi; fi'"
           }
         ]
       }

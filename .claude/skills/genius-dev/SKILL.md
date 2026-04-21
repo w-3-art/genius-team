@@ -4,14 +4,16 @@ description: >-
   Smart coding dispatcher. Analyzes the task and routes to the right specialized
   sub-skill: genius-dev-frontend (UI/CSS/React), genius-dev-backend (API/auth/server),
   genius-dev-mobile (React Native/Expo), genius-dev-database (schema/migrations/queries),
-  genius-dev-api (third-party integrations). Handles full-stack or unclassified tasks directly.
+  genius-dev-api (third-party integrations), genius-dev-web3 (smart contracts, Solidity,
+  Vyper, Foundry, Hardhat, ethers/viem/wagmi, ERC-20/721/1155/4626). Handles full-stack
+  or unclassified tasks directly.
   Use when user says "implement", "code", "build feature", "write code", "create component",
   "add feature", "build this", "make this work".
   Do NOT use for code review (use genius-reviewer or genius-code-review).
   Do NOT use for debugging existing bugs (use genius-debugger).
   Do NOT use for QA/testing (use genius-qa or genius-qa-micro).
-  IMPORTANT: When the task clearly targets frontend, backend, mobile, database, or API,
-  route DIRECTLY to the sub-skill instead of going through genius-dev.
+  IMPORTANT: When the task clearly targets frontend, backend, mobile, database, API,
+  or web3/smart-contracts, route DIRECTLY to the sub-skill instead of going through genius-dev.
   Do NOT use for QA, design, or architecture tasks.
 context: fork
 agent: genius-dev
@@ -53,7 +55,14 @@ Before implementing anything, analyze the task and route to the specialized sub-
 | React Native, Expo, iOS, Android, mobile-specific APIs | **genius-dev-mobile** |
 | SQL, NoSQL, schema design, migrations, Prisma, Drizzle, indexing | **genius-dev-database** |
 | Third-party API integration, SDK wrapper, webhook, OpenAPI client | **genius-dev-api** |
+| Solidity, Vyper, Cairo, Move, smart contracts, ERC-20/721/1155/4626, Foundry, Hardhat, Anchor, ethers/viem/wagmi, dApp wiring | **genius-dev-web3** |
 | Full-stack feature, multi-layer, or unclassified | **Handle directly** (see below) |
+
+**Web3 signal cues** (route to `genius-dev-web3` immediately):
+- File ext `.sol`, `.vy`, `.cairo`, `.move`
+- Config files: `foundry.toml`, `hardhat.config.*`, `Anchor.toml`
+- Keywords: "contract", "token", "NFT", "ERC-*", "vault", "staking", "airdrop",
+  "wallet connect", "onchain", "reentrancy", "gas optimization"
 
 **How to dispatch:**
 When you receive a coding task, state your routing decision:
