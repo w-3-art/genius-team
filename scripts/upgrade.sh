@@ -16,11 +16,14 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 # Config
-REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/main"
+BRANCH="${GENIUS_TEAM_BRANCH:-main}"
 TARGET_VERSION="22.0.0"
 CLAUDE_SKILL_DIR=".claude/skills"
 LOCAL_SOURCE_ROOT=""
 USE_LOCAL_SOURCE=false
+
+# REPO_URL is rebuilt after we've parsed flags (it depends on BRANCH).
+REPO_URL=""
 
 resolve_local_source() {
   if [ -n "${GENIUS_TEAM_SOURCE_DIR:-}" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/VERSION" ] && [ -f "${GENIUS_TEAM_SOURCE_DIR}/scripts/setup.sh" ]; then
@@ -42,28 +45,48 @@ resolve_local_source() {
   return 1
 }
 
+# Flags
+FORCE=false
+DRY_RUN=false
+VERBOSE=false
+
+# ── Early-parse BRANCH so all subsequent logic (local source, self-heal,
+# download URLs) uses the right remote. Full parse happens again in main().
+for _arg in "$@"; do
+  case "$_arg" in
+    --branch=*)          BRANCH="${_arg#*=}" ;;
+    --branch)            _NEED_BRANCH=1 ;;
+    *)
+      if [ "${_NEED_BRANCH:-0}" = "1" ]; then
+        BRANCH="$_arg"
+        _NEED_BRANCH=0
+      fi
+      ;;
+  esac
+done
+unset _NEED_BRANCH
+BRANCH="${BRANCH:-main}"
+
 if LOCAL_SOURCE_ROOT="$(resolve_local_source)"; then
   USE_LOCAL_SOURCE=true
   REPO_URL="$LOCAL_SOURCE_ROOT"
+else
+  REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/${BRANCH}"
 fi
 
 # ── Self-Healing: re-exec from GitHub if this script is older than the source ─
-# This runs even when the local upgrade.sh targets an old version
+# Only makes sense on the canonical `main` branch; feature-branch tests should
+# run whatever script the user fetched (that's the whole point of --branch).
 _REMOTE_VER=""
-if [ "$USE_LOCAL_SOURCE" = false ]; then
+if [ "$USE_LOCAL_SOURCE" = false ] && [ "$BRANCH" = "main" ]; then
   _REMOTE_VER=$(curl -sfL --max-time 5 "https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION" 2>/dev/null || echo "")
 fi
-if [ "$USE_LOCAL_SOURCE" = false ] && [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$TARGET_VERSION" ]; then
+if [ "$USE_LOCAL_SOURCE" = false ] && [ "$BRANCH" = "main" ] && [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$TARGET_VERSION" ]; then
   echo -e "⚠️  This upgrade script targets v$TARGET_VERSION but latest Genius Team is v$_REMOTE_VER."
   echo -e "   Fetching the latest upgrade script from GitHub..."
   echo ""
   exec bash <(curl -fsSL "https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh") "$@"
 fi
-
-# Flags
-FORCE=false
-DRY_RUN=false
-VERBOSE=false
 
 # Stats
 FILES_DOWNLOADED=0
@@ -92,12 +115,20 @@ show_usage() {
   echo "Usage: $0 [OPTIONS]"
   echo ""
   echo "Options:"
-  echo "  --force     Skip git clean check"
-  echo "  --dry-run   Preview changes without modifying files"
-  echo "  --verbose   Show detailed file download output"
-  echo "  --help      Show this help"
+  echo "  --branch BRANCH  GT branch to pull files from (default: main)"
+  echo "                   Also settable via GENIUS_TEAM_BRANCH env var"
+  echo "  --force          Skip git-clean check AND force re-sync even if already at the"
+  echo "                   target version (use to pull incremental branch changes)"
+  echo "  --dry-run        Preview changes without modifying files"
+  echo "  --verbose        Show detailed file download output"
+  echo "  --help           Show this help"
   echo ""
   echo "Upgrades your Genius Team project to v22.0.0 from any previous version."
+  echo ""
+  echo "Examples:"
+  echo "  $0                                    # Upgrade from main"
+  echo "  $0 --branch feat/my-branch --force    # Re-sync from a feature branch"
+  echo "  $0 --force                            # Re-download all files at the same version"
 }
 
 #═══════════════════════════════════════════════════════════════════════════════
@@ -299,12 +330,12 @@ upgrade_to_v17() {
     "genius-updater" "genius-team-optimizer" "genius-memory"
     "genius-code-review"
     "genius-dev-frontend" "genius-dev-backend" "genius-dev-mobile"
-    "genius-dev-database" "genius-dev-api"
+    "genius-dev-database" "genius-dev-api" "genius-dev-web3"
     "genius-skill-creator" "genius-experiments"
     "genius-seo" "genius-crypto"
     "genius-analytics" "genius-performance" "genius-accessibility"
     "genius-i18n" "genius-docs" "genius-content" "genius-template"
-    "genius-playground-generator"
+    "genius-playground-generator" "genius-evolution"
   )
   for skill in "${all_skills[@]}"; do
     download_file "${CLAUDE_SKILL_DIR}/$skill/SKILL.md" "${CLAUDE_SKILL_DIR}/$skill/SKILL.md"
@@ -781,15 +812,23 @@ print_dry_run_summary() {
 main() {
   while [[ $# -gt 0 ]]; do
     case $1 in
-      --force)    FORCE=true;    shift ;;
-      --dry-run)  DRY_RUN=true;  shift ;;
-      --verbose)  VERBOSE=true;  shift ;;
-      --help|-h)  show_usage; exit 0 ;;
+      --force)      FORCE=true;   shift ;;
+      --dry-run)    DRY_RUN=true; shift ;;
+      --verbose)    VERBOSE=true; shift ;;
+      --branch)     BRANCH="$2";  shift 2 ;;
+      --branch=*)   BRANCH="${1#*=}"; shift ;;
+      --help|-h)    show_usage; exit 0 ;;
       *) log_error "Unknown option: $1"; show_usage; exit 1 ;;
     esac
   done
 
   print_banner
+
+  if [ "$USE_LOCAL_SOURCE" = true ]; then
+    log_info "Source: local ($LOCAL_SOURCE_ROOT)"
+  else
+    log_info "Source: $REPO_URL"
+  fi
 
   # ── Step 1: Detect version ─────────────────────────────────────────────────
   log_step 1 5 "Detecting current version..."
@@ -797,11 +836,15 @@ main() {
   echo -e "   Detected: ${BOLD}v$CURRENT_VERSION${NC} → Target: ${BOLD}v$TARGET_VERSION${NC}"
 
   if ! version_lt "$CURRENT_VERSION" "$TARGET_VERSION"; then
-    log_success "Already at v$CURRENT_VERSION — nothing to do."
-    echo ""
-    echo "Your Genius Team is already aligned with the latest version. 🎉"
-    echo "To force a re-download of all files: $0 --force"
-    exit 0
+    if [ "$FORCE" != true ]; then
+      log_success "Already at v$CURRENT_VERSION — nothing to do."
+      echo ""
+      echo "Your Genius Team is already aligned with the latest version. 🎉"
+      echo "To force a re-download of all files at the same version: $0 --force"
+      echo "To pull from a feature branch:                          $0 --branch <name> --force"
+      exit 0
+    fi
+    log_warning "Already at v$CURRENT_VERSION — --force given, re-syncing all v$TARGET_VERSION files."
   fi
 
   # ── Step 2: Prerequisites ──────────────────────────────────────────────────
