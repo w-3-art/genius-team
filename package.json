@@ -1,0 +1,20 @@
+{
+  "name": "genius-team-site",
+  "version": "22.0.0",
+  "private": true,
+  "description": "Genius Team ecosystem marketing site + chat API + Tauri updater host",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11 <25"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "node -e \"console.log('static site — no build step')\"",
+    "typecheck": "echo 'no typescript at root'"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "@hono/node-server": "^1.13.0"
+  }
+}

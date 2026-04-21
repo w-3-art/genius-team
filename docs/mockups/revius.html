@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Revius — populated review mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --gold: #D4A574;
+  --amber: #F59E0B;
+  --coral: #E8825F;
+  --bg: #0B0B0C;
+  --host-bg: #F5F3EF;
+  --host-fg: #1B1B1B;
+  --host-muted: #6B6B6B;
+  --panel: #131316;
+  --panel-2: #18181D;
+  --border: rgba(245, 158, 11, .12);
+  --border-strong: rgba(245, 158, 11, .3);
+  --text: #F3EBDD;
+  --muted: rgba(243, 235, 221, .55);
+  --ok: #38B26D;
+}
+html, body { height: 100%; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.stage {
+  min-height: 100vh;
+  position: relative;
+  background:
+    radial-gradient(ellipse 40% 30% at 20% 20%, rgba(245,158,11,.06), transparent 55%),
+    radial-gradient(ellipse 30% 25% at 80% 70%, rgba(232,130,95,.05), transparent 50%),
+    var(--bg);
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 1.4rem;
+}
+
+/* Simulated host app (light theme) */
+.host {
+  background: var(--host-bg);
+  color: var(--host-fg);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,.4);
+}
+.host__chrome {
+  display: flex; align-items: center; gap: .35rem;
+  padding: .6rem .9rem;
+  background: #E6E0D6;
+  border-bottom: 1px solid #D8D0C2;
+}
+.chrome-dot { width: 11px; height: 11px; border-radius: 50%; background: #D1C7B3; }
+.chrome-dot:nth-child(1) { background: #E8825F; }
+.chrome-dot:nth-child(2) { background: #E5C07B; }
+.chrome-dot:nth-child(3) { background: #7BC77A; }
+.chrome-url {
+  margin-left: .6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  color: #6B6B6B;
+}
+.host__body {
+  padding: 2.4rem 2rem 2rem;
+  font-family: 'DM Sans', sans-serif;
+}
+.host__eyebrow {
+  font-size: .7rem; text-transform: uppercase;
+  letter-spacing: .12em; color: #9B8570;
+  font-weight: 700; margin-bottom: .8rem;
+}
+.host__title {
+  font-size: 1.8rem; font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  color: #1B1B1B;
+  margin-bottom: 1rem;
+  max-width: 440px;
+}
+.host__lead {
+  color: var(--host-muted);
+  font-size: .92rem;
+  line-height: 1.6;
+  max-width: 480px;
+  margin-bottom: 1.6rem;
+}
+.host__cta-row {
+  display: flex; gap: .6rem; margin-bottom: 2rem;
+}
+.host__btn {
+  background: #1B1B1B; color: white;
+  padding: .7rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 600; font-size: .85rem;
+  border: none;
+}
+.host__btn--ghost {
+  background: transparent;
+  color: #1B1B1B;
+  border: 1px solid #D8D0C2;
+}
+.host__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+.host__card {
+  background: white;
+  border: 1px solid #E6E0D6;
+  border-radius: 10px;
+  padding: 1rem;
+}
+.host__card-title { font-weight: 700; font-size: .88rem; margin-bottom: .3rem; }
+.host__card-body { font-size: .78rem; color: var(--host-muted); line-height: 1.5; }
+
+/* Zone selection overlay on hero */
+.zone-select {
+  position: absolute;
+  top: 70px; left: 44px;
+  width: 480px; height: 96px;
+  border: 2px solid var(--amber);
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px rgba(245,158,11,.12), 0 0 30px rgba(245,158,11,.25);
+  z-index: 3;
+}
+.zone-select__corner {
+  position: absolute; width: 14px; height: 14px;
+  border: 2px solid var(--amber);
+  background: var(--bg);
+}
+.zone-select__corner.tl { top: -8px; left: -8px; border-right: none; border-bottom: none; }
+.zone-select__corner.tr { top: -8px; right: -8px; border-left: none; border-bottom: none; }
+.zone-select__corner.bl { bottom: -8px; left: -8px; border-right: none; border-top: none; }
+.zone-select__corner.br { bottom: -8px; right: -8px; border-left: none; border-top: none; }
+.zone-select__tag {
+  position: absolute; top: -30px; left: -2px;
+  background: var(--amber);
+  color: #0B0B0C;
+  font-size: .7rem; font-weight: 700;
+  padding: .28rem .65rem;
+  border-radius: 6px;
+  letter-spacing: .03em;
+}
+
+/* Floating Revius control bar */
+.revius-bar {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(27, 27, 27, .92);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(245,158,11,.18);
+  border-radius: 100px;
+  padding: .5rem .9rem;
+  display: flex; align-items: center; gap: .6rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  z-index: 5;
+}
+.revius-bar__logo {
+  width: 22px; height: 22px;
+}
+.revius-bar__label {
+  font-family: 'DM Sans', sans-serif;
+  color: white;
+  font-size: .72rem; font-weight: 600;
+  letter-spacing: .03em;
+}
+.revius-bar__chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(245,158,11,.12);
+  color: var(--amber);
+  padding: .2rem .55rem;
+  border-radius: 100px;
+  font-size: .62rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.revius-bar__chip::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+  animation: pulseDot 1.6s ease-in-out infinite;
+}
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+.revius-bar__div {
+  width: 1px; height: 18px;
+  background: rgba(255,255,255,.1);
+}
+.revius-bar__btn {
+  display: inline-flex; align-items: center; gap: .3rem;
+  color: white; font-size: .72rem; font-weight: 500;
+  padding: .3rem .55rem;
+  border-radius: 8px;
+  opacity: .72;
+}
+.revius-bar__btn svg { width: 14px; height: 14px; }
+.revius-bar__btn.active {
+  opacity: 1;
+  background: rgba(245,158,11,.15);
+  color: var(--amber);
+}
+
+/* Right pane — observation + insight */
+.pane {
+  display: flex; flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+.revius-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.revius-panel__head {
+  padding: .9rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.revius-panel__title {
+  font-size: .82rem; font-weight: 700;
+  display: flex; align-items: center; gap: .5rem;
+}
+.panel-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--amber); box-shadow: 0 0 8px var(--amber);
+}
+.revius-panel__body { padding: 1.1rem; }
+
+.obs-meta {
+  display: flex; gap: .35rem;
+  flex-wrap: wrap;
+  margin-bottom: .8rem;
+}
+.obs-chip {
+  background: rgba(232,130,95,.1);
+  color: var(--coral);
+  font-size: .62rem; font-weight: 700;
+  padding: .18rem .55rem;
+  border-radius: 4px;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.obs-chip--zone {
+  background: rgba(245,158,11,.1);
+  color: var(--amber);
+}
+.obs-chip--selector {
+  background: rgba(255,255,255,.05);
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: none; letter-spacing: 0;
+}
+.obs-note {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.04);
+  border-radius: 10px;
+  padding: .9rem;
+  font-size: .84rem;
+  line-height: 1.55;
+  color: var(--text);
+  margin-bottom: .8rem;
+}
+.obs-voice {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .8rem;
+  background: rgba(245,158,11,.05);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+}
+.voice-play {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--amber); color: #0B0B0C;
+  display: grid; place-items: center;
+  font-size: .7rem; font-weight: 700;
+}
+.voice-wave {
+  flex: 1; display: flex; align-items: center; gap: 2px; height: 22px;
+}
+.voice-wave span {
+  flex: 1; border-radius: 1px;
+  background: var(--amber);
+  opacity: .7;
+}
+.voice-duration { font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Insight panel */
+.insight-list { list-style: none; }
+.insight-task {
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: .7rem; align-items: flex-start;
+}
+.insight-task:last-child { border-bottom: none; }
+.task-num {
+  font-size: .62rem; font-weight: 700;
+  color: var(--amber);
+  padding: .2rem .45rem;
+  background: rgba(245,158,11,.1);
+  border-radius: 5px;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+.task-content { flex: 1; }
+.task-title { font-size: .82rem; font-weight: 600; margin-bottom: .25rem; }
+.task-sev { display: inline-flex; align-items: center; gap: .3rem; font-size: .62rem; }
+.sev-dot { width: 6px; height: 6px; border-radius: 50%; }
+.sev-dot.hi { background: var(--coral); }
+.sev-dot.md { background: var(--amber); }
+.sev-dot.lo { background: var(--ok); }
+.task-sev span { color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+
+.artifacts {
+  display: flex; flex-wrap: wrap; gap: .4rem;
+  padding: .7rem 1.1rem 1.1rem;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+}
+.artifact-chip {
+  font-size: .7rem;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  padding: .28rem .55rem;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.artifact-chip b { color: var(--amber); font-weight: 500; }
+
+/* Session log */
+.log {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .9rem 1.1rem;
+  font-size: .76rem;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  max-height: 120px; overflow: hidden;
+  position: relative;
+}
+.log::after {
+  content: ''; position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40px;
+  background: linear-gradient(180deg, transparent, var(--panel));
+  pointer-events: none;
+}
+.log-row { display: flex; gap: .6rem; padding: .22rem 0; }
+.log-time { color: var(--muted); opacity: .7; }
+.log-kind-note { color: var(--ok); }
+.log-kind-warn { color: var(--amber); }
+.log-kind-err { color: var(--coral); }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <!-- LEFT: simulated host app with zone select + revius bar -->
+    <div class="host">
+      <div class="host__chrome">
+        <span class="chrome-dot"></span><span class="chrome-dot"></span><span class="chrome-dot"></span>
+        <span class="chrome-url">localhost:5173 · your-app</span>
+      </div>
+      <div class="host__body">
+        <div class="host__eyebrow">Genius studio · waiting list</div>
+        <h1 class="host__title">Join the studio and ship your idea this weekend.</h1>
+        <p class="host__lead">
+          Three tools that work together so anyone can turn an idea into something real —
+          even without writing a line of code.
+        </p>
+        <div class="host__cta-row">
+          <button class="host__btn">Join the list</button>
+          <button class="host__btn host__btn--ghost">See how it works</button>
+        </div>
+        <div class="host__cards">
+          <div class="host__card">
+            <div class="host__card-title">Genius Team</div>
+            <div class="host__card-body">The AI team that guides every step — and teaches you as you go.</div>
+          </div>
+          <div class="host__card">
+            <div class="host__card-title">Cortex</div>
+            <div class="host__card-body">A cockpit for every project you have in flight.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone selection overlay -->
+      <div class="zone-select">
+        <div class="zone-select__corner tl"></div>
+        <div class="zone-select__corner tr"></div>
+        <div class="zone-select__corner bl"></div>
+        <div class="zone-select__corner br"></div>
+        <div class="zone-select__tag">Hero · H1 #main-headline</div>
+      </div>
+
+      <!-- Revius floating control bar -->
+      <div class="revius-bar">
+        <svg class="revius-bar__logo" viewBox="0 0 48 48" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 8 14 L 8 8 L 14 8"/>
+          <path d="M 34 8 L 40 8 L 40 14"/>
+          <path d="M 40 34 L 40 40 L 34 40"/>
+          <path d="M 14 40 L 8 40 L 8 34"/>
+          <path d="M 13 24 C 17 18, 31 18, 35 24 C 31 30, 17 30, 13 24 Z"/>
+          <circle cx="24" cy="24" r="2" fill="#F59E0B" stroke="none"/>
+        </svg>
+        <span class="revius-bar__label">Revius</span>
+        <span class="revius-bar__chip">Recording</span>
+        <span class="revius-bar__div"></span>
+        <button class="revius-bar__btn active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h5v5H4zM15 4h5v5h-5zM4 15h5v5H4zM15 15h5v5h-5"/></svg>
+          Zone
+        </button>
+        <button class="revius-bar__btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4zM5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
+          Voice
+        </button>
+        <button class="revius-bar__btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16v12H4z M8 20h8 M12 16v4"/></svg>
+          Mobile
+        </button>
+        <button class="revius-bar__btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6h12v12H6z"/></svg>
+          Stop
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: observation + insight -->
+    <div class="pane">
+      <div class="revius-panel">
+        <div class="revius-panel__head">
+          <div class="revius-panel__title"><span class="panel-dot"></span>Observation · just now</div>
+          <div style="font-size: .68rem; color: var(--muted); font-family: 'JetBrains Mono', monospace;">#7 of session</div>
+        </div>
+        <div class="revius-panel__body">
+          <div class="obs-meta">
+            <span class="obs-chip">negative</span>
+            <span class="obs-chip obs-chip--zone">Hero · H1</span>
+            <span class="obs-chip obs-chip--selector">h1#main-headline</span>
+          </div>
+          <div class="obs-note">
+            The hero title is too long for mobile — it wraps to four lines on 390 px.
+            Split into two clean lines and move the secondary CTA below the join button so
+            first-time visitors see the wait-list action first.
+          </div>
+          <div class="obs-voice">
+            <div class="voice-play">▶</div>
+            <div class="voice-wave">
+              <span style="height: 30%"></span><span style="height: 60%"></span><span style="height: 40%"></span>
+              <span style="height: 85%"></span><span style="height: 55%"></span><span style="height: 72%"></span>
+              <span style="height: 48%"></span><span style="height: 90%"></span><span style="height: 35%"></span>
+              <span style="height: 65%"></span><span style="height: 78%"></span><span style="height: 45%"></span>
+              <span style="height: 70%"></span><span style="height: 30%"></span><span style="height: 58%"></span>
+              <span style="height: 82%"></span><span style="height: 40%"></span><span style="height: 68%"></span>
+              <span style="height: 50%"></span><span style="height: 75%"></span><span style="height: 36%"></span>
+            </div>
+            <div class="voice-duration">0:18</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="revius-panel">
+        <div class="revius-panel__head">
+          <div class="revius-panel__title"><span class="panel-dot"></span>Insight package · ready to hand off</div>
+          <div style="font-size: .68rem; color: var(--muted); font-family: 'JetBrains Mono', monospace;">7 tasks · 12 obs</div>
+        </div>
+        <div class="revius-panel__body">
+          <ul class="insight-list">
+            <li class="insight-task">
+              <span class="task-num">T-01</span>
+              <div class="task-content">
+                <div class="task-title">Split hero H1 to two lines and retest at 390 px.</div>
+                <div class="task-sev"><span class="sev-dot hi"></span><span>high · blocking mobile first impression</span></div>
+              </div>
+            </li>
+            <li class="insight-task">
+              <span class="task-num">T-02</span>
+              <div class="task-content">
+                <div class="task-title">Move ghost CTA below primary on mobile.</div>
+                <div class="task-sev"><span class="sev-dot md"></span><span>medium · affects conversion rate</span></div>
+              </div>
+            </li>
+            <li class="insight-task">
+              <span class="task-num">T-03</span>
+              <div class="task-content">
+                <div class="task-title">Add retry action on error toast when /join fails.</div>
+                <div class="task-sev"><span class="sev-dot hi"></span><span>high · captured from console warn</span></div>
+              </div>
+            </li>
+            <li class="insight-task">
+              <span class="task-num">T-04</span>
+              <div class="task-content">
+                <div class="task-title">Reduce card padding on 390 px (cramped).</div>
+                <div class="task-sev"><span class="sev-dot lo"></span><span>low · polish</span></div>
+              </div>
+            </li>
+            <li class="insight-task">
+              <span class="task-num">T-05</span>
+              <div class="task-content">
+                <div class="task-title">Align 'Cortex' card iconography with new brand mark.</div>
+                <div class="task-sev"><span class="sev-dot md"></span><span>medium · visual consistency</span></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="artifacts">
+          <div class="artifact-chip">.revius/artifacts/<b>tasks.md</b></div>
+          <div class="artifact-chip">.revius/artifacts/<b>prompts.md</b></div>
+          <div class="artifact-chip">.revius/artifacts/<b>revius-insight.html</b></div>
+        </div>
+      </div>
+
+      <div class="log" aria-label="Session log">
+        <div class="log-row"><span class="log-time">18:22:04</span><span class="log-kind-note">note</span><span>Observation #7 saved for Hero · H1.</span></div>
+        <div class="log-row"><span class="log-time">18:22:01</span><span class="log-kind-warn">warn</span><span>Console: Large layout shift on hero (CLS 0.21).</span></div>
+        <div class="log-row"><span class="log-time">18:21:47</span><span class="log-kind-note">note</span><span>Zone selected: h1#main-headline.</span></div>
+        <div class="log-row"><span class="log-time">18:21:30</span><span class="log-kind-err">err</span><span>POST /api/join returned 503 once — retried ok.</span></div>
+        <div class="log-row"><span class="log-time">18:20:12</span><span class="log-kind-note">note</span><span>Review session started · mobile preview 390.</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cortex — populated mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --gold: #D4A574;
+  --gold-soft: #E5BF8E;
+  --bg: #0B0B0C;
+  --panel: #131316;
+  --panel-2: #18181D;
+  --border: rgba(212, 165, 116, .08);
+  --border-strong: rgba(212, 165, 116, .18);
+  --text: #E8E4DF;
+  --muted: rgba(232, 228, 223, .48);
+  --muted-2: rgba(232, 228, 223, .28);
+  --ok: #7BC77A;
+  --warn: #E5C07B;
+  --err: #E8825F;
+  --blue: #6B8CAE;
+}
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 1rem .8rem;
+  overflow-y: auto;
+}
+.brand {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .4rem .6rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.brand svg { width: 24px; height: 24px; }
+.brand-text { font-weight: 700; font-size: .92rem; letter-spacing: -.01em; }
+.brand-sub { font-size: .62rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; display: block; margin-top: 1px; }
+
+.search {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .5rem .7rem;
+  font-size: .78rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+.search::placeholder { color: var(--muted-2); }
+
+.nav-group-label {
+  font-size: .58rem; text-transform: uppercase;
+  letter-spacing: .12em; font-weight: 700;
+  color: var(--muted-2);
+  padding: .7rem .6rem .4rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: .55rem;
+  padding: .45rem .6rem;
+  border-radius: 7px;
+  font-size: .82rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: background .15s;
+  margin-bottom: 1px;
+}
+.nav-item:hover { background: rgba(212, 165, 116, .06); }
+.nav-item.active {
+  background: rgba(212, 165, 116, .12);
+  color: var(--gold);
+  font-weight: 600;
+}
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted-2);
+  flex-shrink: 0;
+}
+.nav-item.active .nav-dot { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+/* Main */
+.main {
+  padding: 1.4rem 1.8rem 2rem;
+  overflow-y: auto;
+}
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.4rem;
+}
+.crumbs { font-size: .78rem; color: var(--muted); }
+.crumbs b { color: var(--text); font-weight: 600; }
+.topbar-actions { display: flex; gap: .5rem; }
+.pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .3rem .7rem;
+  border-radius: 100px;
+  background: rgba(212, 165, 116, .08);
+  border: 1px solid var(--border-strong);
+  font-size: .7rem; color: var(--gold);
+  font-weight: 600;
+}
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+
+h1.page-title {
+  font-size: 1.55rem; font-weight: 700;
+  letter-spacing: -.02em;
+  margin-bottom: .3rem;
+}
+.page-sub { color: var(--muted); font-size: .88rem; margin-bottom: 1.8rem; }
+
+/* Portfolio grid */
+.portfolio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+}
+.repo-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem;
+  transition: border-color .2s;
+}
+.repo-card:hover { border-color: var(--border-strong); }
+.repo-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: .8rem;
+}
+.repo-name { font-weight: 700; font-size: .92rem; }
+.repo-version { font-size: .65rem; color: var(--muted); margin-top: 2px; letter-spacing: .03em; }
+.health-score {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: .78rem;
+  position: relative;
+}
+.health-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(var(--ok) var(--pct), rgba(255,255,255,.06) var(--pct));
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 62%);
+          mask: radial-gradient(circle, transparent 60%, #000 62%);
+}
+.health-warn { color: var(--warn); }
+.health-warn .health-ring { background: conic-gradient(var(--warn) var(--pct), rgba(255,255,255,.06) var(--pct)); }
+.repo-meta {
+  display: flex; flex-direction: column; gap: .35rem;
+  font-size: .75rem; color: var(--muted);
+}
+.repo-meta .meta-row { display: flex; justify-content: space-between; }
+.repo-meta b { color: var(--text); font-weight: 600; }
+.repo-footer {
+  margin-top: .9rem; padding-top: .8rem;
+  border-top: 1px solid var(--border);
+  font-size: .72rem;
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--muted);
+}
+.repo-skill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  color: var(--gold); font-weight: 600;
+}
+.repo-skill::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 6px var(--gold);
+}
+.repo-next { font-style: italic; color: var(--muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Knowledge section */
+.section-label-main {
+  font-size: .62rem; text-transform: uppercase;
+  letter-spacing: .14em; font-weight: 700;
+  color: var(--gold); margin-bottom: .5rem;
+}
+.section-title-main { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+
+.knowledge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+}
+.knowledge-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem;
+}
+.knowledge-panel h3 {
+  font-size: .9rem; font-weight: 700;
+  margin-bottom: .8rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.chip-count {
+  background: rgba(212,165,116,.1);
+  color: var(--gold);
+  font-size: .62rem;
+  font-weight: 700;
+  padding: .15rem .55rem;
+  border-radius: 100px;
+}
+.memory-list { list-style: none; }
+.memory-bit {
+  padding: .6rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: .6rem; align-items: flex-start;
+}
+.memory-bit:last-child { border-bottom: none; }
+.memory-cat {
+  font-size: .58rem; text-transform: uppercase;
+  letter-spacing: .08em; font-weight: 700;
+  padding: .18rem .5rem; border-radius: 4px;
+  flex-shrink: 0;
+  background: rgba(107, 140, 174, .1);
+  color: var(--blue);
+}
+.memory-cat.preferences { background: rgba(212,165,116,.1); color: var(--gold); }
+.memory-cat.lessons { background: rgba(232,130,95,.1); color: var(--err); }
+.memory-cat.technical { background: rgba(107,140,174,.1); color: var(--blue); }
+.memory-cat.business { background: rgba(123,199,122,.1); color: var(--ok); }
+.memory-content { font-size: .78rem; color: var(--muted); line-height: 1.55; }
+.memory-content b { color: var(--text); font-weight: 600; }
+
+.behavior-list { list-style: none; }
+.behavior-item {
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: .6rem; align-items: center; justify-content: space-between;
+}
+.behavior-item:last-child { border-bottom: none; }
+.behavior-left { display: flex; gap: .6rem; align-items: center; }
+.behavior-sev {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.behavior-sev.critical { background: var(--err); box-shadow: 0 0 6px var(--err); }
+.behavior-sev.warning { background: var(--warn); box-shadow: 0 0 6px var(--warn); }
+.behavior-sev.info { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+.behavior-name { font-size: .82rem; font-weight: 600; }
+.behavior-desc { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+.behavior-toggle {
+  width: 30px; height: 18px; border-radius: 100px;
+  background: var(--gold);
+  position: relative;
+  flex-shrink: 0;
+}
+.behavior-toggle::after {
+  content: ''; position: absolute;
+  right: 2px; top: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #0F0F0F;
+}
+.behavior-toggle.off { background: var(--muted-2); }
+.behavior-toggle.off::after { right: auto; left: 2px; }
+
+/* Stat chips row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .9rem 1.1rem;
+}
+.stat-card-label {
+  font-size: .62rem; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--muted);
+  font-weight: 600;
+  margin-bottom: .25rem;
+}
+.stat-card-value {
+  font-size: 1.4rem; font-weight: 800;
+  color: var(--gold);
+}
+.stat-card-trend {
+  font-size: .66rem; color: var(--ok);
+  margin-top: .15rem;
+  display: inline-flex; align-items: center; gap: .2rem;
+}
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 24 6 L 40 15 L 40 33 L 24 42 L 8 33 L 8 15 Z"/>
+        <path d="M 24 13 L 33.5 18.5 L 33.5 29.5 L 24 35 L 14.5 29.5 L 14.5 18.5 Z" opacity="0.55"/>
+        <path d="M 24 19 L 28 21.5 L 28 26.5 L 24 29 L 20 26.5 L 20 21.5 Z" opacity="0.3"/>
+        <circle cx="24" cy="24" r="1.6" fill="#D4A574" stroke="none"/>
+      </svg>
+      <div>
+        <div class="brand-text">Genius Cortex</div>
+        <small class="brand-sub">v3.2.1</small>
+      </div>
+    </div>
+    <input type="text" class="search" placeholder="Search across all projects…" value="">
+    <div class="nav-group-label">Home</div>
+    <div class="nav-item"><span class="nav-dot"></span>Dashboard</div>
+    <div class="nav-group-label">Portfolio</div>
+    <div class="nav-item active"><span class="nav-dot"></span>Projects</div>
+    <div class="nav-item"><span class="nav-dot"></span>Intelligence</div>
+    <div class="nav-item"><span class="nav-dot"></span>Knowledge Atlas</div>
+    <div class="nav-group-label">Intelligence</div>
+    <div class="nav-item"><span class="nav-dot"></span>Behaviors</div>
+    <div class="nav-item"><span class="nav-dot"></span>Rules</div>
+    <div class="nav-item"><span class="nav-dot"></span>Memory Bits</div>
+    <div class="nav-item"><span class="nav-dot"></span>Personas</div>
+    <div class="nav-item"><span class="nav-dot"></span>Code Bits</div>
+    <div class="nav-item"><span class="nav-dot"></span>Glossary</div>
+    <div class="nav-group-label">Operations</div>
+    <div class="nav-item"><span class="nav-dot"></span>Chat</div>
+    <div class="nav-item"><span class="nav-dot"></span>Search</div>
+    <div class="nav-item"><span class="nav-dot"></span>Watch</div>
+    <div class="nav-item"><span class="nav-dot"></span>Suggestions</div>
+    <div class="nav-item"><span class="nav-dot"></span>Templates</div>
+    <div class="nav-item"><span class="nav-dot"></span>Hub</div>
+    <div class="nav-item"><span class="nav-dot"></span>Schedules</div>
+    <div class="nav-item"><span class="nav-dot"></span>Skills</div>
+    <div class="nav-group-label">Settings</div>
+    <div class="nav-item"><span class="nav-dot"></span>Vault</div>
+    <div class="nav-item"><span class="nav-dot"></span>Soul</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumbs">Portfolio · <b>Projects</b></div>
+      <div class="topbar-actions">
+        <span class="pill"><span class="pill-dot"></span>5 projects tracked</span>
+      </div>
+    </div>
+
+    <h1 class="page-title">Every build, one glance.</h1>
+    <p class="page-sub">Health, active skill, next task — across all your Genius Team projects.</p>
+
+    <!-- Stat row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-label">Projects</div>
+        <div class="stat-card-value">5</div>
+        <div class="stat-card-trend">↗ 2 new this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Avg health</div>
+        <div class="stat-card-value">87</div>
+        <div class="stat-card-trend">↗ +4 vs. last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Active tasks</div>
+        <div class="stat-card-value">12</div>
+        <div class="stat-card-trend">3 due today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Memory bits</div>
+        <div class="stat-card-value">148</div>
+        <div class="stat-card-trend">↗ cross-repo learning</div>
+      </div>
+    </div>
+
+    <div class="portfolio">
+      <div class="repo-card">
+        <div class="repo-head">
+          <div>
+            <div class="repo-name">genius-team</div>
+            <div class="repo-version">v22.0 · main</div>
+          </div>
+          <div class="health-score" style="color:var(--ok)">
+            <div class="health-ring" style="--pct: 86%;"></div>
+            <span>86</span>
+          </div>
+        </div>
+        <div class="repo-meta">
+          <div class="meta-row"><span>Mode</span><b>builder</b></div>
+          <div class="meta-row"><span>Phase</span><b>execution</b></div>
+          <div class="meta-row"><span>Last activity</span><b>2 min ago</b></div>
+        </div>
+        <div class="repo-footer">
+          <span class="repo-skill">genius-dev</span>
+          <span class="repo-next">Ship /guard-check command</span>
+        </div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-head">
+          <div>
+            <div class="repo-name">genius-cortex</div>
+            <div class="repo-version">v3.2.1 · feat/portfolio</div>
+          </div>
+          <div class="health-score" style="color:var(--ok)">
+            <div class="health-ring" style="--pct: 92%;"></div>
+            <span>92</span>
+          </div>
+        </div>
+        <div class="repo-meta">
+          <div class="meta-row"><span>Mode</span><b>pro</b></div>
+          <div class="meta-row"><span>Phase</span><b>ideation</b></div>
+          <div class="meta-row"><span>Last activity</span><b>18 min ago</b></div>
+        </div>
+        <div class="repo-footer">
+          <span class="repo-skill">genius-architect</span>
+          <span class="repo-next">Draft MCP store schema</span>
+        </div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-head">
+          <div>
+            <div class="repo-name">revius</div>
+            <div class="repo-version">v0.1.0 · main</div>
+          </div>
+          <div class="health-score" style="color:var(--ok)">
+            <div class="health-ring" style="--pct: 94%;"></div>
+            <span>94</span>
+          </div>
+        </div>
+        <div class="repo-meta">
+          <div class="meta-row"><span>Mode</span><b>builder</b></div>
+          <div class="meta-row"><span>Phase</span><b>audit</b></div>
+          <div class="meta-row"><span>Last activity</span><b>1 h ago</b></div>
+        </div>
+        <div class="repo-footer">
+          <span class="repo-skill">genius-security</span>
+          <span class="repo-next">Run OWASP scan on coordinator</span>
+        </div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-head">
+          <div>
+            <div class="repo-name">studio-site</div>
+            <div class="repo-version">v1.4.2 · main</div>
+          </div>
+          <div class="health-score health-warn">
+            <div class="health-ring" style="--pct: 68%;"></div>
+            <span>68</span>
+          </div>
+        </div>
+        <div class="repo-meta">
+          <div class="meta-row"><span>Mode</span><b>agency</b></div>
+          <div class="meta-row"><span>Phase</span><b>execution</b></div>
+          <div class="meta-row"><span>Last activity</span><b>6 h ago</b></div>
+        </div>
+        <div class="repo-footer">
+          <span class="repo-skill">genius-seo</span>
+          <span class="repo-next">Ship llms.txt and schema</span>
+        </div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-head">
+          <div>
+            <div class="repo-name">weekend-demo</div>
+            <div class="repo-version">v0.0.2 · sprint-2</div>
+          </div>
+          <div class="health-score" style="color:var(--ok)">
+            <div class="health-ring" style="--pct: 78%;"></div>
+            <span>78</span>
+          </div>
+        </div>
+        <div class="repo-meta">
+          <div class="meta-row"><span>Mode</span><b>beginner</b></div>
+          <div class="meta-row"><span>Phase</span><b>ideation</b></div>
+          <div class="meta-row"><span>Last activity</span><b>yesterday</b></div>
+        </div>
+        <div class="repo-footer">
+          <span class="repo-skill">genius-specs</span>
+          <span class="repo-next">Finish specification doc</span>
+        </div>
+      </div>
+
+      <div class="repo-card">
+        <div class="repo-head">
+          <div>
+            <div class="repo-name">genius-docs</div>
+            <div class="repo-version">v1.0 · main</div>
+          </div>
+          <div class="health-score" style="color:var(--ok)">
+            <div class="health-ring" style="--pct: 89%;"></div>
+            <span>89</span>
+          </div>
+        </div>
+        <div class="repo-meta">
+          <div class="meta-row"><span>Mode</span><b>builder</b></div>
+          <div class="meta-row"><span>Phase</span><b>validation</b></div>
+          <div class="meta-row"><span>Last activity</span><b>3 h ago</b></div>
+        </div>
+        <div class="repo-footer">
+          <span class="repo-skill">genius-content</span>
+          <span class="repo-next">Publish getting-started</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label-main">Intelligence · shared across every project</div>
+    <div class="section-title-main">Memory & Behaviors</div>
+    <div class="knowledge-grid">
+      <div class="knowledge-panel">
+        <h3>Recent memory bits <span class="chip-count">148</span></h3>
+        <ul class="memory-list">
+          <li class="memory-bit">
+            <span class="memory-cat preferences">pref</span>
+            <span class="memory-content"><b>Don't refactor outside the ticket.</b> Change only what the task asks — every line is a potential bug.</span>
+          </li>
+          <li class="memory-bit">
+            <span class="memory-cat technical">tech</span>
+            <span class="memory-content"><b>Use pnpm + Turborepo</b> for all monorepos. Never npm workspaces for multi-package builds.</span>
+          </li>
+          <li class="memory-bit">
+            <span class="memory-cat lessons">lesson</span>
+            <span class="memory-content"><b>Real DB in integration tests.</b> We got burned in Q1 2026 when mocks passed but migration broke prod.</span>
+          </li>
+          <li class="memory-bit">
+            <span class="memory-cat business">biz</span>
+            <span class="memory-content"><b>Beta users keep legacy access.</b> Reference for every pricing conversation about Cortex and Revius.</span>
+          </li>
+          <li class="memory-bit">
+            <span class="memory-cat technical">tech</span>
+            <span class="memory-content"><b>Field Console = amber accent for Revius.</b> Never let the overlay match the host app's brand.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="knowledge-panel">
+        <h3>Active behaviors <span class="chip-count">12</span></h3>
+        <ul class="behavior-list">
+          <li class="behavior-item">
+            <div class="behavior-left">
+              <span class="behavior-sev critical"></span>
+              <div>
+                <div class="behavior-name">Never push to main</div>
+                <div class="behavior-desc">All changes via PR · enforced in Bash hook</div>
+              </div>
+            </div>
+            <div class="behavior-toggle"></div>
+          </li>
+          <li class="behavior-item">
+            <div class="behavior-left">
+              <span class="behavior-sev critical"></span>
+              <div>
+                <div class="behavior-name">No secrets in code</div>
+                <div class="behavior-desc">Scans Write/Edit for api_key, password, token…</div>
+              </div>
+            </div>
+            <div class="behavior-toggle"></div>
+          </li>
+          <li class="behavior-item">
+            <div class="behavior-left">
+              <span class="behavior-sev warning"></span>
+              <div>
+                <div class="behavior-name">Prove before fix</div>
+                <div class="behavior-desc">Reproduce before patching. No assumption-driven debug.</div>
+              </div>
+            </div>
+            <div class="behavior-toggle"></div>
+          </li>
+          <li class="behavior-item">
+            <div class="behavior-left">
+              <span class="behavior-sev warning"></span>
+              <div>
+                <div class="behavior-name">Post fix audit</div>
+                <div class="behavior-desc">Rerun failing test + related tests after every fix.</div>
+              </div>
+            </div>
+            <div class="behavior-toggle"></div>
+          </li>
+          <li class="behavior-item">
+            <div class="behavior-left">
+              <span class="behavior-sev info"></span>
+              <div>
+                <div class="behavior-name">Minimal change</div>
+                <div class="behavior-desc">Smallest diff that solves the problem.</div>
+              </div>
+            </div>
+            <div class="behavior-toggle"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Genius Ecosystem — Anyone can build">
+  <defs>
+    <radialGradient id="aurora" cx="50%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#D4A574" stop-opacity="0.16"/>
+      <stop offset="55%" stop-color="#D4A574" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#0F0F0F" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4A574"/>
+      <stop offset="100%" stop-color="#E5BF8E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="1200" height="630" fill="#0F0F0F"/>
+  <rect width="1200" height="630" fill="url(#aurora)"/>
+
+  <!-- Subtle top border accent -->
+  <rect x="0" y="0" width="1200" height="1" fill="#D4A574" fill-opacity="0.25"/>
+
+  <!-- Three logos centered -->
+  <g transform="translate(250, 180)" fill="none" stroke="#D4A574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Genius Team: radial star -->
+    <g transform="translate(0,0) scale(2)">
+      <line x1="24" y1="24" x2="24" y2="8"/>
+      <line x1="24" y1="24" x2="40" y2="24"/>
+      <line x1="24" y1="24" x2="24" y2="40"/>
+      <line x1="24" y1="24" x2="8" y2="24"/>
+      <line x1="24" y1="24" x2="35.3" y2="12.7"/>
+      <line x1="24" y1="24" x2="35.3" y2="35.3"/>
+      <line x1="24" y1="24" x2="12.7" y2="35.3"/>
+      <line x1="24" y1="24" x2="12.7" y2="12.7"/>
+      <circle cx="24" cy="8" r="1.8" fill="#D4A574" stroke="none"/>
+      <circle cx="40" cy="24" r="1.8" fill="#D4A574" stroke="none"/>
+      <circle cx="24" cy="40" r="1.8" fill="#D4A574" stroke="none"/>
+      <circle cx="8" cy="24" r="1.8" fill="#D4A574" stroke="none"/>
+      <circle cx="24" cy="24" r="3.2" fill="#0F0F0F" stroke="#D4A574" stroke-width="1.8"/>
+    </g>
+  </g>
+
+  <g transform="translate(550, 180)" fill="none" stroke="#D4A574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cortex: hexagonal nested -->
+    <g transform="scale(2)">
+      <path d="M 24 6 L 40 15 L 40 33 L 24 42 L 8 33 L 8 15 Z"/>
+      <path d="M 24 13 L 33.5 18.5 L 33.5 29.5 L 24 35 L 14.5 29.5 L 14.5 18.5 Z" opacity="0.55"/>
+      <path d="M 24 19 L 28 21.5 L 28 26.5 L 24 29 L 20 26.5 L 20 21.5 Z" opacity="0.3"/>
+      <circle cx="24" cy="24" r="1.6" fill="#D4A574" stroke="none"/>
+    </g>
+  </g>
+
+  <g transform="translate(850, 180)" fill="none" stroke="#D4A574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Revius: eye in brackets -->
+    <g transform="scale(2)">
+      <path d="M 8 14 L 8 8 L 14 8"/>
+      <path d="M 34 8 L 40 8 L 40 14"/>
+      <path d="M 40 34 L 40 40 L 34 40"/>
+      <path d="M 14 40 L 8 40 L 8 34"/>
+      <path d="M 13 24 C 17 18, 31 18, 35 24 C 31 30, 17 30, 13 24 Z"/>
+      <circle cx="24" cy="24" r="4.2" opacity="0.55"/>
+      <circle cx="24" cy="24" r="2" fill="#D4A574" stroke="none"/>
+      <circle cx="25.6" cy="22.4" r="0.7" fill="#0F0F0F" stroke="none"/>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="430" text-anchor="middle" font-family="DM Sans, system-ui, -apple-system, sans-serif" font-size="76" font-weight="800" letter-spacing="-1.5" fill="url(#goldText)">Genius Ecosystem</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="490" text-anchor="middle" font-family="DM Sans, system-ui, -apple-system, sans-serif" font-size="28" font-weight="500" fill="#E8E4DF" fill-opacity="0.7">Anyone can build.</text>
+
+  <!-- Tagline row -->
+  <text x="600" y="560" text-anchor="middle" font-family="DM Sans, system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#D4A574" fill-opacity="0.8">GENIUS TEAM  ·  CORTEX  ·  REVIUS</text>
+</svg>

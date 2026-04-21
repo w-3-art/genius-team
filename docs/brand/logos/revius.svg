@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Revius logo">
+  <title>Revius</title>
+  <!-- Viewfinder brackets: 4 corner marks suggesting zone selection -->
+  <path d="M 8 14 L 8 8 L 14 8"/>
+  <path d="M 34 8 L 40 8 L 40 14"/>
+  <path d="M 40 34 L 40 40 L 34 40"/>
+  <path d="M 14 40 L 8 40 L 8 34"/>
+  <!-- Eye: almond shape with pupil, centered -->
+  <path d="M 13 24 C 17 18, 31 18, 35 24 C 31 30, 17 30, 13 24 Z"/>
+  <!-- Iris -->
+  <circle cx="24" cy="24" r="4.2" opacity="0.55"/>
+  <!-- Pupil -->
+  <circle cx="24" cy="24" r="2" fill="#D4A574" stroke="none"/>
+  <!-- Highlight dot (alert, attentive feel) -->
+  <circle cx="25.6" cy="22.4" r="0.7" fill="#0F0F0F" stroke="none"/>
+</svg>

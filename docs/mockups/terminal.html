@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Code + Genius Team — terminal mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --gold: #D4A574;
+  --gold-soft: #E5BF8E;
+  --coral: #E8825F;
+  --blue: #6B8CAE;
+  --ok: #7BC77A;
+  --warn: #E5C07B;
+  --bg: #0B0B0C;
+  --term: #0F0F12;
+  --term-2: #14141A;
+  --muted: rgba(232, 228, 223, .55);
+  --muted-2: rgba(232, 228, 223, .32);
+  --text: #E8E4DF;
+}
+html, body { background: var(--bg); color: var(--text); min-height: 100%; }
+body { font-family: 'DM Sans', sans-serif; padding: 2rem; }
+
+/* Each panel */
+.panel {
+  width: 1280px; max-width: 100%;
+  margin: 0 auto 2rem;
+  background: var(--term);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(212,165,116,.08);
+  box-shadow: 0 40px 100px rgba(0,0,0,.55);
+}
+.panel__chrome {
+  display: flex; align-items: center; gap: .45rem;
+  padding: .7rem 1rem;
+  background: #0A0A0C;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.chrome-dot { width: 12px; height: 12px; border-radius: 50%; }
+.chrome-dot:nth-child(1) { background: #E8825F; }
+.chrome-dot:nth-child(2) { background: #E5C07B; }
+.chrome-dot:nth-child(3) { background: #7BC77A; }
+.chrome-title {
+  margin-left: .7rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .78rem; color: var(--muted);
+  letter-spacing: .01em;
+}
+.chrome-title b { color: var(--text); font-weight: 600; }
+
+.term {
+  padding: 1.3rem 1.5rem 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* Common token colors */
+.tok-prompt { color: var(--gold); font-weight: 600; }
+.tok-muted { color: var(--muted); }
+.tok-dim { color: var(--muted-2); }
+.tok-cmd { color: var(--gold-soft); font-weight: 600; }
+.tok-ok { color: var(--ok); }
+.tok-warn { color: var(--warn); }
+.tok-err { color: var(--coral); }
+.tok-skill { color: var(--gold); font-weight: 600; }
+.tok-path { color: var(--blue); }
+.tok-str { color: var(--gold-soft); }
+.tok-k { color: var(--coral); }
+.tok-h { color: var(--text); font-weight: 700; }
+
+.line { display: block; white-space: pre-wrap; }
+.line-block { margin: .35rem 0; }
+.rule { color: rgba(212,165,116,.15); margin: .35rem 0; }
+
+/* Genius header box */
+.gt-header {
+  border-left: 2px solid var(--gold);
+  padding: .2rem 0 .3rem .9rem;
+  margin: .6rem 0 .8rem;
+  color: var(--muted);
+}
+.gt-header b { color: var(--text); font-weight: 600; }
+
+/* Table */
+.tbl { display: grid; grid-template-columns: auto 1fr; gap: 2px 1.4rem; margin: .45rem 0 .65rem; }
+.tbl .k { color: var(--muted); }
+.tbl .v { color: var(--text); }
+
+/* Badge pills inline in terminal */
+.ci { display: inline-flex; align-items: center; gap: .3rem; padding: 0 .5rem; border-radius: 100px; font-weight: 600; font-size: .78em; }
+.ci-ok { background: rgba(123,199,122,.1); color: var(--ok); }
+.ci-warn { background: rgba(229,192,123,.1); color: var(--warn); }
+.ci-gold { background: rgba(212,165,116,.1); color: var(--gold); }
+.ci-coral { background: rgba(232,130,95,.1); color: var(--coral); }
+
+.agent-card {
+  margin: .7rem 0;
+  padding: .7rem 1rem;
+  background: var(--term-2);
+  border-left: 2px solid var(--gold);
+  border-radius: 6px;
+}
+.agent-card__head { display: flex; align-items: center; gap: .6rem; margin-bottom: .3rem; }
+.agent-card__name { color: var(--gold); font-weight: 700; }
+.agent-card__status { color: var(--muted); font-size: .82em; }
+.agent-card__output { color: var(--muted); font-size: .95em; line-height: 1.5; }
+.agent-card__output b { color: var(--text); font-weight: 600; }
+
+/* Section heading inside terminal */
+.tsec {
+  display: flex; align-items: center; gap: .6rem;
+  margin: .9rem 0 .45rem;
+  color: var(--gold-soft);
+  font-weight: 600;
+  font-size: .95em;
+}
+.tsec::before {
+  content: ''; width: 14px; height: 1px;
+  background: var(--gold);
+}
+
+/* Panel labels above each */
+.panel-label {
+  max-width: 1280px; margin: 0 auto .4rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .8rem; color: var(--muted);
+  letter-spacing: .08em; text-transform: uppercase; font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- PANEL 1 — /genius-start -->
+<div class="panel-label">Panel 1 · /genius-start briefing</div>
+<section class="panel" id="panel-start">
+  <div class="panel__chrome">
+    <span class="chrome-dot"></span><span class="chrome-dot"></span><span class="chrome-dot"></span>
+    <span class="chrome-title"><b>claude code</b> · ~/projects/waiting-list · main · v1.0.4</span>
+  </div>
+  <div class="term">
+<span class="line"><span class="tok-prompt">›</span> <span class="tok-cmd">/genius-start</span></span>
+<span class="line tok-dim">──────────────────────────────────────────────────────────────────────────────</span>
+<span class="line"><span class="ci ci-gold">🧠 GENIUS TEAM · v22.0</span>   <span class="tok-muted">builder mode · session #042</span></span>
+<div class="gt-header">
+<span class="line"><b>Project</b>  <span class="tok-str">waiting-list</span></span>
+<span class="line"><b>Idea</b>     a clean weekend project to validate a landing page for the studio</span>
+<span class="line"><b>Stack</b>    next.js · tailwind · vercel · resend</span>
+<span class="line"><b>Memory</b>   <span class="tok-ok">BRIEFING.md loaded (14 lines)</span>  ·  decisions: <b>4</b>  ·  patterns: <b>2</b></span>
+</div>
+<span class="line tsec">Tasks · .claude/plan.md</span>
+<span class="line"><span class="tok-ok">[x]</span> Discovery interview   <span class="tok-muted">→ DISCOVERY.xml</span></span>
+<span class="line"><span class="tok-ok">[x]</span> Market analysis        <span class="tok-muted">→ MARKET-ANALYSIS.xml</span></span>
+<span class="line"><span class="tok-ok">[x]</span> Specifications         <span class="tok-muted">→ SPECIFICATIONS.xml · approved ✓</span></span>
+<span class="line"><span class="tok-ok">[x]</span> Design system chosen   <span class="tok-muted">→ design-option-02 · warm gold</span></span>
+<span class="line"><span class="tok-ok">[x]</span> Architecture           <span class="tok-muted">→ ARCHITECTURE.md · approved ✓</span></span>
+<span class="line"><span class="tok-warn">[~]</span> Build hero + wait list form</span>
+<span class="line"><span class="tok-dim">[ ]</span> Wire Resend integration</span>
+<span class="line"><span class="tok-dim">[ ]</span> Deploy to Vercel</span>
+<span class="line"></span>
+<span class="line"><span class="tok-muted">Phase</span> <b>execution</b>   <span class="tok-muted">Next</span> <span class="tok-skill">genius-orchestrator</span>   <span class="tok-muted">Skill</span> <span class="tok-skill">genius-dev</span></span>
+<span class="line tok-dim">──────────────────────────────────────────────────────────────────────────────</span>
+<span class="line"><span class="tok-muted">Ready. Type a task or press Shift+Tab to delegate.</span></span>
+<span class="line"><span class="tok-prompt">›</span> <span class="tok-muted">build the wait-list form with inline validation</span><span class="caret">_</span></span>
+  </div>
+</section>
+
+<!-- PANEL 2 — genius-dev + QA-micro Agent Teams -->
+<div class="panel-label">Panel 2 · Agent Teams · genius-dev + QA-micro</div>
+<section class="panel" id="panel-dev">
+  <div class="panel__chrome">
+    <span class="chrome-dot"></span><span class="chrome-dot"></span><span class="chrome-dot"></span>
+    <span class="chrome-title"><b>claude code</b> · Agent Teams · parallel tabs</span>
+  </div>
+  <div class="term">
+<span class="line"><span class="tok-prompt">›</span> build the wait-list form with inline validation</span>
+<span class="line tok-muted">Routing to <span class="tok-skill">genius-orchestrator</span>. Dispatching Agent Teams…</span>
+
+<div class="agent-card">
+  <div class="agent-card__head">
+    <span class="agent-card__name">genius-dev-frontend</span>
+    <span class="ci ci-gold">worktree: feat/hero-form</span>
+    <span class="agent-card__status">· in progress</span>
+  </div>
+  <div class="agent-card__output">
+✎ Writing <span class="tok-path">app/(marketing)/page.tsx</span>
+✎ Writing <span class="tok-path">components/WaitListForm.tsx</span>   <span class="tok-muted">+ 78 lines</span>
+✎ Writing <span class="tok-path">app/actions/join.ts</span>            <span class="tok-muted">+ 34 lines</span>
+<span class="tok-muted">Progress</span> ████████████████░░░░  <b>82%</b>   <span class="tok-muted">3 files · 2 tests pending</span>
+  </div>
+</div>
+
+<div class="agent-card">
+  <div class="agent-card__head">
+    <span class="agent-card__name">genius-qa-micro</span>
+    <span class="ci ci-ok">triggered after every task</span>
+  </div>
+  <div class="agent-card__output">
+<span class="tok-ok">✓</span> lint: clean  ·  <span class="tok-ok">✓</span> typecheck: 0 errors  ·  <span class="tok-ok">✓</span> tests: 4 / 4  ·  <span class="tok-ok">✓</span> spec conformance
+<span class="tok-muted">Verdict</span> <span class="ci ci-ok">PASS</span> — ready to mark task complete.
+  </div>
+</div>
+
+<div class="agent-card">
+  <div class="agent-card__head">
+    <span class="agent-card__name">genius-reviewer</span>
+    <span class="ci ci-warn">every 5 tasks</span>
+  </div>
+  <div class="agent-card__output">
+<span class="tok-muted">Quality score</span> <b>8.6 / 10</b>   <span class="tok-muted">Readability</span> <b>9</b>   <span class="tok-muted">Reuse</span> <b>8</b>   <span class="tok-muted">Perf</span> <b>9</b>
+<span class="tok-muted">Suggestion</span> extract email validator to <span class="tok-path">lib/validators.ts</span> — reused in 3 places.
+  </div>
+</div>
+
+<span class="line tok-dim">──────────────────────────────────────────────────────────────────────────────</span>
+<span class="line"><span class="tok-muted">plan.md</span> <span class="tok-ok">[x]</span> Build hero + wait list form    <span class="tok-muted">just now</span></span>
+<span class="line"><span class="tok-muted">state.json</span> phase:execution · tasks 6/8 · next: <span class="tok-skill">genius-dev-api</span> (Resend)</span>
+<span class="line"><span class="tok-muted">playground</span> updated · <span class="tok-path">.genius/outputs/PROGRESS.html</span></span>
+<span class="line"></span>
+<span class="line tok-muted">Continuing with next task. No pauses. Press <b>STOP</b> to halt.</span>
+  </div>
+</section>
+
+<!-- PANEL 3 — HERO: composite cinematic -->
+<div class="panel-label">Panel 3 · Hero frame · Claude Code + Genius Team in one view</div>
+<section class="panel" id="panel-hero">
+  <div class="panel__chrome">
+    <span class="chrome-dot"></span><span class="chrome-dot"></span><span class="chrome-dot"></span>
+    <span class="chrome-title"><b>claude code</b> · ~/projects/waiting-list · Genius Team v22.0 · builder</span>
+  </div>
+  <div class="term" style="font-size: 12.5px;">
+<span class="line tok-dim">╭───────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="line tok-dim">│  <span class="ci ci-gold">🧠 GENIUS TEAM</span>   <b>waiting-list</b>   builder · execution · 6 / 8 tasks   <span class="tok-muted">session #042</span>   │</span>
+<span class="line tok-dim">╰───────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="line"></span>
+<span class="line"><span class="tok-prompt">›</span> <span class="tok-cmd">/genius-start</span></span>
+<span class="line"><span class="tok-muted">BRIEFING.md loaded · decisions: 4 · patterns: 2 · next: </span><span class="tok-skill">genius-dev-frontend</span></span>
+<span class="line"></span>
+<span class="line"><span class="tok-prompt">›</span> build the wait-list form with inline validation</span>
+<span class="line tok-muted">Routing to <span class="tok-skill">genius-orchestrator</span>. Dispatching Agent Teams…</span>
+<span class="line"></span>
+<span class="line"><span class="tok-skill">◆ genius-dev-frontend</span>   <span class="tok-muted">worktree feat/hero-form</span></span>
+<span class="line">  ✎ <span class="tok-path">components/WaitListForm.tsx</span>   <span class="tok-muted">+78</span>   <span class="tok-muted">validation + optimistic UI</span></span>
+<span class="line">  ✎ <span class="tok-path">app/actions/join.ts</span>           <span class="tok-muted">+34</span></span>
+<span class="line"></span>
+<span class="line"><span class="tok-skill">◆ genius-qa-micro</span>       <span class="tok-ok">✓ PASS</span>   <span class="tok-muted">lint · types · tests 4/4 · spec conformance</span></span>
+<span class="line"><span class="tok-skill">◆ genius-reviewer</span>       <span class="tok-ok">8.6/10</span>  <span class="tok-muted">readable · reusable · performant</span></span>
+<span class="line"></span>
+<span class="line tok-dim">──────────────────────────────────────────────────────────────────────────────</span>
+<span class="line"><span class="tok-muted">Plan.md</span>   <span class="tok-ok">[x]</span> Build hero + wait list form  <span class="tok-warn">[~]</span> Wire Resend  <span class="tok-dim">[ ]</span> Deploy</span>
+<span class="line"><span class="tok-muted">State</span>     <span class="ci ci-gold">phase execution</span>  <span class="ci ci-ok">QA passed</span>  <span class="ci ci-warn">2 tasks to go</span></span>
+<span class="line"><span class="tok-muted">Playground</span> <span class="tok-path">.genius/outputs/PROGRESS.html</span>  <span class="tok-muted">refreshed</span></span>
+<span class="line"></span>
+<span class="line tok-muted">Continuing with next task. Press <b>STOP</b> to halt.</span>
+<span class="line"><span class="tok-prompt">›</span> <span class="caret">_</span></span>
+  </div>
+</section>
+
+</body>
+</html>
