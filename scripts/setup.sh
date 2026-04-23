@@ -120,8 +120,7 @@ if [[ "$ENGINE" == "claude" || "$ENGINE" == "dual" ]]; then
     mkdir -p .claude
     cat > .claude/settings.local.json <<'LOCAL_JSON'
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
-  "$comment": "Your personal overrides. Never overwritten by upgrades. Gitignored by default.",
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": { "allow": [], "deny": [] },
   "hooks": {},
   "env": {}
