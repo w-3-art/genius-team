@@ -22,6 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/ecosystem.css?v=3">
   <script defer src="assets/ecosystem.js?v=3"></script>
+  <script defer src="assets/getting-started-wizard.js?v=1"></script>
   <link rel="icon" href="brand/logos/genius-team.svg" type="image/svg+xml">
 </head>
 <body>
@@ -239,14 +240,34 @@
           <h2 class="section-title" data-i18n="team.install.title">One command and you're in.</h2>
           <p class="section-desc" style="margin:0 auto;" data-i18n="team.install.desc">Free forever, open source, MIT licensed. No account, no credit card.</p>
         </div>
-        <div class="code-block reveal">
-          <span class="comment"># Clone, then run setup.sh inside your project</span><br>
-          git clone https://github.com/w-3-art/genius-team.git<br>
-          cd your-project<br>
-          bash ../genius-team/scripts/setup.sh
+
+        <div class="install-wizard-card reveal" style="background:linear-gradient(180deg,rgba(212,165,116,.06),rgba(212,165,116,.02));border:1px solid rgba(212,165,116,.18);border-radius:20px;padding:2rem 1.5rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:.6rem;" aria-hidden="true">🚀</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin:0 0 .4rem;color:#fff;" data-i18n="team.install.wizard.title">Not sure where to start?</h3>
+          <p style="color:var(--muted);font-size:.85rem;margin:0 auto 1.4rem;max-width:420px;" data-i18n="team.install.wizard.desc">Tell us what you want to do — we'll give you the exact one-liner.</p>
+          <button class="btn btn--primary" type="button" data-gtw-open data-i18n="team.install.wizard.cta">Get started in 3 steps</button>
         </div>
+
+        <details class="reveal" style="margin-top:1.2rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1rem 1.2rem;background:rgba(255,255,255,.02);">
+          <summary style="cursor:pointer;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);" data-i18n="team.install.manual.toggle">Prefer the raw commands? Show manual install</summary>
+          <div style="margin-top:1rem;">
+            <p style="color:var(--muted);font-size:.82rem;margin:0 0 .8rem;" data-i18n="team.install.manual.new">New project (replace my-app with your name):</p>
+            <div class="code-block" style="margin-bottom:.9rem;">
+              <code>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-app</code>
+            </div>
+            <p style="color:var(--muted);font-size:.82rem;margin:0 0 .8rem;" data-i18n="team.install.manual.add">Add to existing project (run inside the repo):</p>
+            <div class="code-block" style="margin-bottom:.9rem;">
+              <code>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)</code>
+            </div>
+            <p style="color:var(--muted);font-size:.82rem;margin:0 0 .8rem;" data-i18n="team.install.manual.upgrade">Upgrade an existing GT install:</p>
+            <div class="code-block">
+              <code>bash &lt;(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh)</code>
+            </div>
+          </div>
+        </details>
+
         <div style="text-align:center;margin-top:1.8rem;">
-          <a class="btn btn--primary" href="https://github.com/w-3-art/genius-team" target="_blank" rel="noreferrer">GitHub repository</a>
+          <a class="btn btn--ghost btn--sm" href="https://github.com/w-3-art/genius-team" target="_blank" rel="noreferrer" data-i18n="team.install.github">GitHub repository</a>
         </div>
       </div>
     </section>
