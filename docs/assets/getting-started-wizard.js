@@ -480,6 +480,22 @@
     rootEl.classList.add('is-open');
     rootEl.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    // Activate step 1 and reset progress
+    goTo(1);
+    // Reset engine selection (in case user re-opens)
+    rootEl.querySelectorAll('[data-engine]').forEach((b) => {
+      const selected = b.dataset.engine === 'claude';
+      b.classList.toggle('is-selected', selected);
+      b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
+    // Reset name input
+    const nameInput = rootEl.querySelector('[data-gtw-name]');
+    if (nameInput) nameInput.value = state.name;
+    // Reset advanced
+    const branchInput = rootEl.querySelector('[data-gtw-branch]');
+    if (branchInput) branchInput.value = '';
+    const forceCb = rootEl.querySelector('[data-gtw-force]');
+    if (forceCb) forceCb.checked = false;
     // Refresh copy for selected language in case user toggled after first open
     rootEl.querySelector('[data-gtw-copy]').textContent = t('copy');
   }
