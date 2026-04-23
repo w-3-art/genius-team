@@ -251,6 +251,28 @@
     return `
       .gtw-overlay { position:fixed; inset:0; background:rgba(0,0,0,.78); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:10050; display:none; align-items:center; justify-content:center; padding:1.5rem; opacity:0; transition:opacity .25s; }
       .gtw-overlay.is-open { display:flex; opacity:1; }
+
+      /* Restore native cursor while wizard is open — the site's custom cursor
+         (ring/dot/glow/trail) lives at z-index 9995-10001, below the overlay. */
+      html.gtw-modal-open,
+      html.gtw-modal-open body,
+      .gtw-overlay,
+      .gtw-overlay * { cursor: auto !important; }
+      .gtw-overlay button,
+      .gtw-overlay [role="button"],
+      .gtw-overlay .gtw-opt,
+      .gtw-overlay .gtw-btn,
+      .gtw-overlay .gtw-close,
+      .gtw-overlay .gtw-copy,
+      .gtw-overlay summary,
+      .gtw-overlay a { cursor: pointer !important; }
+      .gtw-overlay input[type="text"],
+      .gtw-overlay input:not([type]) { cursor: text !important; }
+      .gtw-overlay input[type="checkbox"] { cursor: pointer !important; }
+      html.gtw-modal-open .cursor-ring,
+      html.gtw-modal-open .cursor-dot,
+      html.gtw-modal-open .cursor-glow,
+      html.gtw-modal-open .cursor-trail { display: none !important; }
       .gtw-card { background:#161616; border:1px solid rgba(212,165,116,.14); border-radius:24px; padding:2.2rem 2rem 1.8rem; max-width:560px; width:100%; position:relative; transform:translateY(14px) scale(.98); transition:transform .25s var(--ease-out, cubic-bezier(.22,1,.36,1)); font-family:'DM Sans','Inter',system-ui,sans-serif; color:#E8E4DF; box-shadow:0 30px 80px rgba(0,0,0,.6); max-height:90vh; overflow-y:auto; }
       .gtw-overlay.is-open .gtw-card { transform:none; }
       .gtw-close { position:absolute; top:1rem; right:1rem; width:34px; height:34px; border-radius:50%; border:none; background:rgba(255,255,255,.06); color:rgba(255,255,255,.6); font-size:1.3rem; line-height:1; cursor:pointer; transition:background .2s,color .2s; }
@@ -480,6 +502,8 @@
     rootEl.classList.add('is-open');
     rootEl.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    // Restore native cursor (site normally uses cursor: none + custom ring)
+    document.documentElement.classList.add('gtw-modal-open');
     // Activate step 1 and reset progress
     goTo(1);
     // Reset engine selection (in case user re-opens)
@@ -505,6 +529,7 @@
     rootEl.classList.remove('is-open');
     rootEl.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    document.documentElement.classList.remove('gtw-modal-open');
   }
 
   // Expose
