@@ -4,6 +4,9 @@ description: >-
   Multi-agent PR code review. Dispatches 3 parallel reviewers: bugs finder, security
   auditor, and code quality reviewer. Produces a single consolidated review report.
   Inspired by Anthropic's Code Review system (84% bug detection on large PRs).
+  Also the end-of-loop adversarial CHECKER of the build-test-fix pair (maker ≠ checker):
+  genius-orchestrator dispatches it after the objective gate passes, before advancing to the
+  next task.
   Use when user says "review this PR", "code review", "review pull request",
   "audit the code changes", "multi-agent review".
   Do NOT use for general code quality suggestions — use genius-reviewer for that.
@@ -144,8 +147,27 @@ Mark `.genius/outputs/state.json` complete for `genius-code-review` with a fresh
 
 ---
 
+## Role: end-of-loop adversarial checker (build-test-fix)
+
+In the orchestrator's build-test-fix pair, a green gate from genius-qa-micro is necessary but
+**not sufficient** — a passing test suite can still ship the wrong change. This skill is the
+independent checker that runs AFTER the gate passes and BEFORE the task is marked done. Maker
+(genius-dev) and checker (this skill) are deliberately separate.
+
+- Review only the loop's diff (`git diff` of the task's changes), adversarially: does the
+  change actually satisfy the task, within its blast radius, without new bugs/security holes?
+- Emit an explicit verdict the orchestrator can branch on:
+  **✅ Approved** → task advances to `[x]`.
+  **⚠️ Approved with changes** / **❌ Changes required** → back to genius-dev inside the loop
+  budget; if the cap is hit while still rejected, the orchestrator HALTs and reports to the Lead.
+- Stay read-only on source (diff + report only). Never "fix and pass" — that would collapse
+  maker and checker back into one.
+
+---
+
 ## Handoff
 
+- → **genius-orchestrator**: verdict (approve / changes-required) gates task completion in the loop
 - → **genius-security**: Deep security audit if CRITICAL issues found
 - → **genius-qa-micro**: Generate tests to cover bug scenarios found
 - → **genius-reviewer**: Ongoing code quality coaching (non-PR specific)

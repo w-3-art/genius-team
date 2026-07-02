@@ -212,11 +212,12 @@ Before marking ANY task complete:
 
 ## Handoffs
 
-### From genius-orchestrator
-Receives: Task via Task() with subagent_type, specific requirements, BRIEFING.md context
+### From genius-orchestrator (maker in the build-test-fix pair)
+Receives: Task via Task() with subagent_type, requirements, BRIEFING.md. On re-entry,
+receives genius-qa-micro's exact gate failures (command + exit + file:line) — fix only those.
 
-### To genius-qa-micro
-Provides: Implemented files for quick verification
+### To genius-qa-micro (the objective gate)
+Provides: Implemented files. Gate runs the project's real test/lint/typecheck.
 
 ### To genius-debugger (on error)
 Provides: Error message, stack trace, what was attempted

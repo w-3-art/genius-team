@@ -127,22 +127,61 @@ For PR/code review: use **genius-code-review** (multi-agent, more thorough than 
 
 | Teammate | subagent_type | Purpose |
 |----------|---------------|---------|
-| genius-dev | `genius-dev` | Code implementation |
-| genius-qa-micro | `genius-qa-micro` | Quick 30s quality check (MANDATORY) |
-| genius-debugger | `genius-debugger` | Fix errors |
-| genius-reviewer | `genius-reviewer` | Quality score (read-only) |
+| genius-dev | `genius-dev` | Code implementation (maker) |
+| genius-qa-micro | `genius-qa-micro` | Objective gate: real test/lint/typecheck (MANDATORY) |
+| genius-debugger | `genius-debugger` | Fix diagnosed errors inside the fix loop |
+| genius-code-review | `genius-code-review` | End-of-loop adversarial checker (maker ≠ checker) |
+| genius-reviewer | `genius-reviewer` | Periodic quality score (read-only) |
 
 ---
 
-## MANDATORY QA LOOP
+## BUILD-TEST-FIX PAIR (the execution loop)
 
-After EVERY task, genius-qa-micro runs. Task is NOT complete until QA passes:
+Every task runs the canonical loop of the corpus — never a one-shot dev-then-hope:
 
 ```
-Dev → QA-micro → Fix (if needed) → Re-QA → ✅
+genius-dev writes ──▶ genius-qa-micro runs the OBJECTIVE GATE ──▶ PASS ─▶ genius-code-review (checker) ─▶ next task
+      ▲                    │ (real tests/lint/typecheck of the                                    │
+      │                    │  target project — detected, not assumed)                            │
+      └──── FAIL: exact failures (cmd + exit + file:line) ◀───────┘         REQUEST_CHANGES ──────┘
 ```
 
-This is non-negotiable. No exceptions.
+1. **Maker** — dispatch genius-dev (or the specific `genius-dev-*`) to implement the task.
+2. **Objective gate** — dispatch genius-qa-micro. It detects and runs the project's OWN
+   commands (`package.json` scripts, then `Makefile`, then a tsc fallback) and returns PASS
+   or the EXACT failures. This is a command, not an opinion: PASS only when every gate
+   command exits 0.
+3. **Fix loop** — gate FAIL → hand the verbatim failures back to genius-dev (genius-debugger
+   for a diagnosed bug) and re-run the gate.
+4. **Cap** — **5 iterations by default.** If a loop contract is active for this task
+   (`.genius/loops/build-<task>/CONTRACT.md` exists), the cap is the contract's
+   `max_iterations` instead. Beyond the cap → **HALT + report to the Lead** (mark the task
+   `[!]`); never silently keep looping.
+5. **Adversarial checker (maker ≠ checker)** — on gate PASS, dispatch **genius-code-review**
+   as the end-of-loop checker BEFORE the task is marked `[x]`. REQUEST_CHANGES / Changes
+   required → back to step 1 within the remaining budget; still failing at the cap → HALT+report.
+
+This is non-negotiable. No task advances on a failed gate or a checker rejection.
+
+### Loop state (reuse the kernel — never a bespoke loop)
+
+State lives in `.genius/loops/build-<task>/STATE.md`, written through
+`scripts/loop-kernel.sh` (the same runtime as genius-loop). `<task>` = the plan.md task slug.
+
+```bash
+LOOP=.genius/loops/build-<task>
+bash scripts/loop-kernel.sh state_read  "$LOOP"                              # init/read at task start
+bash scripts/loop-kernel.sh state_write "$LOOP" in-progress <gate_exit> "<what broke>"   # after each gate
+bash scripts/loop-kernel.sh state_write "$LOOP" done 0 "gate PASS + code-review approved"  # on success
+bash scripts/loop-kernel.sh state_write "$LOOP" blocked <gate_exit> "HALT: cap reached"    # on HALT
+```
+
+- When a `CONTRACT.md` is present in the loop dir, enforce the cap with
+  `bash scripts/loop-kernel.sh brakes_check "$LOOP"` (exit 0 = iterate; non-zero = HALT) and
+  run the gate via `gate_run` so the timeout/no-progress/flip-flop brakes apply.
+- Without a contract, count iterations from `state_get "$LOOP" iteration` and stop at 5.
+- **Namespace isolation:** only touch `.genius/loops/build-<task>/` — never
+  `.genius/state.json` or `.claude/plan.md` from the kernel (the Stop hook owns that sync).
 
 ---
 
@@ -184,14 +223,19 @@ Native Tasks (created by genius-start hydration) and plan.md stay in lockstep.
 
 ## Execution Loop
 
-For each incomplete task:
-1. Mark it `[~]`.
-2. Delegate implementation with the most specific dev sub-skill.
-3. If implementation or QA fails, use `genius-debugger` and retry up to 3 times.
-4. Run `genius-qa-micro` before completion is allowed.
-5. Mark success as `[x]`, update `.genius/state.json`, and append memory/session progress.
-6. Every 5 tasks, run `genius-reviewer`.
-7. Continue immediately unless the user says `STOP`/`PAUSE` or a critical system error occurs.
+For each incomplete task, run the **build-test-fix pair** (see above):
+1. Mark it `[~]`; `state_read` the loop at `.genius/loops/build-<task>/`.
+2. Delegate implementation with the most specific dev sub-skill (maker).
+3. Run `genius-qa-micro` — the objective gate. FAIL → hand the exact failures to genius-dev
+   (genius-debugger for a diagnosed bug) and re-run. `state_write` after each gate.
+4. Cap the fix loop at **5 iterations** (or the contract's `max_iterations` if a
+   `CONTRACT.md` is active). Beyond the cap → HALT, mark `[!]`, report to the Lead.
+5. On gate PASS, run `genius-code-review` as the adversarial checker. REQUEST_CHANGES →
+   back to step 2 within budget.
+6. Only after gate PASS + checker approval: mark `[x]`, `state_write ... done`, update
+   `.genius/state.json`, append memory/session progress.
+7. Every 5 tasks, run `genius-reviewer`.
+8. Continue immediately unless the user says `STOP`/`PAUSE` or a critical system error occurs.
 
 ---
 
