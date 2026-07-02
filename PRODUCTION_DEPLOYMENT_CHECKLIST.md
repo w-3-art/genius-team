@@ -9,7 +9,7 @@
 - [x] Verification script passes
 
 ## Main Repo Integration (Phase 2)
-- [x] README, AGENTS.md, CLAUDE.md updated for v23.0
+- [ ] README, AGENTS.md, CLAUDE.md updated for v23.0 (kept at v22.0.0, v23 is beta)
 - [x] .gitignore updated with site exclusion
 - [x] plugin-mode.json template created
 - [x] Migration script created
