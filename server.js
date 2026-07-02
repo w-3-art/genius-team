@@ -15,6 +15,17 @@
  *   ANTHROPIC_MODEL         default 'claude-haiku-4-5'
  *   ALLOWED_CHAT_ORIGINS    optional comma-separated CORS allowlist for /api/chat
  *                           (default: site's own origin — '*' is fine for public chat)
+ *
+ * IMPORTANT (production/Railway): ALLOWED_CHAT_ORIGINS MUST be set to the site's
+ * real origin(s) (e.g. "https://genius.w3art.io") on Railway. Leaving it unset
+ * defaults to '*', which lets any third-party site call /api/chat from a
+ * browser using this server's ANTHROPIC_API_KEY-backed proxy quota.
+ *
+ * /api/chat is also rate-limited per client IP (in-memory sliding window,
+ * see CHAT_RATE_LIMIT_* below) to bound abuse/cost. This is a single-instance,
+ * in-memory limiter — it resets on redeploy and does not share state across
+ * multiple Railway replicas. Fine for the current single-instance deployment;
+ * revisit with a shared store (e.g. Redis) if the service is ever scaled out.
  */
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
@@ -106,8 +117,61 @@ app.use(
 app.get('/api/health', (c) => c.json({ ok: true, service: 'genius-team-site', version: '22.0.0' }));
 
 // ---------------------------------------------------------------------------
-// Chat proxy
+// Chat proxy — per-IP rate limiting (in-memory sliding window)
 // ---------------------------------------------------------------------------
+const CHAT_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const CHAT_RATE_LIMIT_MAX_REQUESTS = 20; // per IP per window
+
+/** ip -> array of request timestamps (ms) within the current window */
+const chatRateLimitBuckets = new Map();
+
+function getClientIp(c) {
+  const forwardedFor = c.req.header('x-forwarded-for');
+  if (forwardedFor) {
+    const first = forwardedFor.split(',')[0].trim();
+    if (first) return first;
+  }
+  return c.env?.incoming?.socket?.remoteAddress || 'unknown';
+}
+
+/** Returns true and records the hit if the request is allowed; false if the IP is over the limit. */
+function allowChatRequest(ip) {
+  const now = Date.now();
+  const windowStart = now - CHAT_RATE_LIMIT_WINDOW_MS;
+
+  let timestamps = chatRateLimitBuckets.get(ip);
+  if (!timestamps) {
+    timestamps = [];
+    chatRateLimitBuckets.set(ip, timestamps);
+  }
+
+  // Drop timestamps that have slid out of the window.
+  while (timestamps.length > 0 && timestamps[0] <= windowStart) {
+    timestamps.shift();
+  }
+
+  if (timestamps.length >= CHAT_RATE_LIMIT_MAX_REQUESTS) {
+    return false;
+  }
+
+  timestamps.push(now);
+  return true;
+}
+
+// Periodic sweep so buckets for IPs that stop sending requests don't accumulate forever.
+setInterval(
+  () => {
+    const cutoff = Date.now() - CHAT_RATE_LIMIT_WINDOW_MS;
+    for (const [ip, timestamps] of chatRateLimitBuckets) {
+      while (timestamps.length > 0 && timestamps[0] <= cutoff) {
+        timestamps.shift();
+      }
+      if (timestamps.length === 0) chatRateLimitBuckets.delete(ip);
+    }
+  },
+  CHAT_RATE_LIMIT_WINDOW_MS
+).unref();
+
 app.use(
   '/api/chat',
   cors({
@@ -119,6 +183,15 @@ app.use(
 );
 
 app.post('/api/chat', async (c) => {
+  const clientIp = getClientIp(c);
+  if (!allowChatRequest(clientIp)) {
+    return c.json(
+      { error: 'rate limit exceeded, try again later' },
+      429,
+      { 'Retry-After': String(Math.ceil(CHAT_RATE_LIMIT_WINDOW_MS / 1000)) }
+    );
+  }
+
   if (!ANTHROPIC_API_KEY) {
     return c.json({ error: 'chat unavailable: ANTHROPIC_API_KEY not configured' }, 503);
   }
