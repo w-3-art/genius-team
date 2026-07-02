@@ -1,5 +1,48 @@
 # Changelog
 
+## [Unreleased — v23 beta / preview]
+
+> **Status:** private beta, **not production-ready**. v22.0.0 remains the current published release. See `GENIUS_TEAM_V23_PRODUCTION_READY.md` and `PRODUCTION_DEPLOYMENT_CHECKLIST.md` for the remaining gates.
+
+### Added — Plugin (private beta)
+- **Claude Code / Codex plugin** — global auto-triggering of skills via `genius-bootstrap` when `.genius/` is present. Ships with `.genius/plugin-mode.json`, session logging, and graceful fallback. Not yet publicly published; the add script stays the supported install path.
+- **`scripts/migrate-to-v23.sh`** — migrates existing projects to the v23 plugin (writes `.genius/plugin-mode.json`) with backup + automatic rollback on failure.
+- **`verify.sh` plugin check** — reports presence of `.genius/plugin-mode.json` and `auto_trigger`.
+
+### Fixed
+- **CI** — `validate.yml` now scans `.claude/skills/*/` (was `.genius/skills/*/`, which matched nothing and left the skill-structure gate inert). [P0-01]
+- **`scripts/migrate-to-v23.sh`** — corrected the heredoc that wrote `plugin-mode.json` (previous form produced malformed JSON / never terminated). [P0-02]
+- **`server.js`** — `/api/chat` is now rate-limited per client IP (in-memory sliding window, 20 req / 10 min) and documents that `ALLOWED_CHAT_ORIGINS` must be set to the real origin in production to avoid third-party proxy abuse of the API-key-backed quota. [P0-11]
+- **Site install (`add.sh`, `.gitignore`)** — hard exclusion of the product site (`docs/`, `site/`, `*.html`, `vercel.json`) so `add.sh` no longer copies deploy-polluting files into target repos.
+
+### Security
+- **Webhook consent** — the `GENIUS_WEBHOOK_URL` hooks in `configs/*/settings.json` now POST only when `"webhook_consent": true` is set in `.genius/config.json` **and** the URL is HTTPS; otherwise they are a no-op. Network destination is now declared in `TOOLS.md` and `SECURITY.md`. [P0-14]
+
+### Changed
+- **Honest claims** — skill count corrected to 55 across README / docs / tips; removed unqualified "production-ready" wording for v23; plugin consistently described as private beta.
+- **Token baseline** — committed `autoresearch/TOKEN-BASELINE-2026-07-02.md` as the reference measurement for the context-reduction overhaul. [P0-13]
+
+## [22.0.0] - 2026-04-23
+
+### Added — Mode System
+- **`/genius-mode`** — experience modes (beginner / builder / pro / agency) that adjust validation strictness, explanation verbosity, and checkpoint behavior. Stored in `.genius/mode.json`.
+
+### Added — Workflow Registry
+- **`.genius/workflows.json`** — complete dependency graph (prerequisites, outputs, next_workflow, category) for all skills.
+
+### Added — Project Import
+- **`/genius-import`** — brings existing codebases into Genius Team, auto-detects artifacts, sets checkpoints, and marks `origin=imported` so validators warn instead of block.
+
+### Added — Session Recovery
+- **`.genius/session-log.jsonl`** + **`scripts/session-recover.sh`** — rebuild `state.json` after a crash.
+
+### Added — Guards & Validators
+- **Pre-transition guard skills** — `genius-guard-pre-planning`, `genius-guard-pre-coding`, `genius-guard-pre-deploy` auto-verify prerequisites before planning, coding, and deployment.
+- **Non-blocking validators** — 4 validators that respect mode (beginner=strict, pro=permissive) and origin (imported=warn only).
+
+### Changed
+- **Categorized routing** — skills organized by Core / Quality / Growth / Business / Infra / Meta across routing tables.
+
 ## [21.0.0] - 2026-03-29
 
 ### Added — Self-Evolution Engine

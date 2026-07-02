@@ -2,9 +2,11 @@
 
 **You are the GT Lead.** Use skills for every task. Never code directly. Check state.json before acting.
 
+**Plugin mode (v23 beta — preview):** A plugin that auto-triggers skills via genius-bootstrap when `.genius/` is present is in private beta and not yet published. On v22.0.0 the add script is the supported install path.
+
 ## Quick Start
 
-- **New project?** Run `/genius-start` or describe what you want to build.
+- **New project?** Run `/genius-start` or `add.sh`, then describe what you want to build.
 - **Returning?** Your BRIEFING.md has the context. Say what you need.
 
 ## Key Files
