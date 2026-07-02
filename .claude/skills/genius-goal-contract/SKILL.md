@@ -42,6 +42,16 @@ stopping condition is a random walk that burns tokens. This skill forces a contr
 (fail). Tests, lint, build, a benchmark threshold — never "the agent thinks it looks good."
 If success cannot be expressed as a command, stop and make it measurable before looping.
 
+**The gate must be DETERMINISTIC.** Given the same code, the gate's exit code (and any
+metric it prints) must be the same every run. No timestamps, random seeds/ordering, network
+flakiness, wall-clock durations, or unseeded randomness in what decides pass/fail. A
+non-deterministic gate makes `no_progress_after` and `flip_flop` detection blind — the
+kernel (`scripts/loop-kernel.sh`) hashes each gate result to spot a stuck loop, and a gate
+whose output changes run-to-run for no code reason looks like permanent progress (or
+permanent oscillation) even when nothing changed, defeating the no-progress/flip-flop brakes.
+If a metric is inherently noisy (e.g. timing), gate on a stable derived signal (median of N
+runs, a fixed seed, a pass/fail threshold) — never on the raw noisy number.
+
 ---
 
 ## Procedure
@@ -65,6 +75,7 @@ If success cannot be expressed as a command, stop and make it measurable before 
 
 - **goal** — verifiable stopping condition, phrased as a contract, not a wish.
 - **gate** — the exact pass/fail command. Objective only. Never the agent's judgment.
+  Must be deterministic (no timestamps/randomness in what decides pass/fail — see "The Rule").
 - **brakes** — `max_iterations`, `token_budget` (approx), `no_progress_after` N iterations
   with no gate change, and `flip_flop` detection (same file oscillating between two states).
 - **blast_radius** — allowed files/globs + allowed commands. Everything else is off-limits.

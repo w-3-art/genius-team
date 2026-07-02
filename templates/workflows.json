@@ -191,6 +191,17 @@
         "checkpoint": "qa_pass"
       },
       {
+        "name": "genius-dev-web3",
+        "description": "Smart-contract and dApp development (Solidity/Vyper/Foundry/Hardhat, ethers/viem/wagmi)",
+        "category": "core",
+        "prerequisites": [
+          ".claude/plan.md"
+        ],
+        "outputs": [],
+        "next_workflow": "genius-qa-micro",
+        "checkpoint": "qa_pass"
+      },
+      {
         "name": "genius-template",
         "description": "Project template bootstrapper",
         "category": "core",
@@ -373,17 +384,6 @@
     ],
     "business": [
       {
-        "name": "genius-product-market-analyst",
-        "description": "Market research and business strategy",
-        "category": "business",
-        "prerequisites": [],
-        "outputs": [
-          "MARKET-ANALYSIS.xml"
-        ],
-        "next_workflow": null,
-        "checkpoint": "auto"
-      },
-      {
         "name": "genius-crypto",
         "description": "Web3 and blockchain analysis",
         "category": "business",
@@ -414,20 +414,28 @@
       },
       {
         "name": "genius-scheduler",
-        "description": "Recurring task configuration",
+        "description": "Bridge from a proven loop to a schedule (manual→skill→loop→schedule discipline; heartbeat + kill switch required)",
         "category": "infra",
-        "prerequisites": [],
-        "outputs": [],
+        "prerequisites": [
+          "genius-goal-contract"
+        ],
+        "outputs": [
+          ".genius/schedules.json"
+        ],
         "next_workflow": null,
         "checkpoint": "auto"
       },
       {
         "name": "genius-experiments",
-        "description": "Autonomous optimization loop",
+        "description": "Autonomous research loop — experiment.md-driven overnight A/B optimization, reviewed each morning",
         "category": "infra",
-        "prerequisites": [],
-        "outputs": [],
-        "next_workflow": null,
+        "prerequisites": [
+          "genius-goal-contract"
+        ],
+        "outputs": [
+          ".genius/loops/<slug>/report-<date>.md"
+        ],
+        "next_workflow": "genius-scheduler",
         "checkpoint": "auto"
       },
       {
@@ -533,11 +541,13 @@
       },
       {
         "name": "genius-autoresearch",
-        "description": "Autonomous optimization loop",
+        "description": "Autonomous evaluation loop — benchmark-driven modify/measure/keep-or-revert (Karpathy-style)",
         "category": "meta",
-        "prerequisites": [],
+        "prerequisites": [
+          "genius-goal-contract"
+        ],
         "outputs": [],
-        "next_workflow": null,
+        "next_workflow": "genius-scheduler",
         "checkpoint": "auto"
       },
       {

@@ -74,17 +74,12 @@ This skill uses `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`:
 
 ## Memory Integration
 
-- **Session start**: Read `@.genius/memory/BRIEFING.md` for context + decisions + patterns
-- **Before each task**: Check BRIEFING.md for relevant patterns or rejected approaches
-- **On complete**: Append `{id, task, status, timestamp}` to `.genius/memory/progress.json`
-- **On error**: Append `{id, error, solution, timestamp}` to `.genius/memory/errors.json`
-- **On decision**: Append `{id, decision, reason, timestamp, tags}` to `.genius/memory/decisions.json`
+Read `@.genius/memory/BRIEFING.md` at session start and before each task; append
+`progress.json` / `errors.json` / `decisions.json` entries on complete/error/decision.
+Full field shapes: `references/execution-details.md` § Memory Integration.
 
----
-
-## Playground Integration
-
-Maintain `playgrounds/templates/progress-dashboard.html` as `.genius/outputs/PROGRESS.html` backed by `.genius/state.json`. Sync task, agent, history, and stats data on every task change, keep status markers aligned with plan markers, and emit a short sprint summary every 5 tasks and at completion.
+Maintain `.genius/outputs/PROGRESS.html` (from `playgrounds/templates/progress-dashboard.html`)
+backed by `.genius/state.json`; emit a sprint summary every 5 tasks and at completion.
 
 ---
 
@@ -104,9 +99,7 @@ You are the **LEAD COORDINATOR**. You do NOT write code directly. You delegate A
 
 ---
 
-## Task Dispatch
-
-## Specialized Dev Sub-Skill Dispatch
+## Task Dispatch — Specialized Dev Sub-Skill
 
 When dispatching coding tasks, select the most specific sub-skill:
 
@@ -165,106 +158,57 @@ This is non-negotiable. No task advances on a failed gate or a checker rejection
 
 ### Loop state (reuse the kernel — never a bespoke loop)
 
-State lives in `.genius/loops/build-<task>/STATE.md`, written through
-`scripts/loop-kernel.sh` (the same runtime as genius-loop). `<task>` = the plan.md task slug.
-
-```bash
-LOOP=.genius/loops/build-<task>
-bash scripts/loop-kernel.sh state_read  "$LOOP"                              # init/read at task start
-bash scripts/loop-kernel.sh state_write "$LOOP" in-progress <gate_exit> "<what broke>"   # after each gate
-bash scripts/loop-kernel.sh state_write "$LOOP" done 0 "gate PASS + code-review approved"  # on success
-bash scripts/loop-kernel.sh state_write "$LOOP" blocked <gate_exit> "HALT: cap reached"    # on HALT
-```
-
-- When a `CONTRACT.md` is present in the loop dir, enforce the cap with
-  `bash scripts/loop-kernel.sh brakes_check "$LOOP"` (exit 0 = iterate; non-zero = HALT) and
-  run the gate via `gate_run` so the timeout/no-progress/flip-flop brakes apply.
-- Without a contract, count iterations from `state_get "$LOOP" iteration` and stop at 5.
-- **Namespace isolation:** only touch `.genius/loops/build-<task>/` — never
-  `.genius/state.json` or `.claude/plan.md` from the kernel (the Stop hook owns that sync).
+State lives in `.genius/loops/build-<task>/STATE.md`, written through `scripts/loop-kernel.sh`
+(the same runtime as genius-loop): `state_read` at task start, `state_write` after each gate
+and on done/blocked, `brakes_check`/`gate_run` when a `CONTRACT.md` is present (else cap at 5
+iterations by hand). Namespace isolation: only `.genius/loops/build-<task>/` — never
+`.genius/state.json` / `.claude/plan.md` from the kernel. Exact commands:
+`references/execution-details.md` § Loop state.
 
 ---
 
 ## Task Tool Syntax
 
-Use `Task({ description, prompt, subagent_type })` and always include BRIEFING context. Use `genius-dev` for implementation, `genius-qa-micro` after every dev task, `genius-debugger` on QA failures, and `genius-reviewer` periodically for quality scoring.
+Use `Task({ description, prompt, subagent_type })` and always include BRIEFING context. Use
+`genius-dev` for implementation, `genius-qa-micro` after every dev task, `genius-debugger` on
+QA failures, and `genius-reviewer` periodically for quality scoring. Call syntax and the
+non-Agent-Teams fallback: `references/execution-details.md` § Task Tool Syntax.
 
 ---
 
 ## Task Hydration & Sync-Back
 
-### Source of Truth: `.claude/plan.md`
-
-Task markers:
-- `[ ]` = Pending
-- `[~]` = In Progress
-- `[x]` = Completed
-- `[!]` = Blocked/Skipped
-
-### Sync-Back Protocol
-
-Before a task starts:
-- Move it to `[~]` in `.claude/plan.md`
-- Call `TaskUpdate` with `status: "in_progress"` to sync Native Tasks
-
-After implementation plus QA pass:
-- Mark it `[x]` in `.claude/plan.md`
-- Call `TaskUpdate` with `status: "completed"` to sync Native Tasks
-- Update `.genius/state.json`
-- Append a completion event to `.genius/session-log.jsonl`
-
-After 3 failed attempts:
-- Mark it `[!]` in `.claude/plan.md`
-- Call `TaskUpdate` with `status: "completed"` and a metadata note to flag the block
-
-Native Tasks (created by genius-start hydration) and plan.md stay in lockstep.
+Source of truth: `.claude/plan.md` (`[ ]` pending, `[~]` in progress, `[x]` done, `[!]`
+blocked). Before a task starts, mark `[~]` + `TaskUpdate(in_progress)`. After gate PASS +
+checker approval, mark `[x]` + `TaskUpdate(completed)` + update `.genius/state.json` +
+session-log. After 3 failed attempts, mark `[!]` and flag the block. Full protocol:
+`references/execution-details.md` § Task Hydration & Sync-Back.
 
 ---
 
 ## Execution Loop
 
-For each incomplete task, run the **build-test-fix pair** (see above):
-1. Mark it `[~]`; `state_read` the loop at `.genius/loops/build-<task>/`.
-2. Delegate implementation with the most specific dev sub-skill (maker).
-3. Run `genius-qa-micro` — the objective gate. FAIL → hand the exact failures to genius-dev
-   (genius-debugger for a diagnosed bug) and re-run. `state_write` after each gate.
-4. Cap the fix loop at **5 iterations** (or the contract's `max_iterations` if a
-   `CONTRACT.md` is active). Beyond the cap → HALT, mark `[!]`, report to the Lead.
-5. On gate PASS, run `genius-code-review` as the adversarial checker. REQUEST_CHANGES →
-   back to step 2 within budget.
-6. Only after gate PASS + checker approval: mark `[x]`, `state_write ... done`, update
-   `.genius/state.json`, append memory/session progress.
-7. Every 5 tasks, run `genius-reviewer`.
-8. Continue immediately unless the user says `STOP`/`PAUSE` or a critical system error occurs.
+For each incomplete task: run the **build-test-fix pair** above (mark `[~]` →
+`state_read` → delegate → gate → fix-loop-or-checker → mark `[x]` + `state_write done` +
+sync memory/session), then run `genius-reviewer` every 5 tasks, then continue immediately
+unless the user says `STOP`/`PAUSE` or a critical system error occurs.
 
 ---
 
 ## On Resume
 
-When resuming execution (after terminal close or `/continue`):
-1. Read `.genius/memory/BRIEFING.md` for full context
-2. Read `.claude/plan.md` for task status
-3. Find first `[ ]` or `[~]` task
-4. Continue execution loop from that point
-
----
-
-## Backward Compatibility
-
-For simple subagent use (non-Agent-Teams), Task() still works:
-```javascript
-Task(
-  description: "short description",
-  prompt: "detailed instructions",
-  subagent_type: "genius-dev"
-)
-```
+After terminal close or `/continue`: read BRIEFING.md, read `.claude/plan.md` for task
+status, find the first `[ ]`/`[~]` task, continue the execution loop from there. Detail:
+`references/execution-details.md` § On Resume.
 
 ---
 
 ## Completion Protocol
 
-When all tasks are done, update `.genius/state.json` with final task totals, surface skipped items, and point the user to the next sequence: full QA, security audit, then deploy. Always mention `.genius/DASHBOARD.html`.
+When all tasks are done, update `.genius/state.json` with final task totals, surface skipped
+items, and point the user to the next sequence: full QA, security audit, then deploy. Always
+mention `.genius/DASHBOARD.html`. Backward-compatible non-Agent-Teams `Task()` usage:
+`references/execution-details.md` § Backward Compatibility.
 
 ---
 
@@ -277,19 +221,11 @@ When all tasks are done, update `.genius/state.json` with final task totals, sur
 
 ## Anti-Patterns
 
-**DON'T:**
-- Write code directly (you're the Lead, not a dev)
-- Skip QA-micro after any task
-- Stop execution without explicit user command
-- Retry the same failing approach
-- Forget to update plan.md
-
-**DO:**
-- Delegate everything via Task()
-- Run QA-micro after every task
-- Log decisions and errors to memory
-- Keep plan.md in sync
-- Read BRIEFING.md for context
+**DON'T:** write code directly, skip QA-micro after any task, stop without explicit user
+command, retry the same failing approach, forget to update plan.md.
+**DO:** delegate everything via Task(), run QA-micro after every task, log decisions/errors
+to memory, keep plan.md in sync, read BRIEFING.md for context.
+Full list: `references/execution-details.md` § Anti-Patterns.
 
 ## Definition of Done
 

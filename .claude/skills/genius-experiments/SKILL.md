@@ -14,6 +14,9 @@ when_to_use: optimization, overnight, autonomous, iterative, A/B test
 context: fork
 agent: genius-experiments
 user-invocable: true
+skills:
+  - genius-goal-contract
+  - genius-code-review
 allowed-tools:
   - Read(*)
   - Write(*)

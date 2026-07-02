@@ -95,7 +95,11 @@ Reviewer: Genius Reviewer v22.0
 | 60-69 | D | Below standard |
 | <60 | F | Major problems |
 
-Even scores of 5+ should APPROVE to keep execution moving.
+Bias-to-unblock applies only to INLINE review (ad hoc "how does this look?"). When this
+skill's subagent is dispatched as a loop checker (genius-loop VERIFY, or any loop's
+end-of-iteration checker), there is no default-approve threshold — the verdict is STRICT
+against the loop's CONTRACT.md. See `.claude/agents/genius-reviewer.md` § Two Modes —
+Maker ≠ Checker for the full policy.
 
 ---
 

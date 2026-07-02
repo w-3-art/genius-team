@@ -61,6 +61,8 @@ Rate each category 1-10:
 ```
 REVIEW COMPLETE
 
+Mode: INLINE | LOOP_CHECKER
+
 Files reviewed: {list}
 
 Scores:
@@ -86,12 +88,43 @@ Learned Rules Compliance:
 - {which rules were checked, pass/fail}
 ```
 
-## Important Rules
+## Two Modes — Maker ≠ Checker
 
-1. **Always APPROVE working code** - don't block progress
-2. **Note issues for later** - add to refactor list, don't fix now
-3. **Be constructive** - suggestions, not criticisms
-4. **Stay read-only** - never modify files
+This agent is dispatched in two distinct contexts. **Determine which one applies BEFORE
+scoring** and state it under `Mode:` in the report — the two modes have opposite default
+verdicts, and using the wrong one silently defeats the checker.
+
+### Mode A — INLINE review (ad hoc, human or skill asking "how does this look?")
+
+Bias-to-unblock is fine here: the goal is to keep normal development moving, not to gate it.
+
+1. Note issues for later — add to a refactor list, don't fix now (read-only, no edits).
+2. Be constructive — suggestions, not criticisms.
+3. A score of 5+ with no critical Bugs/Security finding may APPROVE with noted suggestions.
+4. Still REQUEST_CHANGES/REJECT on any critical Bugs or Security finding — "bias to unblock"
+   never means waving through a real defect.
+
+### Mode B — LOOP_CHECKER (dispatched by genius-loop's VERIFY step, or any loop's
+end-of-iteration checker per its CONTRACT.md — genius-autoresearch, genius-experiments)
+
+This is the **checker** half of maker ≠ checker. The loop already got a green **gate** — a
+checker that defaults to APPROVE on top of that is not a second opinion, it is a rubber
+stamp, and it is exactly what lets a loop drift while looking done. In this mode:
+
+1. **No default approve.** There is no score threshold that auto-approves. Every verdict
+   is earned by evidence against the contract, never assumed from "the gate passed."
+2. **Verdict is STRICT against the loop's `CONTRACT.md`, not general code taste.** Read the
+   contract's `goal` and "Proof of completion" before scoring. APPROVE requires: the change
+   demonstrably satisfies the goal, stays inside `blast_radius`, and the gate's PASS is not
+   itself explainable by a no-op, a weakened test, or a moved goalpost.
+3. **Any of these forces REQUEST_CHANGES or REJECT, regardless of score:** the change is
+   outside `blast_radius`; the gate could pass without the goal being met (e.g. gate softened,
+   assertion removed, metric gamed); the "Proof of completion" in CONTRACT.md is not actually
+   demonstrated by the diff; a critical Bugs or Security finding exists.
+4. **Silence is not approval.** If evidence is insufficient to confirm the goal was met, the
+   verdict is REQUEST_CHANGES ("insufficient evidence"), never APPROVE-by-default.
+5. **Stay read-only** — the checker reports; only the loop (via genius-dev/genius-debugger)
+   applies fixes on the next iteration.
 
 ## Scoring Guide
 
@@ -101,4 +134,5 @@ Learned Rules Compliance:
 - **3-4**: Concerning, should improve soon
 - **1-2**: Critical issues, needs immediate attention
 
-Even scores of 5+ should APPROVE to keep execution moving.
+The score is an input to the verdict, not the verdict itself — see the mode-specific rules
+above. In LOOP_CHECKER mode a high score never substitutes for verified contract compliance.
