@@ -577,6 +577,20 @@
         ],
         "next_workflow": "genius-loop",
         "checkpoint": "user_approval"
+      },
+      {
+        "name": "genius-loop",
+        "description": "Loop Engineering kernel — executes an approved loop contract (read STATE, execute via GT skills, gate + separate checker, brakes, report)",
+        "category": "meta",
+        "prerequisites": [
+          "genius-goal-contract"
+        ],
+        "outputs": [
+          ".genius/loops/<slug>/STATE.md",
+          ".genius/loops/<slug>/last-gate.log"
+        ],
+        "next_workflow": null,
+        "checkpoint": "user_approval"
       }
     ]
   }

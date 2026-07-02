@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.85%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
-> Your AI product team. From idea to production. 56 specialized agents.
+> Your AI product team. From idea to production. 57 specialized agents.
 
 ## What You Get
 
@@ -24,7 +24,7 @@
 ## What's New in v22.0
 
 - **Mode System** — `/genius-mode` switches between beginner, builder, pro, and agency modes. Each adjusts validation strictness, explanation verbosity, and checkpoint behavior.
-- **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 56 skills. Prerequisites, outputs, categories.
+- **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 57 skills. Prerequisites, outputs, categories.
 - **Project Import** — `/genius-import` brings existing codebases into Genius Team. Auto-detects artifacts, sets checkpoints. Validators warn instead of block for imported projects.
 - **Session Recovery** — `.genius/session-log.jsonl` + `scripts/session-recover.sh` rebuilds state after crashes.
 - **Pre-transition Guards** — 3 micro-checklist skills auto-verify prerequisites before planning, coding, and deployment.
@@ -125,7 +125,7 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 
 ---
 
-## 56 Specialized Skills
+## 57 Specialized Skills
 
 | Skill | Purpose |
 |-------|---------|
@@ -185,6 +185,7 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 | genius-guard-pre-coding | Pre-coding validation checklist |
 | genius-guard-pre-deploy | Pre-deployment validation checklist |
 | genius-goal-contract | Loop-engineering goal contract (goal/gate/blast-radius/brakes) |
+| genius-loop | Loop Engineering kernel — runs approved contracts (gate + checker + brakes) |
 
 ---
 
@@ -239,7 +240,7 @@ your-project/
 ├── .claude/
 │   ├── settings.json            # Permissions, hooks & env vars
 │   ├── commands/                # Slash commands (/genius-start, etc.)
-│   ├── skills/                  # 56 Genius Team skill files
+│   ├── skills/                  # 57 Genius Team skill files
 │   └── plan.md                  # Task list (single source of truth)
 ├── .genius/
 │   ├── bin/                     # Local shell commands for Codex / Dual

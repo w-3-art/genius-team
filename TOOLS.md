@@ -113,3 +113,12 @@ npx cloudflare-mcp-server --setup
 - **Citability scoring** — Content structured for AI citations (clarity, factual density, E-E-A-T)
 - **geo-seo-claude** (zubair-trabzada/geo-seo-claude) — Architecture inspiration for genius-seo
 - Used by: `genius-seo`
+
+## Loop Engineering
+
+- **Doctrine** — *no gate, no loop*: every loop needs a verifiable stopping condition (goal), an objective pass/fail command (gate — never the agent's opinion), hard brakes, a blast radius, and a checker separate from the maker. Discipline: manual → skill → loop → schedule, never the reverse.
+- **`genius-goal-contract`** — writes the loop contract to `.genius/loops/<slug>/CONTRACT.md` (goal / gate / brakes / blast_radius / state / autonomy_level / checker). Requires human approval before any loop runs.
+- **`genius-loop`** — the kernel skill. Drives the canonical cycle: read STATE → DISCOVER → PLAN → EXECUTE (routes to GT skills, never codes directly) → VERIFY (gate + genius-reviewer counter-check) → write STATE → ITERATE or HALT+report.
+- **`scripts/loop-kernel.sh`** — bash runtime: `contract_validate` (refuses placeholder gates and blast-radius paths outside the project), `state_read`/`state_write` (STATE.md with iteration counter + gate-result hashes), `brakes_check` (max_iterations / no-progress / flip-flop A→B→A), `gate_run` (gate with timeout — a hung gate FAILS: silent-death guard), `loop_report`.
+- **Namespace** — everything under `.genius/loops/<slug>/`; the kernel never touches `.genius/state.json` or `.claude/plan.md` (owned by the Stop-hook sync).
+- **Autonomy ladder** — L1 suggests → L2 drafts (default) → L3 applies low-risk with merge approval → L4 full auto only if the contract says so.
