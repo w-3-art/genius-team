@@ -566,6 +566,17 @@
         "outputs": [],
         "next_workflow": null,
         "checkpoint": "auto"
+      },
+      {
+        "name": "genius-goal-contract",
+        "description": "Loop-engineering goal contract (goal/gate/blast-radius/brakes)",
+        "category": "meta",
+        "prerequisites": [],
+        "outputs": [
+          ".genius/loops/<slug>/CONTRACT.md"
+        ],
+        "next_workflow": "genius-loop",
+        "checkpoint": "user_approval"
       }
     ]
   }
