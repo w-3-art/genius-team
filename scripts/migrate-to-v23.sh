@@ -39,7 +39,8 @@ cat > "$TARGET_FILE" << EOF
   "plugin_version": "23.0.0",
   "auto_trigger": true,
   "dual_mode": true,
-  "guard_enforced": true,
+  "guard_enforced": "advisory",
+  "guard_note": "Advisory (warning-only) in the internal dev loop; boundary blocking planned for P4-08. See GENIUS_GUARD.md and decisions/GUARD-POLICY.md.",
   "migrated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF

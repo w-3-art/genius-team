@@ -104,7 +104,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then CONSENT=$(jq -r \".webhook_consent // false\" .genius/config.json 2>/dev/null || echo false); case \"$GENIUS_WEBHOOK_URL\" in https://*) HTTPS_OK=true ;; *) HTTPS_OK=false ;; esac; if [ \"$CONSENT\" = \"true\" ] && [ \"$HTTPS_OK\" = \"true\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"session_stop\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"agent\\\":\\\"$TOOL_NAME\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi; fi'"
+            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then CONSENT=$(jq -r \".webhook_consent // false\" .genius/config.json 2>/dev/null || echo false); case \"$GENIUS_WEBHOOK_URL\" in https://*) HTTPS_OK=true ;; *) HTTPS_OK=false ;; esac; if [ \"$CONSENT\" = \"true\" ] && [ \"$HTTPS_OK\" = \"true\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); HOOK_JSON=$(cat); TOOL=$(echo \"$HOOK_JSON\" | jq -r \".tool_name // \\\"\\\"\"); curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"session_stop\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"agent\\\":\\\"$TOOL\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi; fi'"
           }
         ]
       },
@@ -132,7 +132,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -d .genius ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); echo \"{\\\"ts\\\":\\\"$(date -Iseconds)\\\",\\\"tool\\\":\\\"$TOOL_NAME\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\"}\" >> .genius/session-log.jsonl 2>/dev/null; fi || true'"
+            "command": "bash -c 'if [ -d .genius ]; then HOOK_JSON=$(cat); TOOL=$(echo \"$HOOK_JSON\" | jq -r \".tool_name // \\\"\\\"\"); SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); echo \"{\\\"ts\\\":\\\"$(date -Iseconds)\\\",\\\"tool\\\":\\\"$TOOL\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\"}\" >> .genius/session-log.jsonl 2>/dev/null; fi || true'"
           }
         ]
       },
@@ -141,7 +141,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"[$(date +%H:%M:%S)] FILE: $TOOL_INPUT\" >> .genius/activity.log 2>/dev/null || true'"
+            "command": "bash -c 'HOOK_JSON=$(cat); FILE=$(echo \"$HOOK_JSON\" | jq -r \".tool_input.file_path // .tool_input.path // \\\"\\\"\"); echo \"[$(date +%H:%M:%S)] FILE: $FILE\" >> .genius/activity.log 2>/dev/null || true'"
           }
         ]
       },
@@ -150,7 +150,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then CONSENT=$(jq -r \".webhook_consent // false\" .genius/config.json 2>/dev/null || echo false); case \"$GENIUS_WEBHOOK_URL\" in https://*) HTTPS_OK=true ;; *) HTTPS_OK=false ;; esac; if [ \"$CONSENT\" = \"true\" ] && [ \"$HTTPS_OK\" = \"true\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); FILE=\"${TOOL_INPUT:-unknown}\"; curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"file_modified\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"file\\\":\\\"$FILE\\\",\\\"agent\\\":\\\"$TOOL_NAME\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi; fi'"
+            "command": "bash -c 'if [ -n \"$GENIUS_WEBHOOK_URL\" ]; then CONSENT=$(jq -r \".webhook_consent // false\" .genius/config.json 2>/dev/null || echo false); case \"$GENIUS_WEBHOOK_URL\" in https://*) HTTPS_OK=true ;; *) HTTPS_OK=false ;; esac; if [ \"$CONSENT\" = \"true\" ] && [ \"$HTTPS_OK\" = \"true\" ]; then SKILL=$(jq -r \".currentSkill // \\\"none\\\"\" .genius/state.json 2>/dev/null || echo \"none\"); PHASE=$(jq -r \".phase // \\\"unknown\\\"\" .genius/state.json 2>/dev/null || echo \"unknown\"); HOOK_JSON=$(cat); TOOL=$(echo \"$HOOK_JSON\" | jq -r \".tool_name // \\\"\\\"\"); FILE=$(echo \"$HOOK_JSON\" | jq -r \".tool_input.file_path // .tool_input.path // \\\"unknown\\\"\"); curl -s -X POST \"$GENIUS_WEBHOOK_URL\" -H \"Content-Type: application/json\" -d \"{\\\"event\\\":\\\"file_modified\\\",\\\"skill\\\":\\\"$SKILL\\\",\\\"phase\\\":\\\"$PHASE\\\",\\\"file\\\":\\\"$FILE\\\",\\\"agent\\\":\\\"$TOOL\\\",\\\"timestamp\\\":\\\"$(date -Iseconds)\\\"}\" > /dev/null 2>&1 || true; fi; fi'"
           }
         ]
       },
@@ -159,7 +159,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'FILE=\"${TOOL_INPUT:-}\"; if [ -n \"$FILE\" ] && [ -d .claude/rules ]; then echo \"<path_rules_check>\"; for rule in .claude/rules/*.md; do if [ -f \"$rule\" ]; then RULENAME=$(basename \"$rule\"); echo \"Rule available: $RULENAME\"; fi; done; if [ -f .genius/memory/learned-rules.md ]; then echo \"Learned rules: $(wc -l < .genius/memory/learned-rules.md 2>/dev/null || echo 0) lines\"; fi; echo \"</path_rules_check>\"; fi 2>/dev/null || true'"
+            "command": "bash -c 'HOOK_JSON=$(cat); FILE=$(echo \"$HOOK_JSON\" | jq -r \".tool_input.file_path // .tool_input.path // \\\"\\\"\"); if [ -n \"$FILE\" ] && [ -d .claude/rules ]; then echo \"<path_rules_check>\"; for rule in .claude/rules/*.md; do if [ -f \"$rule\" ]; then RULENAME=$(basename \"$rule\"); echo \"Rule available: $RULENAME\"; fi; done; if [ -f .genius/memory/learned-rules.md ]; then echo \"Learned rules: $(wc -l < .genius/memory/learned-rules.md 2>/dev/null || echo 0) lines\"; fi; echo \"</path_rules_check>\"; fi 2>/dev/null || true'"
           }
         ]
       }
