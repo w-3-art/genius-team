@@ -23,7 +23,7 @@ If you discover a security vulnerability in Genius Team:
 ## Security Model
 
 Genius Team runs entirely within Claude Code's sandbox:
-- No external API calls unless explicitly configured (GENIUS_WEBHOOK_URL)
+- No external API calls by default. The only declared destination is `GENIUS_WEBHOOK_URL` (see `TOOLS.md#network-destinations`), and hooks only send to it when the URL is HTTPS **and** `"webhook_consent": true` is explicitly set in `.genius/config.json`
 - No secrets stored in code — use `.env` files (gitignored)
 - All memory is file-based in `.genius/memory/` (no external databases)
 - Hook commands run in the user's shell with their permissions

@@ -38,10 +38,25 @@
 - **/effort** — control analysis depth: `low` (quick), `medium` (default), `high` (deep).
 - **/color** — color-code your session prompt for multiple parallel sessions.
 - **Agent Teams** — `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` for parallel genius-dev
-- **HTTP Hooks** — POST JSON to external URL on hook events (set `GENIUS_WEBHOOK_URL`)
+- **HTTP Hooks** — POST JSON to external URL on hook events (set `GENIUS_WEBHOOK_URL`, see [Network Destinations](#network-destinations) below)
 - **Shared project configs** — configs sync across git worktrees automatically
 - `/simplify`, `/batch` — built-in slash commands for context management
 - **Remote Control** — control your terminal session from your phone via Claude Code mobile app
+
+## Network Destinations
+
+Genius Team makes **no external network calls by default**. The only declared, opt-in destination is:
+
+| Destination | Trigger | Data sent | Opt-in required |
+|-------------|---------|-----------|------------------|
+| `$GENIUS_WEBHOOK_URL` (user-supplied HTTPS URL) | `Stop` and `PostToolUse` hooks (`configs/*/settings.json`) | JSON with event name, current skill, phase, modified file path, tool name, timestamp | Yes — see below |
+
+The webhook hooks in `configs/*/settings.json` will only POST when **all** of the following are true:
+1. `GENIUS_WEBHOOK_URL` is explicitly set in the environment.
+2. `"webhook_consent": true` is explicitly set in `.genius/config.json` (same file/`jq` mechanism already used for all other team configuration — see `scripts/lib/contract.sh`).
+3. `GENIUS_WEBHOOK_URL` starts with `https://` — non-HTTPS URLs are rejected.
+
+If any condition is missing, the hook is a no-op. See `SECURITY.md` for the full security model.
 
 ## OpenClaw (Genius-Claw)
 

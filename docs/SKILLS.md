@@ -2,7 +2,7 @@
 
 ## Overview
 
-Genius Team v22.0 consists of 54 specialized skills organized into workflow, validation, automation, and support phases:
+Genius Team v22.0 consists of 55 specialized skills organized into workflow, validation, automation, and support phases:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐

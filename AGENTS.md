@@ -12,6 +12,14 @@
 
 ## Quick Start
 
+**Current method:** Run the add script for project-specific state.
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)
+```
+
+**Claude Code / Codex plugin (private beta):** A plugin for global auto-triggering skills is in private beta and not yet publicly published. Until it ships, the add script above is the supported install path.
+
 Add the local Genius commands to your shell PATH:
 
 ```bash

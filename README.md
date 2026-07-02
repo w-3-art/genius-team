@@ -1,10 +1,10 @@
 # Genius Team v22.0
 
-[![Version](https://img.shields.io/badge/version-21.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
+[![Version](https://img.shields.io/badge/version-22.0.0-blue.svg)](https://github.com/w-3-art/genius-team/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.85%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
-> Your AI product team. From idea to production. 51 specialized agents.
+> Your AI product team. From idea to production. 55 specialized agents.
 
 ## What You Get
 
@@ -24,7 +24,7 @@
 ## What's New in v22.0
 
 - **Mode System** — `/genius-mode` switches between beginner, builder, pro, and agency modes. Each adjusts validation strictness, explanation verbosity, and checkpoint behavior.
-- **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 54 skills. Prerequisites, outputs, categories.
+- **Workflow Registry** — `.genius/workflows.json` defines the complete dependency graph for all 55 skills. Prerequisites, outputs, categories.
 - **Project Import** — `/genius-import` brings existing codebases into Genius Team. Auto-detects artifacts, sets checkpoints. Validators warn instead of block for imported projects.
 - **Session Recovery** — `.genius/session-log.jsonl` + `scripts/session-recover.sh` rebuilds state after crashes.
 - **Pre-transition Guards** — 3 micro-checklist skills auto-verify prerequisites before planning, coding, and deployment.
@@ -37,23 +37,22 @@
 
 ## Quick Start
 
-### Option A — OpenClaw (recommended)
+## Installation
 
-If you use [OpenClaw](https://openclaw.ai), install Genius-Claw — the native plugin:
+**Current method:** Run the add script to install Genius Team into your project.
 
 ```bash
-openclaw plugins install https://genius.w3art.io/genius-claw.zip
+bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/add.sh)
 ```
 
-Genius-Claw gives you cross-project memory, a global dashboard, and auto-updates via your OpenClaw setup.
+**Claude Code / Codex plugin (private beta):** A plugin for global auto-triggering skills is in private beta and not yet publicly published. Until it ships, the add script above is the supported install path.
 
-### Option B — Standalone (Claude Code / Codex CLI)
+**Legacy / OpenClaw users:** See below for Genius-Claw.
 
-**New project:**
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/create.sh) my-project
-```
-
+**After install:**
+- Add local commands to PATH: `export PATH="$PWD/.genius/bin:$PATH"`
+- Run `genius-start`
+- Start with P0 ideation or any task — skills auto-trigger.
 **Add to existing project:**
 ```bash
 cd my-existing-project
@@ -126,11 +125,13 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 
 ---
 
-## 51 Specialized Skills
+## 55 Specialized Skills
 
 | Skill | Purpose |
 |-------|---------|
 | genius-team | Intelligent router — entry point |
+| genius-start | Session init, resume, and status routing |
+| genius-import | Import an existing project into Genius Team |
 | genius-interviewer | Requirements discovery |
 | genius-product-market-analyst | Market validation |
 | genius-specs | Formal specifications |
@@ -158,9 +159,14 @@ genius-security audits. genius-deployer ships. A Retrospective Engine runs after
 | genius-dev-mobile | React Native/Expo, native APIs, offline |
 | genius-dev-database | Schema design, migrations, query optimization |
 | genius-dev-api | Third-party integrations, SDK wrappers |
+| genius-dev-web3 | Solidity/Vyper/Move smart contracts, dApp integrations |
 | genius-code-review | Multi-agent PR review (bugs+security+quality) |
 | genius-skill-creator | Creates project-specific skills on demand |
 | genius-experiments | Autonomous overnight optimization loop |
+| genius-autoresearch | Karpathy-inspired autonomous optimization loop |
+| genius-evolution | Self-evolving learning system (captures corrections) |
+| genius-playground-generator | Context-aware HTML playground generator |
+| genius-omni-router | Multi-provider routing for Omni mode |
 | genius-seo | GEO-first SEO + AI search optimization |
 | genius-crypto | Web3 intelligence (DexScreener+OpenSea+Dune) |
 | genius-analytics | GA4/Plausible setup, event tracking, funnels |
@@ -232,7 +238,7 @@ your-project/
 ├── .claude/
 │   ├── settings.json            # Permissions, hooks & env vars
 │   ├── commands/                # Slash commands (/genius-start, etc.)
-│   ├── skills/                  # 21+ Genius Team skill files
+│   ├── skills/                  # 55 Genius Team skill files
 │   └── plan.md                  # Task list (single source of truth)
 ├── .genius/
 │   ├── bin/                     # Local shell commands for Codex / Dual
@@ -266,6 +272,10 @@ your-project/
 | jq | any | Required for memory system JSON processing |
 | Git | any | Required for version control and worktrees |
 | Node.js | ≥ 18 | Recommended for most project types |
+
+### Network
+
+Genius Team makes no external network calls by default. Setting `GENIUS_WEBHOOK_URL` enables optional HTTP hooks, gated behind explicit consent (HTTPS only). See [TOOLS.md — Network Destinations](TOOLS.md#network-destinations) for details.
 
 ---
 
