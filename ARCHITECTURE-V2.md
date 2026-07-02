@@ -1,5 +1,14 @@
 # Genius Team v2 — Agent Orchestration Framework
 
+> ⚠️ **HISTORICAL — never implemented, superseded by `.claude/agents/` and skills.**
+> This document describes a proposed agent framework whose `genius-*.yaml` specs were
+> an exploration that was **never wired to any runtime** (no script/skill/hook ever
+> loaded them). The `✅ v2.0` markers below refer to spec-draft completeness, not to
+> shipped capability. The YAML specs now live under
+> [`docs/archive/agent-framework-v2/`](docs/archive/agent-framework-v2/). The real
+> subagents are `.claude/agents/*.md` plus the skills under `.claude/skills/`.
+> Kept for historical reference only.
+
 > **Vision:** Each skill becomes a spawnable agent with its own context, memory, and playground.
 > The orchestrator routes between agents. The user only talks to the orchestrator.
 

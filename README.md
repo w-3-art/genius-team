@@ -251,14 +251,13 @@ your-project/
 │       ├── progress.json
 │       ├── errors.json
 │       └── session-logs/
-├── agents/                      # Agent YAML specs (orchestration)
 ├── scripts/
 │   ├── create.sh                # One-liner new project setup
 │   ├── add.sh                   # Add Genius to existing project
 │   ├── setup.sh                 # Configure modes & engines
 │   ├── upgrade.sh               # Upgrade to latest version
 │   └── verify.sh                # Verify installation health
-└── docs/                        # Documentation & guides
+└── docs/                        # Documentation & guides (incl. archive/agent-framework-v2/)
 ```
 
 ---
