@@ -70,3 +70,10 @@ token.json
 # Debug screenshots (not for prod)
 docs/screenshots/scroll-test/
 docs/screenshots/audit/
+
+# Product site (never copy to target repos)
+docs/
+site/
+*.html
+vercel.json
+sitemap.xml

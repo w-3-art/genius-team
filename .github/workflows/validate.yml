@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "Checking skills directories..."
           failed=0
-          for dir in .genius/skills/*/; do
+          for dir in .claude/skills/*/; do
             [ -d "$dir" ] || continue
             if [ ! -f "${dir}SKILL.md" ]; then
               echo "❌ Missing SKILL.md in $dir"

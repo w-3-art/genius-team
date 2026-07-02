@@ -130,6 +130,14 @@ else
   GENIUS_SRC="${TMPDIR_GT}/genius"
 fi
 
+# ── HARD EXCLUSION: Prevent product site HTML/docs leakage (Vercel bug fix) ──
+if [ -d "${GENIUS_SRC}/docs" ]; then
+  info "Excluding /docs/ (product site HTML + vercel.json) — prevents Vercel deploy pollution in target repo"
+fi
+if [ -d "${GENIUS_SRC}/site" ]; then
+  info "Excluding /site/ (future product site)"
+fi
+
 # ── Copy files (without overwriting) ────────────────────────
 info "Copying Genius Team files to your project..."
 COPIED=0
@@ -154,6 +162,10 @@ copy_dir() {
   if [ -d "$dst" ]; then
     # Merge: copy only files that don't exist yet
     find "$src" -type f | while read -r file; do
+      # HARD EXCLUSION for product site (Vercel bug fix)
+      if [[ "$file" == *"/docs/"* || "$file" == *"/site/"* || "$file" == *.html || "$file" == */vercel.json ]]; then
+        continue
+      fi
       local rel="${file#$src/}"
       local target="$dst/$rel"
       if [ ! -e "$target" ]; then
@@ -164,8 +176,13 @@ copy_dir() {
         ((SKIPPED++)) || true
       fi
     done
-    ok "Merged ${CYAN}$(basename "$dst")/${NC} (skipped existing files)"
+    ok "Merged ${CYAN}$(basename "$dst")/${NC} (skipped existing files + docs/site/HTML)"
   else
+    # For full dir copy, also exclude
+    if [[ "$(basename "$src")" == "docs" || "$(basename "$src")" == "site" ]]; then
+      ok "Skipped ${CYAN}$(basename "$src")/${NC} (product site — Vercel pollution prevention)"
+      return
+    fi
     cp -r "$src" "$dst"
     ok "Added ${CYAN}$(basename "$dst")/${NC}"
     ((COPIED++)) || true

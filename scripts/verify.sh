@@ -169,3 +169,14 @@ if [ "$WARNINGS" -gt 0 ]; then
 else
   say -e "${GREEN}✅ Verification passed.${NC}"
 fi
+
+# v23.0 Plugin mode check
+say "🧩 Plugin mode (v23.0)..."
+if [ -f ".genius/plugin-mode.json" ]; then
+  say -e "  ${GREEN}✓${NC} .genius/plugin-mode.json present"
+  if grep -q '"auto_trigger": true' .genius/plugin-mode.json 2>/dev/null; then
+    say -e "  ${GREEN}✓${NC} auto_trigger enabled"
+  fi
+else
+  say -e "  ${YELLOW}ℹ${NC} No plugin-mode.json (pre-v23 or legacy)"
+fi
