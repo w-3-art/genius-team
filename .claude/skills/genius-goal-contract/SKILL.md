@@ -70,8 +70,11 @@ If success cannot be expressed as a command, stop and make it measurable before 
 - **blast_radius** — allowed files/globs + allowed commands. Everything else is off-limits.
 - **state** — path to `STATE.md` (`done`/`in-progress`/`blocked`/`next`), read at start of
   every run, written at the end of every run.
-- **autonomy_level** — L1 suggests → L2 drafts → L3 applies low-risk with merge approval →
-  L4 full auto. New loops start L1/L2.
+- **autonomy_level** — L1 suggest-only → L2 draft → L3 apply-low-risk-with-merge-approval →
+  L4 full-auto-with-audit-logs. New loops start L1/L2; L3 requires a week of read/approved
+  L1/L2 outputs; L4 requires an active audit log AND a human-read gate at merge that is never
+  bypassable — "level four is earned, not assumed." Canonical definitions live in
+  `genius-auto`'s "Autonomy Ladder" section — this field must stay consistent with it.
 - **checker** — the verifier, kept separate from the maker. The thing that produced the
   change never signs off on it.
 
@@ -101,7 +104,7 @@ read STATE → DISCOVER → PLAN → EXECUTE → VERIFY (gate + separate checker
 - slug: <kebab-case-slug>
 - created: <ISO date>
 - author: <human>
-- autonomy_level: L1   # L1 suggest | L2 draft | L3 apply-low-risk+approve | L4 full-auto
+- autonomy_level: L1   # L1 suggest-only | L2 draft | L3 apply-low-risk-with-merge-approval | L4 full-auto-with-audit-logs (see genius-auto)
 
 ## Goal (stopping condition — a contract, not "make it better")
 <One sentence. Done means exactly this and nothing more.>
