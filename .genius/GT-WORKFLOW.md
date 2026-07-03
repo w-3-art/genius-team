@@ -1,8 +1,9 @@
 <!-- ============================================================
-     GT-WORKFLOW.md — Genius Team framework doctrine (v22.0)
-     Owner: Genius Team framework. DO NOT EDIT by hand.
-     Replaced as a single unit by /genius-upgrade or add.sh.
-     Project-specific content goes in CLAUDE.md (root) instead.
+     GENERATED — edit templates/doctrine/, not this file.
+     Source:      templates/doctrine/GT-WORKFLOW.template.md
+     Fragments:   templates/doctrine/*.md
+     Regenerate:  scripts/generate-doctrine.sh
+     Version:     VERSION (single source of truth) → v22.0
      ============================================================ -->
 
 # Genius Team v22.0 — CLI Mode

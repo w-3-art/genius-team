@@ -80,3 +80,20 @@ jobs:
 
       - name: Reproducible e2e install test (no claude smoke)
         run: bash scripts/e2e-install-test.sh
+
+  doctrine-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate doctrine from single source (VERSION + templates/doctrine/)
+        run: bash scripts/generate-doctrine.sh
+
+      - name: Fail if regeneration produced an uncommitted diff
+        run: |
+          if ! git diff --exit-code; then
+            echo "❌ Doctrine drift: a generated file is out of sync with templates/doctrine/ or VERSION."
+            echo "   Run 'bash scripts/generate-doctrine.sh' locally and commit the result."
+            exit 1
+          fi
+          echo "✅ Doctrine in sync — no drift"
