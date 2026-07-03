@@ -107,6 +107,41 @@ bash <(curl -fsSL https://raw.githubusercontent.com/w-3-art/genius-team/main/scr
 
 The script auto-detects your current version and upgrades to v22. Your `.genius/memory/` data is preserved.
 
+### Preview before installing (`--dry-run`)
+
+Both `add.sh` and `create.sh` accept `--dry-run`. It lists **every file that would be
+written or modified — and writes nothing**. The plan is computed by actually running the
+install inside a throwaway sandbox and diffing it, so the list is exact rather than a guess.
+
+```bash
+# In an existing project — see what would be added/modified, change nothing
+bash <(curl -fsSL .../add.sh) --dry-run
+
+# For a new project — see what would be created
+bash <(curl -fsSL .../create.sh) my-app --dry-run
+```
+
+### Install manifest — "installed with evidence, not hope"
+
+On a real install, both scripts write **`.genius/install-manifest.json`** recording exactly
+what landed on disk:
+
+- `gtVersion`, `installedAt`, `origin` (`add.sh` or `create.sh`), `mode`, `engine`, `targetDir`
+- `files[]` — every written file with its `sha256`, `origin`, and a `mutable` flag
+  (runtime-state files such as `.genius/state.json` are marked mutable and are not
+  integrity-checked)
+- `modified[]` — pre-existing files edited in place (e.g. `CLAUDE.md`, `.gitignore`)
+- `hooks` — the hooks actually installed into `.claude/settings.json`
+- `network` — `webhookConsented` and any `destinations` (empty unless you set
+  `GENIUS_WEBHOOK_URL` **and** `GENIUS_WEBHOOK_CONSENT=1` with an `https://` URL)
+
+Verify the installation against the manifest at any time — it reports missing files and
+modified (tampered) immutable files, and exits non-zero if any are found:
+
+```bash
+bash scripts/verify.sh --manifest
+```
+
 ---
 
 ## How It Works
@@ -245,6 +280,7 @@ your-project/
 ├── .genius/
 │   ├── bin/                     # Local shell commands for Codex / Dual
 │   ├── state.json               # Current project phase & checkpoint
+│   ├── install-manifest.json    # Evidence of what was installed (verify with verify.sh --manifest)
 │   ├── DASHBOARD.html           # Visual master dashboard
 │   └── memory/                  # File-based memory system
 │       ├── BRIEFING.md

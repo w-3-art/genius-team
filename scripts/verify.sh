@@ -6,11 +6,13 @@ cd "$ROOT_DIR"
 
 QUIET=false
 CORTEX_READY=false
+MANIFEST_MODE=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --quiet) QUIET=true; shift ;;
     --cortex-ready) CORTEX_READY=true; shift ;;
+    --manifest) MANIFEST_MODE=true; shift ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
@@ -70,6 +72,65 @@ warn_if_missing() {
     WARNINGS=$((WARNINGS + 1))
   fi
 }
+
+# ── --manifest: compare the install manifest against the real tree ──
+if [ "$MANIFEST_MODE" = true ]; then
+  _sha256() {
+    if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" 2>/dev/null | awk '{print $1}';
+    elif command -v shasum >/dev/null 2>&1; then shasum -a 256 "$1" 2>/dev/null | awk '{print $1}';
+    else echo "UNKNOWN"; fi
+  }
+
+  MANIFEST=".genius/install-manifest.json"
+  say "🧾 Genius Team — Install manifest verification"
+  say "═══════════════════════════════════════════════════════════════"
+
+  if [ ! -f "$MANIFEST" ]; then
+    say -e "  ${RED}✗${NC} $MANIFEST not found — install via add.sh/create.sh to generate it"
+    exit 1
+  fi
+  if ! jq . "$MANIFEST" >/dev/null 2>&1; then
+    say -e "  ${RED}✗${NC} $MANIFEST is not valid JSON"
+    exit 1
+  fi
+
+  M_MISSING=0
+  M_MODIFIED=0
+  M_TOTAL=0
+  while IFS=$'\t' read -r path sha mutable; do
+    [ -z "$path" ] && continue
+    M_TOTAL=$((M_TOTAL + 1))
+    if [ ! -f "$path" ]; then
+      say -e "  ${RED}✗${NC} missing: $path"
+      M_MISSING=$((M_MISSING + 1))
+      continue
+    fi
+    actual="$(_sha256 "$path")"
+    if [ "$actual" != "$sha" ]; then
+      if [ "$mutable" = "true" ]; then
+        say -e "  ${YELLOW}~${NC} changed (runtime state, expected): $path"
+      else
+        say -e "  ${RED}✗${NC} modified: $path"
+        M_MODIFIED=$((M_MODIFIED + 1))
+      fi
+    else
+      say -e "  ${GREEN}✓${NC} $path"
+    fi
+  done < <(jq -r '.files[] | [.path, .sha256, (.mutable // false | tostring)] | @tsv' "$MANIFEST")
+
+  say ""
+  GTV="$(jq -r '.gtVersion // "?"' "$MANIFEST")"
+  INST="$(jq -r '.installedAt // "?"' "$MANIFEST")"
+  ORI="$(jq -r '.origin // "?"' "$MANIFEST")"
+  say "  Manifest: GT v${GTV} — installed ${INST} by ${ORI} — ${M_TOTAL} files tracked"
+  say "═══════════════════════════════════════════════════════════════"
+  if [ $((M_MISSING + M_MODIFIED)) -gt 0 ]; then
+    say -e "${RED}❌ Manifest check failed: ${M_MISSING} missing, ${M_MODIFIED} modified (immutable).${NC}"
+    exit 1
+  fi
+  say -e "${GREEN}✅ Manifest check passed — all tracked files present and unmodified.${NC}"
+  exit 0
+fi
 
 say "🔍 Genius Team v22.0 — Verification"
 say "═══════════════════════════════════════════════════════════════"
