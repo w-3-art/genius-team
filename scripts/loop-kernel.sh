@@ -10,13 +10,26 @@
 #
 # Commands:
 #   contract_validate <loop_dir|CONTRACT.md>   exit 0 = contract is runnable
+#                                              (also registers the loop with Cortex)
 #   state_read        <loop_dir>               init if missing, print STATE.md
 #   state_get         <loop_dir> <key>         print one metadata value
 #   state_write       <loop_dir> <status> <gate_exit> [gate_output]
 #   brakes_check      <loop_dir>               0=iterate 2=max_iter 3=no_progress
-#                                              4=flip_flop 10=done 11=blocked
+#                                              4=flip_flop 5=killed-via-cortex
+#                                              10=done 11=blocked
 #   gate_run          <loop_dir>               run the gate with timeout, print exit
-#   loop_report       <loop_dir>               end-of-loop summary
+#   loop_report       <loop_dir>               end-of-loop summary (+ final Cortex report)
+#   cortex_register   <loop_dir>               register loop in the Cortex control plane
+#   cortex_heartbeat  <loop_dir> [tokens]      heartbeat; exit 5 = Cortex ordered a kill
+#   cortex_report     <loop_dir>               send the final verdict to Cortex
+#
+# Control plane (LP-06): if the `cortex` CLI is reachable (override with
+# $CORTEX_BIN), the kernel registers the loop, heartbeats on every
+# brakes_check and reports the final verdict — Cortex is the police: a
+# heartbeat answering kill:true halts the loop (STATE set to blocked, final
+# report sent, brakes_check exits 5). GRACEFUL DEGRADATION: when cortex is
+# absent or fails, the loop still runs — a warning is logged to stderr and
+# every cortex_* helper returns 0.
 #
 # The 4 deaths this kernel prevents:
 #   runaway recursion -> max_iterations cap (brakes_check)
@@ -104,6 +117,128 @@ _state_meta() {
   local v
   v=$(grep -E "^- $2:" "$1" | head -1 | sed -E "s/^- $2: *//" || true)
   echo "${v:--}"
+}
+
+# ------------------------------------------------ cortex control plane (LP-06)
+
+CORTEX_BIN="${CORTEX_BIN:-cortex}"
+_CORTEX_WARNED=0
+
+_cortex_available() { command -v "$CORTEX_BIN" >/dev/null 2>&1; }
+
+_cortex_warn() {
+  [ "$_CORTEX_WARNED" -eq 1 ] && return 0
+  _CORTEX_WARNED=1
+  echo "loop-kernel: WARNING: cortex CLI not reachable — loop runs WITHOUT the control plane (no heartbeat, no kill switch)" >&2
+}
+
+_json_escape() {
+  # stdin/arg -> JSON-string-safe (backslash, quote, newlines)
+  printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | tr '\n' ' '
+}
+
+_loop_id() {
+  # <loop_dir> -> "<repo>/<slug>" — must match Cortex's default id convention
+  echo "$(basename "$(_project_root)")/$(basename "$(_resolve_loop_dir "$1")")"
+}
+
+_state_set_status() {
+  # _state_set_status <loop_dir> <status> — rewrite ONLY the status line
+  local dir="$1" new="$2" state tmp
+  dir=$(_resolve_loop_dir "$dir")
+  state=$(_state_path "$dir")
+  [ -f "$state" ] || _state_init "$dir"
+  tmp="$state.tmp.$$"
+  awk -v s="$new" '/^- status: / { print "- status: " s; next } { print }' "$state" > "$tmp" && mv "$tmp" "$state"
+}
+
+cortex_register() {
+  # Registers the loop in the Cortex control plane. Never blocks the loop:
+  # unreachable/refusing cortex -> warning on stderr, exit 0.
+  local dir contract id repo goal level json out
+  dir=$(_resolve_loop_dir "${1:-}")
+  contract=$(_contract_path "$dir")
+  [ -f "$contract" ] || _die "contract not found: $contract"
+  _cortex_available || { _cortex_warn; return 0; }
+  id=$(_loop_id "$dir")
+  repo=$(basename "$(_project_root)")
+  goal=$(_section "$contract" "Goal" | sed '/^[[:space:]]*$/d' | head -1)
+  level=$(_autonomy "$contract")
+  json=$(printf '{"id":"%s","repo":"%s","contractPath":"%s","goal":"%s","autonomyLevel":"%s"}' \
+    "$(_json_escape "$id")" \
+    "$(_json_escape "$repo")" \
+    "$(_json_escape "$(cd "$dir" && pwd -P)/CONTRACT.md")" \
+    "$(_json_escape "$goal")" \
+    "$(_json_escape "${level:-L2}")")
+  if out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --register "$json" 2>/dev/null); then
+    echo "loop-kernel: cortex: registered loop $id" >&2
+  else
+    echo "loop-kernel: WARNING: cortex refused/failed loop registration (${out:-no output}) — loop runs without control plane" >&2
+  fi
+  return 0
+}
+
+cortex_heartbeat() {
+  # cortex_heartbeat <loop_dir> [token_estimate]
+  # exit 0 = continue (or cortex unreachable), exit 5 = Cortex ordered a kill.
+  local dir state id iteration gate_exit verdict tokens json out reason
+  dir=$(_resolve_loop_dir "${1:-}")
+  tokens="${2:-}"
+  _cortex_available || { _cortex_warn; return 0; }
+  state=$(_state_path "$dir")
+  [ -f "$state" ] || _state_init "$dir"
+  id=$(_loop_id "$dir")
+  iteration=$(_state_meta "$state" "iteration")
+  case "$iteration" in (''|-|*[!0-9]*) iteration=0 ;; esac
+  gate_exit=$(_state_meta "$state" "last_gate_exit")
+  case "$gate_exit" in
+    0) verdict="pass" ;;
+    ''|-) verdict="-" ;;
+    *) verdict="fail" ;;
+  esac
+  json=$(printf '{"id":"%s","iteration":%s,"gateVerdict":"%s"' \
+    "$(_json_escape "$id")" "$iteration" "$verdict")
+  case "$tokens" in
+    (''|*[!0-9]*) json="$json}" ;;
+    (*) json="$json,\"tokenEstimate\":$tokens}" ;;
+  esac
+  if ! out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --heartbeat "$json" 2>/dev/null); then
+    echo "loop-kernel: WARNING: cortex heartbeat failed — continuing without control plane" >&2
+    return 0
+  fi
+  if echo "$out" | grep -qE '"kill"[[:space:]]*:[[:space:]]*true'; then
+    reason=$(echo "$out" | sed -n 's/.*"reason":"\([^"]*\)".*/\1/p')
+    echo "KILL: cortex ordered a kill${reason:+ — $reason}"
+    return 5
+  fi
+  return 0
+}
+
+cortex_report() {
+  # Sends the final verdict to Cortex (status done -> completed, else halted).
+  local dir state id status cstatus gate_exit verdict json out
+  dir=$(_resolve_loop_dir "${1:-}")
+  _cortex_available || { _cortex_warn; return 0; }
+  state=$(_state_path "$dir")
+  [ -f "$state" ] || _state_init "$dir"
+  id=$(_loop_id "$dir")
+  status=$(_state_meta "$state" "status")
+  case "$status" in
+    done) cstatus="completed" ;;
+    *)    cstatus="halted" ;;
+  esac
+  gate_exit=$(_state_meta "$state" "last_gate_exit")
+  case "$gate_exit" in
+    0) verdict="pass" ;;
+    ''|-) verdict="-" ;;
+    *) verdict="fail" ;;
+  esac
+  json=$(printf '{"id":"%s","status":"%s","verdict":"%s"}' \
+    "$(_json_escape "$id")" "$cstatus" "$verdict")
+  if ! out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --report "$json" 2>/dev/null); then
+    echo "loop-kernel: WARNING: cortex final report failed" >&2
+  fi
+  return 0
 }
 
 # ------------------------------------------------------- contract_validate ---
@@ -197,6 +332,10 @@ EOF
     return 1
   fi
   echo "contract_validate: PASS (gate + brakes + blast_radius + autonomy=$level)"
+
+  # LP-06: a runnable contract gets registered with the control plane
+  # (no-op with a warning when cortex is unreachable).
+  cortex_register "$dir" || true
 }
 
 # ------------------------------------------------------- state read / write --
@@ -319,6 +458,18 @@ brakes_check() {
   if [ "$status" = "blocked" ]; then
     echo "HALT: BLOCKED — needs human input"; return 11
   fi
+
+  # LP-06: heartbeat the Cortex control plane. kill:true is an order:
+  # write STATE (blocked), send the final report, halt cleanly (exit 5).
+  local hb_rc=0
+  cortex_heartbeat "$dir" || hb_rc=$?
+  if [ "$hb_rc" -eq 5 ]; then
+    _state_set_status "$dir" "blocked"
+    cortex_report "$dir" || true
+    echo "HALT: KILLED — kill requested via Cortex control plane"
+    return 5
+  fi
+
   if [ -n "$max_iter" ] && [ "$iteration" -ge "$max_iter" ]; then
     echo "HALT: MAX_ITERATIONS — $iteration/$max_iter iterations used"; return 2
   fi
@@ -418,12 +569,15 @@ brakes verdict:  $verdict (code $rc)
 state file:      $state
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
+
+  # LP-06: final verdict goes to the control plane too (warn-only on failure).
+  cortex_report "$dir" || true
 }
 
 # -------------------------------------------------------------------- main ---
 
 usage() {
-  sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//'
   exit 1
 }
 
@@ -437,5 +591,8 @@ case "$cmd" in
   brakes_check)      brakes_check "$@" ;;
   gate_run)          gate_run "$@" ;;
   loop_report)       loop_report "$@" ;;
+  cortex_register)   cortex_register "$@" ;;
+  cortex_heartbeat)  cortex_heartbeat "$@" ;;
+  cortex_report)     cortex_report "$@" ;;
   *)                 usage ;;
 esac

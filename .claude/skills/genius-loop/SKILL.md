@@ -107,12 +107,22 @@ Status: `done` (gate PASS + checker approve), `blocked` (needs human input), els
 `in-progress`. Also update the `Done` / `In Progress` / `Blocked` / `Next` sections of
 STATE.md by hand — the next run starts from them. Then:
 - `brakes_check` exit 0 → go to step 2 (next iteration).
-- Any other exit (MAX_ITERATIONS / NO_PROGRESS / FLIP_FLOP / DONE / BLOCKED) → HALT:
+- Any other exit (MAX_ITERATIONS / NO_PROGRESS / FLIP_FLOP / KILLED / DONE / BLOCKED) → HALT:
 ```bash
 bash scripts/loop-kernel.sh loop_report .genius/loops/<slug>
 ```
 Show the report to the human with: what changed, final gate verdict, checker verdict,
 and (on a brake halt) what you would try next if the loop were re-authorized.
+
+## Cortex control plane (LP-06)
+
+The kernel talks to the Cortex control plane automatically when the `cortex` CLI is
+installed: `contract_validate` registers the loop, every `brakes_check` heartbeats
+(iteration + gate verdict), and `loop_report` sends the final verdict. If Cortex answers
+`kill:true` (kill switch or brakes exceeded), `brakes_check` exits 5 (`HALT: KILLED`) after
+setting STATE to `blocked` — treat it like any other brake: HALT + `loop_report`. Without
+cortex the loop runs unchanged (a warning is logged; there is just no remote kill switch).
+Inspect/kill from anywhere: `cortex loops`, `cortex loops --kill <id|--repo <r>|--all>`.
 
 ## Definition of Done
 - [ ] `contract_validate` passed before iteration 1 (or the loop refused to start).
