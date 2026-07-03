@@ -11,9 +11,14 @@
 #      railway/netlify/wrangler/flyctl deploy, gh release create, docker push,
 #      supabase db push, eas submit). Denied when the pre-deploy checklist has
 #      not passed (.genius/state.json phase != "deploy-approved") OR the action
-#      is initiated by an active loop whose autonomy_level < L4.
+#      is initiated by an active loop whose autonomy_level < L4. Matched ONLY at
+#      command position (start / after ; && || | ( { backtick) so a boundary
+#      keyword inside an echo/string/comment does NOT fire (GUARD-POLICY §5.1).
 #   2. UNVETTED INSTALL  (curl|sh, wget|sh, claude plugin install, cortex skill
-#      add). Denied unless .genius/allow-install exists (explicit human vetting).
+#      add) AND unvetted skill-directory writes: a Bash cp/mv/git clone/redirect
+#      into a skills path, or a Write tool call whose target is a skills file
+#      (.claude/skills/<name>/SKILL.md, **/skills/<name>/SKILL.md). Denied unless
+#      .genius/allow-install exists (explicit human vetting). Runs on Bash|Write.
 #
 # Mechanism (verified in Claude Code 2.1.198, GUARD-POLICY §3): a PreToolUse hook
 # denies a tool call by writing this JSON on stdout:
@@ -33,10 +38,19 @@ HOOK_JSON=$(cat)
 
 TOOL=$(printf '%s' "$HOOK_JSON" | jq -r '.tool_name // ""' 2>/dev/null || echo "")
 CMD=$(printf '%s'  "$HOOK_JSON" | jq -r '.tool_input.command // ""' 2>/dev/null || echo "")
+FILE=$(printf '%s' "$HOOK_JSON" | jq -r '.tool_input.file_path // .tool_input.path // ""' 2>/dev/null || echo "")
 
-# Only the Bash tool carries a shell command; anything else is out of scope.
-[ "$TOOL" = "Bash" ] || exit 0
-[ -n "$CMD" ] || exit 0
+# Boundaries apply to Bash (shell commands) and Write (skill-file writes). Any
+# other tool is out of scope — stay silent (GUARD-POLICY §4 matcher "Bash|Write").
+case "$TOOL" in
+  Bash|Write) ;;
+  *) exit 0 ;;
+esac
+# Nothing inspectable → stay silent.
+[ -n "$CMD" ] || [ -n "$FILE" ] || exit 0
+
+# Target string used for logging (the command for Bash, the path for Write).
+TARGET="${CMD:-$FILE}"
 
 GUARD_LOG=".genius/guard.log"
 TS=$(date "+%Y-%m-%d %H:%M:%S" 2>/dev/null || echo "?")
@@ -55,34 +69,60 @@ emit_deny() {
 
 # --- Boundary detection ------------------------------------------------------
 
-PUSHPUB_RX='(git[[:space:]]+push|(npm|pnpm|yarn)[[:space:]]+publish|npx[[:space:]]+[^&|;]*publish|vercel[[:space:]]+(deploy|.*--prod)|netlify[[:space:]]+deploy|railway[[:space:]]+(up|deploy)|wrangler[[:space:]]+deploy|flyctl[[:space:]]+deploy|gh[[:space:]]+release[[:space:]]+create|docker[[:space:]]+push|supabase[[:space:]]+db[[:space:]]+push|eas[[:space:]]+submit)'
+# Command position: start of a line, or right after a shell separator
+# (; & | ( { backtick). grep scans per line, so ^ also covers newlines. This
+# ensures a boundary keyword inside an echo/string/comment/arg does NOT fire.
+CMDPOS='(^|[;&|(`{])[[:space:]]*'
 
-INSTALL_RX='(curl[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|wget[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|claude[[:space:]]+plugin[[:space:]]+install|cortex[[:space:]]+skill[[:space:]]+add)'
+PUSHPUB_INNER='(git[[:space:]]+push|(npm|pnpm|yarn)[[:space:]]+publish|npx[[:space:]]+[^&|;]*publish|vercel[[:space:]]+(deploy|.*--prod)|netlify[[:space:]]+deploy|railway[[:space:]]+(up|deploy)|wrangler[[:space:]]+deploy|flyctl[[:space:]]+deploy|gh[[:space:]]+release[[:space:]]+create|docker[[:space:]]+push|supabase[[:space:]]+db[[:space:]]+push|eas[[:space:]]+submit)'
+PUSHPUB_RX="${CMDPOS}${PUSHPUB_INNER}"
+
+# Unvetted install from the network (also anchored at command position).
+INSTALL_INNER='(curl[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|wget[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|claude[[:space:]]+plugin[[:space:]]+install|cortex[[:space:]]+skill[[:space:]]+add)'
+INSTALL_RX="${CMDPOS}${INSTALL_INNER}"
+
+# A clear skills-directory path (§4 frontière INSTALL): .claude/skills/... or any
+# **/skills/<name>/SKILL.md. Kept deliberately narrow so we only fire on clear
+# skills targets (GUARD-POLICY §5.1 — when in doubt, do not block).
+SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
+# A Bash command that writes a skill into a skills path via cp/mv/rsync/install/
+# ln/git clone/tee or a redirect.
+SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 
 IS_PUSHPUB=false
 IS_INSTALL=false
-printf '%s' "$CMD" | grep -qE "$PUSHPUB_RX" && IS_PUSHPUB=true
-printf '%s' "$CMD" | grep -qE "$INSTALL_RX" && IS_INSTALL=true
 
-# Nominal case: not a boundary command → stay silent (GUARD-POLICY §5.1/5.3).
+# Push/publish/deploy is a shell-only boundary (Bash).
+if [ "$TOOL" = "Bash" ] && [ -n "$CMD" ]; then
+  printf '%s' "$CMD" | grep -qE "$PUSHPUB_RX"     && IS_PUSHPUB=true
+  printf '%s' "$CMD" | grep -qE "$INSTALL_RX"      && IS_INSTALL=true
+  printf '%s' "$CMD" | grep -qE "$SKILLS_WRITE_RX"  && IS_INSTALL=true
+fi
+
+# Write tool: deny creating/replacing a skill file inside a skills directory.
+if [ "$TOOL" = "Write" ] && [ -n "$FILE" ]; then
+  printf '%s' "$FILE" | grep -qE "$SKILLS_PATH_RX" && IS_INSTALL=true
+fi
+
+# Nominal case: not a boundary action → stay silent (GUARD-POLICY §5.1/5.3).
 if [ "$IS_PUSHPUB" = false ] && [ "$IS_INSTALL" = false ]; then
   exit 0
 fi
 
 # --- Escape hatch (traceable, per-action, never silent) ----------------------
 if [ "${GENIUS_GUARD_OVERRIDE:-}" = "1" ]; then
-  log_guard "OVERRIDE GENIUS_GUARD_OVERRIDE=1 bypassed guard for: ${CMD:0:200}"
+  log_guard "OVERRIDE GENIUS_GUARD_OVERRIDE=1 bypassed guard for: ${TARGET:0:200}"
   exit 0
 fi
 
 # --- Boundary 2: unvetted install -------------------------------------------
 if [ "$IS_INSTALL" = true ]; then
   if [ -f .genius/allow-install ]; then
-    log_guard "ALLOW install (.genius/allow-install present) for: ${CMD:0:200}"
+    log_guard "ALLOW install (.genius/allow-install present) for: ${TARGET:0:200}"
     exit 0
   fi
-  log_guard "DENY install (no .genius/allow-install) for: ${CMD:0:200}"
-  emit_deny "Genius Guard — INSTALL boundary blocked. This command installs code from an unvetted source (curl|sh / plugin install / skill add). Audit the source first. When you have reviewed it and trust it: 'touch .genius/allow-install' to allow installs in this project, or set GENIUS_GUARD_OVERRIDE=1 for a single logged bypass (recorded in .genius/guard.log)."
+  log_guard "DENY install (no .genius/allow-install) for: ${TARGET:0:200}"
+  emit_deny "Genius Guard — INSTALL boundary blocked. This action installs/activates a skill from an unvetted source: curl|sh / wget|sh / plugin install / cortex skill add, or a write into a skills directory (.claude/skills/<name>/SKILL.md, **/skills/<name>/SKILL.md) via cp/mv/git clone/redirect or the Write tool. Audit the source first. When you have reviewed it and trust it: 'touch .genius/allow-install' to allow installs in this project, or set GENIUS_GUARD_OVERRIDE=1 for a single logged bypass (recorded in .genius/guard.log)."
   exit 0
 fi
 

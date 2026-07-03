@@ -14,7 +14,7 @@
 | Layer | Where | Status | Behavior |
 |-------|-------|--------|----------|
 | **Internal dev loop** | `PreToolUse` hooks on `Write` / `Edit` / `Bash` | ✅ **Advisory (active)** | Emits a warning into context (e.g. "GUARD WARNING: action without active skill"). It does **NOT** block the tool call. The agent is expected to heed it. |
-| **Boundaries** | unvetted install · pre-deploy · push / publish | ✅ **Blocking (active — P4-08)** | *Denies* the action (hard block) until the boundary condition is satisfied. Implemented by `scripts/genius-guard-boundary.sh`, wired as a `PreToolUse` `Bash` hook in `.claude/settings.json` and all four `configs/*/settings.json`. Verified end-to-end in Claude Code 2.1.199. Spec: `decisions/GUARD-POLICY.md`. |
+| **Boundaries** | unvetted install · pre-deploy · push / publish | ✅ **Blocking (active — P4-08)** | *Denies* the action (hard block) until the boundary condition is satisfied. Implemented by `scripts/genius-guard-boundary.sh`, wired as a `PreToolUse` `Bash|Write` hook in `.claude/settings.json` and all four `configs/*/settings.json`. Verified end-to-end in Claude Code 2.1.199. Spec: `decisions/GUARD-POLICY.md`. |
 
 **Why this split (validated policy).** Blocking the internal loop turns the tool into a cage that power users reject; advisory warnings keep the discipline visible without fighting the operator. Hard blocks are reserved for the few irreversible boundaries where the cost of a mistake is high (installing unvetted third-party skills, deploying, or pushing/publishing).
 
@@ -24,10 +24,10 @@
 
 ### 🚧 The three boundaries (active) — how to clear each
 
-| Boundary | Trigger (Bash command) | Deny condition | How to clear it |
+| Boundary | Trigger (Bash command / Write path) | Deny condition | How to clear it |
 |----------|------------------------|----------------|-----------------|
 | **Push / publish / deploy** | `git push`, `npm/pnpm/yarn publish`, `vercel deploy`/`--prod`, `railway/netlify/wrangler/flyctl deploy`, `gh release create`, `docker push`, `supabase db push`, `eas submit` | `.genius/state.json` `phase != "deploy-approved"`, **or** the action is initiated by an active loop (`.genius/loops/<slug>/STATE.md` `status: in-progress`) whose `CONTRACT.md` `autonomy_level < L4` | Pass genius-qa + genius-security, clear the human deploy checkpoint, set `phase` to `deploy-approved`. Loop-initiated pushes also require `autonomy_level: L4` with an active audit log. |
-| **Unvetted install** | `curl … \| sh`, `wget … \| sh`, `claude plugin install`, `cortex skill add` | `.genius/allow-install` is absent | Audit the source, then `touch .genius/allow-install` to allow installs in this project. |
+| **Unvetted install** | `curl … \| sh`, `wget … \| sh`, `claude plugin install`, `cortex skill add`, **and any write into a skills directory** — a Bash `cp`/`mv`/`git clone`/redirect into `.claude/skills/…` or `**/skills/<name>/SKILL.md`, or a `Write` tool call whose path targets such a skill file | `.genius/allow-install` is absent | Audit the source, then `touch .genius/allow-install` to allow installs in this project. |
 
 **Escape hatch (per-action, never silent).** Set `GENIUS_GUARD_OVERRIDE=1` in the environment for a single command to bypass **any** boundary. Every override is appended to `.genius/guard.log` (`BOUNDARY OVERRIDE …`) — there is no silent bypass. This is for the human operator's explicit, deliberate use, not for the agent to reach for on its own. Every deny and every allow is likewise logged, so `.genius/guard.log` is the audit trail for boundary decisions.
 
