@@ -18,6 +18,7 @@
 ## Testing (Phase 3)
 - [x] Clean install test: 0 leakage
 - [x] Verify.sh passes in test project
+- [x] Reproducible e2e install gate — `scripts/e2e-install-test.sh` (P4-07): clean HOME + pristine project → `add.sh` → asserts `.genius/` contract (state/config/install-manifest), `.claude/skills`, `validate-skills.sh` green in target, hooks jq-parsable, `verify.sh --manifest` green. Wired in CI (`validate.yml` → `e2e-install`, no claude smoke). Optional headless smoke (`E2E_WITH_CLAUDE=1`) ran locally with `claude 2.1.199` → rc=0.
 - [x] Bootstrap production safeguards verified (never fail silently, session logging, plugin-mode.json)
 - [ ] Real Claude Code session testing (P0-P3 flow, auto-trigger, guard, dual-mode)
 - [ ] Zero errors in real session

@@ -72,3 +72,11 @@ jobs:
 
       - name: Trigger routing regression (floor from baseline)
         run: bash scripts/trigger-evals.sh
+
+  e2e-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reproducible e2e install test (no claude smoke)
+        run: bash scripts/e2e-install-test.sh
