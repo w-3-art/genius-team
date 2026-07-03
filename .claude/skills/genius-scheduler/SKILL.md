@@ -60,6 +60,8 @@ Before writing ANY schedule, confirm the loop is proven by hand. Refuse otherwis
       merges/deploys keeps a human-read gate (L3+).
 - [ ] `token_budget` / max wall-time are declared — no unbudgeted unsupervised loop
       (runaway-recursion guard; the corpus's $47k/11-day failure).
+- [ ] For scheduled/webhook/remote triggers, both fields above are mandatory, not just
+      "appropriate" — see "Trigger safety" below for the hard-refuse rule.
 
 If any box is unchecked → STOP and hand back to **genius-goal-contract** /
 **genius-loop**. Scheduling does not fix an unreliable loop; it multiplies it.
@@ -79,6 +81,51 @@ An unattended loop with no heartbeat is how loops die silently. Every schedule M
   loop invocation, not an uncapped daemon.
 - **Kill switch** — a documented way to disable the schedule (delete the Routine / remove
   the crontab line) and a per-run budget cap.
+
+## Trigger safety — scheduled / webhook / remote (P5-06, veille P0)
+
+**"No gate, no loop" extends to triggers: no budget, no trigger.** A trigger firing an
+unattended loop is EXECUTE with nobody watching, plus an external party decides
+*when*. Refuse ANY scheduled/webhook/remote trigger unless **both** hold:
+
+- [ ] `autonomy_level` declared in the target `CONTRACT.md` (L1-L4) — undeclared is
+      refused, never defaulted to L1.
+- [ ] `blast_radius` bounded and passes `contract_validate` — empty/wildcard refused.
+
+**Dedup, thread-aware (GT policy, not native).** GitHub-triggered Routines start a new
+session per event with no reuse; channel webhooks (`notifications/claude/channel`) are
+fire-and-forget, unacknowledged. Neither dedups. A retrying sender re-fires the loop, so
+genius-scheduler MUST record an idempotency key (delivery/thread/PR-SHA ID) in
+`.genius/schedules.json` before EXECUTE and skip an already-processed key — one event,
+one run.
+
+**One-shots: use native `deleteAfterRun`.** One-shot `CronCreate` tasks and `/loop`
+reminders delete themselves after firing; a Routine's one-off trigger auto-disables and
+shows **Ran**. Never hand-roll a "fake one-shot" recurring job.
+
+**Destination preserved on recurring runs.** A Routine's connector/prompt destination
+stays constant across runs even though each run is a new session; a channel reply must
+echo the inbound `chat_id`/thread meta so it lands in the triggering thread, not the
+most recent one.
+
+**Fallback model per trigger — fable/opus/sonnet only.** Native `fallbackModel` in
+`settings.json` is a global session-scoped chain (max 3, no cross-file merge) — not
+per-trigger. genius-scheduler records its own `fallback_model` per
+`.genius/schedules.json` entry: `claude-opus-4-8` → `claude-sonnet-5` (matches
+`configs/*/settings.json`). Never `haiku` for a code-role trigger — reserved for the
+marketing chat in `server.js`.
+
+**Remote triggers — trusted hosts + Trusted Devices.** Webhook receivers bind loopback
+only (`127.0.0.1`, never `0.0.0.0`) and gate on sender identity before forwarding.
+Remote Control only talks to `api.anthropic.com` — a custom `ANTHROPIC_BASE_URL`/gateway
+disables it. **Trusted Devices** (Team/Enterprise, beta, off by default) ties Remote
+Control to an enrolled device + a sign-in ≤18h old — recommend it for orgs letting
+members steer scheduled loops remotely. Doesn't replace the push/deploy/publish
+boundary: `decisions/GUARD-POLICY.md` §6 owns that enforcement, this section only
+owns the trigger-level refusal.
+
+*Sources (WebFetch-verified 2026-07-03): `code.claude.com/docs/en/{scheduled-tasks,
+routines,channels-reference,remote-control,settings}`.*
 
 ## Scheduling methods
 
@@ -105,7 +152,11 @@ stops on session end or `STOP`.
 
 1. Verify the guardrail checklist above — refuse if any box is unchecked.
 2. Pick the method: persistent → `/schedule` or cron+`claude -p`; supervised → `/loop`.
-3. Record the schedule in `.genius/schedules.json` (slug, cron, method, budget, kill-switch).
+3. Record the schedule in `.genius/schedules.json`: `slug`, `cron`, `method`, `budget`,
+   `kill_switch`, `autonomy_level`, `blast_radius_ref`, `recur` (false relies on native
+   `deleteAfterRun`), `dedup_key_field` (webhook/remote only), `destination` (fixed
+   across runs), `fallback_model` (`claude-opus-4-8` → `claude-sonnet-5`, never haiku).
+   See "Trigger safety" above.
 4. Provide the activation command AND the disable/kill command to the user.
 5. Log the decision to `.genius/memory/decisions.json`:
    `{"decision":"SCHEDULED: <slug> <cron>","reason":"proven stable N runs","tags":["scheduler","loop"]}`
@@ -125,6 +176,9 @@ requirements above are the operator's manual substitute — do not schedule with
 ## Definition of Done
 
 - [ ] Guardrail checklist passed (approved contract + ≥3 manual `done` runs + budget).
+- [ ] Scheduled/webhook/remote triggers: `autonomy_level`+`blast_radius` present, dedup
+      key defined, one-shots use native `deleteAfterRun`, destination fixed,
+      `fallback_model` fable/opus/sonnet only.
 - [ ] Method selected; the scheduled command runs the loop THROUGH the kernel (brakes apply).
 - [ ] Heartbeat + logging configured for the unsupervised run.
 - [ ] Schedule written to `.genius/schedules.json`; activation AND kill commands given.
