@@ -60,6 +60,17 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/genius-guard-boundary.sh"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
