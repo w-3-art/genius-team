@@ -25,6 +25,9 @@ hooks:
 
 # genius-accessibility — WCAG 2.2 AA Audit & Implementation
 
+Runnable commands, code patterns, and checklists for every step:
+`references/a11y-details.md` (matching § per step).
+
 ## Principles
 
 1. **Semantic HTML first** — Use correct elements before adding ARIA.
@@ -32,281 +35,36 @@ hooks:
 3. **Test with real assistive technology** — axe-core finds ~30% of issues. Humans find the rest.
 4. **No accessibility = legal risk** — ADA, EAA (EU 2025), AODA compliance matters.
 
----
-
 ## Step-by-Step Protocol
 
-### Step 1 — Automated Audit (axe-core)
-
-```bash
-# Install axe CLI
-npm install -g @axe-core/cli
-
-# Run against local or production URL
-axe http://localhost:3000 --reporter json > .genius/axe-report.json
-
-# Check critical violations
-node -e "
-const r = require('./.genius/axe-report.json');
-const violations = r[0].violations;
-console.log('Critical:', violations.filter(v => v.impact === 'critical').length);
-console.log('Serious:', violations.filter(v => v.impact === 'serious').length);
-console.log('Moderate:', violations.filter(v => v.impact === 'moderate').length);
-violations.filter(v => ['critical','serious'].includes(v.impact))
-  .forEach(v => console.log(\`[\${v.impact.toUpperCase()}] \${v.id}: \${v.description}\`));
-"
-```
-
-#### Playwright + axe (CI integration)
-
-Use `@axe-core/playwright` with `AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()`. Test all key pages (home, checkout, forms). Run: `npx playwright test tests/accessibility.spec.ts`
-
-### Step 2 — Color Contrast
-
-**Minimum ratios (WCAG 2.2 AA):**
-- Normal text (< 18pt): **4.5:1**
-- Large text (≥ 18pt / 14pt bold): **3:1**
-- UI components & graphical objects: **3:1**
-
-```bash
-# Install contrast checker
-npm install -g @accessibility-checker/contrast
-
-# Check specific colors
-node -e "
-const { getContrastRatio } = require('@accessibility-checker/contrast');
-const ratio = getContrastRatio('#6B7280', '#FFFFFF');
-console.log('Ratio:', ratio.toFixed(2) + ':1');
-console.log('AA Pass (normal text):', ratio >= 4.5);
-"
-```
-
-**Common failures to check:**
-- Gray placeholder text on white background (often < 4.5:1)
-- Light blue links on white background
-- White text on brand color buttons
-- Disabled state text (still needs 3:1 minimum in WCAG 2.2)
-
-```css
-/* ✅ WCAG AA compliant color tokens */
-:root {
-  --text-primary: #111827;      /* 16.7:1 on white */
-  --text-secondary: #374151;    /* 10.9:1 on white */
-  --text-muted: #4B5563;        /* 7.4:1 on white — NOT #9CA3AF (2.8:1 ❌) */
-  --brand-500: #6366F1;         /* Check on white: 4.7:1 ✅ */
-  --error: #DC2626;             /* 4.6:1 on white ✅ */
-}
-```
-
-### Step 3 — Semantic HTML Structure
-
-```html
-<!-- ✅ Correct landmark structure -->
-<header role="banner">
-  <nav aria-label="Main navigation">
-    <ul>
-      <li><a href="/">Home</a></li>
-    </ul>
-  </nav>
-</header>
-
-<main id="main-content">
-  <h1>Page Title</h1> <!-- Only ONE h1 per page -->
-  
-  <article>
-    <h2>Section</h2>
-    <h3>Subsection</h3> <!-- Don't skip heading levels -->
-  </article>
-</main>
-
-<aside aria-label="Related content">...</aside>
-<footer role="contentinfo">...</footer>
-
-<!-- Skip link (must be first focusable element) -->
-<a href="#main-content" class="skip-link">Skip to main content</a>
-```
-
-```css
-/* Skip link — visible on focus */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: #000;
-  color: #fff;
-  padding: 8px;
-  z-index: 100;
-  transition: top 0.2s;
-}
-.skip-link:focus {
-  top: 0;
-}
-```
-
-### Step 4 — ARIA Usage (when semantic HTML isn't enough)
-
-```tsx
-// ✅ Custom dropdown — ARIA required
-<div
-  role="combobox"
-  aria-expanded={isOpen}
-  aria-haspopup="listbox"
-  aria-controls="dropdown-list"
-  aria-activedescendant={selectedId}
->
-  <input aria-autocomplete="list" />
-</div>
-<ul id="dropdown-list" role="listbox">
-  {options.map(opt => (
-    <li key={opt.id} id={opt.id} role="option" aria-selected={opt.id === selectedId}>
-      {opt.label}
-    </li>
-  ))}
-</ul>
-
-// ✅ Live region for dynamic content
-<div aria-live="polite" aria-atomic="true">
-  {statusMessage}
-</div>
-
-// ✅ Loading states
-<button aria-busy={isLoading} aria-disabled={isLoading}>
-  {isLoading ? 'Saving...' : 'Save'}
-</button>
-
-// ❌ Don't do this
-<div role="button" onClick={handleClick}> // Use <button> instead
-<span aria-label="Close">X</span> // Use <button aria-label="Close">×</button>
-```
-
-### Step 5 — Form Accessibility
-
-```tsx
-// ✅ Accessible form pattern
-<form>
-  <div>
-    <label htmlFor="email">
-      Email address
-      <span aria-hidden="true"> *</span>
-    </label>
-    <input
-      id="email"
-      type="email"
-      name="email"
-      required
-      aria-required="true"
-      aria-describedby="email-error email-hint"
-      aria-invalid={hasError}
-      autoComplete="email"
-    />
-    <span id="email-hint" className="hint">
-      We'll never share your email.
-    </span>
-    {hasError && (
-      <span id="email-error" role="alert" className="error">
-        Please enter a valid email address.
-      </span>
-    )}
-  </div>
-</form>
-```
-
-### Step 6 — Keyboard Navigation
-
-**All interactive elements must be reachable via Tab and operable via keyboard:**
-
-```tsx
-// ✅ Custom interactive components
-function Accordion({ items }) {
-  return items.map((item, i) => (
-    <div key={item.id}>
-      <button
-        aria-expanded={item.isOpen}
-        aria-controls={`panel-${i}`}
-        id={`header-${i}`}
-      >
-        {item.title}
-      </button>
-      <div
-        id={`panel-${i}`}
-        role="region"
-        aria-labelledby={`header-${i}`}
-        hidden={!item.isOpen}
-      >
-        {item.content}
-      </div>
-    </div>
-  ))
-}
-```
-
-```css
-/* ✅ Always visible focus indicators */
-:focus-visible {
-  outline: 3px solid #6366F1;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* ❌ Never do this */
-*:focus { outline: none; }
-```
-
-**Focus trap for modals:**
-
-```typescript
-// Use focus-trap-react
-import FocusTrap from 'focus-trap-react'
-
-<FocusTrap active={isOpen}>
-  <div role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-    <h2 id="dialog-title">Confirm action</h2>
-    {/* ... */}
-    <button onClick={onClose}>Close</button>
-  </div>
-</FocusTrap>
-```
-
-### Step 7 — Images & Media
-
-```tsx
-// ✅ Informative image
-<img src="chart.png" alt="Bar chart showing 40% increase in Q4 revenue" />
-
-// ✅ Decorative image
-<img src="divider.png" alt="" role="presentation" />
-
-// ✅ Complex image — reference long description
-<figure>
-  <img src="org-chart.png" alt="Company org chart — see description below" aria-describedby="chart-desc" />
-  <figcaption id="chart-desc">
-    The CEO reports to the Board. Three VPs report to the CEO: Engineering, Product, and Sales.
-  </figcaption>
-</figure>
-
-// ✅ Video
-<video controls>
-  <source src="demo.mp4" type="video/mp4" />
-  <track kind="captions" src="captions.vtt" srclang="en" label="English" default />
-</video>
-```
-
-### Step 8 — Screen Reader Testing
-
-**Manual testing checklist:**
-
-```markdown
-**Screen Reader Checklist** (VoiceOver CMD+F5 on mac, NVDA on Windows):
-- [ ] Page title, landmarks, form labels, error messages (aria-live), alt text, interactive roles all announced correctly
-- [ ] Tab order logical, heading navigation works (H key), modal traps focus
-
----
+1. **Automated audit (axe-core)** — run `@axe-core/cli` against the target URL, write
+   `.genius/axe-report.json`, count critical/serious/moderate violations. CI: use
+   `@axe-core/playwright` with wcag2a/2aa/21aa/22aa tags on all key pages.
+   Commands: § Step 1.
+2. **Color contrast** — WCAG 2.2 AA minimums: normal text (< 18pt) **4.5:1**, large text
+   (≥ 18pt / 14pt bold) **3:1**, UI components & graphical objects **3:1**, disabled text
+   still 3:1. Watch gray placeholders, light-blue links, white-on-brand buttons.
+   Checker command + compliant token set: § Step 2.
+3. **Semantic HTML structure** — landmarks (header/nav/main/aside/footer), one h1 per
+   page, no skipped heading levels, skip link as first focusable element.
+   Markup + skip-link CSS: § Step 3.
+4. **ARIA usage** — only when semantic HTML isn't enough: combobox/listbox pattern,
+   `aria-live` regions, `aria-busy` loading states; never `<div role="button">`.
+   Patterns: § Step 4.
+5. **Form accessibility** — label htmlFor, `aria-required`, `aria-describedby` for
+   hints/errors, `aria-invalid`, `role="alert"` errors, autoComplete. Pattern: § Step 5.
+6. **Keyboard navigation** — everything Tab-reachable and keyboard-operable, visible
+   `:focus-visible` indicators (never `outline: none`), focus trap for modals
+   (focus-trap-react). Patterns: § Step 6.
+7. **Images & media** — informative alt text, empty alt for decorative, long descriptions
+   via `aria-describedby`/figcaption, captions track on video. Patterns: § Step 7.
+8. **Screen reader testing** — manual pass with VoiceOver (CMD+F5) / NVDA: titles,
+   landmarks, labels, live errors, alt text, roles announced; logical tab order; heading
+   nav (H); modal focus trap. Checklist: § Step 8.
 
 ## Output
 
 Write `.genius/a11y-report.md` with severity-grouped findings and record the audit summary in `.genius/state.json`.
-
----
 
 ## Handoff
 
@@ -314,13 +72,9 @@ Write `.genius/a11y-report.md` with severity-grouped findings and record the aud
 - **→ genius-performance** — Ensure a11y fixes don't regress performance
 - **→ genius-reviewer** — Add a11y checks to PR review process
 
----
-
 ## Playground Update
 
 Refresh the existing dashboard tab with real accessibility data and point the user to `.genius/DASHBOARD.html`.
-
----
 
 ## Definition of Done
 

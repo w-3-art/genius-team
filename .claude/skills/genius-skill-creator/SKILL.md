@@ -31,8 +31,8 @@ hooks:
 # Genius Skill Creator v22 — The Meta-Skill
 
 **Skills that spawn skills. Automate the automator.**
-
----
+Full templates, scaffolding commands, and a concrete example:
+`references/skill-templates.md` (matching § per step).
 
 ## When to Create a Skill
 
@@ -42,30 +42,15 @@ Create a skill when you observe:
 3. **Specialization**: The workflow requires specific domain knowledge
 4. **Handoff**: Multiple agents need to coordinate on this workflow
 
-Examples that warrant a skill:
-- "Every time we add a payment feature, we do X, Y, Z"
-- "Deploying to production always requires these 8 steps"
-- "Database migrations always follow this exact pattern"
+Examples: "every payment feature does X, Y, Z", "production deploys always take these 8
+steps", "DB migrations always follow this exact pattern".
 
----
+## Workflow
 
-## Step 1: Understand the Workflow
+### Step 1 — Understand the workflow
 
-Gather requirements by analyzing:
-
-```bash
-# Read existing skills for patterns
-ls .claude/skills/
-cat .claude/skills/*/SKILL.md | grep -A3 "^## "  # Scan section headers
-
-# Check CLAUDE.md for existing skill references
-grep -i "skill\|when.*use\|invoke" CLAUDE.md
-
-# Look for repeated patterns in recent work
-git log --oneline -20
-```
-
-Answer these questions:
+Analyze existing skills, CLAUDE.md references, and recent git history (commands:
+§ Workflow Analysis Commands), then answer:
 1. **What does it do?** (one sentence, active voice)
 2. **What triggers it?** (keywords, phrases, conditions)
 3. **What does it NOT do?** (clear boundaries to prevent misuse)
@@ -73,183 +58,30 @@ Answer these questions:
 5. **What does it output?** (files, report, code, etc.)
 6. **Who calls it?** (user-invocable: true/false)
 
----
+### Step 2 — Draft the frontmatter
 
-## Step 2: Draft the Frontmatter
+Follow the Anthropic spec exactly (full template: § Frontmatter Template).
+**Naming**: kebab-case, `genius-` prefix, descriptive but concise
+(`genius-stripe-payments`, `genius-i18n`). **Description**: start with the job, concrete
+triggers, anti-triggers, under 3 sentences.
 
-Follow the Anthropic Claude Code skill specification exactly:
+### Step 3 — Write the skill body
 
-```yaml
----
-name: genius-{kebab-case-name}           # Always genius- prefix for Genius Team skills
-description: >-
-  [ONE SENTENCE WHAT IT DOES]. Use when [TRIGGER PHRASES/CONDITIONS].
-  Do NOT use for [ANTI-TRIGGERS — what it should NOT handle].
-context: fork                             # fork = isolated agent context
-agent: genius-{kebab-case-name}          # matches name
-user-invocable: true                     # true if user can directly invoke; false if orchestrator-only
-allowed-tools:
-  - Read(*)
-  - Write(*)
-  - Edit(*)
-  - Glob(*)
-  - Grep(*)
-  - Bash(npm *)                          # only include tools the skill actually needs
-hooks:
-  PostToolUse:
-    - type: command
-      command: "bash -c 'echo \"[$(date +%H:%M:%S)] {SKILLNAME}: $TOOL_NAME\" >> .genius/{name}.log 2>/dev/null || true'"
-  Stop:
-    - type: command
-      command: "bash -c 'echo \"{SKILLNAME} COMPLETE: $(date)\" >> .genius/{name}.log 2>/dev/null || true'"
-      once: true
----
-```
+**Progressive disclosure** — most important info first, details later. Required sections:
+Mode Compatibility table, Core Principles, main content sections, Output (state.json
+update command), Handoff. Full body template: § SKILL.md Body Template. Keep it concise,
+runnable, purpose-driven.
 
-**Naming rules**:
-- kebab-case only
-- genius- prefix for all Genius Team skills
-- Descriptive but concise: `genius-stripe-payments`, `genius-i18n`, `genius-analytics`
+### Step 4 — Create the directory structure
 
-**Description rules**: start with the job, include concrete triggers, include anti-triggers, keep it under 3 sentences.
+`.claude/skills/genius-my-skill/` with `SKILL.md` (required) + `references/` (optional:
+templates, examples, checklists). Scaffolding commands: § Directory Scaffolding.
 
----
+### Step 5 — Register in CLAUDE.md
 
-## Step 3: Write the Skill Body
-
-Follow **progressive disclosure** — most important info first, details later.
-
-### SKILL.md Template
-
-```markdown
----
-[frontmatter]
----
-
-# {Skill Name} v22 — {Tagline}
-
-**{One powerful sentence describing the skill's value.}**
-
----
-
-## Mode Compatibility
-
-| Mode | Behavior |
-|------|----------|
-| **CLI** | [how it runs in terminal] |
-| **IDE** | [how it runs in VS Code/Cursor] |
-| **Omni** | [multi-provider behavior] |
-| **Dual** | [Claude+Codex split] |
-
----
-
-## Core Principles
-
-1. **[Principle 1]**: [brief explanation]
-2. **[Principle 2]**: [brief explanation]
-3. **[Principle 3]**: [brief explanation]
-
----
-
-## [Main Section 1]
-
-[Content — code examples, commands, patterns]
-
----
-
-## [Main Section 2]
-
-[Content]
-
----
-
-## Output
-
-Update `.genius/outputs/state.json` on completion:
-\`\`\`bash
-jq --arg ts "$(date -Iseconds)" '.skill = "genius-{name}" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
-\`\`\`
-
----
-
-## Handoff
-
-- → **[other-skill]**: [when/why to hand off]
-```
-
-**Constraints**: keep it concise, runnable, and purpose-driven.
-
----
-
-## Step 4: Create Skill Directory Structure
-
-```bash
-SKILL_NAME="genius-my-skill"
-SKILL_DIR=".claude/skills/${SKILL_NAME}"
-
-mkdir -p "${SKILL_DIR}"
-mkdir -p "${SKILL_DIR}/references"  # For supporting docs, templates, examples
-
-# Create the SKILL.md
-# Write the drafted content to SKILL_DIR/SKILL.md
-
-# Optionally add reference files
-# cp some-template.md "${SKILL_DIR}/references/template.md"
-```
-
-Directory structure:
-```
-.claude/skills/genius-my-skill/
-├── SKILL.md              # Required — the skill definition
-└── references/           # Optional — supporting files
-    ├── template.md       # Reusable templates
-    ├── examples.md       # Example outputs
-    └── checklist.md      # Validation checklists
-```
-
----
-
-## Step 5: Register in CLAUDE.md
-
-After creating the skill, update `CLAUDE.md` to mention it:
-
-```bash
-# Find the skills section in CLAUDE.md
-grep -n "skills\|Skills\|## " CLAUDE.md | head -20
-```
-
-Add an entry like:
-```markdown
-## Project Skills
-
-- **genius-my-skill**: [One line description]. Invoke when [trigger].
-```
-
----
-
-## Concrete Example
-
-Use a short, project-specific skill such as `genius-stripe-payments` when a payment workflow repeats often.
-
-Example frontmatter:
-```yaml
-name: genius-stripe-payments
-description: >-
-  Stripe payment integration skill. Use when work involves "add Stripe",
-  "subscription billing", or "checkout flow". Do NOT use for other providers.
-```
-
-Reference file `.claude/skills/genius-stripe-payments/references/setup-checklist.md`:
-```markdown
-# Stripe Setup Checklist
-- [ ] STRIPE_SECRET_KEY in .env
-- [ ] STRIPE_PUBLISHABLE_KEY in .env  
-- [ ] STRIPE_WEBHOOK_SECRET in .env
-- [ ] Webhook endpoint registered in Stripe dashboard
-- [ ] Products/prices created in Stripe dashboard
-```
-
----
+Add a one-line entry under the project skills section: name, description, trigger
+(commands + entry format: § CLAUDE.md Registration). Concrete worked example
+(`genius-stripe-payments` + its setup checklist): § Concrete Example.
 
 ## Validation Checklist
 
@@ -265,8 +97,6 @@ Before finalizing the skill, verify:
 - [ ] Total length < 5000 words
 - [ ] CLAUDE.md updated with skill reference
 
----
-
 ## Output
 
 Update `.genius/outputs/state.json` on completion:
@@ -274,8 +104,6 @@ Update `.genius/outputs/state.json` on completion:
 ```bash
 jq --arg ts "$(date -Iseconds)" '.skill = "genius-skill-creator" | .status = "complete" | .updatedAt = $ts' .genius/outputs/state.json > .genius/outputs/state.json.tmp && mv .genius/outputs/state.json.tmp .genius/outputs/state.json 2>/dev/null || true
 ```
-
----
 
 ## Handoff
 

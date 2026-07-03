@@ -43,6 +43,7 @@ hooks:
 # Genius Dev v22.0 — The Craftsman
 
 **Real artists ship. But they ship when it's insanely great.**
+Field shapes, full standards, optional MCP patterns: `references/dev-details.md`.
 
 ## Smart Sub-Skill Dispatch
 
@@ -50,240 +51,61 @@ Before implementing anything, analyze the task and route to the specialized sub-
 
 | Task type | Sub-skill to use |
 |-----------|-----------------|
-| React, Vue, Svelte, CSS, Tailwind, UI components, animations, responsive | **genius-dev-frontend** |
-| Node.js, Express, Fastify, API routes, auth, middleware, REST, GraphQL | **genius-dev-backend** |
-| React Native, Expo, iOS, Android, mobile-specific APIs | **genius-dev-mobile** |
-| SQL, NoSQL, schema design, migrations, Prisma, Drizzle, indexing | **genius-dev-database** |
-| Third-party API integration, SDK wrapper, webhook, OpenAPI client | **genius-dev-api** |
-| Solidity, Vyper, Cairo, Move, smart contracts, ERC-20/721/1155/4626, Foundry, Hardhat, Anchor, ethers/viem/wagmi, dApp wiring | **genius-dev-web3** |
+| React, Vue, Svelte, CSS, Tailwind, UI, animations, responsive | **genius-dev-frontend** |
+| Node.js, Express, Fastify, API routes, auth, REST, GraphQL | **genius-dev-backend** |
+| React Native, Expo, iOS, Android, mobile APIs | **genius-dev-mobile** |
+| SQL, NoSQL, schema, migrations, Prisma, Drizzle, indexing | **genius-dev-database** |
+| Third-party API integration, SDK wrapper, webhook, OpenAPI | **genius-dev-api** |
+| Solidity, Vyper, Cairo, Move, ERC-*, Foundry, Hardhat, Anchor, ethers/viem/wagmi | **genius-dev-web3** |
 | Full-stack feature, multi-layer, or unclassified | **Handle directly** (see below) |
 
-**Web3 signal cues** (route to `genius-dev-web3` immediately):
-- File ext `.sol`, `.vy`, `.cairo`, `.move`
-- Config files: `foundry.toml`, `hardhat.config.*`, `Anchor.toml`
-- Keywords: "contract", "token", "NFT", "ERC-*", "vault", "staking", "airdrop",
-  "wallet connect", "onchain", "reentrancy", "gas optimization"
+**Web3 signal cues** (route to `genius-dev-web3` immediately): file ext `.sol`,
+`.vy`, `.cairo`, `.move`; configs `foundry.toml`, `hardhat.config.*`, `Anchor.toml`;
+keywords "contract", "token", "NFT", "ERC-*", "vault", "staking", "airdrop",
+"wallet connect", "onchain", "reentrancy", "gas optimization".
 
-**How to dispatch:**
-When you receive a coding task, state your routing decision:
-> "This task involves [frontend/backend/mobile/database/API integration]. I'm routing to genius-dev-[type]."
-
-In Claude Code Agent Teams mode, spawn the sub-skill as a sub-agent.
-In Codex dual mode, use thread forking to the appropriate sub-agent.
-In standalone mode, apply the sub-skill's specific guidelines from its SKILL.md.
-
----
-
-## Unified Dashboard Integration
-
-**DO NOT launch separate HTML files.** Update the unified state instead.
-
-### On Phase Start
-Update `.genius/outputs/state.json`:
-```json
-{
-  "currentPhase": "dev",
-  "phases": {
-    "dev": {
-      "status": "in-progress",
-      "data": {
-        "currentTask": "...",
-        "completedTasks": [],
-        "progress": 0
-      }
-    }
-  }
-}
-```
-
-### During Development
-Update `phases.dev.data` with progress:
-- Add completed tasks to `completedTasks` array
-- Update `progress` percentage
-- Update `currentTask` description
-
-### On Phase Complete
-Update state.json with:
-- `phases.dev.status` = `"complete"`
-- `phases.dev.data.progress` = `100`
-- `currentPhase` = `"qa"`
-
----
-
-## Memory Integration
-
-### On Implementation Start
-Read `@.genius/memory/BRIEFING.md` for project context, patterns, and past decisions.
-Check for previously rejected approaches before proposing solutions.
-
-### On Decision Made
-Append to `.genius/memory/decisions.json`:
-```json
-{"id": "d-XXX", "decision": "DEV: [choice]", "reason": "[why]", "timestamp": "ISO-date", "tags": ["decision", "implementation"]}
-```
-
-### On Error Encountered
-Append to `.genius/memory/errors.json`:
-```json
-{"id": "e-XXX", "error": "[approach] failed: [error]", "solution": "[what worked instead]", "timestamp": "ISO-date", "tags": ["rejected", "implementation"]}
-```
-
-### On Feature Complete
-Append to `.genius/memory/progress.json`:
-```json
-{"id": "t-XXX", "task": "IMPLEMENTED: [feature]", "status": "completed", "timestamp": "ISO-date"}
-```
-
----
-
-## The Six Pillars of Excellence
-
-1. **Think Different** — Question every assumption
-2. **Obsess Over Details** — Every variable name matters
-3. **Plan Like Da Vinci** — Understand the full picture before coding
-4. **Craft, Don't Code** — Code should read like prose
-5. **Iterate Relentlessly** — First version is never good enough
-6. **Simplify Ruthlessly** — Elegance = nothing left to take away
-
----
+**How to dispatch:** state your routing decision ("This task involves [type].
+I'm routing to genius-dev-[type]."). Agent Teams mode → spawn the sub-skill as a
+sub-agent. Codex dual mode → thread forking. Standalone → apply the sub-skill's
+guidelines from its SKILL.md.
 
 ## Workflow Protocol
 
-### Phase 1: Understand
-1. Parse the requirements completely
-2. Check BRIEFING.md for existing patterns
-3. Identify files to create/modify
-4. Plan the implementation approach
+1. **Understand** — parse requirements, check BRIEFING.md for existing patterns, identify files, plan the approach.
+2. **Implement** — create files in dependency order, follow existing codebase patterns, handle errors gracefully.
+3. **Verify** — `npm run typecheck || npx tsc --noEmit`, `npm run lint`, `npm run test`.
+4. **Document** — update relevant docs plus the runtime state/session log expected by Genius Team v22.
 
-### Phase 2: Implement
-1. Create files in dependency order
-2. Follow existing patterns in codebase
-3. Handle error cases gracefully
-4. Add appropriate comments
+## State & Memory
 
-### Phase 3: Verify
-```bash
-npm run typecheck 2>&1 || npx tsc --noEmit
-npm run lint 2>&1
-npm run test 2>&1
-```
+**DO NOT launch separate HTML files** — update `.genius/outputs/state.json`
+(`phases.dev` status/progress/currentTask; on complete: status `complete`,
+progress 100, `currentPhase: "qa"`). Read `@.genius/memory/BRIEFING.md` at start
+(check previously rejected approaches); append decisions/errors/completions to
+`.genius/memory/{decisions,errors,progress}.json`. Exact JSON field shapes:
+`references/dev-details.md` § Unified Dashboard Integration and § Memory Integration.
 
-### Phase 4: Document
-Update relevant documentation plus the runtime state/session log expected by Genius Team v22.
+## Quality Bar
 
----
+TypeScript: no `any`, proper error handling, clear interfaces. React: functional
+components, loading/error states, error boundaries. General: no hardcoded values
+or secrets, no console.logs, meaningful names, single responsibility. Six Pillars
+and the full pre-completion checklist: `references/dev-details.md` § Code Quality
+Standards and § Quality Checklist.
 
-## Code Quality Standards
+## Optional MCP Patterns
 
-### TypeScript
-- NO `any` types — use proper interfaces
-- Proper error handling with try/catch
-- Use optional chaining for safety
-- Define clear interfaces
-
-### React/Next.js
-- Functional components only
-- Proper loading and error states
-- Use appropriate hooks
-- Implement error boundaries
-
-### General
-- No hardcoded values — use constants/config
-- No console.logs in production code
-- Meaningful variable names
-- Single responsibility principle
-
----
-
-## Quality Checklist
-
-Before marking ANY task complete:
-
-- [ ] TypeScript compiles without errors
-- [ ] No `any` types used
-- [ ] Error handling implemented
-- [ ] Loading states present (if UI)
-- [ ] No hardcoded secrets
-- [ ] No console.logs
-- [ ] Code is readable and well-named
-- [ ] Tests written (if applicable)
-
----
+MCP Elicitation (structured mid-task input, Claude Code ≥ 2.1.76) and Cloudflare
+Code Mode (`GENIUS_MCP_CODE_MODE=true`) — when and how:
+`references/dev-details.md` § MCP Elicitation Pattern and § Cloudflare Code Mode MCP.
 
 ## Handoffs
 
-### From genius-orchestrator (maker in the build-test-fix pair)
-Receives: Task via Task() with subagent_type, requirements, BRIEFING.md. On re-entry,
-receives genius-qa-micro's exact gate failures (command + exit + file:line) — fix only those.
-
-### To genius-qa-micro (the objective gate)
-Provides: Implemented files. Gate runs the project's real test/lint/typecheck.
-
-### To genius-debugger (on error)
-Provides: Error message, stack trace, what was attempted
-
----
-
-## MCP Elicitation Pattern (Claude Code ≥ 2.1.76, March 2026)
-
-MCP servers can now request **structured input mid-task** without blocking the agent workflow.
-
-### What is it?
-When an MCP tool needs user input (API key, confirmation, configuration), it can:
-1. Display an **interactive form** (fields, dropdowns, checkboxes) via a dialog
-2. Or **open a browser URL** to collect data externally
-The agent receives the result and continues — no interruption, no back-and-forth prompts.
-
-### Hooks available
-- `Elicitation` — fires before the elicitation dialog is shown; can override/pre-fill values
-- `ElicitationResult` — fires after the user submits; can validate or transform the response
-
-### When to use it in genius-dev tasks
-- Setting up a new integration that needs credentials → the MCP server shows a form, gets the key, stores it
-- Collecting user preferences for a feature before generating code
-- Confirming a destructive operation (delete, reset) without stopping the build flow
-
-### Example pattern (server-side)
-```typescript
-// In your MCP server tool handler:
-const { fields } = await server.elicit({
-  message: "Configure your Stripe integration",
-  requestedSchema: {
-    type: "object",
-    properties: {
-      apiKey: { type: "string", description: "Stripe secret key (sk_...)" },
-      webhookSecret: { type: "string", description: "Webhook endpoint secret" },
-    },
-    required: ["apiKey"]
-  }
-});
-// `fields` now contains validated user input
-```
-
-### Compatibility
-- Requires Claude Code ≥ 2.1.76 (released March 14, 2026)
-- Works with any MCP server using the `@modelcontextprotocol/sdk` package
-- Hooks are configured in `.claude/settings.json` under `hooks.Elicitation`
-
----
-
-## Cloudflare Code Mode MCP (Optional)
-
-If `GENIUS_MCP_CODE_MODE=true` is set and a Cloudflare Code Mode MCP server is configured, you can use this pattern for API integrations:
-
-### Instead of searching through hundreds of MCP tool definitions:
-
-1. `get_docs("stripe create payment intent")` → get only what you need
-2. `run_code("...")` → test in a sandboxed Workers environment
-3. Write the final implementation based on the tested code
-
-### Why this matters:
-- Fixed ~1K token cost (vs 500K+ for full API schemas)
-- Safe execution in isolated sandbox
-- Progressive discovery — only load docs you actually need
-
-**Enable:** Add `cloudflare-code-mode` to your `mcpServers` in `.claude/settings.json`
-**Guide:** See `docs/cloudflare-mcp-guide.md` for setup instructions
+- **From genius-orchestrator** (maker in the build-test-fix pair): task via Task()
+  with subagent_type, requirements, BRIEFING.md. On re-entry: genius-qa-micro's
+  exact gate failures (command + exit + file:line) — fix only those.
+- **To genius-qa-micro** (objective gate): implemented files; gate runs the project's real test/lint/typecheck.
+- **To genius-debugger** (on error): error message, stack trace, what was attempted.
 
 ## Definition of Done
 

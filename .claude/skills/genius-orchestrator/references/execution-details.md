@@ -1,10 +1,81 @@
 # genius-orchestrator — Execution Details (progressive disclosure)
 
-Loaded on demand from `SKILL.md`. Contains the full mechanics behind the loop state
+Loaded on demand from `SKILL.md`. Contains the full mechanics behind the mandatory
+artifacts, Agent Teams mode, teammates roster, build-test-fix pair, loop state
 kernel, task sync-back protocol, Task() syntax, resume procedure, backward
 compatibility, and anti-patterns. `SKILL.md` keeps only the summary each of these
 needs to route correctly; read this file before touching loop state, plan.md sync,
 or Task() calls directly.
+
+---
+
+## Mandatory Artifacts (full protocol)
+
+**This skill MUST generate:**
+- Plan: `.claude/plan.md`
+- HTML Playground: `.genius/outputs/PROGRESS.html`
+
+**Before transitioning to next skill:**
+1. Verify .claude/plan.md exists
+2. Verify HTML playground exists
+3. Update state.json checkpoint
+4. **Regenerate master dashboard** — follow `.claude/commands/genius-dashboard.md` to update `.genius/DASHBOARD.html`, then run:
+   ```bash
+   open .genius/DASHBOARD.html 2>/dev/null || echo "📂 Open: $(pwd)/.genius/DASHBOARD.html"
+   ```
+5. Announce transition
+
+**If artifacts missing:** DO NOT proceed. Generate them first.
+
+---
+
+## Agent Teams Mode
+
+This skill uses `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`:
+
+- **Lead** (this orchestrator) uses delegate mode — coordinates only, NEVER writes code
+- **Teammates** spawned via Task() with natural language prompts
+- Each teammate reads `@.genius/memory/BRIEFING.md` for project context
+- Git worktree isolation available for parallel work
+- Shared task list via `.claude/plan.md`
+
+---
+
+## Available Teammates
+
+| Teammate | subagent_type | Purpose |
+|----------|---------------|---------|
+| genius-dev | `genius-dev` | Code implementation (maker) |
+| genius-qa-micro | `genius-qa-micro` | Objective gate: real test/lint/typecheck (MANDATORY) |
+| genius-debugger | `genius-debugger` | Fix diagnosed errors inside the fix loop |
+| genius-code-review | `genius-code-review` | End-of-loop adversarial checker (maker ≠ checker) |
+| genius-reviewer | `genius-reviewer` | Periodic quality score (read-only) |
+
+---
+
+## Build-Test-Fix Pair (diagram + expanded steps)
+
+```
+genius-dev writes ──▶ genius-qa-micro runs the OBJECTIVE GATE ──▶ PASS ─▶ genius-code-review (checker) ─▶ next task
+      ▲                    │ (real tests/lint/typecheck of the                                    │
+      │                    │  target project — detected, not assumed)                            │
+      └──── FAIL: exact failures (cmd + exit + file:line) ◀───────┘         REQUEST_CHANGES ──────┘
+```
+
+1. **Maker** — dispatch genius-dev (or the specific `genius-dev-*`) to implement the task.
+2. **Objective gate** — dispatch genius-qa-micro. It detects and runs the project's OWN
+   commands (`package.json` scripts, then `Makefile`, then a tsc fallback) and returns PASS
+   or the EXACT failures. This is a command, not an opinion: PASS only when every gate
+   command exits 0.
+3. **Fix loop** — gate FAIL → hand the verbatim failures back to genius-dev (genius-debugger
+   for a diagnosed bug) and re-run the gate.
+4. **Cap** — **5 iterations by default.** If a loop contract is active for this task
+   (`.genius/loops/build-<task>/CONTRACT.md` exists), the cap is the contract's
+   `max_iterations` instead. Beyond the cap → **HALT + report to the Lead** (mark the task
+   `[!]`); never silently keep looping.
+5. **Adversarial checker (maker ≠ checker)** — on gate PASS, dispatch **genius-code-review**
+   as the end-of-loop checker BEFORE the task is marked `[x]`. REQUEST_CHANGES / Changes
+   required → back to step 1 within the remaining budget; still failing at the cap → HALT+report.
 
 ---
 

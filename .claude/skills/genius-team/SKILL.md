@@ -68,208 +68,63 @@ context: fork
 # Genius Team v22.0 — Your AI Product Team
 
 **From idea to production. Agent Teams. File-based memory. No fluff.**
-
----
+Full ladders and maps: `references/routing-details.md`.
 
 ## MANDATORY CHECKS (NON-NEGOTIABLE)
 
 Before routing:
 1. Read `.genius/state.json` — verify phase, checkpoint, and mode
-2. Read `.genius/mode.json` — adjust behavior per mode (beginner/builder/pro/agency)
+2. Read `.genius/mode.json` — adjust behavior per mode (beginner: explain +
+   confirm; builder: brief announce, default; pro: silent; agency: client-friendly)
 3. Verify previous checkpoint is validated and required artifact/playground exists
 4. If any check fails, block routing and recover first
 
----
-
-## Mode-Aware Behavior
-
-Read `@.genius/mode.json` and adjust:
-- **beginner**: Explain routing choice, confirm with user before invoking
-- **builder**: Announce transition briefly (default)
-- **pro**: Route silently, minimal output
-- **agency**: Client-friendly status updates
-
----
-
-## Memory Integration
-
 Read `@.genius/memory/BRIEFING.md` at session start and check `plan.md` before routing.
 
-## Intent Detection — By Category
+## Intent Detection
 
-### Core Workflow
-| User Says | Route To |
-|-----------|----------|
-| "new project", "I want to build", "idea", "let's build" | genius-interviewer |
-| "market analysis", "competitors", "market research", "TAM/SAM" | genius-product-market-analyst |
-| "write specs", "requirements", "specifications", "user stories" | genius-specs |
-| "design", "branding", "colors", "UI", "visual", "logo" | genius-designer |
-| "marketing", "launch plan", "go-to-market", "acquisition" | genius-marketer |
-| "write copy", "landing page text", "headlines", "email copy" | genius-copywriter |
-| "setup services", "env vars", "API keys", "integrations" | genius-integration-guide |
-| "architecture", "plan the build", "technical design", "plan.md" | genius-architect |
-| "start building", "execute", "build it", "go", "make it" | genius-orchestrator |
-| "implement", "code", "build feature", "create component" | genius-dev |
+- **Core flow**: "new project"/"idea" → genius-interviewer · "market analysis"/"competitors" → genius-product-market-analyst · "specs"/"requirements" → genius-specs · "design"/"branding"/"UI" → genius-designer · "marketing"/"go-to-market" → genius-marketer · "write copy"/"headlines" → genius-copywriter · "setup services"/"API keys" → genius-integration-guide · "architecture"/"plan the build" → genius-architect · "execute"/"build it" → genius-orchestrator · "implement"/"code" → genius-dev
+- **Quality**: "QA"/"full audit" → genius-qa · "quick check" → genius-qa-micro · "security audit" → genius-security · "review PR" → genius-code-review · "review my code" → genius-reviewer · "debug"/"fix error" → genius-debugger · "manual test" → genius-test-assistant · "test the UI" → genius-ui-tester
+- **Growth**: "SEO" → genius-seo · "analytics"/"GA4" → genius-analytics · "performance"/"CWV" → genius-performance · "a11y"/"WCAG" → genius-accessibility · "blog"/"newsletter" → genius-content · "i18n" → genius-i18n · "Web3"/"smart contract" → genius-crypto
+- **Infra**: "deploy"/"ship it" → genius-deployer · "setup CI" → genius-ci · "schedule task" → genius-scheduler · "A/B test" → genius-experiments · "docs"/"README" → genius-docs · "remember"/"what did we decide" → genius-memory
 
-### Quality
-| User Says | Route To |
-|-----------|----------|
-| "run tests", "quality check", "QA", "full audit" | genius-qa |
-| "quick check", "validate this", "did it work" | genius-qa-micro |
-| "security audit", "vulnerabilities", "penetration test" | genius-security |
-| "code review", "review PR", "review code", "review all files" | genius-code-review |
-| "review my code", "check code quality" | genius-reviewer |
-| "debug", "fix this error", "why is this broken" | genius-debugger |
-| "help me test", "testing session", "manual test" | genius-test-assistant |
-| "test the UI", "visual testing", "screenshot test" | genius-ui-tester |
+Meta intents (skill optimization, updates, onboarding, playground templates,
+auto-mode tuning, tips, `/genius-mode`, `/genius-import`) route on each skill's
+own description. Full trigger-phrase tables: `references/routing-details.md`
+§ Intent Detection — Full Tables and § Meta Intents.
 
-### Growth
-| User Says | Route To |
-|-----------|----------|
-| "SEO", "search ranking", "Google ranking", "keywords" | genius-seo |
-| "analytics setup", "tracking", "events", "GA4", "Plausible" | genius-analytics |
-| "performance", "speed", "load time", "Core Web Vitals" | genius-performance |
-| "accessibility", "a11y", "WCAG", "screen reader" | genius-accessibility |
-| "write blog", "content strategy", "article", "newsletter" | genius-content |
-| "translate", "localization", "i18n", "multi-language" | genius-i18n |
-
-### Business
-| User Says | Route To |
-|-----------|----------|
-| "crypto", "Web3", "blockchain", "smart contract", "NFT" | genius-crypto |
-
-### Infrastructure
-| User Says | Route To |
-|-----------|----------|
-| "deploy", "go live", "ship it", "production" | genius-deployer |
-| "setup CI", "GitHub Actions", "CI pipeline" | genius-ci |
-| "schedule a task", "recurring check", "run every X minutes" | genius-scheduler |
-| "A/B test", "experiment", "autonomous optimization" | genius-experiments |
-| "documentation", "write docs", "README", "API docs" | genius-docs |
-
-### Meta
-| User Says | Route To |
-|-----------|----------|
-| "remember", "what did we decide", "context", "history" | genius-memory |
-| "optimize skills", "update genius team" | genius-team-optimizer |
-| "check for updates", "new claude code version" | genius-updater |
-| "onboard", "user onboarding", "welcome flow" | genius-onboarding |
-| "playground template", "generate playground" | genius-playground-generator |
-| "tune auto mode", "make it more permissive" | genius-auto |
-| "switch mode", "change to pro", "beginner mode" | /genius-mode command |
-| "import project", "add existing project" | /genius-import command |
-| "tips", "what else can you do", "show me features" | genius-tips |
-
-## Context Detection
-
-Check both the runtime state and required project artifacts before routing:
-- No `.genius/state.json`: `genius-interviewer`
-- `.genius/discovery/DISCOVERY.xml` present and market phase not complete: `genius-product-market-analyst`
-- `.genius/discovery/MARKET-ANALYSIS.xml` present and specs phase not complete: `genius-specs`
-- `.genius/discovery/SPECIFICATIONS.xml` present and specs checkpoint pending: approval gate, then `genius-designer`
-- Design phase complete in `.genius/outputs/state.json`: `genius-marketer`
-- `.genius/discovery/MARKETING-PLAN.xml` present: `genius-copywriter`
-- `.genius/discovery/COPY.xml` present: `genius-integration-guide`
-- `.genius/discovery/INTEGRATIONS.xml` present: `genius-architect`
-- Architecture checkpoint approved in `.genius/state.json`: `genius-orchestrator`
-- `.claude/plan.md` or `.agents/plan.md` with active work: resume `genius-orchestrator`
-- QA or deploy artifacts requested explicitly: `genius-qa`, `genius-security`, or `genius-deployer`
-
-If the previous artifact or required playground is missing, block routing and regenerate it first.
+No state.json → genius-interviewer. Otherwise follow the artifact ladder
+(DISCOVERY → MARKET-ANALYSIS → SPECS → design → MARKETING-PLAN → COPY →
+INTEGRATIONS → architecture → orchestrator): full ladder + required-artifact
+map per skill in `references/routing-details.md` § Context Detection and
+§ Artifact Validation. Missing artifact/playground → block routing, regenerate first.
 
 ## Pre-Transition Guards
 
-Before certain transitions, auto-invoke guard skills:
 - Before genius-architect: invoke `genius-guard-pre-planning`
 - Before genius-dev/genius-orchestrator: invoke `genius-guard-pre-coding`
 - Before genius-deployer: invoke `genius-guard-pre-deploy`
 
----
+## Checkpoints & Handoff Protocol (BLOCKING)
 
-## ARTIFACT VALIDATION
+User approval is only required after `genius-specs`, `genius-designer`, and
+`genius-architect`; other valid handoffs are automatic. Before routing: required
+artifact exists, checkpoint validated in `.genius/state.json`, `.genius/outputs/state.json`
+reflects the phase. On success: update `state.json` (fresh `updated_at`), pass
+context, announce the transition briefly, mention `.genius/DASHBOARD.html`.
 
-Required handoff artifacts are:
-- `genius-interviewer`: `.genius/discovery/DISCOVERY.xml` + `.genius/outputs/state.json`
-- `genius-product-market-analyst`: `.genius/discovery/MARKET-ANALYSIS.xml` + `.genius/outputs/state.json`
-- `genius-specs`: `.genius/discovery/SPECIFICATIONS.xml` + `.genius/outputs/state.json`
-- `genius-designer`: `.genius/outputs/design-playground.html` + `.genius/outputs/state.json`
-- `genius-marketer`: `.genius/discovery/MARKETING-PLAN.xml` + `.genius/outputs/GTM-STRATEGY.html`
-- `genius-copywriter`: `.genius/discovery/COPY.xml` + `.genius/outputs/COPY-OPTIONS.html`
-- `genius-integration-guide`: `.genius/discovery/INTEGRATIONS.xml` + `.genius/outputs/STACK-CONFIG.html`
-- `genius-architect`: `.genius/ARCHITECTURE.md` or architecture phase data in `.genius/outputs/state.json`
-- `genius-orchestrator`: updated `.claude/plan.md` or `.agents/plan.md`
-- `genius-qa`: `.genius/QA-REPORT.xml`
-- `genius-security`: `.genius/SECURITY-AUDIT.xml`
-- `genius-deployer`: `.genius/DEPLOYMENT.md`
+## Disambiguation
 
-See `GENIUS_GUARD.md` for full recovery protocol.
-
----
-
-## Checkpoints
-
-User approval is only required after `genius-specs`, `genius-designer`, and `genius-architect`. All other valid handoffs are automatic.
-
-## State Management
-
-Update `.genius/state.json` on every successful handoff with the chosen skill and a fresh `updated_at` timestamp.
-
----
-
-## Handoff Protocol (BLOCKING)
-
-Before routing: required artifact exists, the required checkpoint is validated in `.genius/state.json`, and `.genius/outputs/state.json` reflects the current phase. On success, update `state.json`, pass context, and announce the transition briefly.
-
----
-
-## Memory Triggers
-
-- "Remember that..." / "We decided..." -> `.genius/memory/decisions.json`
-- "This broke because..." -> `.genius/memory/errors.json`
-- "Pattern: ..." -> `.genius/memory/patterns.json`
-
-## Disambiguation Rules
-
-When the user's request is ambiguous or could match multiple skills:
-
-1. **Prefer specificity over generality**: If the request mentions "React component" -> genius-dev-frontend directly
-2. **When genuinely ambiguous**: Ask ONE clarifying question
-3. **NEVER default to working without a skill** — wrong skill > no skill
-4. **Common confusions**:
-   - "review" without "PR" -> genius-reviewer. "review PR" -> genius-code-review
-   - "copy" for landing page -> genius-copywriter. "blog post" -> genius-content
-   - "integrate Stripe" -> genius-dev-api. "Stripe billing" -> genius-dev-backend
-   - "analyze the market" -> genius-product-market-analyst (NOT genius-specs)
-   - "define the architecture" -> genius-architect
-   - "test" / "QA" after full build -> genius-qa. "quick check" -> genius-qa-micro
-   - "build login page" -> genius-dev-frontend. "build auth system" -> genius-dev-backend
-
-## Commands
-
-Use `/genius-start`, `/status`, `/continue`, `/reset`, `/update-check`, `/genius-dashboard`, `/genius-mode`, and `/genius-import` as the primary control commands. `STOP` or `PAUSE` halts autonomous execution.
-
-## Master Dashboard
-
-Mention `.genius/DASHBOARD.html` after skill completion, `/genius-start`, `/status`, and checkpoint approvals.
-
-## Dual Mode
-
-Use `/challenge` and `/genius-switch-engine {dual|claude|codex}` for cross-engine workflows.
-
-## Workflow Registry
-
-The full workflow dependency graph is defined in `.genius/workflows.json`. Reference it for prerequisites and next-workflow routing.
-
----
+Prefer specificity; genuinely ambiguous → ask ONE clarifying question; NEVER
+work without a skill (wrong skill > no skill). Common confusions table:
+`references/routing-details.md` § Disambiguation Rules.
 
 ## Error Recovery
 
-If a routed skill fails:
-1. **Retry once** with the same skill
-2. If still fails, **fall back to genius-dev** for implementation or **genius-reviewer** for review
-3. **Log the failure** in `.genius/errors.log`
-4. **Notify user**
-5. Never silently swallow errors
+Skill fails → retry once → fall back (genius-dev for implementation,
+genius-reviewer for review) → log to `.genius/errors.log` → notify user. Never
+silently swallow errors. Memory triggers, commands, dual mode, workflow
+registry: `references/routing-details.md`.
 
 ## Definition of Done
 

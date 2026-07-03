@@ -232,3 +232,51 @@ find .claude/rules -name '*.md' -exec cat {} + | wc -c        # 9461
   création d'artefacts `.genius/` non suivis (aucun fichier existant touché).
 - Baseline figée au **2026-07-02** ; toute comparaison future doit rejouer les commandes de
   §1 et §6 sur le même repo pour être valide.
+
+---
+
+## After P4-03 (progressive disclosure)
+
+> **Date de mesure :** 2026-07-03 — item P4-03 (Phase 4). Les 12 plus gros `SKILL.md` ont
+> été réduits au niveau 1-2 (rôle, triggers, workflow essentiel), les détails verbeux
+> (exemples longs, templates, checklists exhaustives) déplacés dans un `references/*.md`
+> chargé à la demande. Frontmatter `name`/`description` **inchangé** (routing identique).
+> Méthode : `wc -c` avant (HEAD) → après (working tree).
+
+### Avant → après par skill traité (bytes)
+
+| Skill | Avant | Après | Gain | Fichier references |
+|---|---:|---:|---:|---|
+| `genius-dev-web3` | 12 841 | 5 883 | -54,2 % | `web3-details.md` |
+| `genius-team` | 11 330 | 5 952 | -47,5 % | `routing-details.md` |
+| `genius-dev` | 9 993 | 5 529 | -44,7 % | `dev-details.md` |
+| `genius-orchestrator` | 9 889 | 5 992 | -39,4 % | `execution-details.md` |
+| `genius-content` | 9 590 | 3 998 | -58,3 % | `content-templates.md` |
+| `genius-dev-backend` | 9 576 | 3 836 | -59,9 % | `backend-patterns.md` |
+| `genius-designer` | 8 951 | 5 058 | -43,5 % | `design-details.md` |
+| `genius-accessibility` | 8 951 | 4 026 | -55,0 % | `a11y-details.md` |
+| `genius-omni-router` | 8 638 | 4 889 | -43,4 % | `omni-routing-details.md` |
+| `genius-playground-generator` | 8 552 | 4 830 | -43,5 % | `playground-details.md` |
+| `genius-dev-mobile` | 8 288 | 4 309 | -48,0 % | `mobile-patterns.md` |
+| `genius-skill-creator` | 8 266 | 4 835 | -41,5 % | `skill-templates.md` |
+| **TOTAL (12 skills)** | **114 865** | **59 137** | **-48,5 %** | |
+
+### Gain sur un `skill_get` typique (niveau 1-2 seul)
+
+Un `skill_get` (chargement du `SKILL.md` complet à l'activation, via Store ou natif) sur
+un de ces 12 skills ne paie plus que le niveau 1-2 ; le `references/*.md` n'est lu que si
+le skill en a réellement besoin (progressive disclosure niveau 3).
+
+| Mesure (sur les 12 skills traités) | Avant | Après | Gain |
+|---|---:|---:|---:|
+| Moyenne bytes / skill | 9 572 | 4 928 | **-48,5 %** |
+| Médiane bytes / skill | 9 264 | 4 862 | -47,5 % |
+| Moyenne tokens `/4` / `skill_get` | 2 393 | 1 232 | -1 161 tok |
+| Moyenne des gains par skill | | | **-48,2 %** |
+| Médiane des gains par skill | | | **-46,1 %** |
+
+> Lecture : un `skill_get` typique sur un gros skill coûte désormais **~1 160 tokens de
+> moins** (borne `/4`). Aucune perte d'information : tout le contenu retiré est dans le
+> `references/*.md` du skill (liens relatifs vérifiés) ; `validate-skills.sh` reste vert
+> (0 erreur, 2 warnings pré-existants genius-import), 0 skill > 10 KB parmi les traités,
+> descriptions frontmatter (index startup) strictement inchangées.
