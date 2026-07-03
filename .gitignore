@@ -71,6 +71,10 @@ token.json
 docs/screenshots/scroll-test/
 docs/screenshots/audit/
 
+# Regenerable Playwright meta-captures of the live site (not served by any page).
+# Reproduce with the site screenshot script; heavy and not worth versioning.
+docs/screenshots/site-preview/
+
 # Product site (never copy to target repos)
 docs/
 site/
