@@ -1,0 +1,224 @@
+{"skill": "genius-accessibility", "type": "should_trigger", "phrase": "accessibility audit", "expect": "genius-accessibility"}
+{"skill": "genius-accessibility", "type": "should_trigger", "phrase": "a11y", "expect": "genius-accessibility"}
+{"skill": "genius-accessibility", "type": "should_trigger", "phrase": "WCAG compliance", "expect": "genius-accessibility"}
+{"skill": "genius-accessibility", "type": "should_not", "phrase": "React component", "not": "genius-accessibility", "belongs_to": "genius-dev-frontend"}
+{"skill": "genius-analytics", "type": "should_trigger", "phrase": "setup analytics", "expect": "genius-analytics"}
+{"skill": "genius-analytics", "type": "should_trigger", "phrase": "track events", "expect": "genius-analytics"}
+{"skill": "genius-analytics", "type": "should_trigger", "phrase": "conversion funnel", "expect": "genius-analytics"}
+{"skill": "genius-analytics", "type": "should_not", "phrase": "optimize performance", "not": "genius-analytics", "belongs_to": "genius-performance"}
+{"skill": "genius-architect", "type": "should_trigger", "phrase": "plan architecture", "expect": "genius-architect"}
+{"skill": "genius-architect", "type": "should_trigger", "phrase": "choose the stack", "expect": "genius-architect"}
+{"skill": "genius-architect", "type": "should_trigger", "phrase": "technical design", "expect": "genius-architect"}
+{"skill": "genius-architect", "type": "should_not", "phrase": "authentication", "not": "genius-architect", "belongs_to": "genius-dev-backend"}
+{"skill": "genius-auto", "type": "should_trigger", "phrase": "tune auto mode", "expect": "genius-auto"}
+{"skill": "genius-auto", "type": "should_trigger", "phrase": "make it more permissive", "expect": "genius-auto"}
+{"skill": "genius-auto", "type": "should_trigger", "phrase": "tighten permissions", "expect": "genius-auto"}
+{"skill": "genius-auto", "type": "should_not", "phrase": "GitHub Actions", "not": "genius-auto", "belongs_to": "genius-ci"}
+{"skill": "genius-autoresearch", "type": "should_trigger", "phrase": "/autoresearch", "expect": "genius-autoresearch"}
+{"skill": "genius-autoresearch", "type": "should_trigger", "phrase": "optimize this", "expect": "genius-autoresearch"}
+{"skill": "genius-autoresearch", "type": "should_trigger", "phrase": "improve this automatically", "expect": "genius-autoresearch"}
+{"skill": "genius-autoresearch", "type": "should_not", "phrase": "build feature", "not": "genius-autoresearch", "belongs_to": "genius-dev"}
+{"skill": "genius-ci", "type": "should_trigger", "phrase": "setup CI", "expect": "genius-ci"}
+{"skill": "genius-ci", "type": "should_trigger", "phrase": "GitHub Actions", "expect": "genius-ci"}
+{"skill": "genius-ci", "type": "should_trigger", "phrase": "CI pipeline", "expect": "genius-ci"}
+{"skill": "genius-ci", "type": "should_not", "phrase": "go to production", "not": "genius-ci", "belongs_to": "genius-deployer"}
+{"skill": "genius-code-review", "type": "should_trigger", "phrase": "review this PR", "expect": "genius-code-review"}
+{"skill": "genius-code-review", "type": "should_trigger", "phrase": "code review", "expect": "genius-code-review"}
+{"skill": "genius-code-review", "type": "should_trigger", "phrase": "review pull request", "expect": "genius-code-review"}
+{"skill": "genius-code-review", "type": "should_not", "phrase": "IN PROGRESS", "not": "genius-code-review", "belongs_to": "genius-orchestrator"}
+{"skill": "genius-content", "type": "should_trigger", "phrase": "write a blog post", "expect": "genius-content"}
+{"skill": "genius-content", "type": "should_trigger", "phrase": "newsletter", "expect": "genius-content"}
+{"skill": "genius-content", "type": "should_trigger", "phrase": "content strategy", "expect": "genius-content"}
+{"skill": "genius-content", "type": "should_not", "phrase": "landing page", "not": "genius-content", "belongs_to": "genius-copywriter"}
+{"skill": "genius-copywriter", "type": "should_trigger", "phrase": "write copy", "expect": "genius-copywriter"}
+{"skill": "genius-copywriter", "type": "should_trigger", "phrase": "landing page", "expect": "genius-copywriter"}
+{"skill": "genius-copywriter", "type": "should_trigger", "phrase": "headlines", "expect": "genius-copywriter"}
+{"skill": "genius-copywriter", "type": "should_not", "phrase": "write a blog post", "not": "genius-copywriter", "belongs_to": "genius-content"}
+{"skill": "genius-crypto", "type": "should_trigger", "phrase": "check this token", "expect": "genius-crypto"}
+{"skill": "genius-crypto", "type": "should_trigger", "phrase": "analyze NFT collection", "expect": "genius-crypto"}
+{"skill": "genius-crypto", "type": "should_trigger", "phrase": "on-chain analytics", "expect": "genius-crypto"}
+{"skill": "genius-crypto", "type": "should_not", "phrase": "smart contract", "not": "genius-crypto", "belongs_to": "genius-dev-web3"}
+{"skill": "genius-debugger", "type": "should_trigger", "phrase": "there's a bug", "expect": "genius-debugger"}
+{"skill": "genius-debugger", "type": "should_trigger", "phrase": "fix this error", "expect": "genius-debugger"}
+{"skill": "genius-debugger", "type": "should_trigger", "phrase": "debug this", "expect": "genius-debugger"}
+{"skill": "genius-debugger", "type": "should_not", "phrase": "build feature", "not": "genius-debugger", "belongs_to": "genius-dev"}
+{"skill": "genius-deployer", "type": "should_trigger", "phrase": "deploy", "expect": "genius-deployer"}
+{"skill": "genius-deployer", "type": "should_trigger", "phrase": "ship it", "expect": "genius-deployer"}
+{"skill": "genius-deployer", "type": "should_trigger", "phrase": "go to production", "expect": "genius-deployer"}
+{"skill": "genius-deployer", "type": "should_not", "phrase": "build feature", "not": "genius-deployer", "belongs_to": "genius-dev"}
+{"skill": "genius-designer", "type": "should_trigger", "phrase": "design the brand", "expect": "genius-designer"}
+{"skill": "genius-designer", "type": "should_trigger", "phrase": "create design system", "expect": "genius-designer"}
+{"skill": "genius-designer", "type": "should_trigger", "phrase": "design options", "expect": "genius-designer"}
+{"skill": "genius-designer", "type": "should_not", "phrase": "React component", "not": "genius-designer", "belongs_to": "genius-dev-frontend"}
+{"skill": "genius-dev", "type": "should_trigger", "phrase": "implement", "expect": "genius-dev"}
+{"skill": "genius-dev", "type": "should_trigger", "phrase": "code", "expect": "genius-dev"}
+{"skill": "genius-dev", "type": "should_trigger", "phrase": "build feature", "expect": "genius-dev"}
+{"skill": "genius-dev", "type": "should_not", "phrase": "React component", "not": "genius-dev", "belongs_to": "genius-dev-frontend"}
+{"skill": "genius-dev-api", "type": "should_trigger", "phrase": "integrate [service]", "expect": "genius-dev-api"}
+{"skill": "genius-dev-api", "type": "should_trigger", "phrase": "Stripe integration", "expect": "genius-dev-api"}
+{"skill": "genius-dev-api", "type": "should_trigger", "phrase": "OpenAI API", "expect": "genius-dev-api"}
+{"skill": "genius-dev-api", "type": "should_not", "phrase": "authentication", "not": "genius-dev-api", "belongs_to": "genius-dev-backend"}
+{"skill": "genius-dev-backend", "type": "should_trigger", "phrase": "API endpoint", "expect": "genius-dev-backend"}
+{"skill": "genius-dev-backend", "type": "should_trigger", "phrase": "server", "expect": "genius-dev-backend"}
+{"skill": "genius-dev-backend", "type": "should_trigger", "phrase": "authentication", "expect": "genius-dev-backend"}
+{"skill": "genius-dev-backend", "type": "should_not", "phrase": "React component", "not": "genius-dev-backend", "belongs_to": "genius-dev-frontend"}
+{"skill": "genius-dev-database", "type": "should_trigger", "phrase": "database schema", "expect": "genius-dev-database"}
+{"skill": "genius-dev-database", "type": "should_trigger", "phrase": "migration", "expect": "genius-dev-database"}
+{"skill": "genius-dev-database", "type": "should_trigger", "phrase": "SQL query", "expect": "genius-dev-database"}
+{"skill": "genius-dev-database", "type": "should_not", "phrase": "authentication", "not": "genius-dev-database", "belongs_to": "genius-dev-backend"}
+{"skill": "genius-dev-frontend", "type": "should_trigger", "phrase": "React component", "expect": "genius-dev-frontend"}
+{"skill": "genius-dev-frontend", "type": "should_trigger", "phrase": "CSS", "expect": "genius-dev-frontend"}
+{"skill": "genius-dev-frontend", "type": "should_trigger", "phrase": "Tailwind", "expect": "genius-dev-frontend"}
+{"skill": "genius-dev-frontend", "type": "should_not", "phrase": "authentication", "not": "genius-dev-frontend", "belongs_to": "genius-dev-backend"}
+{"skill": "genius-dev-mobile", "type": "should_trigger", "phrase": "React Native", "expect": "genius-dev-mobile"}
+{"skill": "genius-dev-mobile", "type": "should_trigger", "phrase": "Expo", "expect": "genius-dev-mobile"}
+{"skill": "genius-dev-mobile", "type": "should_trigger", "phrase": "mobile app", "expect": "genius-dev-mobile"}
+{"skill": "genius-dev-mobile", "type": "should_not", "phrase": "React component", "not": "genius-dev-mobile", "belongs_to": "genius-dev-frontend"}
+{"skill": "genius-dev-web3", "type": "should_trigger", "phrase": "smart contract", "expect": "genius-dev-web3"}
+{"skill": "genius-dev-web3", "type": "should_trigger", "phrase": "Solidity", "expect": "genius-dev-web3"}
+{"skill": "genius-dev-web3", "type": "should_trigger", "phrase": "Vyper", "expect": "genius-dev-web3"}
+{"skill": "genius-dev-web3", "type": "should_not", "phrase": "analyze NFT collection", "not": "genius-dev-web3", "belongs_to": "genius-crypto"}
+{"skill": "genius-docs", "type": "should_trigger", "phrase": "write documentation", "expect": "genius-docs"}
+{"skill": "genius-docs", "type": "should_trigger", "phrase": "README", "expect": "genius-docs"}
+{"skill": "genius-docs", "type": "should_trigger", "phrase": "API docs", "expect": "genius-docs"}
+{"skill": "genius-docs", "type": "should_not", "phrase": "landing page", "not": "genius-docs", "belongs_to": "genius-copywriter"}
+{"skill": "genius-dual-engine", "type": "should_trigger", "phrase": "dual review", "expect": "genius-dual-engine"}
+{"skill": "genius-dual-engine", "type": "should_trigger", "phrase": "challenge mode", "expect": "genius-dual-engine"}
+{"skill": "genius-dual-engine", "type": "should_trigger", "phrase": "builder challenger", "expect": "genius-dual-engine"}
+{"skill": "genius-dual-engine", "type": "should_not", "phrase": "check code quality", "not": "genius-dual-engine", "belongs_to": "genius-reviewer"}
+{"skill": "genius-evolution", "type": "should_trigger", "phrase": "wrong", "expect": "genius-evolution"}
+{"skill": "genius-evolution", "type": "should_trigger", "phrase": "I told you", "expect": "genius-evolution"}
+{"skill": "genius-evolution", "type": "should_trigger", "phrase": "we don't do that", "expect": "genius-evolution"}
+{"skill": "genius-evolution", "type": "should_not", "phrase": "build feature", "not": "genius-evolution", "belongs_to": "genius-dev"}
+{"skill": "genius-experiments", "type": "should_trigger", "phrase": "run experiments", "expect": "genius-experiments"}
+{"skill": "genius-experiments", "type": "should_trigger", "phrase": "optimize overnight", "expect": "genius-experiments"}
+{"skill": "genius-experiments", "type": "should_trigger", "phrase": "autonomous optimization", "expect": "genius-experiments"}
+{"skill": "genius-experiments", "type": "should_not", "phrase": "build feature", "not": "genius-experiments", "belongs_to": "genius-dev"}
+{"skill": "genius-goal-contract", "type": "should_trigger", "phrase": "define a goal", "expect": "genius-goal-contract"}
+{"skill": "genius-goal-contract", "type": "should_trigger", "phrase": "make this a loop", "expect": "genius-goal-contract"}
+{"skill": "genius-goal-contract", "type": "should_trigger", "phrase": "run until done", "expect": "genius-goal-contract"}
+{"skill": "genius-goal-contract", "type": "should_not", "phrase": "build feature", "not": "genius-goal-contract", "belongs_to": "genius-dev"}
+{"skill": "genius-guard-pre-coding", "type": "should_trigger", "phrase": "pre-coding checklist", "expect": "genius-guard-pre-coding"}
+{"skill": "genius-guard-pre-coding", "type": "should_trigger", "phrase": "verify architecture approved before coding", "expect": "genius-guard-pre-coding"}
+{"skill": "genius-guard-pre-coding", "type": "should_not", "phrase": "build feature", "not": "genius-guard-pre-coding", "belongs_to": "genius-dev"}
+{"skill": "genius-guard-pre-deploy", "type": "should_trigger", "phrase": "pre-deployment checklist", "expect": "genius-guard-pre-deploy"}
+{"skill": "genius-guard-pre-deploy", "type": "should_trigger", "phrase": "verify QA passed before deploy", "expect": "genius-guard-pre-deploy"}
+{"skill": "genius-guard-pre-deploy", "type": "should_not", "phrase": "go to production", "not": "genius-guard-pre-deploy", "belongs_to": "genius-deployer"}
+{"skill": "genius-guard-pre-planning", "type": "should_trigger", "phrase": "pre-planning checklist", "expect": "genius-guard-pre-planning"}
+{"skill": "genius-guard-pre-planning", "type": "should_trigger", "phrase": "verify specs exist before planning", "expect": "genius-guard-pre-planning"}
+{"skill": "genius-guard-pre-planning", "type": "should_not", "phrase": "plan architecture", "not": "genius-guard-pre-planning", "belongs_to": "genius-architect"}
+{"skill": "genius-i18n", "type": "should_trigger", "phrase": "add translations", "expect": "genius-i18n"}
+{"skill": "genius-i18n", "type": "should_trigger", "phrase": "multi-language", "expect": "genius-i18n"}
+{"skill": "genius-i18n", "type": "should_trigger", "phrase": "i18n setup", "expect": "genius-i18n"}
+{"skill": "genius-i18n", "type": "should_not", "phrase": "landing page", "not": "genius-i18n", "belongs_to": "genius-copywriter"}
+{"skill": "genius-import", "type": "should_trigger", "phrase": "import this project", "expect": "genius-import"}
+{"skill": "genius-import", "type": "should_trigger", "phrase": "add genius team to this project", "expect": "genius-import"}
+{"skill": "genius-import", "type": "should_trigger", "phrase": "genius import", "expect": "genius-import"}
+{"skill": "genius-import", "type": "should_not", "phrase": "let's begin this session", "not": "genius-import", "belongs_to": "genius-start"}
+{"skill": "genius-integration-guide", "type": "should_trigger", "phrase": "how to integrate X", "expect": "genius-integration-guide"}
+{"skill": "genius-integration-guide", "type": "should_trigger", "phrase": "setup [service]", "expect": "genius-integration-guide"}
+{"skill": "genius-integration-guide", "type": "should_trigger", "phrase": "connect to [API]", "expect": "genius-integration-guide"}
+{"skill": "genius-integration-guide", "type": "should_not", "phrase": "integrate [service]", "not": "genius-integration-guide", "belongs_to": "genius-dev-api"}
+{"skill": "genius-interviewer", "type": "should_trigger", "phrase": "start a new project", "expect": "genius-interviewer"}
+{"skill": "genius-interviewer", "type": "should_trigger", "phrase": "I want to build X", "expect": "genius-interviewer"}
+{"skill": "genius-interviewer", "type": "should_trigger", "phrase": "interview me", "expect": "genius-interviewer"}
+{"skill": "genius-interviewer", "type": "should_not", "phrase": "formalize requirements", "not": "genius-interviewer", "belongs_to": "genius-specs"}
+{"skill": "genius-loop", "type": "should_trigger", "phrase": "run the loop", "expect": "genius-loop"}
+{"skill": "genius-loop", "type": "should_trigger", "phrase": "start the loop", "expect": "genius-loop"}
+{"skill": "genius-loop", "type": "should_trigger", "phrase": "iterate until the gate passes", "expect": "genius-loop"}
+{"skill": "genius-loop", "type": "should_not", "phrase": "make this a loop", "not": "genius-loop", "belongs_to": "genius-goal-contract"}
+{"skill": "genius-marketer", "type": "should_trigger", "phrase": "marketing strategy", "expect": "genius-marketer"}
+{"skill": "genius-marketer", "type": "should_trigger", "phrase": "go-to-market", "expect": "genius-marketer"}
+{"skill": "genius-marketer", "type": "should_trigger", "phrase": "GTM", "expect": "genius-marketer"}
+{"skill": "genius-marketer", "type": "should_not", "phrase": "write a blog post", "not": "genius-marketer", "belongs_to": "genius-content"}
+{"skill": "genius-memory", "type": "should_trigger", "phrase": "update memory", "expect": "genius-memory"}
+{"skill": "genius-memory", "type": "should_trigger", "phrase": "save context", "expect": "genius-memory"}
+{"skill": "genius-memory", "type": "should_trigger", "phrase": "generate briefing", "expect": "genius-memory"}
+{"skill": "genius-memory", "type": "should_not", "phrase": "let's begin this session", "not": "genius-memory", "belongs_to": "genius-start"}
+{"skill": "genius-omni-router", "type": "should_trigger", "phrase": "route this task to a secondary provider in omni mode", "expect": "genius-omni-router"}
+{"skill": "genius-omni-router", "type": "should_trigger", "phrase": "multi-provider omni routing", "expect": "genius-omni-router"}
+{"skill": "genius-omni-router", "type": "should_not", "phrase": "build feature", "not": "genius-omni-router", "belongs_to": "genius-dev"}
+{"skill": "genius-onboarding", "type": "should_trigger", "phrase": "setup genius", "expect": "genius-onboarding"}
+{"skill": "genius-onboarding", "type": "should_trigger", "phrase": "initialize", "expect": "genius-onboarding"}
+{"skill": "genius-onboarding", "type": "should_trigger", "phrase": "first time setup", "expect": "genius-onboarding"}
+{"skill": "genius-onboarding", "type": "should_not", "phrase": "let's begin this session", "not": "genius-onboarding", "belongs_to": "genius-start"}
+{"skill": "genius-orchestrator", "type": "should_trigger", "phrase": "IN PROGRESS", "expect": "genius-orchestrator"}
+{"skill": "genius-orchestrator", "type": "should_trigger", "phrase": "execute", "expect": "genius-orchestrator"}
+{"skill": "genius-orchestrator", "type": "should_trigger", "phrase": "build it", "expect": "genius-orchestrator"}
+{"skill": "genius-orchestrator", "type": "should_not", "phrase": "React component", "not": "genius-orchestrator", "belongs_to": "genius-dev-frontend"}
+{"skill": "genius-performance", "type": "should_trigger", "phrase": "optimize performance", "expect": "genius-performance"}
+{"skill": "genius-performance", "type": "should_trigger", "phrase": "Lighthouse audit", "expect": "genius-performance"}
+{"skill": "genius-performance", "type": "should_trigger", "phrase": "slow website", "expect": "genius-performance"}
+{"skill": "genius-performance", "type": "should_not", "phrase": "AI search visibility", "not": "genius-performance", "belongs_to": "genius-seo"}
+{"skill": "genius-playground-generator", "type": "should_trigger", "phrase": "generate playground", "expect": "genius-playground-generator"}
+{"skill": "genius-playground-generator", "type": "should_trigger", "phrase": "create dashboard", "expect": "genius-playground-generator"}
+{"skill": "genius-playground-generator", "type": "should_trigger", "phrase": "visualize my project", "expect": "genius-playground-generator"}
+{"skill": "genius-playground-generator", "type": "should_not", "phrase": "create design system", "not": "genius-playground-generator", "belongs_to": "genius-designer"}
+{"skill": "genius-product-market-analyst", "type": "should_trigger", "phrase": "market research", "expect": "genius-product-market-analyst"}
+{"skill": "genius-product-market-analyst", "type": "should_trigger", "phrase": "competitor analysis", "expect": "genius-product-market-analyst"}
+{"skill": "genius-product-market-analyst", "type": "should_trigger", "phrase": "validate idea", "expect": "genius-product-market-analyst"}
+{"skill": "genius-product-market-analyst", "type": "should_not", "phrase": "formalize requirements", "not": "genius-product-market-analyst", "belongs_to": "genius-specs"}
+{"skill": "genius-qa", "type": "should_trigger", "phrase": "run QA", "expect": "genius-qa"}
+{"skill": "genius-qa", "type": "should_trigger", "phrase": "test everything", "expect": "genius-qa"}
+{"skill": "genius-qa", "type": "should_trigger", "phrase": "quality audit", "expect": "genius-qa"}
+{"skill": "genius-qa", "type": "should_not", "phrase": "validate this", "not": "genius-qa", "belongs_to": "genius-qa-micro"}
+{"skill": "genius-qa-micro", "type": "should_trigger", "phrase": "quick check", "expect": "genius-qa-micro"}
+{"skill": "genius-qa-micro", "type": "should_trigger", "phrase": "validate this", "expect": "genius-qa-micro"}
+{"skill": "genius-qa-micro", "type": "should_trigger", "phrase": "did it work", "expect": "genius-qa-micro"}
+{"skill": "genius-qa-micro", "type": "should_not", "phrase": "build feature", "not": "genius-qa-micro", "belongs_to": "genius-dev"}
+{"skill": "genius-reviewer", "type": "should_trigger", "phrase": "review my code", "expect": "genius-reviewer"}
+{"skill": "genius-reviewer", "type": "should_trigger", "phrase": "check code quality", "expect": "genius-reviewer"}
+{"skill": "genius-reviewer", "type": "should_trigger", "phrase": "is this good code", "expect": "genius-reviewer"}
+{"skill": "genius-reviewer", "type": "should_not", "phrase": "review pull request", "not": "genius-reviewer", "belongs_to": "genius-code-review"}
+{"skill": "genius-scheduler", "type": "should_trigger", "phrase": "schedule a task", "expect": "genius-scheduler"}
+{"skill": "genius-scheduler", "type": "should_trigger", "phrase": "recurring check", "expect": "genius-scheduler"}
+{"skill": "genius-scheduler", "type": "should_trigger", "phrase": "run every X minutes", "expect": "genius-scheduler"}
+{"skill": "genius-scheduler", "type": "should_not", "phrase": "GitHub Actions", "not": "genius-scheduler", "belongs_to": "genius-ci"}
+{"skill": "genius-security", "type": "should_trigger", "phrase": "security audit", "expect": "genius-security"}
+{"skill": "genius-security", "type": "should_trigger", "phrase": "check for vulnerabilities", "expect": "genius-security"}
+{"skill": "genius-security", "type": "should_trigger", "phrase": "OWASP scan", "expect": "genius-security"}
+{"skill": "genius-security", "type": "should_not", "phrase": "check code quality", "not": "genius-security", "belongs_to": "genius-reviewer"}
+{"skill": "genius-seo", "type": "should_trigger", "phrase": "SEO audit", "expect": "genius-seo"}
+{"skill": "genius-seo", "type": "should_trigger", "phrase": "optimize for search", "expect": "genius-seo"}
+{"skill": "genius-seo", "type": "should_trigger", "phrase": "AI search visibility", "expect": "genius-seo"}
+{"skill": "genius-seo", "type": "should_not", "phrase": "conversion funnel", "not": "genius-seo", "belongs_to": "genius-analytics"}
+{"skill": "genius-skill-creator", "type": "should_trigger", "phrase": "create a skill for X", "expect": "genius-skill-creator"}
+{"skill": "genius-skill-creator", "type": "should_trigger", "phrase": "new project skill", "expect": "genius-skill-creator"}
+{"skill": "genius-skill-creator", "type": "should_trigger", "phrase": "make a skill that handles Y", "expect": "genius-skill-creator"}
+{"skill": "genius-skill-creator", "type": "should_not", "phrase": "formalize requirements", "not": "genius-skill-creator", "belongs_to": "genius-specs"}
+{"skill": "genius-specs", "type": "should_trigger", "phrase": "write specs", "expect": "genius-specs"}
+{"skill": "genius-specs", "type": "should_trigger", "phrase": "create specifications", "expect": "genius-specs"}
+{"skill": "genius-specs", "type": "should_trigger", "phrase": "formalize requirements", "expect": "genius-specs"}
+{"skill": "genius-specs", "type": "should_not", "phrase": "make a skill that handles Y", "not": "genius-specs", "belongs_to": "genius-skill-creator"}
+{"skill": "genius-start", "type": "should_trigger", "phrase": "let's begin this session", "expect": "genius-start"}
+{"skill": "genius-start", "type": "should_trigger", "phrase": "where were we", "expect": "genius-start"}
+{"skill": "genius-start", "type": "should_trigger", "phrase": "resume", "expect": "genius-start"}
+{"skill": "genius-start", "type": "should_not", "phrase": "start a new project", "not": "genius-start", "belongs_to": "genius-interviewer"}
+{"skill": "genius-team", "type": "should_trigger", "phrase": "start", "expect": "genius-team"}
+{"skill": "genius-team", "type": "should_trigger", "phrase": "begin project", "expect": "genius-team"}
+{"skill": "genius-team", "type": "should_trigger", "phrase": "what should I do next", "expect": "genius-team"}
+{"skill": "genius-team", "type": "should_not", "phrase": "build feature", "not": "genius-team", "belongs_to": "genius-dev"}
+{"skill": "genius-team-optimizer", "type": "should_trigger", "phrase": "optimize the team", "expect": "genius-team-optimizer"}
+{"skill": "genius-team-optimizer", "type": "should_trigger", "phrase": "improve workflow", "expect": "genius-team-optimizer"}
+{"skill": "genius-team-optimizer", "type": "should_trigger", "phrase": "team retrospective", "expect": "genius-team-optimizer"}
+{"skill": "genius-team-optimizer", "type": "should_not", "phrase": "fix this error", "not": "genius-team-optimizer", "belongs_to": "genius-debugger"}
+{"skill": "genius-template", "type": "should_trigger", "phrase": "start from a template", "expect": "genius-template"}
+{"skill": "genius-template", "type": "should_trigger", "phrase": "SaaS boilerplate", "expect": "genius-template"}
+{"skill": "genius-template", "type": "should_trigger", "phrase": "e-commerce starter", "expect": "genius-template"}
+{"skill": "genius-template", "type": "should_not", "phrase": "let's begin this session", "not": "genius-template", "belongs_to": "genius-start"}
+{"skill": "genius-test-assistant", "type": "should_trigger", "phrase": "write test plan", "expect": "genius-test-assistant"}
+{"skill": "genius-test-assistant", "type": "should_trigger", "phrase": "manual testing", "expect": "genius-test-assistant"}
+{"skill": "genius-test-assistant", "type": "should_trigger", "phrase": "test script", "expect": "genius-test-assistant"}
+{"skill": "genius-test-assistant", "type": "should_not", "phrase": "test everything", "not": "genius-test-assistant", "belongs_to": "genius-qa"}
+{"skill": "genius-tips", "type": "should_trigger", "phrase": "tips", "expect": "genius-tips"}
+{"skill": "genius-tips", "type": "should_trigger", "phrase": "what else can you do", "expect": "genius-tips"}
+{"skill": "genius-tips", "type": "should_trigger", "phrase": "show me features", "expect": "genius-tips"}
+{"skill": "genius-tips", "type": "should_not", "phrase": "let's begin this session", "not": "genius-tips", "belongs_to": "genius-start"}
+{"skill": "genius-ui-tester", "type": "should_trigger", "phrase": "test the UI", "expect": "genius-ui-tester"}
+{"skill": "genius-ui-tester", "type": "should_trigger", "phrase": "visual testing", "expect": "genius-ui-tester"}
+{"skill": "genius-ui-tester", "type": "should_trigger", "phrase": "screenshot test", "expect": "genius-ui-tester"}
+{"skill": "genius-ui-tester", "type": "should_not", "phrase": "test everything", "not": "genius-ui-tester", "belongs_to": "genius-qa"}
+{"skill": "genius-updater", "type": "should_trigger", "phrase": "check for updates", "expect": "genius-updater"}
+{"skill": "genius-updater", "type": "should_trigger", "phrase": "upgrade genius", "expect": "genius-updater"}
+{"skill": "genius-updater", "type": "should_trigger", "phrase": "is there a new version", "expect": "genius-updater"}
+{"skill": "genius-updater", "type": "should_not", "phrase": "build feature", "not": "genius-updater", "belongs_to": "genius-dev"}
