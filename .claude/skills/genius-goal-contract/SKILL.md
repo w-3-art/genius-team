@@ -76,8 +76,13 @@ runs, a fixed seed, a pass/fail threshold) — never on the raw noisy number.
 - **goal** — verifiable stopping condition, phrased as a contract, not a wish.
 - **gate** — the exact pass/fail command. Objective only. Never the agent's judgment.
   Must be deterministic (no timestamps/randomness in what decides pass/fail — see "The Rule").
-- **brakes** — `max_iterations`, `token_budget` (approx), `no_progress_after` N iterations
-  with no gate change, and `flip_flop` detection (same file oscillating between two states).
+- **brakes** — `max_iterations`, `token_budget` (**REQUIRED**), `no_progress_after` N
+  iterations with no gate change, and `flip_flop` detection (same file oscillating between
+  two states). `token_budget` is a hard requirement, not a nicety: the Cortex control plane
+  (LP-07) **refuses to register a loop whose contract declares no `token_budget`** — no
+  budget, no loop. Optionally add `token_per_iteration` (an estimate) so Cortex can compute
+  and display the worst-case spend (`token_per_iteration × max_iterations`) before the first
+  unsupervised run.
 - **blast_radius** — allowed files/globs + allowed commands. Everything else is off-limits.
 - **state** — path to `STATE.md` (`done`/`in-progress`/`blocked`/`next`), read at start of
   every run, written at the end of every run.
@@ -104,6 +109,21 @@ read STATE → DISCOVER → PLAN → EXECUTE → VERIFY (gate + separate checker
 - **Silent death** → heartbeat/timeout on the gate; a hung gate fails the run.
 - **Random walk** → objective gate, not opinion.
 - **Comprehension debt** → human-read gate at merge (L3+ requires approval).
+
+## Budgets enforced by Cortex (LP-07)
+
+When the loop kernel runs with the Cortex control plane reachable, budgets stop being
+advisory:
+- **No budget, no loop.** Registration is refused if the contract declares no `token_budget`.
+- **Per-loop cap.** A heartbeat whose cumulative token estimate exceeds this loop's
+  `token_budget` returns `kill:true` and the loop halts cleanly.
+- **Per-repo cap.** Cortex also caps the *cumulative* tokens of all loops in a repo (generous
+  default, tunable in `~/.genius-cortex/config.json`); exceeding it kills the loop too.
+- **Worst-case pre-flight.** If `token_per_iteration` is given, Cortex prints
+  `token_per_iteration × max_iterations` at registration and warns when it blows the budget.
+- **Cost-per-accepted-change.** `cortex loops --stats` reports acceptance rate and
+  tokens-per-accepted-change per loop and per repo, flagging any loop under 50% acceptance as
+  "losing money". Report those figures at run end so the metric stays honest.
 
 ---
 
@@ -139,7 +159,8 @@ read STATE → DISCOVER → PLAN → EXECUTE → VERIFY (gate + separate checker
 
 ## Brakes (hard caps)
 - max_iterations: <N>
-- token_budget: <approx, e.g. 200k>
+- token_budget: <approx, e.g. 200k>   # REQUIRED — Cortex refuses to register a loop without it (no budget, no loop)
+- token_per_iteration: <approx, e.g. 30k>   # optional — lets Cortex show worst-case = token_per_iteration × max_iterations
 - no_progress_after: <N> iterations with no change in gate result → HALT+report
 - flip_flop: HALT if any file oscillates between two states across iterations
 
@@ -162,6 +183,7 @@ read STATE → DISCOVER → PLAN → EXECUTE → VERIFY (gate + separate checker
 - [ ] Gate is a real command that exits 0/non-zero — verified runnable, not aspirational.
 - [ ] Proof of completion was fixed before any implementation work.
 - [ ] Blast radius and brakes are explicit.
+- [ ] `token_budget` is declared (Cortex refuses the loop without it — no budget, no loop).
 - [ ] Autonomy starts at L1 or L2.
 - [ ] Human has approved the contract.
 
