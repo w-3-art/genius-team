@@ -181,7 +181,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v22.0 loaded | Model: claude-opus-4-6 | Effort: high | Guard: $GUARD | Memory: $MEM\"'"
+            "command": "bash -c 'GUARD=$([ -f GENIUS_GUARD.md ] && echo \"✅\" || echo \"⚠️ MISSING\"); MEM=$([ -f .genius/memory/BRIEFING.md ] && echo \"✅\" || echo \"⚠️ not generated yet\"); echo \"🛡️ Genius Team v22.0 loaded | Model: claude-opus-4-8 | Effort: high | Guard: $GUARD | Memory: $MEM\"'"
           }
         ]
       }
@@ -192,9 +192,10 @@
     "GENIUS_TEAM_VERSION": "22.0.0",
     "CLAUDE_CODE_AUTO_MODE": "skill-aware",
     "GENIUS_TEAM_MODE": "omni",
-    "ANTHROPIC_MODEL": "claude-opus-4-6",
+    "ANTHROPIC_MODEL": "claude-opus-4-8",
     "CLAUDE_CODE_EFFORT_LEVEL": "high"
   },
+  "fallbackModel": ["claude-sonnet-5"],
   "compaction": {
     "postCompactionSections": [
       "## Genius Team Core Rules",

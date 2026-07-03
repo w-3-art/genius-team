@@ -121,7 +121,7 @@ Auth tokens are stored locally by each CLI. Re-login when they expire.
 
 | Provider | Model | Relative Cost | Best For |
 |----------|-------|--------------|----------|
-| Claude Code | Opus 4.6 | $$$ | Quality-critical tasks |
+| Claude Code | Opus 4.8 | $$$ | Quality-critical tasks |
 | Codex CLI | GPT-4.1 | $$ | Volume code generation |
 | Kimi CLI | Kimi K2 | $ | Documentation, summaries |
 | Gemini CLI | Gemini 2.5 Pro | $$ | Research, analysis |

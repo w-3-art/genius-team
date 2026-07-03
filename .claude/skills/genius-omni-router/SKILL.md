@@ -33,13 +33,13 @@ Per-category rationale, health-check script, route command examples, cost tracki
 
 ## Core Principle
 
-Claude Code (Opus 4.6) is the **lead orchestrator** and the **always-available fallback**. Secondary providers are force multipliers — used when available and when they offer a clear advantage for the task at hand.
+Claude Code (Opus 4.8) is the **lead orchestrator** and the **always-available fallback**. Secondary providers are force multipliers — used when available and when they offer a clear advantage for the task at hand.
 
 ## Provider Registry
 
 | Provider | CLI | Model | Strengths | Cost |
 |----------|-----|-------|-----------|------|
-| **Claude Code** | `claude` | Opus 4.6 | Architecture, reasoning, code review, orchestration | $$$ |
+| **Claude Code** | `claude` | Opus 4.8 | Architecture, reasoning, code review, orchestration | $$$ |
 | **Codex CLI** | `codex` | GPT-4.1 | Fast code generation, refactoring, boilerplate | $$ |
 | **Kimi CLI** | `kimi` | Kimi K2 | Long-context analysis, documentation, summaries | $ |
 | **Gemini CLI** | `gemini` | Gemini 2.5 Pro | Research, multi-modal, large codebases | $$ |
