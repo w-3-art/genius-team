@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.85%2B-purple.svg)](https://docs.anthropic.com/claude-code)
 
-> Your AI product team. From idea to production. 57 specialized agents.
+> Your AI product team. From idea to production. 58 specialized agents.
 
 ## What You Get
 
@@ -276,7 +276,7 @@ your-project/
 ├── .claude/
 │   ├── settings.json            # Permissions, hooks & env vars
 │   ├── commands/                # Slash commands (/genius-start, etc.)
-│   ├── skills/                  # 57 Genius Team skill files
+│   ├── skills/                  # 58 Genius Team skill files
 │   └── plan.md                  # Task list (single source of truth)
 ├── .genius/
 │   ├── bin/                     # Local shell commands for Codex / Dual

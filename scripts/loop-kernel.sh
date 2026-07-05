@@ -198,9 +198,28 @@ _state_set_meta() {
 # ------------------------------------------------ cortex control plane (LP-06)
 
 CORTEX_BIN="${CORTEX_BIN:-cortex}"
+_CORTEX_TIMEOUT="${CORTEX_TIMEOUT:-10}"
 _CORTEX_WARNED=0
 
 _cortex_available() { command -v "$CORTEX_BIN" >/dev/null 2>&1; }
+
+_cortex_call() {
+  # _cortex_call <secs> <register|heartbeat|report> <json> — run
+  # `$CORTEX_BIN loops --<sub> <json>` under a BOUNDED timeout so a HUNG cortex
+  # can't stall the loop (graceful degradation covered an absent/refusing binary,
+  # not a hanging one). Reuses the gate timeout machinery (_exec_gate), which on
+  # stock macOS kills the whole process group. Prints cortex's captured output
+  # and returns its exit code; a timeout is a non-zero exit, which the callers
+  # already treat as "cortex unreachable" (warn + continue). The json is passed
+  # via an EXPORTED var so arbitrary JSON needs no shell re-quoting.
+  local secs="$1" sub="$2" json="$3" log rc=0
+  export CORTEX_BIN CORTEX_NO_UPDATE_CHECK=1 _LK_CORTEX_JSON="$json"
+  log="${TMPDIR:-/tmp}/loop-kernel.cortex.$$.${RANDOM}"
+  _exec_gate '"$CORTEX_BIN" loops --'"$sub"' "$_LK_CORTEX_JSON"' "$secs" "$log" || rc=$?
+  [ -f "$log" ] && { cat "$log"; rm -f "$log"; }
+  unset _LK_CORTEX_JSON
+  return "$rc"
+}
 
 _cortex_warn() {
   [ "$_CORTEX_WARNED" -eq 1 ] && return 0
@@ -246,7 +265,7 @@ cortex_register() {
     "$(_json_escape "$(cd "$dir" && pwd -P)/CONTRACT.md")" \
     "$(_json_escape "$goal")" \
     "$(_json_escape "${level:-L2}")")
-  if out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --register "$json" 2>/dev/null); then
+  if out=$(_cortex_call "$_CORTEX_TIMEOUT" register "$json" 2>/dev/null); then
     echo "loop-kernel: cortex: registered loop $id" >&2
   else
     echo "loop-kernel: WARNING: cortex refused/failed loop registration (${out:-no output}) — loop runs without control plane" >&2
@@ -278,8 +297,8 @@ cortex_heartbeat() {
     (''|*[!0-9]*) json="$json}" ;;
     (*) json="$json,\"tokenEstimate\":$tokens}" ;;
   esac
-  if ! out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --heartbeat "$json" 2>/dev/null); then
-    echo "loop-kernel: WARNING: cortex heartbeat failed — continuing without control plane" >&2
+  if ! out=$(_cortex_call "$_CORTEX_TIMEOUT" heartbeat "$json" 2>/dev/null); then
+    echo "loop-kernel: WARNING: cortex heartbeat failed/timed out — continuing without control plane" >&2
     return 0
   fi
   if echo "$out" | grep -qE '"kill"[[:space:]]*:[[:space:]]*true'; then
@@ -325,8 +344,8 @@ cortex_report() {
     (*) json="$json,\"tokensUsed\":$tokens" ;;
   esac
   json="$json}"
-  if ! out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --report "$json" 2>/dev/null); then
-    echo "loop-kernel: WARNING: cortex final report failed" >&2
+  if ! out=$(_cortex_call "$_CORTEX_TIMEOUT" report "$json" 2>/dev/null); then
+    echo "loop-kernel: WARNING: cortex final report failed/timed out" >&2
   fi
   return 0
 }
@@ -353,7 +372,10 @@ contract_validate() {
   if [ -z "$gate" ]; then
     echo "❌ gate: no command found in the fenced block of ## Gate"
     errors=$((errors + 1))
-  elif echo "$gate" | grep -q '<'; then
+  elif echo "$gate" | grep -qE '<[A-Za-z][A-Za-z0-9_ .-]*>'; then
+    # Match an actual unfilled template tag (<exact command>, <slug>, <gate>) —
+    # NOT legitimate shell '<' (redirection `< file`, heredoc `<<EOF`, process
+    # substitution `<(...)`, or comparison `[[ a < b ]]`).
     echo "❌ gate: unfilled placeholder '<...>' — the gate must be a real command"
     errors=$((errors + 1))
   else
@@ -441,7 +463,9 @@ EOF
         if [ -z "$wgate" ]; then
           echo "❌ workflow: step '$name' has no gate command"
           errors=$((errors + 1))
-        elif echo "$wgate" | grep -q '<'; then
+        elif echo "$wgate" | grep -qE '<[A-Za-z][A-Za-z0-9_ .-]*>'; then
+          # actual unfilled tag only — legitimate shell '<' (redirect/heredoc/
+          # process-substitution/comparison) is allowed (see ## Gate check above)
           echo "❌ workflow: step '$name' gate has an unfilled placeholder '<...>'"
           errors=$((errors + 1))
         else
@@ -652,23 +676,42 @@ _exec_gate() {
   elif command -v gtimeout >/dev/null 2>&1; then
     gtimeout "$secs" bash -c "$gate" > "$log" 2>&1 || rc=$?
   else
-    # No timeout/gtimeout (stock macOS ships neither): run the gate in the
-    # background and POLL its liveness, killing it only if it outlives the
-    # timeout. A poll loop — not a second background watcher — is deliberate:
-    # a backgrounded `( sleep … )` watcher inherits this function's stdout, and
-    # its orphaned `sleep` child keeps that fd open, so under `$(_exec_gate …)`
-    # command substitution (the kernel's own documented calling convention)
-    # the capture would block for the FULL timeout even after the gate returns.
-    bash -c "$gate" > "$log" 2>&1 &
-    local pid=$! start=$SECONDS
+    # No timeout/gtimeout (stock macOS ships neither): run the gate in its OWN
+    # process group and POLL its liveness, killing the WHOLE group if it outlives
+    # the timeout — so a gate that spawns children (or is a shell pipeline)
+    # leaves no orphans (killing only the immediate PID does). setsid (Linux)
+    # makes pid==pgid directly; on stock macOS setsid is absent, so we enable job
+    # control (set -m), under which each backgrounded job gets a fresh process
+    # group whose PGID equals the job-leader PID — then `kill -<pid>` (negative =
+    # the group) reaps the entire tree. A poll loop — not a second background
+    # watcher — is deliberate: a backgrounded `( sleep … )` watcher inherits this
+    # function's stdout, and its orphaned `sleep` child keeps that fd open, so
+    # under `$(_exec_gate …)` command substitution (the kernel's own documented
+    # calling convention) the capture would block for the FULL timeout even after
+    # the gate returns.
+    local pid start had_m=0
+    if command -v setsid >/dev/null 2>&1; then
+      setsid bash -c "$gate" > "$log" 2>&1 &
+      pid=$!
+    else
+      case "$-" in *m*) had_m=1 ;; esac
+      set -m
+      bash -c "$gate" > "$log" 2>&1 &
+      pid=$!
+      [ "$had_m" -eq 1 ] || set +m
+    fi
+    start=$SECONDS
     while kill -0 "$pid" 2>/dev/null; do
       if [ $((SECONDS - start)) -ge "$secs" ]; then
-        kill -9 "$pid" 2>/dev/null || true
+        # TERM the whole group, give it a beat to clean up, then KILL survivors.
+        kill -TERM "-$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null || true
+        sleep 0.3
+        kill -KILL "-$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null || true
         break
       fi
       sleep 0.2
     done
-    wait "$pid" || rc=$?
+    wait "$pid" 2>/dev/null || rc=$?
   fi
   return "$rc"
 }

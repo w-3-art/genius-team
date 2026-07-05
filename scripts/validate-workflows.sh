@@ -75,6 +75,8 @@ check_prose_count() {
 }
 
 check_prose_count "README header"   "README.md"                          '## [0-9]+ Specialized Skills'
+check_prose_count "README tagline"  "README.md"                          '[0-9]+ specialized agents'
+check_prose_count "README tree"     "README.md"                          '[0-9]+ Genius Team skill files'
 check_prose_count "README registry" "README.md"                          'for all [0-9]+ skills'
 check_prose_count "SKILLS.md"        "docs/SKILLS.md"                     'consists of [0-9]+ specialized skills'
 check_prose_count "genius-tips"      ".claude/skills/genius-tips/SKILL.md" 'are [0-9]+ specialized skills'
