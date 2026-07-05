@@ -93,6 +93,12 @@ runs, a fixed seed, a pass/fail threshold) — never on the raw noisy number.
   `genius-auto`'s "Autonomy Ladder" section — this field must stay consistent with it.
 - **checker** — the verifier, kept separate from the maker. The thing that produced the
   change never signs off on it.
+- **signals** (optional, LP-10) — domains this loop **emits** to / **listens** to on the
+  Cortex signal bus. An out-of-blast-radius find becomes a typed
+  signal (`finding | blocker | handoff | budget-alert`) via `cortex_loop_signal_emit` on a
+  declared `emits:` domain — never an edit to forbidden files. At run start, poll `listens:`
+  domains via `cortex_loop_signal_poll` (consumer = `<repo>/<slug>`; delivered once per
+  consumer). Log: `cortex loops --signals`.
 
 ---
 
@@ -166,6 +172,10 @@ advisory:
 
 ## Checker (separate from maker)
 <Who/what verifies — a distinct reviewer/skill/command, never the maker's self-assessment.>
+
+## Signals (inter-loop composition — optional)
+- emits: <domain(s)>     # domains this loop may emit signals on
+- listens: <domain(s)>   # domains polled at run start
 
 ## State
 - path: .genius/loops/<slug>/STATE.md
