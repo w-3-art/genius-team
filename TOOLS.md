@@ -33,7 +33,7 @@
 
 - **Claude Code Channels** — talk to your session from Telegram or Discord. Full filesystem + MCP + git access from your phone.
 - **Voice Mode** — `/voice` push-to-talk (spacebar). 20 languages. Improved in 2.1.84 with better push-to-talk UX.
-- **1M Token Context** — Opus 4.6 supports 1M tokens on Max/Team/Enterprise. Less compaction needed.
+- **1M Token Context** — Opus 4.8 and Sonnet 5 provide a native 1M-token context window. Less compaction needed. See the [compatibility table](#claude-code--model-compatibility) below.
 - **/loop** — recurring tasks: `/loop 5m check deploy`, `/loop 30s run tests`. Used by `genius-scheduler`.
 - **/effort** — control analysis depth: `low` (quick), `medium` (default), `high` (deep).
 - **/color** — color-code your session prompt for multiple parallel sessions.
@@ -42,6 +42,31 @@
 - **Shared project configs** — configs sync across git worktrees automatically
 - `/simplify`, `/batch` — built-in slash commands for context management
 - **Remote Control** — control your terminal session from your phone via Claude Code mobile app
+
+## Claude Code & Model Compatibility
+
+> Verified **2026-07-05** against official docs. Sources: [Claude Code CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) · [Models overview](https://docs.claude.com/en/docs/about-claude/models/overview). Latest Claude Code at time of writing: **2.1.201**. GT still targets `2.1.86+` as its floor; the rows below note the version each feature landed in.
+
+### Models (source: Models overview)
+
+| Model | API ID | Context | Price in / out (per MTok) |
+|-------|--------|---------|---------------------------|
+| Opus 4.8 | `claude-opus-4-8` | 1M tokens | $5 / $25 |
+| Sonnet 5 | `claude-sonnet-5` | 1M tokens | $3 / $15 — introductory **$2 / $10 through 2026-08-31** |
+| Fable 5 | `claude-fable-5` | 1M tokens | $10 / $50 |
+| Haiku 4.5 | `claude-haiku-4-5` | 200k tokens | $1 / $5 |
+
+> **Tokenizer drift** — Sonnet 5, Opus 4.8 and Fable 5 use the tokenizer introduced with Opus 4.7. Versus models before Opus 4.7, the same text produces **roughly 30% more tokens** (content-dependent). Budget context and cost accordingly. (Source: Models overview.)
+
+### Claude Code features (source: CHANGELOG)
+
+| Feature | Since | Notes |
+|---------|-------|-------|
+| Claude **Sonnet 5** = default model in Claude Code + native 1M context | 2.1.197 | promotional $2/$10 MTok through 2026-08-31 |
+| `/agents` wizard **removed** | 2.1.198 | manage subagents by asking Claude, or edit `.claude/agents/` directly |
+| Background **Notification hooks** | 2.1.198 | a session that needs input or finishes fires the `Notification` hook (`agent_needs_input` / `agent_completed`) |
+| **Worktree agents** auto-ship | 2.1.198 | background agents from `claude agents` commit, push, and open a **draft PR** after finishing code work in a worktree, instead of stopping to ask |
+| **Team agents** report `failed` to the lead | 2.1.198 | a teammate that dies on an API error reports `failed` (no silent block); messaging a stuck teammate wakes it to retry |
 
 ## Network Destinations
 

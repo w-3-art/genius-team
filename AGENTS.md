@@ -106,6 +106,16 @@ Genius Team v22.0 uses subagent delegation for parallel work.
 | genius-debugger | Fix errors |
 | genius-reviewer | Quality score (read-only) |
 
+### Managing subagents in Claude Code
+
+When the Dual/Claude Code side of the team edits subagents, note the current Claude Code behavior (verified 2026-07-05 against the [Claude Code CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md); latest 2.1.201):
+
+- **No `/agents` wizard.** It was removed in **Claude Code 2.1.198** — create or manage subagents by asking Claude, or by editing `.claude/agents/` files directly.
+- **Background notifications (2.1.198).** A background session that needs input or finishes fires the `Notification` hook with `agent_needs_input` / `agent_completed`.
+- **Worktree agents ship their work (2.1.198).** Background agents launched from `claude agents` commit, push, and open a **draft PR** after finishing code work in a worktree, instead of stopping to ask.
+- **Team agents fail loudly (2.1.198).** A teammate that dies on an API error reports `failed` to the lead (no silent block); messaging a stuck teammate wakes it to retry.
+- **Default model.** Claude Code defaults to **Claude Sonnet 5** (native 1M context) since 2.1.197. See `TOOLS.md` → *Claude Code & Model Compatibility* for the model/pricing table.
+
 ---
 
 ## 🔄 Dual Mode — Working with Claude
