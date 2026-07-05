@@ -318,6 +318,10 @@ Genius Team makes no external network calls by default. Setting `GENIUS_WEBHOOK_
 
 No secret, token, payload, or prompt is ever written to a log. The boundary guard redacts every line it appends to `.genius/guard.log`, and `scripts/test-guard-no-leak.sh` (run in CI) proves it. See the ecosystem-wide policy in [TELEMETRY-PRIVACY.md](TELEMETRY-PRIVACY.md).
 
+### Security
+
+Found a vulnerability? Do not open a public issue — email **benjamin@w3art.io**. Scope, response targets, and safe harbor: [SECURITY.md](SECURITY.md).
+
 ---
 
 ## Contributing

@@ -1,35 +1,105 @@
-# Security Policy
+# Security Policy — Genius Team
 
-## Supported Versions
+Repo-scoped security policy for **genius-team**. This follows the
+ecosystem-wide policy at the workspace root `SECURITY.md` (canonical contact,
+full response targets, and safe harbor text live there — short versions
+below); see "Scope" for what is / isn't covered by this file specifically.
 
-| Version | Supported |
-|---------|-----------|
-| 21.x    | Yes       |
-| 20.x    | Security fixes only |
-| < 20.0  | No        |
+## Scope
 
-## Reporting a Vulnerability
+This policy covers the **genius-team** repository: the 57 Claude Code skills
+under `.claude/skills/`, the guard hooks (`scripts/genius-guard-boundary.sh`
+and the `PreToolUse`/`UserPromptSubmit` hooks in `.claude/settings.json`), the
+distributed configs (`configs/{cli,ide,dual,omni}/`), install/verify scripts
+(`scripts/`), and the marketing chat backend (`server.js`).
 
-If you discover a security vulnerability in Genius Team:
+It does **not** cover:
+- **genius-cortex** (CLI + Genius Store MCP server, skill supply-chain
+  controls, secrets vault) — see
+  [genius-cortex/SECURITY.md](https://github.com/w-3-art/genius-cortex/blob/main/SECURITY.md).
+- **revius** (UX review tool) — see
+  [revius/SECURITY.md](https://github.com/w-3-art/revius/blob/main/SECURITY.md).
+- **genius-team-plugin** (the shell Claude Code plugin) — see its own
+  `SECURITY.md`.
 
-1. **Do NOT open a public issue**
-2. Email security@w3art.io with:
-   - Description of the vulnerability
-   - Steps to reproduce
-   - Potential impact
-3. We will acknowledge within 48 hours
-4. We will provide a fix within 7 days for critical issues
+## Reporting a vulnerability
 
-## Security Model
+**Do not open a public GitHub issue.**
+
+Email **benjamin@w3art.io** with the affected file/skill/hook, a description
+of the vulnerability and its impact, and steps to reproduce.
+
+**PGP:** not yet available — **TODO** (publish a PGP key for encrypted
+reports).
+
+## Response targets
+
+- **Acknowledgement:** within 5 business days.
+- **Triage / severity confirmed:** within 10 business days of acknowledgement.
+- **Remediation target:** Critical ≤ 30 days · High ≤ 60 days · Medium ≤ 90
+  days · Low — best-effort, next convenient release. This is a solo-maintained
+  project; targets are best-effort, not a contractual SLA.
+
+## Safe harbor
+
+Good-faith research that identifies and reports a vulnerability without
+exploiting it beyond what's needed to demonstrate it, avoids data
+destruction/privacy violations/service disruption, only touches
+accounts/data/deployments you own or are authorized to test, and allows a
+reasonable coordinated-disclosure window before going public, will not
+trigger legal action from us. This does not cover third-party infrastructure
+(GitHub, npm, Claude Code / the Anthropic API, the marketing site's hosting) —
+report those to their owners.
+
+## In scope
+
+- Skill files under `.claude/skills/` (prompt injection via skill content,
+  unsafe shell patterns in embedded scripts, permission over-declaration).
+- Guard hook scripts (`scripts/genius-guard-boundary.sh`) — bypasses of the
+  push/publish, pre-deploy, or unvetted-skill-install frontiers (see
+  `GUARD_POLICY` reference below for the enforcement model).
+- `server.js` (marketing chat backend) — injection, secret leakage, rate-limit
+  bypass, unauthorized model/endpoint access.
+- Install/verify scripts (`scripts/*.sh`) and the 4 distributed configs.
+
+## Out of scope
+
+- Third-party dependencies without a demonstrated exploitable path through
+  this repo's own code — report upstream instead.
+- Skills served by the Genius Store that are **not** first-party
+  `@genius-team/*` (third-party skill content bugs belong to that skill's own
+  maintainer and to the Cortex supply-chain vetting policy, not this repo).
+- Denial-of-service via local resource exhaustion (all of this runs locally
+  under the user's own Claude Code session, by design).
+
+## Security model
 
 Genius Team runs entirely within Claude Code's sandbox:
-- No external API calls by default. The only declared destination is `GENIUS_WEBHOOK_URL` (see `TOOLS.md#network-destinations`), and hooks only send to it when the URL is HTTPS **and** `"webhook_consent": true` is explicitly set in `.genius/config.json`
-- No secrets stored in code — use `.env` files (gitignored)
-- All memory is file-based in `.genius/memory/` (no external databases)
-- Hook commands run in the user's shell with their permissions
 
-## Known Considerations
+- **No external API calls by default.** The only declared destination is
+  `GENIUS_WEBHOOK_URL` (see `TOOLS.md#network-destinations`), and hooks only
+  send to it when the URL is HTTPS **and** `"webhook_consent": true` is
+  explicitly set in `.genius/config.json`.
+- **No secrets stored in code** — use `.env` files (gitignored).
+- **All memory is file-based** in `.genius/memory/` (no external databases).
+- **Hook commands run in the user's shell** with their permissions — the
+  boundary hooks are advisory in the inner dev loop and hard-block only at the
+  three frontiers (unvetted skill install, pre-deploy, push/publish); see the
+  ecosystem `GUARD-POLICY.md` (workspace root, `decisions/GUARD-POLICY.md`)
+  for the full model.
+- **Skill trust model.** Skills served through the Genius Store are vetted via
+  Skill Card + checksum + security lint, implemented once, canonically, in
+  `genius-cortex` — see
+  [`genius-cortex/docs/SKILL-SUPPLY-CHAIN.md`](https://github.com/w-3-art/genius-cortex/blob/main/docs/SKILL-SUPPLY-CHAIN.md).
+  This repo does not duplicate that logic.
 
-- **Webhook payloads** may contain file paths. Only enable webhooks on trusted networks.
-- **Session logs** in `.genius/session-log.jsonl` may contain tool inputs. These are gitignored by default.
-- **`.env.example`** files generated by genius-integration-guide contain placeholder values, never real secrets.
+## Known considerations
+
+- **Webhook payloads** may contain file paths. Only enable webhooks on trusted
+  networks.
+- **Session logs** in `.genius/session-log.jsonl` may contain tool inputs.
+  These are gitignored by default.
+- **`.env.example`** files generated by `genius-integration-guide` contain
+  placeholder values, never real secrets.
+- **Telemetry/privacy** — no secret, token, payload, or prompt reaches a log;
+  see [`TELEMETRY-PRIVACY.md`](TELEMETRY-PRIVACY.md).
