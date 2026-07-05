@@ -23,6 +23,17 @@
 #   cortex_heartbeat  <loop_dir> [tokens]      heartbeat; exit 5 = Cortex ordered a kill
 #   cortex_report     <loop_dir>               send the final verdict to Cortex
 #
+# Workflow loop (LP-09) — a CONTRACT.md may declare a "## Workflow" section
+# (pipe table: | step | gate | checkpoint |). The kernel then advances step by
+# step: a step's gate passing crosses that step's gate; checkpoint=human (and
+# EVERY step at autonomy L1/L2) HALTs until a human records a per-step approval.
+#   workflow_status   <loop_dir>               current step, position, checkpoint
+#   workflow_advance  <loop_dir>               one transition: run current step gate,
+#                                              then ADVANCE / retry (1) / HALT
+#                                              checkpoint (12) / brake codes above
+#   workflow_approve  <loop_dir> <step>        HUMAN-run: record traceable approval
+#                                              (.genius/loops/<slug>/approvals/<step>)
+#
 # Control plane (LP-06): if the `cortex` CLI is reachable (override with
 # $CORTEX_BIN), the kernel registers the loop, heartbeats on every
 # brakes_check and reports the final verdict — Cortex is the police: a
@@ -117,6 +128,65 @@ _state_meta() {
   local v
   v=$(grep -E "^- $2:" "$1" | head -1 | sed -E "s/^- $2: *//" || true)
   echo "${v:--}"
+}
+
+# ------------------------------------------------- workflow helpers (LP-09) --
+
+_workflow_rows() {
+  # _workflow_rows <contract> -> TSV "name<TAB>checkpoint<TAB>gate", in order.
+  # Parses the pipe table of "## Workflow": | step | gate | checkpoint |
+  # Gate commands must not contain a literal '|' — wrap them in a script.
+  _section "$1" "Workflow" | awk -F'|' '
+    /^\|/ {
+      s = $2; g = $3; c = $4
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", s)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", g)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", c)
+      if (s == "" || s == "step" || s ~ /^:?-+:?$/) next
+      print s "\t" c "\t" g
+    }
+  '
+}
+
+_workflow_field() {
+  # _workflow_field <contract> <step> <checkpoint|gate> -> value
+  local row
+  row=$(_workflow_rows "$1" | awk -F'\t' -v s="$2" '$1 == s { print; exit }')
+  [ -n "$row" ] || return 1
+  case "$3" in
+    checkpoint) echo "$row" | cut -f2 ;;
+    gate)       echo "$row" | cut -f3 ;;
+    *)          return 1 ;;
+  esac
+}
+
+_workflow_next() {
+  # _workflow_next <contract> <step> -> next step name ("" if <step> is last)
+  _workflow_rows "$1" | awk -F'\t' -v s="$2" '
+    found { print $1; exit }
+    $1 == s { found = 1 }
+  '
+}
+
+_state_set_meta() {
+  # _state_set_meta <loop_dir> <key> <value> — update (or insert after the
+  # status line) a single "- key: value" metadata line in STATE.md.
+  local dir="$1" key="$2" val="$3" state tmp
+  dir=$(_resolve_loop_dir "$dir")
+  state=$(_state_path "$dir")
+  [ -f "$state" ] || _state_init "$dir"
+  tmp="$state.tmp.$$"
+  if grep -qE "^- $key:" "$state"; then
+    awk -v k="$key" -v v="$val" '
+      index($0, "- " k ":") == 1 { print "- " k ": " v; next }
+      { print }
+    ' "$state" > "$tmp" && mv "$tmp" "$state"
+  else
+    awk -v k="$key" -v v="$val" '
+      { print }
+      /^- status: / && !done { print "- " k ": " v; done = 1 }
+    ' "$state" > "$tmp" && mv "$tmp" "$state"
+  fi
 }
 
 # ------------------------------------------------ cortex control plane (LP-06)
@@ -327,6 +397,46 @@ $files
 EOF
   fi
 
+  # --- workflow (LP-09): if a ## Workflow table is present, every step needs
+  # --- a real deterministic gate and a checkpoint of auto|human ---------------
+  if grep -qE '^## Workflow' "$contract"; then
+    local rows name cp wgate wtok dupes
+    rows=$(_workflow_rows "$contract")
+    if [ -z "$rows" ]; then
+      echo "❌ workflow: ## Workflow section has no step rows (| step | gate | checkpoint |)"
+      errors=$((errors + 1))
+    else
+      dupes=$(echo "$rows" | cut -f1 | sort | uniq -d)
+      if [ -n "$dupes" ]; then
+        echo "❌ workflow: duplicate step name(s): $(echo "$dupes" | tr '\n' ' ')"
+        errors=$((errors + 1))
+      fi
+      while IFS=$'\t' read -r name cp wgate; do
+        [ -n "$name" ] || continue
+        case "$cp" in
+          auto|human) : ;;
+          *) echo "❌ workflow: step '$name' checkpoint must be auto|human, got '$cp'"
+             errors=$((errors + 1)) ;;
+        esac
+        if [ -z "$wgate" ]; then
+          echo "❌ workflow: step '$name' has no gate command"
+          errors=$((errors + 1))
+        elif echo "$wgate" | grep -q '<'; then
+          echo "❌ workflow: step '$name' gate has an unfilled placeholder '<...>'"
+          errors=$((errors + 1))
+        else
+          wtok=$(echo "$wgate" | awk '{print $1}')
+          if ! command -v "$wtok" >/dev/null 2>&1; then
+            echo "❌ workflow: step '$name' gate '$wtok' is not an executable command"
+            errors=$((errors + 1))
+          fi
+        fi
+      done <<EOF
+$rows
+EOF
+    fi
+  fi
+
   if [ "$errors" -gt 0 ]; then
     echo "contract_validate: FAIL ($errors error(s)) — no gate, no loop."
     return 1
@@ -418,6 +528,11 @@ state_write() {
   body=$(awk '/^## /{f=1} f{print}' "$state")
   [ -n "$body" ] || body=$(printf '## Done\n\n## In Progress\n\n## Blocked\n\n## Next')
 
+  # preserve metadata lines the kernel does not own (e.g. LP-09 step/awaiting)
+  local extra
+  extra=$(awk '/^## /{exit} /^- /{print}' "$state" \
+    | grep -vE '^- (status|iteration|last_gate_exit|gate_hash|gate_hash_history|updated):' || true)
+
   cat > "$state" <<EOF
 # Loop State: $slug
 
@@ -427,7 +542,8 @@ state_write() {
 - gate_hash: $hash
 - gate_hash_history: $history
 - updated: $(_now)
-
+${extra:+$extra
+}
 $body
 EOF
   echo "state_write: iteration=$iteration status=$status gate_exit=$gate_exit hash=$hash"
@@ -505,18 +621,10 @@ brakes_check() {
 
 # ---------------------------------------------------------------- gate_run ---
 
-gate_run() {
-  # runs the contract's gate with its timeout; hung gate = FAIL (silent-death guard)
-  local dir contract gate secs log rc=0
-  dir=$(_resolve_loop_dir "${1:-}")
-  contract=$(_contract_path "$dir")
-  [ -f "$contract" ] || _die "contract not found: $contract"
-
-  gate=$(_gate_cmd "$contract")
-  [ -n "$gate" ] || _die "no gate command in $contract"
-  secs=$(_gate_timeout "$contract")
-  log="$dir/last-gate.log"
-
+_exec_gate() {
+  # _exec_gate <gate_cmd> <timeout_secs> <log_file> — run a gate command with a
+  # timeout (hung gate = FAIL, silent-death guard). Returns the gate's exit code.
+  local gate="$1" secs="$2" log="$3" rc=0
   if command -v timeout >/dev/null 2>&1; then
     timeout "$secs" bash -c "$gate" > "$log" 2>&1 || rc=$?
   elif command -v gtimeout >/dev/null 2>&1; then
@@ -530,9 +638,155 @@ gate_run() {
     kill "$watcher" 2>/dev/null || true
     wait "$watcher" 2>/dev/null || true
   fi
+  return "$rc"
+}
+
+gate_run() {
+  # runs the contract's gate with its timeout; hung gate = FAIL (silent-death guard)
+  local dir contract gate secs log rc=0
+  dir=$(_resolve_loop_dir "${1:-}")
+  contract=$(_contract_path "$dir")
+  [ -f "$contract" ] || _die "contract not found: $contract"
+
+  gate=$(_gate_cmd "$contract")
+  [ -n "$gate" ] || _die "no gate command in $contract"
+  secs=$(_gate_timeout "$contract")
+  log="$dir/last-gate.log"
+
+  _exec_gate "$gate" "$secs" "$log" || rc=$?
 
   echo "gate_exit: $rc (log: $log, timeout: ${secs}s)"
   return "$rc"
+}
+
+# --------------------------------------------------- workflow loop (LP-09) ---
+# The product pipeline (Interview → Specs → Architecture → Dev → Review →
+# Deploy) as ONE self-advancing loop. Each step's gate is deterministic (the
+# existing guard/review IS the gate: review pass = gate crossed). Human
+# checkpoints are explicit: checkpoint=human in the table — and at autonomy
+# L1/L2 EVERY step is a human checkpoint. A human checkpoint HALTs (exit 12)
+# until workflow_approve records a traceable per-step approval (GUARD-POLICY
+# §5.5: per-action, never a permanent global override). Even L4 never skips a
+# human checkpoint — L4 removes prompts on auto steps, never the review.
+
+workflow_status() {
+  local dir contract state cur total idx cp
+  dir=$(_resolve_loop_dir "${1:-}")
+  contract=$(_contract_path "$dir")
+  state=$(_state_path "$dir")
+  [ -f "$contract" ] || _die "contract not found: $contract"
+  [ -f "$state" ] || _state_init "$dir"
+  [ -n "$(_workflow_rows "$contract")" ] || _die "no ## Workflow section in $contract"
+  cur=$(_state_meta "$state" "step")
+  [ "$cur" = "-" ] && cur=$(_workflow_rows "$contract" | head -1 | cut -f1)
+  total=$(_workflow_rows "$contract" | wc -l | tr -d ' ')
+  idx=$(_workflow_rows "$contract" | awk -F'\t' -v s="$cur" '$1 == s { print NR; exit }')
+  cp=$(_workflow_field "$contract" "$cur" checkpoint || echo "?")
+  echo "workflow: step $cur (${idx:-?}/$total, checkpoint=$cp) status=$(_state_meta "$state" "status") awaiting=$(_state_meta "$state" "awaiting")"
+}
+
+workflow_approve() {
+  # HUMAN-run: record an explicit, traceable, per-step approval.
+  local dir step="${2:-}"
+  dir=$(_resolve_loop_dir "${1:-}")
+  [ -n "$step" ] || _die "usage: workflow_approve <loop_dir> <step>"
+  _workflow_field "$(_contract_path "$dir")" "$step" gate >/dev/null \
+    || _die "unknown workflow step '$step'"
+  mkdir -p "$dir/approvals"
+  printf 'step: %s\napproved: %s\napproved-by: human (workflow_approve)\n' \
+    "$step" "$(_now)" > "$dir/approvals/$step"
+  echo "workflow_approve: step '$step' approved ($dir/approvals/$step)"
+}
+
+workflow_advance() {
+  # One workflow transition. Exit codes:
+  #   0  = advanced (or resumed/completed) — call again for the next transition
+  #   1  = current step's gate FAILED — iterate on the step (fix, re-run)
+  #   12 = HALT: human checkpoint — approval required (workflow_approve)
+  #   2/3/4/5/10/11 = brake verdicts propagated from brakes_check
+  local dir contract state level cur next cp gate secs rc=0
+  dir=$(_resolve_loop_dir "${1:-}")
+  contract=$(_contract_path "$dir")
+  state=$(_state_path "$dir")
+  [ -f "$contract" ] || _die "contract not found: $contract"
+  [ -f "$state" ] || _state_init "$dir"
+  [ -n "$(_workflow_rows "$contract")" ] || _die "no ## Workflow section in $contract"
+
+  level=$(_autonomy "$contract"); level="${level:-L2}"
+  cur=$(_state_meta "$state" "step")
+  if [ "$cur" = "-" ] || [ -z "$cur" ]; then
+    cur=$(_workflow_rows "$contract" | head -1 | cut -f1)
+    _state_set_meta "$dir" "step" "$cur"
+  fi
+  _workflow_field "$contract" "$cur" gate >/dev/null \
+    || _die "STATE step '$cur' not found in the ## Workflow table"
+
+  # -- resume: a blocked checkpoint whose approval has since been recorded ----
+  if [ "$(_state_meta "$state" "status")" = "blocked" ] \
+     && [ "$(_state_meta "$state" "awaiting")" = "checkpoint:$cur" ]; then
+    if [ -f "$dir/approvals/$cur" ]; then
+      _state_set_meta "$dir" "awaiting" "-"
+      next=$(_workflow_next "$contract" "$cur")
+      if [ -z "$next" ]; then
+        _state_set_status "$dir" "done"
+        echo "CHECKPOINT APPROVED: $cur — WORKFLOW DONE (all steps passed)"
+        cortex_report "$dir" || true
+        return 0
+      fi
+      _state_set_meta "$dir" "step" "$next"
+      _state_set_status "$dir" "in-progress"
+      echo "CHECKPOINT APPROVED: $cur → step $next"
+      return 0
+    fi
+    echo "HALT: CHECKPOINT — step '$cur' awaits human approval"
+    echo "approve with: bash scripts/loop-kernel.sh workflow_approve $dir $cur"
+    return 12
+  fi
+
+  # -- brakes first (includes the LP-06 Cortex heartbeat + kill switch) -------
+  local brakes_out brakes_rc=0
+  brakes_out=$(brakes_check "$dir") || brakes_rc=$?
+  if [ "$brakes_rc" -ne 0 ]; then
+    echo "$brakes_out"
+    return "$brakes_rc"
+  fi
+
+  # -- run the CURRENT step's gate (deterministic; timeout = contract Gate's) -
+  gate=$(_workflow_field "$contract" "$cur" gate)
+  secs=$(_gate_timeout "$contract")
+  _exec_gate "$gate" "$secs" "$dir/last-gate.log" || rc=$?
+
+  if [ "$rc" -ne 0 ]; then
+    state_write "$dir" "in-progress" "$rc" "workflow step=$cur gate FAILED" >/dev/null
+    echo "STEP GATE FAIL: step '$cur' exit $rc — iterate on this step (log: $dir/last-gate.log)"
+    return 1
+  fi
+
+  # -- gate passed: checkpoint? (human step, or ANY step at L1/L2) ------------
+  cp=$(_workflow_field "$contract" "$cur" checkpoint)
+  local need_human=false
+  [ "$cp" = "human" ] && need_human=true
+  case "$level" in L1|L2) need_human=true ;; esac
+  if [ "$need_human" = true ] && [ ! -f "$dir/approvals/$cur" ]; then
+    state_write "$dir" "blocked" 0 "workflow step=$cur gate PASSED — awaiting human checkpoint" >/dev/null
+    _state_set_meta "$dir" "awaiting" "checkpoint:$cur"
+    echo "HALT: CHECKPOINT — step '$cur' gate PASSED; human approval required before advancing (autonomy=$level, checkpoint=$cp)"
+    echo "approve with: bash scripts/loop-kernel.sh workflow_approve $dir $cur"
+    return 12
+  fi
+
+  # -- advance (or finish) -----------------------------------------------------
+  next=$(_workflow_next "$contract" "$cur")
+  if [ -z "$next" ]; then
+    state_write "$dir" "done" 0 "workflow step=$cur gate PASSED — final step" >/dev/null
+    echo "WORKFLOW DONE: all steps passed (last: $cur)"
+    cortex_report "$dir" || true
+    return 0
+  fi
+  state_write "$dir" "in-progress" 0 "workflow step=$cur gate PASSED" >/dev/null
+  _state_set_meta "$dir" "step" "$next"
+  echo "ADVANCE: $cur → $next"
+  return 0
 }
 
 # -------------------------------------------------------------- loop_report --
@@ -577,7 +831,7 @@ EOF
 # -------------------------------------------------------------------- main ---
 
 usage() {
-  sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,43p' "$0" | sed 's/^# \{0,1\}//'
   exit 1
 }
 
@@ -594,5 +848,8 @@ case "$cmd" in
   cortex_register)   cortex_register "$@" ;;
   cortex_heartbeat)  cortex_heartbeat "$@" ;;
   cortex_report)     cortex_report "$@" ;;
+  workflow_status)   workflow_status "$@" ;;
+  workflow_advance)  workflow_advance "$@" ;;
+  workflow_approve)  workflow_approve "$@" ;;
   *)                 usage ;;
 esac

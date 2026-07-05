@@ -134,6 +134,7 @@ Inspect/kill from anywhere: `cortex loops`, `cortex loops --kill <id|--repo <r>|
 
 ## Handoff / Next Step
 - No contract or invalid contract → **genius-goal-contract**.
+- Multi-step product pipeline (Interview→…→Deploy) as one loop → **genius-workflow-loop** (LP-09).
 - HALT on a brake → human decides: revise the contract (new budget/approach) or abandon.
 - `done` at L3+ → human merge approval (comprehension gate), then genius-qa /
   genius-deployer as the project workflow dictates.

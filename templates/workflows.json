@@ -601,6 +601,20 @@
         ],
         "next_workflow": null,
         "checkpoint": "user_approval"
+      },
+      {
+        "name": "genius-workflow-loop",
+        "description": "LP-09 meta-loop — the product pipeline (Interview→Specs→Architecture→Dev→Review→Deploy) as one self-advancing loop: per-step deterministic gates (guard/review = gate), human checkpoints at specs/architecture/before-deploy/before-push",
+        "category": "meta",
+        "prerequisites": [
+          "genius-goal-contract"
+        ],
+        "outputs": [
+          ".genius/loops/<slug>/STATE.md",
+          ".genius/loops/<slug>/approvals/<step>"
+        ],
+        "next_workflow": null,
+        "checkpoint": "user_approval"
       }
     ]
   }
