@@ -49,6 +49,9 @@ jobs:
           [ $failed -eq 0 ] && echo "✅ All skills have SKILL.md"
           exit $failed
 
+      - name: Telemetry/privacy — guard log never leaks secrets
+        run: bash scripts/test-guard-no-leak.sh
+
   check-resolvable:
     runs-on: ubuntu-latest
     steps:

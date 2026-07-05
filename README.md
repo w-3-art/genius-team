@@ -314,6 +314,10 @@ your-project/
 
 Genius Team makes no external network calls by default. Setting `GENIUS_WEBHOOK_URL` enables optional HTTP hooks, gated behind explicit consent (HTTPS only). See [TOOLS.md — Network Destinations](TOOLS.md#network-destinations) for details.
 
+### Telemetry & Privacy
+
+No secret, token, payload, or prompt is ever written to a log. The boundary guard redacts every line it appends to `.genius/guard.log`, and `scripts/test-guard-no-leak.sh` (run in CI) proves it. See the ecosystem-wide policy in [TELEMETRY-PRIVACY.md](TELEMETRY-PRIVACY.md).
+
 ---
 
 ## Contributing

@@ -55,10 +55,24 @@ TARGET="${CMD:-$FILE}"
 GUARD_LOG=".genius/guard.log"
 TS=$(date "+%Y-%m-%d %H:%M:%S" 2>/dev/null || echo "?")
 
+# redact_secrets — mask secret/token/credential shapes before they hit the log.
+# Policy: docs/TELEMETRY-PRIVACY.md §1 (no secret ever reaches a log) — the guard
+# logs the command it acted on, which can carry an embedded credential. Patterns
+# mirror Revius' SECRET_PATTERNS. POSIX/BSD-and-GNU-sed safe (no \s, no \d).
+redact_secrets() {
+  printf '%s' "$1" | sed -E \
+    -e 's/(sk|pk)_(live|test)_[A-Za-z0-9]{6,}/[REDACTED]/g' \
+    -e 's/[Bb][Ee][Aa][Rr][Ee][Rr][[:space:]]+[A-Za-z0-9._~+/-]+=*/Bearer [REDACTED]/g' \
+    -e 's/([Aa][Pp][Ii][-_]?([Kk][Ee][Yy]|[Ss][Ee][Cc][Rr][Ee][Tt]))([=:])[[:space:]]*["'"'"']?[A-Za-z0-9._~+/-]{6,}["'"'"']?/\1\3[REDACTED]/g' \
+    -e 's/([Pp][Aa][Ss][Ss][Ww]?[Oo]?[Rr]?[Dd]?)([=:])[[:space:]]*["'"'"']?[^[:space:]"'"'"']{4,}["'"'"']?/\1\2[REDACTED]/g' \
+    -e 's#(://[^/@:[:space:]]+):[^@/[:space:]]+@#\1:[REDACTED]@#g'
+}
+
 log_guard() {
-  # Never silent: every override / allow / deny leaves a trace.
+  # Never silent: every override / allow / deny leaves a trace. Redacted first —
+  # the audit trail must record WHAT was guarded, never the secret inside it.
   mkdir -p .genius 2>/dev/null || true
-  printf '[%s] BOUNDARY %s\n' "$TS" "$1" >> "$GUARD_LOG" 2>/dev/null || true
+  printf '[%s] BOUNDARY %s\n' "$TS" "$(redact_secrets "$1")" >> "$GUARD_LOG" 2>/dev/null || true
 }
 
 emit_deny() {
