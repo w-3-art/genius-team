@@ -372,7 +372,7 @@ contract_validate() {
   if [ -z "$gate" ]; then
     echo "❌ gate: no command found in the fenced block of ## Gate"
     errors=$((errors + 1))
-  elif echo "$gate" | grep -qE '<[A-Za-z][A-Za-z0-9_ .-]*>'; then
+  elif echo "$gate" | grep -qE '<[A-Za-z][A-Za-z0-9_ -]*[A-Za-z0-9_-]>'; then
     # Match an actual unfilled template tag (<exact command>, <slug>, <gate>) —
     # NOT legitimate shell '<' (redirection `< file`, heredoc `<<EOF`, process
     # substitution `<(...)`, or comparison `[[ a < b ]]`).
@@ -463,7 +463,7 @@ EOF
         if [ -z "$wgate" ]; then
           echo "❌ workflow: step '$name' has no gate command"
           errors=$((errors + 1))
-        elif echo "$wgate" | grep -qE '<[A-Za-z][A-Za-z0-9_ .-]*>'; then
+        elif echo "$wgate" | grep -qE '<[A-Za-z][A-Za-z0-9_ -]*[A-Za-z0-9_-]>'; then
           # actual unfilled tag only — legitimate shell '<' (redirect/heredoc/
           # process-substitution/comparison) is allowed (see ## Gate check above)
           echo "❌ workflow: step '$name' gate has an unfilled placeholder '<...>'"
