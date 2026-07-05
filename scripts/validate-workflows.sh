@@ -57,12 +57,40 @@ if [ -n "$orphans" ]; then
   ERRORS=$((ERRORS + 1))
 fi
 
+# ── Prose skill-count drift guard ───────────────────────────────────────────
+# Current-state "N skills" claims in these canonical docs must equal n_dirs.
+# Historical mentions (CHANGELOG, analysis docs) are intentionally NOT checked —
+# only these authoritative current-state strings, so old counts never trip this.
+check_prose_count() {
+  # $1=label  $2=file  $3=ERE matching the count phrase (with the number)
+  local label="$1" file="$2" re="$3" got
+  got=$(grep -oiE "$re" "$file" 2>/dev/null | grep -oE '[0-9]+' | head -1 || true)
+  if [ -z "$got" ]; then
+    echo "❌ ${label}: expected skill-count phrase not found in ${file}"
+    ERRORS=$((ERRORS + 1))
+  elif [ "$got" != "$n_dirs" ]; then
+    echo "❌ ${label}: says ${got} skills but ${n_dirs} skill dirs exist (${file})"
+    ERRORS=$((ERRORS + 1))
+  fi
+}
+
+check_prose_count "README header"   "README.md"                          '## [0-9]+ Specialized Skills'
+check_prose_count "README registry" "README.md"                          'for all [0-9]+ skills'
+check_prose_count "SKILLS.md"        "docs/SKILLS.md"                     'consists of [0-9]+ specialized skills'
+check_prose_count "genius-tips"      ".claude/skills/genius-tips/SKILL.md" 'are [0-9]+ specialized skills'
+
+readme_rows=$(grep -cE '^\| genius-' README.md || true)
+if [ "$readme_rows" != "$n_dirs" ]; then
+  echo "❌ README skill table has ${readme_rows} rows but ${n_dirs} skill dirs exist"
+  ERRORS=$((ERRORS + 1))
+fi
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ "$ERRORS" -gt 0 ]; then
   echo "❌ FAIL: $ERRORS problem(s)"
   exit 1
 else
-  echo "✅ PASS — exactly one workflow entry per skill directory"
+  echo "✅ PASS — workflow/skill 1:1 match and prose skill-counts in sync"
   exit 0
 fi

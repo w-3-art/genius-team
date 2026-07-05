@@ -1,5 +1,12 @@
 # Claude Code + Opus 4 Features Used in Genius Team v22.0
 
+> ⚠️ **HISTORICAL — describes the v9.0-era "Opus 4 as default" model doctrine and is
+> no longer accurate.** Claude Code now defaults to Claude Sonnet 5 (see
+> [`../../TOOLS.md`](../../TOOLS.md) "Model Compatibility" and `../../AGENTS.md`), and the
+> "Save-Token Mode" split below has been superseded. The Claude-Code feature notes
+> (Agent Teams, forked context, hooks, permissions) are kept for historical reference
+> only; treat any model-name or default-model claim here as outdated.
+
 ## Overview
 
 Genius Team v22.0 is built on Claude Code's latest features, with Opus 4 as the default model for all roles.
