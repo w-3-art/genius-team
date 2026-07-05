@@ -652,13 +652,23 @@ _exec_gate() {
   elif command -v gtimeout >/dev/null 2>&1; then
     gtimeout "$secs" bash -c "$gate" > "$log" 2>&1 || rc=$?
   else
+    # No timeout/gtimeout (stock macOS ships neither): run the gate in the
+    # background and POLL its liveness, killing it only if it outlives the
+    # timeout. A poll loop — not a second background watcher — is deliberate:
+    # a backgrounded `( sleep … )` watcher inherits this function's stdout, and
+    # its orphaned `sleep` child keeps that fd open, so under `$(_exec_gate …)`
+    # command substitution (the kernel's own documented calling convention)
+    # the capture would block for the FULL timeout even after the gate returns.
     bash -c "$gate" > "$log" 2>&1 &
-    local pid=$! watcher
-    ( sleep "$secs" && kill -9 "$pid" 2>/dev/null ) &
-    watcher=$!
+    local pid=$! start=$SECONDS
+    while kill -0 "$pid" 2>/dev/null; do
+      if [ $((SECONDS - start)) -ge "$secs" ]; then
+        kill -9 "$pid" 2>/dev/null || true
+        break
+      fi
+      sleep 0.2
+    done
     wait "$pid" || rc=$?
-    kill "$watcher" 2>/dev/null || true
-    wait "$watcher" 2>/dev/null || true
   fi
   return "$rc"
 }

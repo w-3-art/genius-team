@@ -197,6 +197,45 @@ echo "   $OUT"
 check "at L2 even an auto step HALTs for approval" $?
 
 echo ""
+echo "== 10. gate timeout fallback (no timeout/gtimeout binary) returns promptly =="
+# Regression guard for the _exec_gate fallback branch: on hosts without GNU
+# timeout/gtimeout (stock macOS), a passing gate captured via $(...) command
+# substitution — the kernel's documented calling convention — MUST return as
+# soon as the gate finishes, NOT block for the full contract Timeout. To exercise
+# this branch on ANY host (CI ubuntu ships GNU timeout), a BASH_ENV shim shadows
+# the `command -v timeout/gtimeout` probe so the fallback path is always taken.
+FB_ENV="$TMP/force-fallback.bashenv"
+cat > "$FB_ENV" <<'SHIM'
+command() {
+  if [ "${1:-}" = "-v" ]; then
+    case "${2:-}" in timeout|gtimeout) return 1 ;; esac
+  fi
+  builtin command "$@"
+}
+SHIM
+FB_DIR="$PROJECT/.genius/loops/fallback-demo"
+mkdir -p "$FB_DIR"
+# Small (5s) Timeout so a regression stalls for 5s, not 30s, before the assert trips.
+cat > "$FB_DIR/CONTRACT.md" <<'EOF'
+# Loop Contract: fallback demo
+- slug: fallback-demo
+## Gate (objective pass/fail)
+```bash
+true
+```
+- Interpretation: PASS when exit code == 0.
+- Timeout: 5s
+EOF
+# sanity: the shim really hides timeout/gtimeout (else the assert is vacuous)
+BASH_ENV="$FB_ENV" bash -c 'command -v timeout >/dev/null 2>&1' && hid=1 || hid=0
+[ "$hid" -eq 0 ]; check "BASH_ENV shim hides timeout (fallback branch is forced)" $?
+fb_start=$(date +%s)
+OUT=$(BASH_ENV="$FB_ENV" bash "$KERNEL" gate_run "$FB_DIR" 2>&1); rc=$?
+fb_elapsed=$(( $(date +%s) - fb_start ))
+[ $rc -eq 0 ]; check "passing gate exits 0 via no-timeout fallback" $? "rc=$rc out=$OUT"
+[ "$fb_elapsed" -lt 2 ]; check "fallback returns in <2s (not the 5s Timeout)" $? "elapsed=${fb_elapsed}s"
+
+echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ "$failures" -eq 0 ]; then
   echo "✅ workflow-loop: ALL TESTS PASSED"
