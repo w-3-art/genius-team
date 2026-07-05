@@ -84,6 +84,43 @@ jobs:
       - name: Reproducible e2e install test (no claude smoke)
         run: bash scripts/e2e-install-test.sh
 
+  workflows-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Workflow/skill 1:1 map + prose & config skill-count drift
+        run: bash scripts/validate-workflows.sh
+
+      - name: Skills have required sections
+        run: bash scripts/validate-skills.sh
+
+  loop-kernel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: LP-06/07 loop-kernel <-> Cortex control-plane tests
+        run: bash scripts/test-loop-kernel-cortex.sh
+
+      - name: LP-09 workflow-loop tests (incl. gate-timeout fallback regression)
+        run: bash scripts/test-workflow-loop.sh
+
+  loop-kernel-macos:
+    # macOS runners ship neither GNU timeout nor gtimeout, so the _exec_gate
+    # no-timeout fallback branch runs for real here — the exact path that
+    # ubuntu (GNU coreutils) never exercises. Guards the gate-timeout bug from
+    # silently regressing on the primary macOS dev platform.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: LP-09 workflow-loop tests on macOS (native no-timeout fallback)
+        run: bash scripts/test-workflow-loop.sh
+
+      - name: LP-06/07 loop-kernel <-> Cortex control-plane tests on macOS
+        run: bash scripts/test-loop-kernel-cortex.sh
+
   doctrine-drift:
     runs-on: ubuntu-latest
     steps:

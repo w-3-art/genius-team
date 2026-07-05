@@ -17,7 +17,7 @@ for skill_dir in "$SKILLS_DIR"/*/; do
   
   if [ ! -f "$file" ]; then
     echo "❌ $skill: SKILL.md missing"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
     continue
   fi
   
@@ -26,31 +26,31 @@ for skill_dir in "$SKILLS_DIR"/*/; do
   # Check frontmatter
   if ! head -1 "$file" | grep -q "^---"; then
     echo "❌ $skill: missing frontmatter"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
   fi
   
   # Check description with negative triggers
   if ! grep -q "Do NOT use" "$file" 2>/dev/null; then
     echo "⚠️  $skill: no negative triggers (Do NOT use)"
-    ((WARNINGS++))
+    WARNINGS=$((WARNINGS + 1))
   fi
   
   # Check Definition of Done
   if ! grep -q "Definition of Done" "$file" 2>/dev/null; then
     echo "⚠️  $skill: missing Definition of Done"
-    ((WARNINGS++))
+    WARNINGS=$((WARNINGS + 1))
   fi
   
   # Check Handoff section (for skills that route)
   if ! grep -q "Handoff\|Next Step" "$file" 2>/dev/null; then
     echo "⚠️  $skill: no Handoff or Next Step section"
-    ((WARNINGS++))
+    WARNINGS=$((WARNINGS + 1))
   fi
   
   # Check size (warn if over 10KB)
   if [ "$size" -gt 10000 ]; then
     echo "⚠️  $skill: ${size}B (over 10KB limit)"
-    ((WARNINGS++))
+    WARNINGS=$((WARNINGS + 1))
   fi
 done
 
