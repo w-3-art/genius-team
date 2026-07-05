@@ -78,9 +78,12 @@ values, duplicate steps, missing brakes/budget are all refused).
 ### 1. Drive the meta-loop
 ```bash
 bash scripts/loop-kernel.sh workflow_status  .genius/loops/gt-product-pipeline
-bash scripts/loop-kernel.sh workflow_advance .genius/loops/gt-product-pipeline
+bash scripts/loop-kernel.sh workflow_advance .genius/loops/gt-product-pipeline <cumulative_tokens>
 ```
-Interpret `workflow_advance` exit codes:
+`<cumulative_tokens>` is your running estimate of the tokens the pipeline has burned so
+far (integer); it is heartbeated to Cortex and arms the LP-07 token-budget kill switch
+(estimate > contract `token_budget` → `kill:true` → exit 5). Omit it only when Cortex is
+absent. Interpret `workflow_advance` exit codes:
 - **0 — ADVANCE / resume / done.** Call `workflow_advance` again for the next transition.
 - **1 — STEP GATE FAIL.** Do the step's actual work via the matching GT skill
   (dev → genius-dev, review → genius-code-review, …), inside the blast radius,
@@ -96,15 +99,19 @@ Interpret `workflow_advance` exit codes:
 
 ### 2. Every HALT ends with a report
 ```bash
-bash scripts/loop-kernel.sh loop_report .genius/loops/gt-product-pipeline
+bash scripts/loop-kernel.sh loop_report .genius/loops/gt-product-pipeline <accepted_steps> <tokens_used>
 ```
+`<accepted_steps>` = steps whose gate passed this run, `<tokens_used>` = final cumulative
+token estimate — both feed the LP-07 cost-per-accepted-change stats (`cortex loops --stats`).
 Show: current step (`workflow_status`), gates crossed, checkpoint awaited or brake
 hit, and what the next human action is.
 
 ## Cortex control plane (LP-06 — graceful degradation)
 Identical to genius-loop: `contract_validate` registers (`cortex loops --register`),
-every `workflow_advance` heartbeats through `brakes_check` (`--heartbeat`,
-kill:true → exit 5, STATE blocked), completion sends `--report`. **Without the
+every `workflow_advance` heartbeats through `brakes_check` (`--heartbeat`, carrying the
+`<cumulative_tokens>` estimate you pass — LP-07 budget kill),
+kill:true → exit 5, STATE blocked; completion sends `--report` with the
+`<accepted_steps> <tokens_used>` cost accounting. **Without the
 `cortex` CLI the pipeline runs unchanged** — the kernel logs
 `WARNING: cortex CLI not reachable` to stderr and continues (no remote kill switch).
 

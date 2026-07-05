@@ -14,23 +14,29 @@
 #   state_read        <loop_dir>               init if missing, print STATE.md
 #   state_get         <loop_dir> <key>         print one metadata value
 #   state_write       <loop_dir> <status> <gate_exit> [gate_output]
-#   brakes_check      <loop_dir>               0=iterate 2=max_iter 3=no_progress
+#   brakes_check      <loop_dir> [tokens]      0=iterate 2=max_iter 3=no_progress
 #                                              4=flip_flop 5=killed-via-cortex
-#                                              10=done 11=blocked
+#                                              10=done 11=blocked. [tokens] = the
+#                                              cumulative token estimate to heartbeat
+#                                              (fuels the LP-07 budget kill switch).
 #   gate_run          <loop_dir>               run the gate with timeout, print exit
-#   loop_report       <loop_dir>               end-of-loop summary (+ final Cortex report)
+#   loop_report       <loop_dir> [accepted] [tokens]   end-of-loop summary (+ final
+#                                              Cortex report with LP-07 cost accounting)
 #   cortex_register   <loop_dir>               register loop in the Cortex control plane
 #   cortex_heartbeat  <loop_dir> [tokens]      heartbeat; exit 5 = Cortex ordered a kill
-#   cortex_report     <loop_dir>               send the final verdict to Cortex
+#   cortex_report     <loop_dir> [accepted] [tokens]   send the final verdict + LP-07
+#                                              cost accounting to Cortex
 #
 # Workflow loop (LP-09) — a CONTRACT.md may declare a "## Workflow" section
 # (pipe table: | step | gate | checkpoint |). The kernel then advances step by
 # step: a step's gate passing crosses that step's gate; checkpoint=human (and
 # EVERY step at autonomy L1/L2) HALTs until a human records a per-step approval.
 #   workflow_status   <loop_dir>               current step, position, checkpoint
-#   workflow_advance  <loop_dir>               one transition: run current step gate,
+#   workflow_advance  <loop_dir> [tokens]      one transition: run current step gate,
 #                                              then ADVANCE / retry (1) / HALT
-#                                              checkpoint (12) / brake codes above
+#                                              checkpoint (12) / brake codes above.
+#                                              [tokens] = cumulative token estimate,
+#                                              heartbeated for the LP-07 budget kill.
 #   workflow_approve  <loop_dir> <step>        HUMAN-run: record traceable approval
 #                                              (.genius/loops/<slug>/approvals/<step>)
 #
@@ -285,9 +291,14 @@ cortex_heartbeat() {
 }
 
 cortex_report() {
-  # Sends the final verdict to Cortex (status done -> completed, else halted).
-  local dir state id status cstatus gate_exit verdict json out
+  # cortex_report <loop_dir> [accepted] [tokens_used]
+  # LP-07: accepted (changes accepted this run) and tokens_used feed the
+  # cost-per-accepted-change stats (`cortex loops --stats`). Both optional:
+  # omitted -> Cortex keeps the live estimate and reports no acceptance rate.
+  local dir state id status cstatus gate_exit verdict json out accepted tokens
   dir=$(_resolve_loop_dir "${1:-}")
+  accepted="${2:-}"
+  tokens="${3:-}"
   _cortex_available || { _cortex_warn; return 0; }
   state=$(_state_path "$dir")
   [ -f "$state" ] || _state_init "$dir"
@@ -303,8 +314,17 @@ cortex_report() {
     ''|-) verdict="-" ;;
     *) verdict="fail" ;;
   esac
-  json=$(printf '{"id":"%s","status":"%s","verdict":"%s"}' \
+  json=$(printf '{"id":"%s","status":"%s","verdict":"%s"' \
     "$(_json_escape "$id")" "$cstatus" "$verdict")
+  case "$accepted" in
+    (''|*[!0-9]*) : ;;
+    (*) json="$json,\"accepted\":$accepted" ;;
+  esac
+  case "$tokens" in
+    (''|*[!0-9]*) : ;;
+    (*) json="$json,\"tokensUsed\":$tokens" ;;
+  esac
+  json="$json}"
   if ! out=$(CORTEX_NO_UPDATE_CHECK=1 "$CORTEX_BIN" loops --report "$json" 2>/dev/null); then
     echo "loop-kernel: WARNING: cortex final report failed" >&2
   fi
@@ -552,8 +572,10 @@ EOF
 # ------------------------------------------------------------ brakes_check ---
 
 brakes_check() {
-  local dir contract state
+  # brakes_check <loop_dir> [cumulative_tokens]
+  local dir contract state tokens
   dir=$(_resolve_loop_dir "${1:-}")
+  tokens="${2:-}"
   contract=$(_contract_path "$dir")
   state=$(_state_path "$dir")
   [ -f "$contract" ] || _die "contract not found: $contract"
@@ -578,7 +600,7 @@ brakes_check() {
   # LP-06: heartbeat the Cortex control plane. kill:true is an order:
   # write STATE (blocked), send the final report, halt cleanly (exit 5).
   local hb_rc=0
-  cortex_heartbeat "$dir" || hb_rc=$?
+  cortex_heartbeat "$dir" "$tokens" || hb_rc=$?
   if [ "$hb_rc" -eq 5 ]; then
     _state_set_status "$dir" "blocked"
     cortex_report "$dir" || true
@@ -704,8 +726,9 @@ workflow_advance() {
   #   1  = current step's gate FAILED — iterate on the step (fix, re-run)
   #   12 = HALT: human checkpoint — approval required (workflow_approve)
   #   2/3/4/5/10/11 = brake verdicts propagated from brakes_check
-  local dir contract state level cur next cp gate secs rc=0
+  local dir contract state level cur next cp gate secs rc=0 tokens
   dir=$(_resolve_loop_dir "${1:-}")
+  tokens="${2:-}"
   contract=$(_contract_path "$dir")
   state=$(_state_path "$dir")
   [ -f "$contract" ] || _die "contract not found: $contract"
@@ -745,7 +768,7 @@ workflow_advance() {
 
   # -- brakes first (includes the LP-06 Cortex heartbeat + kill switch) -------
   local brakes_out brakes_rc=0
-  brakes_out=$(brakes_check "$dir") || brakes_rc=$?
+  brakes_out=$(brakes_check "$dir" "$tokens") || brakes_rc=$?
   if [ "$brakes_rc" -ne 0 ]; then
     echo "$brakes_out"
     return "$brakes_rc"
@@ -792,8 +815,11 @@ workflow_advance() {
 # -------------------------------------------------------------- loop_report --
 
 loop_report() {
-  local dir contract state
+  # loop_report <loop_dir> [accepted] [tokens_used]
+  local dir contract state accepted tokens
   dir=$(_resolve_loop_dir "${1:-}")
+  accepted="${2:-}"
+  tokens="${3:-}"
   contract=$(_contract_path "$dir")
   state=$(_state_path "$dir")
   [ -f "$contract" ] || _die "contract not found: $contract"
@@ -819,13 +845,15 @@ iterations:      $iteration / ${max_iter:-?}
 last gate exit:  $gate_exit $( [ "$gate_exit" = "0" ] && echo '(PASS)' || echo '(FAIL)' )
 autonomy_level:  ${level:-?}
 token_budget:    ${token_budget:-undeclared} (approx. cost ≤ budget × iterations used)
+tokens_used:     ${tokens:-not reported} / accepted changes: ${accepted:-not reported}
 brakes verdict:  $verdict (code $rc)
 state file:      $state
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 
-  # LP-06: final verdict goes to the control plane too (warn-only on failure).
-  cortex_report "$dir" || true
+  # LP-06/LP-07: final verdict + cost accounting go to the control plane too
+  # (warn-only on failure). accepted/tokens_used are forwarded when supplied.
+  cortex_report "$dir" "$accepted" "$tokens" || true
 }
 
 # -------------------------------------------------------------------- main ---

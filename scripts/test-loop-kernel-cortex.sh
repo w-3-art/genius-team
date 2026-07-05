@@ -168,6 +168,30 @@ grep -q -- "--report" "$MOCK_LOG"; check "report call sent to cortex" $?
 grep -- "--report" "$MOCK_LOG" | grep -q '"status":"completed"'; check "done state reports status completed" $?
 grep -- "--report" "$MOCK_LOG" | grep -q '"verdict":"pass"'; check "report carries the gate verdict" $?
 
+# --- 7. LP-07: token budget kill switch is fed real data --------------------------
+echo ""
+echo "7. LP-07 token estimate + cost accounting reach cortex"
+# 7a. brakes_check <dir> <tokens> forwards tokenEstimate on the heartbeat
+# (the heartbeat fires before any brake verdict, so the estimate reaches cortex
+#  regardless of what brakes_check ultimately returns).
+: > "$MOCK_LOG"
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" state_write "$LOOP_DIR" in-progress 1 "gate failed" > /dev/null
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" brakes_check "$LOOP_DIR" 150000 > /dev/null 2>&1 || true
+grep -q -- "--heartbeat" "$MOCK_LOG"; check "brakes_check with a token estimate heartbeats cortex" $?
+grep -- "--heartbeat" "$MOCK_LOG" | grep -q '"tokenEstimate":150000'; check "heartbeat JSON carries tokenEstimate (LP-07 kill switch fed)" $?
+# 7b. a heartbeat WITHOUT a token arg stays backward-compatible (no tokenEstimate)
+: > "$MOCK_LOG"
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" brakes_check "$LOOP_DIR" > /dev/null 2>&1
+grep -- "--heartbeat" "$MOCK_LOG" | grep -q 'tokenEstimate'; rc=$?
+[ "$rc" -ne 0 ]; check "heartbeat omits tokenEstimate when no estimate is passed" $?
+# 7c. loop_report <dir> <accepted> <tokensUsed> forwards LP-07 cost accounting
+: > "$MOCK_LOG"
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" state_write "$LOOP_DIR" done 0 "gate passed" > /dev/null
+out=$(CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" loop_report "$LOOP_DIR" 3 175000 2>&1); rc=$?
+check "loop_report accepts accepted + tokens_used" $rc "$out"
+grep -- "--report" "$MOCK_LOG" | grep -q '"accepted":3'; check "report JSON carries accepted (cost-per-accepted-change)" $?
+grep -- "--report" "$MOCK_LOG" | grep -q '"tokensUsed":175000'; check "report JSON carries tokensUsed" $?
+
 # --- result ------------------------------------------------------------------------
 echo ""
 if [ "$failures" -gt 0 ]; then

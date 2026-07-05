@@ -101,16 +101,26 @@ Checker REQUEST_CHANGES/REJECT → treat the iteration as failed despite the gre
 ### 6. Write STATE, then ITERATE or HALT
 ```bash
 bash scripts/loop-kernel.sh state_write .genius/loops/<slug> <status> <gate_exit> "<gate output summary>"
-bash scripts/loop-kernel.sh brakes_check .genius/loops/<slug>
+bash scripts/loop-kernel.sh brakes_check .genius/loops/<slug> <cumulative_tokens>
 ```
 Status: `done` (gate PASS + checker approve), `blocked` (needs human input), else
 `in-progress`. Also update the `Done` / `In Progress` / `Blocked` / `Next` sections of
-STATE.md by hand — the next run starts from them. Then:
+STATE.md by hand — the next run starts from them.
+
+**Feed the budget brake (LP-07).** `<cumulative_tokens>` is your running estimate of the
+tokens this loop has burned *so far* (sum across iterations, integer). Passing it is what
+arms the Cortex per-loop / per-repo token kill switch: a heartbeat whose estimate exceeds
+the contract's `token_budget` returns `kill:true` and `brakes_check` HALTs. Omit it only
+when Cortex is absent (the estimate is then a no-op). Then:
 - `brakes_check` exit 0 → go to step 2 (next iteration).
 - Any other exit (MAX_ITERATIONS / NO_PROGRESS / FLIP_FLOP / KILLED / DONE / BLOCKED) → HALT:
 ```bash
-bash scripts/loop-kernel.sh loop_report .genius/loops/<slug>
+bash scripts/loop-kernel.sh loop_report .genius/loops/<slug> <accepted_changes> <tokens_used>
 ```
+`<accepted_changes>` = how many iterations produced a change that passed gate + checker
+(fuels `cortex loops --stats` cost-per-accepted-change; a loop under 50% acceptance is
+flagged "losing money"). `<tokens_used>` = final cumulative token estimate. Both optional
+but expected at HALT/DONE so the metric stays honest.
 Show the report to the human with: what changed, final gate verdict, checker verdict,
 and (on a brake halt) what you would try next if the loop were re-authorized.
 
@@ -118,7 +128,8 @@ and (on a brake halt) what you would try next if the loop were re-authorized.
 
 The kernel talks to the Cortex control plane automatically when the `cortex` CLI is
 installed: `contract_validate` registers the loop, every `brakes_check` heartbeats
-(iteration + gate verdict), and `loop_report` sends the final verdict. If Cortex answers
+(iteration + gate verdict + the `<cumulative_tokens>` estimate you pass), and `loop_report`
+sends the final verdict plus the `<accepted_changes> <tokens_used>` cost accounting. If Cortex answers
 `kill:true` (kill switch or brakes exceeded), `brakes_check` exits 5 (`HALT: KILLED`) after
 setting STATE to `blocked` — treat it like any other brake: HALT + `loop_report`. Without
 cortex the loop runs unchanged (a warning is logged; there is just no remote kill switch).

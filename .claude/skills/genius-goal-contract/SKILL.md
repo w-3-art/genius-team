@@ -118,18 +118,18 @@ read STATE → DISCOVER → PLAN → EXECUTE → VERIFY (gate + separate checker
 
 ## Budgets enforced by Cortex (LP-07)
 
-When the loop kernel runs with the Cortex control plane reachable, budgets stop being
-advisory:
+With the Cortex control plane reachable, budgets stop being advisory:
 - **No budget, no loop.** Registration is refused if the contract declares no `token_budget`.
-- **Per-loop cap.** A heartbeat whose cumulative token estimate exceeds this loop's
-  `token_budget` returns `kill:true` and the loop halts cleanly.
-- **Per-repo cap.** Cortex also caps the *cumulative* tokens of all loops in a repo (generous
-  default, tunable in `~/.genius-cortex/config.json`); exceeding it kills the loop too.
+- **Per-loop cap.** The loop passes its cumulative token estimate each heartbeat
+  (`brakes_check <dir> <tokens>` / `workflow_advance <dir> <tokens>`); over `token_budget` →
+  `kill:true` and halt. Pass none → only `max_iterations` guards that run.
+- **Per-repo cap.** Cortex caps the *cumulative* tokens of all loops in a repo (tunable in
+  `~/.genius-cortex/config.json`); over that also kills it.
 - **Worst-case pre-flight.** If `token_per_iteration` is given, Cortex prints
   `token_per_iteration × max_iterations` at registration and warns when it blows the budget.
-- **Cost-per-accepted-change.** `cortex loops --stats` reports acceptance rate and
-  tokens-per-accepted-change per loop and per repo, flagging any loop under 50% acceptance as
-  "losing money". Report those figures at run end so the metric stays honest.
+- **Cost-per-accepted-change.** Fed by `<accepted> <tokens_used>` at `loop_report`;
+  `cortex loops --stats` reports acceptance rate + tokens-per-accepted, flagging loops under
+  50% acceptance as "losing money".
 
 ---
 
