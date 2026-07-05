@@ -85,6 +85,21 @@ if [ "$readme_rows" != "$n_dirs" ]; then
   ERRORS=$((ERRORS + 1))
 fi
 
+# SessionStart banner drift: every mode config prints "Version: … | N skills | …"
+# live at each session start. That N must equal n_dirs too (this string is not
+# covered by check_prose_count above, and CI never boots a session).
+for cfg in configs/*/settings.json; do
+  [ -f "$cfg" ] || continue
+  got=$(grep -oE '[0-9]+ skills' "$cfg" 2>/dev/null | grep -oE '[0-9]+' | head -1 || true)
+  if [ -z "$got" ]; then
+    echo "❌ ${cfg}: no 'N skills' banner found in SessionStart hook"
+    ERRORS=$((ERRORS + 1))
+  elif [ "$got" != "$n_dirs" ]; then
+    echo "❌ ${cfg}: banner says ${got} skills but ${n_dirs} skill dirs exist"
+    ERRORS=$((ERRORS + 1))
+  fi
+done
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ "$ERRORS" -gt 0 ]; then
