@@ -19,7 +19,7 @@
 - **Webhook consent** — the `GENIUS_WEBHOOK_URL` hooks in `configs/*/settings.json` now POST only when `"webhook_consent": true` is set in `.genius/config.json` **and** the URL is HTTPS; otherwise they are a no-op. Network destination is now declared in `TOOLS.md` and `SECURITY.md`. [P0-14]
 
 ### Changed
-- **Docs compat refresh (verified 2026-07-05)** — `TOOLS.md` gains a *Claude Code & Model Compatibility* section (models, context, pricing, tokenizer drift + a Claude Code feature table), and `AGENTS.md` documents subagent management after the `/agents` wizard removal. Every claim is cited against the [Claude Code CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) and the [Models overview](https://docs.claude.com/en/docs/about-claude/models/overview). Verified facts: Sonnet 5 is the default Claude Code model with a native 1M context and $2/$10 MTok intro pricing through 2026-08-31 (Claude Code 2.1.197); the `/agents` wizard was removed and subagents are now managed by asking Claude or editing `.claude/agents/` directly, background sessions fire `agent_needs_input` / `agent_completed` Notification hooks, worktree agents auto commit/push/open a draft PR, and team agents report `failed` to the lead (all Claude Code 2.1.198). Stale "Opus 4.6 1M context" claims in `TOOLS.md` and this changelog corrected to Opus 4.8.
+- **Docs compat refresh (verified 2026-07-05)** — `TOOLS.md` gains a *Claude Code & Model Compatibility* section (models, context, pricing, tokenizer drift + a Claude Code feature table), and `AGENTS.md` documents subagent management after the `/agents` wizard removal. Every claim is cited against the [Claude Code CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) and the [Models overview](https://docs.claude.com/en/docs/about-claude/models/overview). Verified facts: Sonnet 5 is the default Claude Code model with a native 1M context and $2/$10 MTok intro pricing through 2026-08-31 (Claude Code 2.1.197); the `/agents` wizard was removed and subagents are now managed by asking Claude or editing `.claude/agents/` directly, background sessions fire `agent_needs_input` / `agent_completed` Notification hooks, worktree agents auto commit/push/open a draft PR, and team agents report `failed` to the lead (all Claude Code 2.1.198). The stale "Opus 4.6 1M context" claim in `TOOLS.md` was corrected to Opus 4.8; the historical `[19.0.0]` changelog entry is left intact as a release-time record.
 - **Honest claims** — skill count corrected to 55 across README / docs / tips; removed unqualified "production-ready" wording for v23; plugin consistently described as private beta.
 - **Token baseline** — committed `autoresearch/TOKEN-BASELINE-2026-07-02.md` as the reference measurement for the context-reduction overhaul. [P0-13]
 
@@ -166,7 +166,7 @@
 - 🎚️ **Effort levels** — `/effort low|medium|high` to control analysis depth per-task. Quick answers when you need speed, deep analysis when you need precision.
 
 ### Improved — 1M Token Context Window
-- 🧠 **Opus 4.8 1M context** — Full support for the 1M-token window. Less aggressive compaction = better session continuity. Genius Team workflows can now maintain full context across longer sessions.
+- 🧠 **Opus 4.6 1M context** — Full support for 1M token window on Max/Team/Enterprise. Less aggressive compaction = better session continuity. Genius Team workflows can now maintain full context across longer sessions.
 - Updated compaction strategy references across all 4 modes
 
 ### Improved — Tool & Engine Versions
