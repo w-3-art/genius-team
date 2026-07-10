@@ -108,15 +108,26 @@ FLAGS='([[:space:]]+-[^[:space:]]+([[:space:]]+[^[:space:]]+)?)*'
 # real push/publish keyword: "env NODE_ENV=x npm publish", "sudo git push",
 # "command git push", "nohup git push", "time git push", "nice -n N git push",
 # "stdbuf -oL git push", "timeout N git push". Each wrapper carries its own args
-# (env: [-i] and NAME=val assignments; sudo: [-u user]; command: [-p]; nice:
-# [-n N]; stdbuf: at least one flag; timeout: an optional flag run then a
-# DURATION) so the run ends exactly at the wrapped subcommand — never swallowing
-# it. Wrappers may nest ("sudo nohup git push"), hence the outer (…[[:space:]]+)*.
+# so the run ends exactly at the wrapped subcommand — never swallowing it:
+#   env      [-i] and NAME=val assignments
+#   sudo     any run of flags with optional values (FLAGS) — "-E", "-H", "-i",
+#            "-E -H", "-u user" (NOT just "-u user": "sudo -E git push" is real).
+#   command  [-p]
+#   nice     any flags (FLAGS) — "-n 10", "-10", "--adjustment=10",
+#            "--adjustment 10" (NOT just "-n N").
+#   stdbuf   at least one flag
+#   timeout  any run of flags with optional values (FLAGS) then a DURATION —
+#            "-s KILL 30", "-k 5 30", "--kill-after 5 30" (NOT just valueless
+#            flags before the duration).
+# Each wrapper keyword also carries an optional absolute-path prefix (BINPFX), so
+# "/usr/bin/sudo git push", "/bin/nice -n 10 git push", "/usr/bin/timeout 30 git
+# push", "/usr/bin/env NODE_ENV=x npm publish" are caught too. Wrappers may nest
+# ("sudo nohup git push"), hence the outer (…[[:space:]]+)*.
 # Anchored strictly after CMDPOS/ENVPFX so string/comment safety (§5.1) holds:
 # a wrapper keyword inside an echo/quote/comment has no separator before it and
 # never fires ("echo 'sudo git push'", "# time git push" still PASS).
 ASSIGN='[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*'
-WRAP_ONE="(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo([[:space:]]+-u[[:space:]]+[^[:space:]]+)?|command([[:space:]]+-p)?|nohup|time|nice([[:space:]]+-n[[:space:]]+[0-9]+)?|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout([[:space:]]+-[^[:space:]]+)*[[:space:]]+[0-9]+[a-z]?)"
+WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+[0-9]+[a-z]?)"
 WRAP="(${WRAP_ONE}[[:space:]]+)*"
 
 PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"
@@ -131,6 +142,19 @@ PUSHPUB_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${PUSHPUB_INNER}"
 # ssh and still PASS.
 SSH_PUSH_RX="${CMDPOS}ssh[[:space:]]+[^;&|]*git[[:space:]]+push"
 
+# Shell -c wrapper that carries a push/publish (best-effort, documented). Fires
+# ONLY when bash/sh/zsh is ITSELF at command position (optionally path-prefixed),
+# followed by a "-c"-family flag and a quoted command string whose FIRST command
+# is git push / npm|pnpm|yarn publish: "bash -c \"git push\"", "sh -c 'npm
+# publish'", "/bin/zsh -lc \"yarn publish\"". Scope note (like SSH above): only
+# the leading command inside the -c string is inspected; a push buried after a
+# separator ("bash -c 'cd r && git push'") is NOT caught here — that is an
+# accepted best-effort limitation (GUARD-POLICY §5.1). Because the shell keyword
+# must sit at command position, a shell name inside another command's quoted
+# argument never fires: "echo 'bash -c \"git push\"'" (echo is the command, bash
+# is inside its quote — no separator before it) still PASSES.
+SHELLC_RX="${CMDPOS}${BINPFX}(bash|sh|zsh)[[:space:]]+([^\"']*[[:space:]])?-[A-Za-z]*c[[:space:]]+[\"']?[[:space:]]*(git[[:space:]]+push|(npm|pnpm|yarn)[[:space:]]+publish)"
+
 # Unvetted install from the network (also anchored at command position).
 INSTALL_INNER='(curl[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|wget[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|claude[[:space:]]+plugin[[:space:]]+install|cortex[[:space:]]+skill[[:space:]]+add)'
 INSTALL_RX="${CMDPOS}${INSTALL_INNER}"
@@ -144,7 +168,17 @@ SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 # curl -o / --output, wget -O / --output-document, and dd of= are just as capable
 # of dropping a SKILL.md into a skills path as cp/mv/tee/redirect — the output
 # flag is required so a plain download (path only in a URL, no write) still PASSES.
-SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=])|dd[^;&|]*[[:space:]]of=|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
+# Directory-target download flags land a skill just as well as file-target ones:
+# wget -P / --directory-prefix and curl --output-dir take a DIRECTORY, so a skills
+# dir given there is a write too. "git clone" may carry flags before the verb
+# (e.g. "git -C .claude/skills/evil clone URL", where the skills dir is the -C
+# value BEFORE "clone") — GIT_C_CLONE_RX below covers that path-before-verb shape.
+SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
+# "git -C <skills-dir> clone URL": the skills target is the -C value that sits
+# BEFORE "clone", so SKILLS_WRITE_RX (which needs the path AFTER the write verb)
+# cannot reach it. Match git → optional flags → -C → a skills path → then "clone"
+# as a separate word (so a benign "git -C .claude/skills/x status" does NOT fire).
+GIT_C_CLONE_RX="${CMDPOS}${BINPFX}git[[:space:]]+([^;&|]*[[:space:]])?-C[[:space:]]+[\"']?(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)[^;&|]*[[:space:]]clone([[:space:]]|\$)"
 
 IS_PUSHPUB=false
 IS_INSTALL=false
@@ -153,8 +187,10 @@ IS_INSTALL=false
 if [ "$TOOL" = "Bash" ] && [ -n "$CMD" ]; then
   printf '%s' "$CMD" | grep -qE "$PUSHPUB_RX"     && IS_PUSHPUB=true
   printf '%s' "$CMD" | grep -qE "$SSH_PUSH_RX"     && IS_PUSHPUB=true
+  printf '%s' "$CMD" | grep -qE "$SHELLC_RX"       && IS_PUSHPUB=true
   printf '%s' "$CMD" | grep -qE "$INSTALL_RX"      && IS_INSTALL=true
   printf '%s' "$CMD" | grep -qE "$SKILLS_WRITE_RX"  && IS_INSTALL=true
+  printf '%s' "$CMD" | grep -qE "$GIT_C_CLONE_RX"   && IS_INSTALL=true
 fi
 
 # Write tool: deny creating/replacing a skill file inside a skills directory.

