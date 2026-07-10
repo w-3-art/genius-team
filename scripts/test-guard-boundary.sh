@@ -104,6 +104,9 @@ expect_deny "timeout 30 git push"
 # Fractional DURATION must not smuggle a push past the timeout wrapper.
 expect_deny "timeout 1.5 git push"
 expect_deny "timeout 0.5s git push"
+# Leading-dot DURATION (valid for coreutils timeout) must not bypass either.
+expect_deny "timeout .5 git push"
+expect_deny "timeout .5s git push"
 expect_deny "timeout --preserve-status 30 git push"
 expect_deny "sudo nohup git push"
 # sudo with flags other than "-u user" (not just -u: -E/-H/-i/-E -H are real).
