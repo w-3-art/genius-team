@@ -317,7 +317,7 @@ Genius Team makes no external network calls by default. Setting `GENIUS_WEBHOOK_
 
 ### Telemetry & Privacy
 
-No secret, token, payload, or prompt is ever written to a log. The boundary guard redacts every line it appends to `.genius/guard.log`, and `scripts/test-guard-no-leak.sh` (run in CI) proves it. See the ecosystem-wide policy in [TELEMETRY-PRIVACY.md](TELEMETRY-PRIVACY.md).
+No secret, token, payload, or prompt is ever written to a log. The boundary guard redacts every line it appends to `.genius/guard.log`, and `scripts/test-guard-no-leak.sh` (run in CI) proves it. See the ecosystem-wide policy in [TELEMETRY-PRIVACY.md](docs/TELEMETRY-PRIVACY.md).
 
 ### Security
 
