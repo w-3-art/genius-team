@@ -208,6 +208,20 @@ expect_deny "wget -O skills/x/SKILL.md https://x.example.com/s"
 # A redirect into a relative skills path is a write too (with or without a space).
 expect_deny "cat payload > skills/x/SKILL.md"
 expect_deny "cat payload >skills/x/SKILL.md"
+# Env-var-assignment prefix (ENVPFX) must not smuggle a skills write past the guard —
+# the ${ENVPFX}${WRAP}${ENVPFX} layout mirrors PUSHPUB_RX (finding 1: SKILLS_WRITE_RX
+# had omitted ENVPFX, so a "FOO=bar cp …"/"DESTDIR=/x install …" write bypassed).
+expect_deny "FOO=bar cp evil .claude/skills/x/SKILL.md"
+expect_deny "DESTDIR=/x install -m644 e .claude/skills/x/SKILL.md"
+# A NESTED "**/skills/<name>/SKILL.md" write (skills dir under build/, packages/, …)
+# is a write too — the intermediate terminator class ([[:space:]"'/]) can end on the
+# "/" before "skills", so the relative tail reaches a nested skills dir (finding 2:
+# the terminator had allowed only whitespace/quote, so it could not align on the mid-
+# token "/" and "build/skills/…" writes bypassed while the Write tool's SKILLS_PATH_RX
+# still blocked the same path).
+expect_deny "cp f build/skills/foo/SKILL.md"
+expect_deny "cp f packages/x/skills/foo/SKILL.md"
+expect_deny "tee build/skills/foo/SKILL.md < p"
 
 echo ""
 echo "6. INSTALL write lookalikes still pass (download without writing a skill)"
@@ -237,8 +251,13 @@ expect_pass 'echo "run: tee .claude/skills/x/SKILL.md"'
 # A relative skills path merely MENTIONED (not written) passes; and a lookalike
 # directory ("myskills/…") is not the skills dir and must not over-block (finding 2).
 expect_pass "echo skills/x/SKILL.md"
+expect_pass "echo build/skills/foo/SKILL.md"
 expect_pass "echo my-skills/x/SKILL.md"
 expect_pass "cp foo myskills/x/SKILL.md"
+# "myskills/" is not a skills dir — no whitespace/quote/slash boundary precedes
+# "skills" (it is glued to "my"), so the terminator class cannot end right before it
+# and it never matches even as a write target (finding 2 non-regression).
+expect_pass "cp f myskills/foo/SKILL.md"
 
 echo ""
 echo "7. Benign lookalikes still pass (zero over-blocking)"

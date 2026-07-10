@@ -185,26 +185,34 @@ INSTALL_RX="${CMDPOS}${INSTALL_INNER}"
 SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 # Same skills target seen INSIDE a Bash command argument. Two shapes: the canonical
 # ".claude/skills/…" (its ".claude/" prefix is boundary enough), and the top-level
-# relative "skills/<name>/SKILL.md". The relative form is matched only at the START
-# of a path component (right after the write verb's separator, an argument boundary,
-# or a redirect's whitespace) — never mid-token — so it closes the **/skills/
-# asymmetry (a Bash "cp f skills/x/SKILL.md" / "tee skills/x/SKILL.md" used to bypass
-# every INSTALL detector even though the Write tool blocks the same path, GUARD-POLICY
-# §4) WITHOUT over-blocking ("myskills/…" never matches). The SKILL.md leaf is still
-# required so a plain "skills/" mention does not over-block.
+# relative "skills/<name>/SKILL.md". The relative form is matched only at a path-
+# component BOUNDARY — right after the write verb's separator, an argument boundary,
+# a redirect's whitespace, OR a nested "/" (so "build/skills/x/SKILL.md" and
+# "packages/x/skills/foo/SKILL.md" are caught too, exactly like the Write tool's
+# SKILLS_PATH_RX which anchors on (^|/)) — never mid-token. This closes the **/skills/
+# asymmetry (a Bash "cp f skills/x/SKILL.md" / "cp f build/skills/x/SKILL.md" used to
+# bypass every INSTALL detector even though the Write tool blocks the same path,
+# GUARD-POLICY §4) WITHOUT over-blocking ("myskills/…" never matches — no boundary
+# precedes "skills"). The SKILL.md leaf is still required so a plain "skills/" mention
+# does not over-block. The boundary is supplied by the consumer (SKILLS_WRITE_RX's
+# terminator class / SKILLS_REDIR_RX's redirect), so the tail itself needs no anchor.
 SKILLS_PATH_TAIL='(\.claude/skills/|skills/[^/]+/SKILL\.md)'
 # A Bash command that writes a skill into a skills path via cp/mv/rsync/install/
 # ln/git clone/tee (or a redirect, SKILLS_REDIR_RX below). The write VERB is now
-# anchored at command position (CMDPOS), through optional wrappers (WRAP: sudo/
-# env/…) and an optional path prefix (BINPFX: /bin/cp) — exactly like the push/
-# publish detectors — so a verb that merely appears inside a string/comment/other
+# anchored at command position (CMDPOS), through optional leading env-var
+# assignments (ENVPFX), optional wrappers (WRAP: sudo/env/…) and an optional path
+# prefix (BINPFX: /bin/cp) — the ${ENVPFX}${WRAP}${ENVPFX} layout mirrors PUSHPUB_RX
+# EXACTLY (ENVPFX both before and after WRAP), so "FOO=bar cp … .claude/skills/…"
+# and "DESTDIR=/x install … .claude/skills/…" stay DENY instead of smuggling a write
+# past on an env-var prefix. A verb that merely appears inside a string/comment/other
 # argument has no separator before it and does NOT fire (GUARD-POLICY §5.1; e.g.
 # 'git commit -m "cp x .claude/skills/y/SKILL.md"' PASSES). Genuine installs in
-# command position (including sudo-wrapped ones) stay DENY.
-# Each write verb ends at its own separator, so the skills path that follows is at a
-# path-component boundary: SKILLS_PATH_TAIL needs no extra anchor. Intermediate args
-# between the verb and the path are consumed by ([^;&|]*[[:space:]"'])? — a run that
-# ends in whitespace/quote, keeping the relative form pinned to a token start.
+# command position (including env-prefixed and sudo-wrapped ones) stay DENY.
+# Intermediate args between the verb and the path are consumed by ([^;&|]*[[:space:]"'/])?
+# — a run ending in whitespace, quote, OR "/". Ending on "/" lets the relative form
+# reach a nested skills dir ("cp f build/skills/x/SKILL.md" — the "/" before "skills"
+# is the boundary) while still pinning it to a component boundary, so "myskills/…"
+# (no whitespace/quote/slash right before "skills") never matches.
 # curl -o / --output, wget -O / --output-document, and dd of= are just as capable
 # of dropping a SKILL.md into a skills path as cp/mv/tee — the output flag is
 # required so a plain download (path only in a URL, no write) still PASSES.
@@ -214,7 +222,7 @@ SKILLS_PATH_TAIL='(\.claude/skills/|skills/[^/]+/SKILL\.md)'
 # (e.g. "git -C .claude/skills/evil clone URL", where the skills dir is the -C
 # value BEFORE "clone") — GIT_C_CLONE_RX below covers that path-before-verb shape.
 SKILLS_WRITE_INNER='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=)'
-SKILLS_WRITE_RX="${CMDPOS}${WRAP}${BINPFX}${SKILLS_WRITE_INNER}([^;&|]*[[:space:]\"'])?${SKILLS_PATH_TAIL}"
+SKILLS_WRITE_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${BINPFX}${SKILLS_WRITE_INNER}([^;&|]*[[:space:]\"'/])?${SKILLS_PATH_TAIL}"
 # A redirect (> or >>) into a skills path is a write regardless of command position —
 # it FOLLOWS the producing command ("cat payload > .claude/skills/x/SKILL.md"), so it
 # is matched unanchored. Only the redirect's immediate target ([[:space:]]* then the
