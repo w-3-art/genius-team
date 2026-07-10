@@ -88,8 +88,23 @@ emit_deny() {
 # ensures a boundary keyword inside an echo/string/comment/arg does NOT fire.
 CMDPOS='(^|[;&|(`{])[[:space:]]*'
 
-PUSHPUB_INNER='(git[[:space:]]+push|(npm|pnpm|yarn)[[:space:]]+publish|npx[[:space:]]+[^&|;]*publish|vercel[[:space:]]+(deploy|.*--prod)|netlify[[:space:]]+deploy|railway[[:space:]]+(up|deploy)|wrangler[[:space:]]+deploy|flyctl[[:space:]]+deploy|gh[[:space:]]+release[[:space:]]+create|docker[[:space:]]+push|supabase[[:space:]]+db[[:space:]]+push|eas[[:space:]]+submit)'
-PUSHPUB_RX="${CMDPOS}${PUSHPUB_INNER}"
+# Real-world command forms that sit BETWEEN the command position and the boundary
+# keyword. Each is anchored strictly after CMDPOS (so string/comment safety from
+# §5.1 is preserved — a benign keyword still needs a separator immediately before
+# it), but they close the gap where a genuine, irreversible push/publish escapes
+# just because it carries a common prefix:
+#   ENVPFX  leading env-var assignments — NODE_ENV=production npm publish,
+#           GIT_SSH_COMMAND="ssh -i k" git push (quoted values may hold spaces).
+#   BINPFX  an absolute path on the binary — /usr/bin/git push.
+#   FLAGS   flags (with optional values) before the subcommand — git -C repo push,
+#           yarn --cwd . publish. Never swallows the subcommand: a following
+#           non-dash token (push/publish/…) ends the flag run.
+ENVPFX='([A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*[[:space:]]+)*'
+BINPFX='(/[^[:space:]]*/)?'
+FLAGS='([[:space:]]+-[^[:space:]]+([[:space:]]+[^[:space:]]+)?)*'
+
+PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"
+PUSHPUB_RX="${CMDPOS}${ENVPFX}${PUSHPUB_INNER}"
 
 # Unvetted install from the network (also anchored at command position).
 INSTALL_INNER='(curl[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|wget[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|claude[[:space:]]+plugin[[:space:]]+install|cortex[[:space:]]+skill[[:space:]]+add)'

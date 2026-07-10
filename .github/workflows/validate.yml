@@ -52,6 +52,9 @@ jobs:
       - name: Telemetry/privacy — guard log never leaks secrets
         run: bash scripts/test-guard-no-leak.sh
 
+      - name: Guard — push/publish boundary detection (no bypass, no over-block)
+        run: bash scripts/test-guard-boundary.sh
+
   check-resolvable:
     runs-on: ubuntu-latest
     steps:
