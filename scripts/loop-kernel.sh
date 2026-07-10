@@ -615,6 +615,18 @@ brakes_check() {
   case "$iteration" in (''|-|*[!0-9]*) iteration=0 ;; esac
 
   if [ "$status" = "done" ]; then
+    # LP-06/LP-07: the terminal iteration (the one whose gate PASSED and set
+    # status=done) is otherwise NEVER heartbeated — brakes_check returns here
+    # before the heartbeat below, and cortex_report carries no iteration. Send
+    # exactly one final heartbeat so the terminal iteration count reaches Cortex;
+    # without it the attempts counter feeding the LP-07 cost stats is under-counted
+    # by 1, which can flip the losingMoney verdict at the 0.5 threshold. Idempotent:
+    # a STATE flag makes it fire once even if brakes_check is polled again. A kill
+    # answer is moot on a finished loop, so the heartbeat's stdout/exit are ignored.
+    if [ "$(_state_meta "$state" "final_heartbeat")" != "yes" ]; then
+      cortex_heartbeat "$dir" "$tokens" >/dev/null || true
+      _state_set_meta "$dir" "final_heartbeat" "yes"
+    fi
     echo "HALT: DONE — gate passed, loop finished"; return 10
   fi
   if [ "$status" = "blocked" ]; then

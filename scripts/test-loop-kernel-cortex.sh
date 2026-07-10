@@ -192,6 +192,28 @@ check "loop_report accepts accepted + tokens_used" $rc "$out"
 grep -- "--report" "$MOCK_LOG" | grep -q '"accepted":3'; check "report JSON carries accepted (cost-per-accepted-change)" $?
 grep -- "--report" "$MOCK_LOG" | grep -q '"tokensUsed":175000'; check "report JSON carries tokensUsed" $?
 
+# --- 8. terminal iteration is heartbeated (LP-07 attempts not under-counted) -------
+echo ""
+echo "8. done loop heartbeats the terminal iteration exactly once"
+# brakes_check returns early on status=done; without a final heartbeat the terminal
+# iteration count never reaches Cortex, under-counting attempts by 1 (can flip the
+# losingMoney verdict at 0.5). The done branch now sends one idempotent heartbeat.
+# Reset STATE so the iteration count is deterministic (0 -> 1 -> 2) for this section.
+rm -f "$LOOP_DIR/STATE.md"
+: > "$MOCK_LOG"
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" state_write "$LOOP_DIR" in-progress 1 "iter1 fail" > /dev/null
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" brakes_check "$LOOP_DIR" > /dev/null 2>&1
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" state_write "$LOOP_DIR" done 0 "iter2 pass" > /dev/null
+out=$(CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" brakes_check "$LOOP_DIR" 2>&1); rc=$?
+[ "$rc" -eq 10 ]; check "brakes_check on done returns HALT: DONE (exit 10)" $? "exit=$rc"
+echo "$out" | grep -q "HALT: DONE"; check "done verdict announced" $? "$out"
+grep -- "--heartbeat" "$MOCK_LOG" | grep -q '"iteration":2'; check "terminal iteration (2) is heartbeated" $?
+before=$(grep -c -- "--heartbeat" "$MOCK_LOG")
+CORTEX_BIN="$MOCK_DIR/cortex" bash "$KERNEL" brakes_check "$LOOP_DIR" > /dev/null 2>&1
+after=$(grep -c -- "--heartbeat" "$MOCK_LOG")
+[ "$before" -eq "$after" ]; check "terminal heartbeat is idempotent (no duplicate on re-poll)" $? "before=$before after=$after"
+grep -q "^- final_heartbeat: yes" "$LOOP_DIR/STATE.md"; check "STATE records the one-shot final_heartbeat flag" $?
+
 # --- result ------------------------------------------------------------------------
 echo ""
 if [ "$failures" -gt 0 ]; then
