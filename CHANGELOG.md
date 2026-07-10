@@ -20,7 +20,7 @@
 
 ### Changed
 - **Docs compat refresh (verified 2026-07-05)** — `TOOLS.md` gains a *Claude Code & Model Compatibility* section (models, context, pricing, tokenizer drift + a Claude Code feature table), and `AGENTS.md` documents subagent management after the `/agents` wizard removal. Every claim is cited against the [Claude Code CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) and the [Models overview](https://docs.claude.com/en/docs/about-claude/models/overview). Verified facts: Sonnet 5 is the default Claude Code model with a native 1M context and $2/$10 MTok intro pricing through 2026-08-31 (Claude Code 2.1.197); the `/agents` wizard was removed and subagents are now managed by asking Claude or editing `.claude/agents/` directly, background sessions fire `agent_needs_input` / `agent_completed` Notification hooks, worktree agents auto commit/push/open a draft PR, and team agents report `failed` to the lead (all Claude Code 2.1.198). The stale "Opus 4.6 1M context" claim in `TOOLS.md` was corrected to Opus 4.8; the historical `[19.0.0]` changelog entry is left intact as a release-time record.
-- **Honest claims** — skill count corrected to 55 across README / docs / tips; removed unqualified "production-ready" wording for v23; plugin consistently described as private beta.
+- **Honest claims** — skill count corrected to 58 across README / docs / tips; removed unqualified "production-ready" wording for v23; plugin consistently described as private beta.
 - **Token baseline** — committed `autoresearch/TOKEN-BASELINE-2026-07-02.md` as the reference measurement for the context-reduction overhaul. [P0-13]
 
 ## [22.0.0] - 2026-04-23
