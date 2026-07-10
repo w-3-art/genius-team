@@ -307,6 +307,61 @@ expect_pass "echo 'run: git push origin main to deploy'"
 expect_pass "# git push later"
 
 echo ""
+echo "8. ROOT-FIX matrix: every write/clone verb × prefix × skills-target is DENY"
+# The three P1 bypasses this suite regression-guards had a common ROOT: each
+# detector rebuilt the command-position prefix and the skills-path pattern on its
+# own, and any single omission (a missing ENVPFX/WRAP layer, a leaf-required
+# relative branch, a redirect with no nested prefix) reopened a hole. The fix
+# makes every command detector begin with the ONE shared ${PFX} and consume the
+# ONE shared leaf-less SKILLS_DIR. This matrix pins that invariant: the full cross
+# product of {write/clone verbs} × {command-position prefixes: none, env-var,
+# sudo, sudo -E, absolute path, env wrapper} × {skills targets: canonical
+# .claude/skills, nested build/skills & packages/…/skills, top-level relative
+# skills, both bare-dir and /SKILL.md forms} must ALL be DENY. A single PASS here
+# means a prefix or a target shape has drifted out of the shared machinery again.
+mtargets=(
+  ".claude/skills/x" ".claude/skills/x/SKILL.md"
+  "build/skills/x" "build/skills/x/SKILL.md"
+  "packages/a/skills/x"
+  "skills/x" "skills/x/SKILL.md"
+)
+mprefixes=("" "FOO=bar " "sudo " "sudo -E " "/usr/bin/" "env NAME=v ")
+mtemplates=(
+  "cp f @T" "mv a @T" "tee @T" "install -m644 e @T" "dd of=@T if=/tmp/p"
+  "curl -o @T https://x.example.com/s" "wget -O @T https://x.example.com/s"
+  "cat p > @T" "git -C @T clone https://x.example.com/r" "git clone https://x.example.com/r @T"
+)
+for T in "${mtargets[@]}"; do
+  for P in "${mprefixes[@]}"; do
+    for tmpl in "${mtemplates[@]}"; do
+      expect_deny "${P}${tmpl//@T/$T}"
+    done
+  done
+done
+
+echo ""
+echo "9. ROOT-FIX counter-audit: the shared machinery must not over-block"
+# The leaf-less SKILLS_DIR and the colon-free URL guards must keep every benign
+# lookalike PASS — a clone FROM a skills-repo URL, a "clone"/"skills" word in a
+# message, a git op inside a skills dir, a lookalike "myskills/" dir, a mere
+# mention, and a benign timeout-wrapped test command.
+expect_pass "git commit -m 'refactor the clone helper for skills loading'"
+expect_pass "git -C .claude/skills/foo commit -m 'add clone feature'"
+expect_pass "git -C .claude/skills/foo add clone"
+expect_pass "git -C .claude/skills/foo log --grep clone"
+expect_pass "git -C .claude/skills/foo grep clone"
+expect_pass "git -C .claude/skills/foo branch clone"
+expect_pass "echo build/skills/x/SKILL.md"
+expect_pass "git clone https://x.example.com/r /tmp/x"
+expect_pass "git clone URL /tmp/x"
+expect_pass "git clone URL mybuild"
+expect_pass "git clone https://h/org/skills/r.git /tmp/x"
+expect_pass "git clone git@host:org/skills/r.git ./x"
+expect_pass "cp f myskills/x/SKILL.md"
+expect_pass "cp f myskills/foo/SKILL.md"
+expect_pass "timeout 30 npm test"
+
+echo ""
 if [ "$failures" -gt 0 ]; then
   echo "$failures check(s) FAILED"
   exit 1

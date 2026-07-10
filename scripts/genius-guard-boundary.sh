@@ -132,6 +132,17 @@ ASSIGN='[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*'
 WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+[^[:space:];&|]+)"
 WRAP="(${WRAP_ONE}[[:space:]]+)*"
 
+# PFX — the ONE shared command-position prefix. It is EXACTLY the layer that
+# PUSHPUB_RX (the correct detector) puts in front of its binary keyword:
+# command position (CMDPOS), leading env-var assignments (ENVPFX), known
+# wrappers (WRAP: sudo/env/timeout/…), a second ENVPFX (env vars may recur after
+# a wrapper — "sudo HUSKY=0 git push"), and an optional path on the binary
+# (BINPFX: /usr/bin/…). EVERY command detector (SKILLS_WRITE_RX, GIT_C_CLONE_RX,
+# GIT_CLONE_DIR_RX) begins with ${PFX} so none reconstructs the prefix layer on
+# its own — a divergent reconstruction is exactly how a wrapper/env prefix used
+# to smuggle a canonical target past one detector while another blocked it.
+PFX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${BINPFX}"
+
 # DESIGN DECISION (assumed, conservative fail-safe) — "git push --help",
 # "git push --dry-run" and "git push -n" are DENY just like a real push, until
 # phase=deploy-approved, even though none of them actually pushes anything.
@@ -183,28 +194,45 @@ INSTALL_RX="${CMDPOS}${INSTALL_INNER}"
 # **/skills/<name>/SKILL.md. Used for the Write tool, whose file_path is a pure
 # path (no surrounding command), so ^ / '/' are the only meaningful boundaries.
 SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
-# Same skills target seen INSIDE a Bash command argument. Two shapes: the canonical
-# ".claude/skills/…" (its ".claude/" prefix is boundary enough), and the top-level
-# relative "skills/<name>/SKILL.md". The relative form is matched only at a path-
-# component BOUNDARY — right after the write verb's separator, an argument boundary,
-# a redirect's whitespace, OR a nested "/" (so "build/skills/x/SKILL.md" and
-# "packages/x/skills/foo/SKILL.md" are caught too, exactly like the Write tool's
-# SKILLS_PATH_RX which anchors on (^|/)) — never mid-token. This closes the **/skills/
-# asymmetry (a Bash "cp f skills/x/SKILL.md" / "cp f build/skills/x/SKILL.md" used to
-# bypass every INSTALL detector even though the Write tool blocks the same path,
-# GUARD-POLICY §4) WITHOUT over-blocking ("myskills/…" never matches — no boundary
-# precedes "skills"). The SKILL.md leaf is still required so a plain "skills/" mention
-# does not over-block. The boundary is supplied by the consumer (SKILLS_WRITE_RX's
-# terminator class / SKILLS_REDIR_RX's redirect), so the tail itself needs no anchor.
-SKILLS_PATH_TAIL='(\.claude/skills/|skills/[^/]+/SKILL\.md)'
+# The SAME skills target seen INSIDE a Bash command argument, as ONE shared
+# pattern so every command detector consumes the SINGLE canonical definition
+# instead of rebuilding a divergent skills-path (a per-detector reconstruction is
+# exactly how a nested/leaf-less target slipped past one detector while another
+# blocked it — the three P1 bypasses this fix closes):
+#
+#   SKILLS_NEST — an OPTIONAL nested path prefix: a run of path chars ending in
+#     "/". It is colon-free ([^…:…]) so a remote URL's "://" (or an scp
+#     "host:org/…") can never masquerade as the local prefix. It supplies the "/"
+#     boundary that lets the relative branch reach a NESTED skills dir
+#     ("build/skills/…", "packages/x/skills/…") — and, since ".claude/" itself
+#     ends in "/", the canonical ".claude/skills/…" is reachable through it too.
+#   SKILLS_DIR  — a skills DIRECTORY (one dir segment, NO SKILL.md leaf required).
+#     A write, a redirect, a clone destination and a `git -C` value ALL name a
+#     location inside the skills tree, so the boundary is "a skills directory",
+#     not "a SKILL.md file". Being leaf-less, SKILLS_DIR also matches the directory
+#     prefix of a leaf'd path (grep is substring-based: it finds ".claude/skills/x"
+#     inside ".claude/skills/x/SKILL.md"), so the single pattern covers both the
+#     leaf'd file writes and the bare-directory targets (directory-target downloads
+#     like "wget -P …/skills/evil/", and bare clone/-C dirs) uniformly. Requiring a
+#     leaf on the relative branch is what let leaf-less relative dirs bypass
+#     (finding 2), so the leaf is deliberately NOT required here.
+#
+# SKILLS_DIR rejects "myskills/…"/"mybuild": "skills/" must sit at a path boundary.
+# That boundary is supplied by SKILLS_NEST (its trailing "/") OR by the mandatory
+# left-boundary char every consumer places immediately before the pattern
+# (SKILLS_WRITE_RX's verb-space/terminator, SKILLS_REDIR_RX's ">"+space,
+# GIT_C_CLONE_RX's -C separator, GIT_CLONE_DIR_RX's argument space) — so grep can
+# never start "skills/" mid-token inside "my"+"skills". (The Write tool's
+# SKILLS_PATH_RX above stays separate: its input is a bare path with no consumer
+# to the left, so it carries its own (^|/) boundary and its own leaf rule.)
+SKILLS_NEST="([^[:space:]:;&|\"']*/)?"
+SKILLS_DIR="${SKILLS_NEST}(\.claude/skills/|skills/)[^[:space:];&|/]+"
 # A Bash command that writes a skill into a skills path via cp/mv/rsync/install/
-# ln/git clone/tee (or a redirect, SKILLS_REDIR_RX below). The write VERB is now
-# anchored at command position (CMDPOS), through optional leading env-var
-# assignments (ENVPFX), optional wrappers (WRAP: sudo/env/…) and an optional path
-# prefix (BINPFX: /bin/cp) — the ${ENVPFX}${WRAP}${ENVPFX} layout mirrors PUSHPUB_RX
-# EXACTLY (ENVPFX both before and after WRAP), so "FOO=bar cp … .claude/skills/…"
-# and "DESTDIR=/x install … .claude/skills/…" stay DENY instead of smuggling a write
-# past on an env-var prefix. A verb that merely appears inside a string/comment/other
+# ln/git clone/tee (or a redirect, SKILLS_REDIR_RX below). The write VERB begins
+# with the shared ${PFX} (CMDPOS·ENVPFX·WRAP·ENVPFX·BINPFX) — the SAME prefix layer
+# PUSHPUB_RX uses — so "FOO=bar cp … .claude/skills/…", "sudo cp …" and
+# "DESTDIR=/x install … .claude/skills/…" stay DENY instead of smuggling a write
+# past on an env-var/wrapper prefix, and no divergent prefix reconstruction remains. A verb that merely appears inside a string/comment/other
 # argument has no separator before it and does NOT fire (GUARD-POLICY §5.1; e.g.
 # 'git commit -m "cp x .claude/skills/y/SKILL.md"' PASSES). Genuine installs in
 # command position (including env-prefixed and sudo-wrapped ones) stay DENY.
@@ -218,18 +246,23 @@ SKILLS_PATH_TAIL='(\.claude/skills/|skills/[^/]+/SKILL\.md)'
 # required so a plain download (path only in a URL, no write) still PASSES.
 # Directory-target download flags land a skill just as well as file-target ones:
 # wget -P / --directory-prefix and curl --output-dir take a DIRECTORY, so a skills
-# dir given there is a write too. "git clone" has two skills-target shapes NOT
-# reachable by this verb-then-path form: the skills dir may be the -C value BEFORE
-# "clone" ("git -C .claude/skills/evil clone URL" — GIT_C_CLONE_RX below), or the
-# positional clone DESTINATION directory AFTER the url ("git clone URL skills/x" —
-# GIT_CLONE_DIR_RX below). Both reuse the same anchored skills machinery.
-SKILLS_WRITE_INNER='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=)'
-SKILLS_WRITE_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${BINPFX}${SKILLS_WRITE_INNER}([^;&|]*[[:space:]\"'/])?${SKILLS_PATH_TAIL}"
+# dir given there is a write too. "git clone" is DELIBERATELY NOT a verb here: its
+# two skills-target shapes are handled by the dedicated GIT_C_CLONE_RX (the -C value
+# BEFORE "clone" — "git -C .claude/skills/evil clone URL") and GIT_CLONE_DIR_RX (the
+# positional DESTINATION dir AFTER the url — "git clone URL skills/x"), both of which
+# guard the remote URL with a COLON-FREE prefix. Routing clone through this generic
+# verb-then-path form instead would let the leaf-less SKILLS_DIR match the "/skills/"
+# INSIDE a clone URL ("git clone https://h/org/skills/r.git /tmp/x") — the generic
+# terminator ([^;&|]*[[:space:]"'/]) is not colon-free and would swallow "https://…/"
+# up to a "/skills/". Keeping clone out of SKILLS_WRITE_INNER leaves it to the two
+# colon-safe detectors, so a legit clone FROM a skills-repo URL PASSES.
+SKILLS_WRITE_INNER='((cp|mv|rsync|install|ln)[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=)'
+SKILLS_WRITE_RX="${PFX}${SKILLS_WRITE_INNER}([^;&|]*[[:space:]\"'/])?${SKILLS_DIR}"
 # A redirect (> or >>) into a skills path is a write regardless of command position —
 # it FOLLOWS the producing command ("cat payload > .claude/skills/x/SKILL.md"), so it
 # is matched unanchored. Only the redirect's immediate target ([[:space:]]* then the
 # path) counts, so a skills path sitting further along as a separate arg does not fire.
-SKILLS_REDIR_RX=">[[:space:]]*${SKILLS_PATH_TAIL}"
+SKILLS_REDIR_RX=">[[:space:]]*${SKILLS_DIR}"
 # "git -C <skills-dir> clone URL": the skills target is the -C value that sits
 # BEFORE "clone", so SKILLS_WRITE_RX (which needs the path AFTER the write verb)
 # cannot reach it. Match git -> optional flags -> -C -> a skills path -> then
@@ -238,17 +271,20 @@ SKILLS_REDIR_RX=">[[:space:]]*${SKILLS_PATH_TAIL}"
 # LATER token — "git -C .claude/skills/x commit -m 'add clone feature'",
 # "… add clone", "… grep clone", "… log --grep clone", "… branch clone" all PASS
 # (the earlier [^;&|]*[[:space:]]clone tail wrongly matched "clone" as any word).
-# The -C value reuses the SAME anchored skills machinery as every other detector:
-# an optional colon-free path prefix ending in "/" (so "build/skills/x/SKILL.md"
-# and a leading-relative "skills/x/SKILL.md" both reach the skills segment — the
-# prefix supplies the "/" boundary the SKILLS_PATH_TAIL relative form expects, or
-# is empty at the -C value start) then SKILLS_PATH_TAIL. Without the prefix the
-# tail was glued to "-C \"?" and the relative "(^|/)skills/…" could never find its
-# "/" boundary, so "git -C build/skills/x/SKILL.md clone …" and "git -C
-# skills/x/SKILL.md clone …" bypassed while ".claude/skills/…" was DENY. The
-# colon-free prefix ([^[:space:]:;&|"']*/) keeps a remote URL out of the -C value
-# from smuggling a match ("://" carries a ":").
-GIT_C_CLONE_RX="${CMDPOS}${BINPFX}git[[:space:]]+([^;&|]*[[:space:]])?-C[[:space:]]+[\"']?([^[:space:]:;&|\"']*/)?${SKILLS_PATH_TAIL}[^[:space:];&|]*[\"']?([[:space:]]+-[^[:space:]]+)*[[:space:]]+clone([[:space:]]|\$)"
+# It now begins with the shared ${PFX} — so a wrapper/env prefix can no longer
+# smuggle even the CANONICAL target past it ("sudo git -C .claude/skills/x clone
+# URL", "FOO=bar git -C … clone", "env NAME=v git -C … clone" used to bypass
+# because this detector rebuilt only CMDPOS+BINPFX, omitting ENVPFX/WRAP). The -C
+# value is a DIRECTORY (a clone destination has no SKILL.md leaf), so it uses
+# ${SKILLS_DIR} — the leaf-less shared pattern (the earlier SKILLS_PATH_TAIL
+# required a /SKILL.md leaf, so leaf-less "git -C skills/x clone", "git -C
+# build/skills/x clone", "git -C packages/a/skills/x clone" bypassed while the
+# leaf'd ".claude/skills/x/SKILL.md" was DENY). SKILLS_DIR carries its own
+# colon-free nested prefix, so a nested/relative dir reaches the skills segment and
+# a remote URL cannot masquerade as the -C value. A trailing [^[:space:];&|]* then
+# absorbs any extra path (e.g. a "/SKILL.md" leaf on a file-shaped -C value) before
+# the optional dash-flags and the "clone" VERB.
+GIT_C_CLONE_RX="${PFX}git[[:space:]]+([^;&|]*[[:space:]])?-C[[:space:]]+[\"']?${SKILLS_DIR}[^[:space:];&|]*[\"']?([[:space:]]+-[^[:space:]]+)*[[:space:]]+clone([[:space:]]|\$)"
 # "git [flags] clone [flags] <url> <skills-dir-target>": the clone DESTINATION is
 # a positional directory AFTER "clone". The ".claude/skills/…" and file-shaped
 # "**/skills/<name>/SKILL.md" targets are already caught by SKILLS_WRITE_RX (git
@@ -257,16 +293,17 @@ GIT_C_CLONE_RX="${CMDPOS}${BINPFX}git[[:space:]]+([^;&|]*[[:space:]])?-C[[:space
 # install, yet SKILLS_PATH_TAIL's relative branch requires a SKILL.md leaf so it
 # slipped through. Match git (at command position, through ENVPFX/WRAP/BINPFX like
 # the other detectors) -> clone -> the intervening url/flags run ending in
-# whitespace -> the target: an optional colon-free "/"-terminated prefix then
-# "skills/<name>". The MANDATORY leading [[:space:]] pins the match to an argument
-# boundary, and the colon-free prefix keeps the remote URL ("https://…/skills/…",
-# "git@host:org/skills/…") from firing — only the local destination arg counts, so
-# "git clone https://h/org/skills/r.git /tmp/x" (safe, clones into ./x) PASSES.
-# "(^|/)skills/" semantics: a "/" or arg-start must precede "skills", so a lookalike
-# "myskills/x" never matches, while a nested "build/skills/x" does (consistent with
-# SKILLS_PATH_RX). Anchored at command position so "echo 'git clone URL skills/x'"
-# and "git commit -m 'clone into skills/x'" (clone is not the git verb) still PASS.
-GIT_CLONE_DIR_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${BINPFX}git${FLAGS}[[:space:]]+clone[[:space:]]+[^;&|]*[[:space:]]([^[:space:]:;&|\"']*/)?skills/[^[:space:];&|/]+"
+# whitespace -> the target: ${SKILLS_DIR}, the leaf-less shared directory pattern.
+# It begins with the shared ${PFX} like every other detector. The MANDATORY leading
+# [[:space:]] pins the target to an argument boundary, and SKILLS_DIR's colon-free
+# nested prefix keeps the remote URL ("https://…/skills/…", "git@host:org/skills/…")
+# from firing — only the local destination arg counts, so "git clone
+# https://h/org/skills/r.git /tmp/x" (safe, clones into ./x) PASSES. A lookalike
+# "myskills/x" never matches (no "/"-boundary before "skills"), while a nested
+# "build/skills/x" and the canonical ".claude/skills/x" both do. Anchored at command
+# position so "echo 'git clone URL skills/x'" and "git commit -m 'clone into
+# skills/x'" (clone is not the git verb) still PASS.
+GIT_CLONE_DIR_RX="${PFX}git${FLAGS}[[:space:]]+clone[[:space:]]+[^;&|]*[[:space:]]${SKILLS_DIR}"
 
 IS_PUSHPUB=false
 IS_INSTALL=false
