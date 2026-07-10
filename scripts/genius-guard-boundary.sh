@@ -96,12 +96,14 @@ CMDPOS='(^|[;&|(`{])[[:space:]]*'
 # just because it carries a common prefix:
 #   ENVPFX  leading env-var assignments — NODE_ENV=production npm publish,
 #           GIT_SSH_COMMAND="ssh -i k" git push (quoted values may hold spaces).
-#   BINPFX  an absolute path on the binary — /usr/bin/git push.
+#   BINPFX  a path on the binary — absolute (/usr/bin/git push) OR relative
+#           (./git push, ../bin/git push, bin/git push). A path prefix is a run
+#           of segments each ending in "/", directly glued to the binary name.
 #   FLAGS   flags (with optional values) before the subcommand — git -C repo push,
 #           yarn --cwd . publish. Never swallows the subcommand: a following
 #           non-dash token (push/publish/…) ends the flag run.
 ENVPFX='([A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*[[:space:]]+)*'
-BINPFX='(/[^[:space:]]*/)?'
+BINPFX='(/?([^[:space:]/;&|]+/)*)?'
 FLAGS='([[:space:]]+-[^[:space:]]+([[:space:]]+[^[:space:]]+)?)*'
 
 # WRAP — known command WRAPPERS that sit between the command position and the
@@ -127,7 +129,7 @@ FLAGS='([[:space:]]+-[^[:space:]]+([[:space:]]+[^[:space:]]+)?)*'
 # a wrapper keyword inside an echo/quote/comment has no separator before it and
 # never fires ("echo 'sudo git push'", "# time git push" still PASS).
 ASSIGN='[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*'
-WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+[0-9]+[a-z]?)"
+WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+[0-9]+([.][0-9]+)?[a-z]?)"
 WRAP="(${WRAP_ONE}[[:space:]]+)*"
 
 PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"
@@ -176,9 +178,13 @@ SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 # "git -C <skills-dir> clone URL": the skills target is the -C value that sits
 # BEFORE "clone", so SKILLS_WRITE_RX (which needs the path AFTER the write verb)
-# cannot reach it. Match git → optional flags → -C → a skills path → then "clone"
-# as a separate word (so a benign "git -C .claude/skills/x status" does NOT fire).
-GIT_C_CLONE_RX="${CMDPOS}${BINPFX}git[[:space:]]+([^;&|]*[[:space:]])?-C[[:space:]]+[\"']?(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)[^;&|]*[[:space:]]clone([[:space:]]|\$)"
+# cannot reach it. Match git -> optional flags -> -C -> a skills path -> then
+# "clone" as the git VERB: the -C value ends at whitespace, then only optional
+# dash-flags may sit before "clone". This does NOT fire when "clone" is merely a
+# LATER token — "git -C .claude/skills/x commit -m 'add clone feature'",
+# "… add clone", "… grep clone", "… log --grep clone", "… branch clone" all PASS
+# (the earlier [^;&|]*[[:space:]]clone tail wrongly matched "clone" as any word).
+GIT_C_CLONE_RX="${CMDPOS}${BINPFX}git[[:space:]]+([^;&|]*[[:space:]])?-C[[:space:]]+[\"']?(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)[^[:space:];&|]*[\"']?([[:space:]]+-[^[:space:]]+)*[[:space:]]+clone([[:space:]]|\$)"
 
 IS_PUSHPUB=false
 IS_INSTALL=false

@@ -79,6 +79,11 @@ expect_deny "FOO=1 BAR=2 git push"
 expect_deny "NODE_ENV=production npm publish"
 expect_deny "git -C repo push origin main"
 expect_deny "/usr/bin/git push"
+# Relative-path binary prefixes are real too (BINPFX must not be absolute-only).
+expect_deny "./git push"
+expect_deny "../bin/git push"
+expect_deny "bin/git push"
+expect_deny "src/tools/git push"
 expect_deny "/opt/homebrew/bin/npm publish"
 expect_deny "yarn --cwd . publish"
 expect_deny "npm --registry https://r.example.com publish"
@@ -96,6 +101,9 @@ expect_deny "time git push"
 expect_deny "nice -n 10 git push"
 expect_deny "stdbuf -oL git push"
 expect_deny "timeout 30 git push"
+# Fractional DURATION must not smuggle a push past the timeout wrapper.
+expect_deny "timeout 1.5 git push"
+expect_deny "timeout 0.5s git push"
 expect_deny "timeout --preserve-status 30 git push"
 expect_deny "sudo nohup git push"
 # sudo with flags other than "-u user" (not just -u: -E/-H/-i/-E -H are real).
@@ -133,6 +141,10 @@ expect_pass "git commit -m 'nohup git push later'"
 expect_pass "echo 'ssh host git push'"
 expect_pass "ssh-add -l"
 expect_pass "nice_task.sh"
+# A path-like string inside an echo argument (relative BINPFX must not fire from
+# inside a quoted arg — no separator precedes the path).
+expect_pass 'echo "dossier/fichier git push"'
+expect_pass "echo 'run bin/git push in ci'"
 # shell name inside another command's quoted arg (echo is the command) must pass.
 expect_pass "echo 'bash -c \"git push\"'"
 # shell -c whose leading command is NOT a push/publish must pass.
@@ -160,6 +172,8 @@ expect_deny "wget --directory-prefix .claude/skills/evil/ https://x.example.com/
 expect_deny "curl --output-dir .claude/skills/evil -O https://x.example.com/SKILL.md"
 # git clone with flags before the verb: skills dir is the -C value BEFORE clone.
 expect_deny "git -C .claude/skills/evil clone https://x.example.com/r"
+# Optional dash-flags may sit between the -C skills value and the clone verb.
+expect_deny "git -C .claude/skills/evil --bare clone https://x.example.com/r"
 
 echo ""
 echo "6. INSTALL write lookalikes still pass (download without writing a skill)"
@@ -172,6 +186,14 @@ expect_pass "wget -P /tmp/downloads https://example.com/x"
 expect_pass "curl --output-dir /tmp -O https://example.com/x"
 # git read op (not clone) inside a skills dir must pass (no write).
 expect_pass "git -C .claude/skills/foo status"
+# "clone" as a LATER token (not the git verb) inside a -C skills dir must PASS —
+# the -C value ends at whitespace and only dash-flags may precede the verb, so a
+# benign "clone" in a message/subcommand/arg does not over-block (counter-audit).
+expect_pass 'git -C .claude/skills/foo commit -m "add clone feature"'
+expect_pass "git -C .claude/skills/foo add clone"
+expect_pass "git -C .claude/skills/foo grep clone"
+expect_pass "git -C .claude/skills/foo log --grep clone"
+expect_pass "git -C .claude/skills/foo branch clone"
 
 echo ""
 echo "7. Benign lookalikes still pass (zero over-blocking)"
