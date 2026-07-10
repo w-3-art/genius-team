@@ -129,7 +129,7 @@ FLAGS='([[:space:]]+-[^[:space:]]+([[:space:]]+[^[:space:]]+)?)*'
 # a wrapper keyword inside an echo/quote/comment has no separator before it and
 # never fires ("echo 'sudo git push'", "# time git push" still PASS).
 ASSIGN='[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*'
-WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+([0-9]+([.][0-9]*)?|[.][0-9]+)[a-z]?)"
+WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+[^[:space:];&|]+)"
 WRAP="(${WRAP_ONE}[[:space:]]+)*"
 
 PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"

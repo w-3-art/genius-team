@@ -107,6 +107,17 @@ expect_deny "timeout 0.5s git push"
 # Leading-dot DURATION (valid for coreutils timeout) must not bypass either.
 expect_deny "timeout .5 git push"
 expect_deny "timeout .5s git push"
+# Exotic strtod DURATION forms (exponent, signed, hex, inf) are valid coreutils
+# durations — enumerating strtod's grammar in ERE is a losing game, so the atom
+# now CONSUMES any single non-separator token instead of validating it.
+expect_deny "timeout 1e2 git push"
+expect_deny "timeout +30 git push"
+expect_deny "timeout 0x1e git push"
+expect_deny "timeout inf git push"
+# The broadened atom consumes the duration token but cannot over-block: the
+# branch only fires when a push/publish keyword follows, so a benign inner
+# command ("npm test") still PASSES.
+expect_pass "timeout 30 npm test"
 expect_deny "timeout --preserve-status 30 git push"
 expect_deny "sudo nohup git push"
 # sudo with flags other than "-u user" (not just -u: -E/-H/-i/-E -H are real).
