@@ -15,8 +15,9 @@
 #      command position (start / after ; && || | ( { backtick) so a boundary
 #      keyword inside an echo/string/comment does NOT fire (GUARD-POLICY §5.1).
 #   2. UNVETTED INSTALL  (curl|sh, wget|sh, claude plugin install, cortex skill
-#      add) AND unvetted skill-directory writes: a Bash cp/mv/git clone/redirect
-#      into a skills path, or a Write tool call whose target is a skills file
+#      add) AND unvetted skill-directory writes: a Bash cp/mv/git clone/tee/
+#      redirect/curl -o/wget -O/dd of= into a skills path, or a Write tool call
+#      whose target is a skills file
 #      (.claude/skills/<name>/SKILL.md, **/skills/<name>/SKILL.md). Denied unless
 #      .genius/allow-install exists (explicit human vetting). Runs on Bash|Write.
 #
@@ -103,8 +104,32 @@ ENVPFX='([A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*[[:space
 BINPFX='(/[^[:space:]]*/)?'
 FLAGS='([[:space:]]+-[^[:space:]]+([[:space:]]+[^[:space:]]+)?)*'
 
+# WRAP — known command WRAPPERS that sit between the command position and the
+# real push/publish keyword: "env NODE_ENV=x npm publish", "sudo git push",
+# "command git push", "nohup git push", "time git push", "nice -n N git push",
+# "stdbuf -oL git push", "timeout N git push". Each wrapper carries its own args
+# (env: [-i] and NAME=val assignments; sudo: [-u user]; command: [-p]; nice:
+# [-n N]; stdbuf: at least one flag; timeout: an optional flag run then a
+# DURATION) so the run ends exactly at the wrapped subcommand — never swallowing
+# it. Wrappers may nest ("sudo nohup git push"), hence the outer (…[[:space:]]+)*.
+# Anchored strictly after CMDPOS/ENVPFX so string/comment safety (§5.1) holds:
+# a wrapper keyword inside an echo/quote/comment has no separator before it and
+# never fires ("echo 'sudo git push'", "# time git push" still PASS).
+ASSIGN='[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*'
+WRAP_ONE="(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo([[:space:]]+-u[[:space:]]+[^[:space:]]+)?|command([[:space:]]+-p)?|nohup|time|nice([[:space:]]+-n[[:space:]]+[0-9]+)?|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout([[:space:]]+-[^[:space:]]+)*[[:space:]]+[0-9]+[a-z]?)"
+WRAP="(${WRAP_ONE}[[:space:]]+)*"
+
 PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"
-PUSHPUB_RX="${CMDPOS}${ENVPFX}${PUSHPUB_INNER}"
+# ENVPFX may recur after WRAP too ("sudo HUSKY=0 git push"); it matches empty in
+# the common case, so no false positive is introduced.
+PUSHPUB_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${PUSHPUB_INNER}"
+
+# SSH remote command that carries a push (best-effort, documented): "ssh host
+# git push". Fires only when ssh sits at command position and "git push" appears
+# in the remote command run (bounded by ;&| so it stays on the same command).
+# "echo 'ssh host git push'" / "# ssh host git push" have no separator before
+# ssh and still PASS.
+SSH_PUSH_RX="${CMDPOS}ssh[[:space:]]+[^;&|]*git[[:space:]]+push"
 
 # Unvetted install from the network (also anchored at command position).
 INSTALL_INNER='(curl[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|wget[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh|claude[[:space:]]+plugin[[:space:]]+install|cortex[[:space:]]+skill[[:space:]]+add)'
@@ -116,7 +141,10 @@ INSTALL_RX="${CMDPOS}${INSTALL_INNER}"
 SKILLS_PATH_RX='(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 # A Bash command that writes a skill into a skills path via cp/mv/rsync/install/
 # ln/git clone/tee or a redirect.
-SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
+# curl -o / --output, wget -O / --output-document, and dd of= are just as capable
+# of dropping a SKILL.md into a skills path as cp/mv/tee/redirect — the output
+# flag is required so a plain download (path only in a URL, no write) still PASSES.
+SKILLS_WRITE_RX='((cp|mv|rsync|install|ln)[[:space:]]|git[[:space:]]+clone[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=])|dd[^;&|]*[[:space:]]of=|>[^;&|]*)[^;&|]*(\.claude/skills/|(^|/)skills/[^/]+/SKILL\.md)'
 
 IS_PUSHPUB=false
 IS_INSTALL=false
@@ -124,6 +152,7 @@ IS_INSTALL=false
 # Push/publish/deploy is a shell-only boundary (Bash).
 if [ "$TOOL" = "Bash" ] && [ -n "$CMD" ]; then
   printf '%s' "$CMD" | grep -qE "$PUSHPUB_RX"     && IS_PUSHPUB=true
+  printf '%s' "$CMD" | grep -qE "$SSH_PUSH_RX"     && IS_PUSHPUB=true
   printf '%s' "$CMD" | grep -qE "$INSTALL_RX"      && IS_INSTALL=true
   printf '%s' "$CMD" | grep -qE "$SKILLS_WRITE_RX"  && IS_INSTALL=true
 fi
