@@ -132,6 +132,24 @@ ASSIGN='[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'\''[^'\'']*'\''|[^[:space:]])*'
 WRAP_ONE="${BINPFX}(env([[:space:]]+-i)?([[:space:]]+${ASSIGN})*|sudo${FLAGS}|command([[:space:]]+-p)?|nohup|time|nice${FLAGS}|stdbuf([[:space:]]+-[^[:space:]]+)+|timeout${FLAGS}[[:space:]]+[^[:space:];&|]+)"
 WRAP="(${WRAP_ONE}[[:space:]]+)*"
 
+# DESIGN DECISION (assumed, conservative fail-safe) — "git push --help",
+# "git push --dry-run" and "git push -n" are DENY just like a real push, until
+# phase=deploy-approved, even though none of them actually pushes anything.
+# This is intentional over-blocking, not a bug: FLAGS is a generic flag-run
+# matcher and does not special-case --help/--dry-run/-n, so the whole
+# "git push <anything>" surface is caught as one. Carving out an exclusion for
+# these specific flags would reopen a chained bypass — e.g. an agent (or a
+# prompt injection) typing "git push --dry-run; git push" would sail through
+# the harmless-looking first half and the real push right after it would no
+# longer be the first "git push" the regex sees in isolation, or a more subtle
+# variant could rely on the excluded flag being stripped/ignored downstream.
+# Because CMDPOS anchors PUSHPUB_RX at the command position (§ above), any
+# literal "git push …" invocation is meant to trip the boundary regardless of
+# which flags follow — false positives on read-only invocations (--help,
+# --dry-run, -n) are the accepted cost of not hand-rolling a flag allowlist
+# here. If a legitimate read-only "git push --dry-run" is needed pre-approval,
+# the human sets the deploy-approved checkpoint rather than the hook special-
+# casing the flag.
 PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"
 # ENVPFX may recur after WRAP too ("sudo HUSKY=0 git push"); it matches empty in
 # the common case, so no false positive is introduced.
