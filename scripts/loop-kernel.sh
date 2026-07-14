@@ -422,6 +422,34 @@ cortex_report() {
 
 # ------------------------------------------------------- contract_validate ---
 
+# _gate_lead_cmd <command-line>
+# Echoes the effective leading command word of a gate line for the `command -v`
+# resolvability check. Leading inline env assignments (NAME=val) are skipped so
+# `CI=1 npm test` is judged on `npm`, not the un-runnable token `CI=1`. A
+# subshell `( ... )` or brace group `{ ...; }` has no single leading command —
+# its resolvability is internal — so an empty string is echoed and the caller
+# treats it as runnable. A real missing command (nonexistent-cmd-xyz) still
+# yields that token, so the caller still rejects it.
+_gate_lead_cmd() {
+  local line tok
+  line=$(printf '%s' "$1" | sed -E 's/^[[:space:]]+//')
+  case "$line" in
+    '('*|'{'*) return 0 ;;   # compound command → no single token to resolve
+  esac
+  # peel off leading `NAME=val ` env-assignment tokens
+  while :; do
+    tok=$(printf '%s' "$line" | awk '{print $1}')
+    case "$tok" in
+      [A-Za-z_][A-Za-z0-9_]*=*)
+        line=$(printf '%s' "$line" \
+          | sed -E 's/^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]*//')
+        [ -n "$line" ] || return 0 ;;   # only assignments → nothing to resolve
+      *) break ;;
+    esac
+  done
+  printf '%s' "$(printf '%s' "$line" | awk '{print $1}')"
+}
+
 contract_validate() {
   local dir contract errors=0
   dir=$(_resolve_loop_dir "${1:-}")
@@ -450,8 +478,10 @@ contract_validate() {
     errors=$((errors + 1))
   else
     first_line=$(echo "$gate" | head -1)
-    first_tok=$(echo "$first_line" | awk '{print $1}')
-    if ! command -v "$first_tok" >/dev/null 2>&1; then
+    # Effective command word: skips leading `NAME=val` env assignments and is
+    # empty for a subshell `( ... )` / brace group `{ ...; }` (runnable compound).
+    first_tok=$(_gate_lead_cmd "$first_line")
+    if [ -n "$first_tok" ] && ! command -v "$first_tok" >/dev/null 2>&1; then
       echo "❌ gate: '$first_tok' is not an executable command on this machine"
       errors=$((errors + 1))
     fi
@@ -565,8 +595,10 @@ EOF
           echo "❌ workflow: step '$name' gate has an unfilled placeholder '<...>'"
           errors=$((errors + 1))
         else
-          wtok=$(echo "$wgate" | awk '{print $1}')
-          if ! command -v "$wtok" >/dev/null 2>&1; then
+          # same resolvability rule as ## Gate: skip leading env assignments,
+          # accept subshell/brace-group compounds (see _gate_lead_cmd).
+          wtok=$(_gate_lead_cmd "$wgate")
+          if [ -n "$wtok" ] && ! command -v "$wtok" >/dev/null 2>&1; then
             echo "❌ workflow: step '$name' gate '$wtok' is not an executable command"
             errors=$((errors + 1))
           fi

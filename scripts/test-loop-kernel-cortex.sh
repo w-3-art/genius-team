@@ -305,6 +305,73 @@ race_iter=$(grep -E '^- iteration:' "$LOOP_DIR/STATE.md" | sed -E 's/^- iteratio
 [ ! -e "$LOOP_DIR/.lock" ]; check "advisory lock is released after every write (no leaked .lock)" $?
 ! ls "$LOOP_DIR"/STATE.md.tmp.* >/dev/null 2>&1; check "no orphaned STATE.md.tmp.<pid> left behind" $?
 
+# --- 11. gate resolvability: env-assignment prefix & subshell/group are runnable ---
+echo ""
+echo "11. contract_validate resolves gates behind env assignments and compounds"
+# Regression: the resolvability check took the FIRST whitespace token and ran
+# `command -v` on it. A gate starting with an inline env assignment (`CI=1 npm
+# test`) or a subshell/brace group (`( cd x && make )`) was rejected because the
+# first token (`CI=1`, `(`) is not a command — blocking a loop that runs fine.
+# It now skips leading NAME=val assignments and accepts compound commands, while
+# a genuinely missing command and an unfilled placeholder still fail.
+GV_DIR="$TMP/project/.genius/loops/gate-loop"
+mkdir -p "$GV_DIR"
+write_gate_contract() { # write_gate_contract <gate-command>
+  cat > "$GV_DIR/CONTRACT.md" <<EOF
+# Loop Contract: gate loop
+
+- slug: gate-loop
+- autonomy_level: L2
+
+## Goal (stopping condition)
+The gate exits 0.
+
+## Gate (objective pass/fail)
+\`\`\`bash
+$1
+\`\`\`
+
+## Proof of completion
+Gate exit code 0.
+
+## Blast radius (do-not-touch boundary)
+- allowed_files:
+  - src/**
+
+## Brakes (hard caps)
+- max_iterations: 10
+- token_budget: 100k
+- no_progress_after: 5
+
+## Checker (separate from maker)
+genius-reviewer.
+
+## State
+- path: .genius/loops/gate-loop/STATE.md
+EOF
+}
+gate_expect() { # gate_expect <gate> <PASS|FAIL>
+  local want="$2" out rc
+  write_gate_contract "$1"
+  out=$(CORTEX_BIN="$TMP/no-such-cortex" bash "$KERNEL" contract_validate "$GV_DIR" 2>/dev/null); rc=$?
+  if [ "$want" = "FAIL" ]; then
+    { [ "$rc" -ne 0 ] && echo "$out" | grep -q "gate"; }
+    check "gate '$1' -> FAIL" $? "rc=$rc out=$out"
+  else
+    [ "$rc" -eq 0 ]
+    check "gate '$1' -> PASS" $? "rc=$rc out=$out"
+  fi
+}
+# runnable gates that used to be falsely rejected
+gate_expect "CI=1 npm test" PASS
+gate_expect "FOO=1 BAR=2 make check" PASS
+gate_expect "( cd x && make )" PASS
+gate_expect "{ cd x && make; }" PASS
+# genuinely broken gates must still fail
+gate_expect "nonexistent-cmd-xyz --run" FAIL
+gate_expect "<exact command>" FAIL
+rm -rf "$GV_DIR"
+
 # --- result ------------------------------------------------------------------------
 echo ""
 if [ "$failures" -gt 0 ]; then
