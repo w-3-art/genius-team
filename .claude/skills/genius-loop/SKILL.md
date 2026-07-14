@@ -57,12 +57,12 @@ goal/gate/brakes/blast_radius/checker, placeholder or non-executable gates, and 
 blast-radius path outside the project root.
 
 Read `autonomy_level` from the contract. It decides what EXECUTE may do:
-- **L1 (suggest)** — analysis only; write findings/proposals to
+- **L1 suggest-only** — analysis only; write findings/proposals to
   `.genius/loops/<slug>/proposals/`, apply nothing.
-- **L2 (draft)** — write draft diffs/files under `proposals/`, apply nothing. **Default.**
-- **L3 (apply low-risk)** — dispatch skills that apply changes INSIDE the blast radius;
+- **L2 draft** — write draft diffs/files under `proposals/`, apply nothing. **Default.**
+- **L3 apply-low-risk-with-merge-approval** — dispatch skills that apply changes INSIDE the blast radius;
   merge/commit/deploy still requires explicit human approval (human-read gate).
-- **L4 (full-auto-with-audit-logs)** — only if the contract literally says `autonomy_level: L4`
+- **L4 full-auto-with-audit-logs** — only if the contract literally says `autonomy_level: L4`
   AND an active audit log exists. The human-read gate at merge still applies — L4 removes the
   blocking prompt, never the review (see genius-auto's Autonomy Ladder — "level four is earned,
   not assumed").
