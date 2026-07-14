@@ -286,6 +286,25 @@ tb_expect "1M" PASS
 tb_expect "500k   # REQUIRED — Cortex refuses a loop without it" PASS
 rm -rf "$TB_DIR"
 
+# --- 10. concurrency: parallel state_write must not lose the iteration bump ------
+echo ""
+echo "10. STATE.md read-modify-write is serialized across processes (advisory lock)"
+# Without an inter-process lock, N concurrent state_write on a fresh loop each read
+# iteration=0 and write 1 (lost updates) — which SILENTLY defeats the max_iterations
+# anti-runaway brake. The mkdir-based advisory lock must serialize them so the count
+# reaches N. Run under a comma-decimal locale too: the backoff must stay locale-safe.
+rm -f "$LOOP_DIR/STATE.md"
+CORTEX_BIN="$TMP/no-such-cortex" bash "$KERNEL" state_read "$LOOP_DIR" >/dev/null
+for i in $(seq 1 10); do
+  ( LC_ALL=fr_FR.UTF-8 CORTEX_BIN="$TMP/no-such-cortex" \
+      bash "$KERNEL" state_write "$LOOP_DIR" in-progress 1 "race$i" >/dev/null 2>&1 ) &
+done
+wait
+race_iter=$(grep -E '^- iteration:' "$LOOP_DIR/STATE.md" | sed -E 's/^- iteration: *//')
+[ "$race_iter" = "10" ]; check "10 parallel state_write -> iteration=10 (no lost updates)" $? "got iteration=$race_iter"
+[ ! -e "$LOOP_DIR/.lock" ]; check "advisory lock is released after every write (no leaked .lock)" $?
+! ls "$LOOP_DIR"/STATE.md.tmp.* >/dev/null 2>&1; check "no orphaned STATE.md.tmp.<pid> left behind" $?
+
 # --- result ------------------------------------------------------------------------
 echo ""
 if [ "$failures" -gt 0 ]; then

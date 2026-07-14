@@ -77,6 +77,72 @@ _hash() {
   fi
 }
 
+# ------------------------------------------------- inter-process STATE lock --
+# STATE.md is mutated read-modify-write (read iteration/history -> rewrite the
+# file). With no cross-process lock, concurrent kernel invocations lose updates
+# — 10 parallel state_write on a fresh loop all land on iteration=1 instead of
+# 10, which SILENTLY DEFEATS the max_iterations anti-runaway brake. Guard every
+# read->modify->write of STATE.md with an advisory lock: a directory (mkdir is
+# atomic / O_EXCL-like) taken with capped exponential backoff, a timeout, and
+# stale-lock recovery. Mirrors Cortex's withFileLock (genius-cortex
+# src/core/atomic-store.ts) so the bash and TS sides share one concurrency model.
+
+_LOCK_TIMEOUT="${LOOP_LOCK_TIMEOUT:-10}"   # give up acquiring after N seconds
+_LOCK_STALE="${LOOP_LOCK_STALE:-30}"       # a lock older than N seconds = crashed holder
+
+_epoch() { date +%s; }
+
+_mtime() {
+  # mtime of a path in epoch seconds (portable: BSD/macOS stat -f, GNU stat -c)
+  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null
+}
+
+_purge_stale_tmp() {
+  # Remove orphaned STATE.md.tmp.<pid> files (>1h old) a crash left mid-write, so
+  # they can't accumulate on disk. Best-effort; never fails the caller.
+  find "$1" -maxdepth 1 -name 'STATE.md.tmp.*' -mmin +60 -exec rm -f {} + 2>/dev/null || true
+}
+
+_lock_acquire() {
+  # _lock_acquire <loop_dir> — block until the loop's advisory lock is held, then
+  # purge stale tmp orphans (serialized under the lock). _die on timeout (the
+  # lock was never taken, so nothing to release).
+  local dir="$1" lock start now age mtime delay_ms
+  lock="$dir/.lock"
+  mkdir -p "$dir"
+  start=$(_epoch)
+  delay_ms=5
+  while :; do
+    if mkdir "$lock" 2>/dev/null; then
+      _purge_stale_tmp "$dir"
+      return 0
+    fi
+    # reclaim a lock abandoned by a crashed holder (older than the stale window)
+    mtime=$(_mtime "$lock" || true)
+    if [ -n "$mtime" ]; then
+      now=$(_epoch)
+      age=$((now - mtime))
+      if [ "$age" -ge "$_LOCK_STALE" ]; then
+        rmdir "$lock" 2>/dev/null || true
+        continue
+      fi
+    fi
+    now=$(_epoch)
+    if [ $((now - start)) -ge "$_LOCK_TIMEOUT" ]; then
+      _die "could not acquire STATE lock $lock within ${_LOCK_TIMEOUT}s (held by another process)"
+    fi
+    # Integer-only backoff so it is locale-independent: printf '%03d' formats the
+    # millisecond count with no decimal separator (a float printf emits ',' under
+    # a comma-decimal locale and would corrupt the next expression). delay_ms is
+    # capped at 100, so '0.%03d' spans 0.005s .. 0.100s.
+    sleep "$(printf '0.%03d' "$delay_ms")" 2>/dev/null || sleep 1
+    delay_ms=$((delay_ms * 2))
+    [ "$delay_ms" -gt 100 ] && delay_ms=100
+  done
+}
+
+_lock_release() { rmdir "$1/.lock" 2>/dev/null || true; }
+
 _resolve_loop_dir() {
   # accept either the loop dir or a direct path to CONTRACT.md
   local arg="${1:-}"
@@ -180,6 +246,8 @@ _state_set_meta() {
   local dir="$1" key="$2" val="$3" state tmp
   dir=$(_resolve_loop_dir "$dir")
   state=$(_state_path "$dir")
+  _lock_acquire "$dir"
+  trap '_lock_release "$dir"; [ -z "${tmp:-}" ] || rm -f "$tmp"; trap - RETURN' RETURN
   [ -f "$state" ] || _state_init "$dir"
   tmp="$state.tmp.$$"
   if grep -qE "^- $key:" "$state"; then
@@ -242,6 +310,8 @@ _state_set_status() {
   local dir="$1" new="$2" state tmp
   dir=$(_resolve_loop_dir "$dir")
   state=$(_state_path "$dir")
+  _lock_acquire "$dir"
+  trap '_lock_release "$dir"; [ -z "${tmp:-}" ] || rm -f "$tmp"; trap - RETURN' RETURN
   [ -f "$state" ] || _state_init "$dir"
   tmp="$state.tmp.$$"
   awk -v s="$new" '/^- status: / { print "- status: " s; next } { print }' "$state" > "$tmp" && mv "$tmp" "$state"
@@ -577,6 +647,11 @@ state_write() {
   case "$gate_exit" in
     (''|*[!0-9]*) _die "gate_exit must be a number, got '$gate_exit'" ;;
   esac
+
+  # lock the whole read->modify->write of STATE.md (below) so concurrent writers
+  # can't lose the iteration bump — the max_iterations brake depends on it.
+  _lock_acquire "$dir"
+  trap '_lock_release "$dir"; trap - RETURN' RETURN
 
   [ -f "$state" ] || _state_init "$dir"
 
