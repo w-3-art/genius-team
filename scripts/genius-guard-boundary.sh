@@ -268,9 +268,19 @@ PFX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${BINPFX}"
 # the human sets the deploy-approved checkpoint rather than the hook special-
 # casing the flag.
 PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${FLAGS}[[:space:]]+publish|${BINPFX}npx[[:space:]]+[^&|;]*publish|${BINPFX}vercel${FLAGS}[[:space:]]+(deploy|.*--prod)|${BINPFX}netlify${FLAGS}[[:space:]]+deploy|${BINPFX}railway${FLAGS}[[:space:]]+(up|deploy)|${BINPFX}wrangler${FLAGS}[[:space:]]+deploy|${BINPFX}flyctl${FLAGS}[[:space:]]+deploy|${BINPFX}gh${FLAGS}[[:space:]]+release[[:space:]]+create|${BINPFX}docker${FLAGS}[[:space:]]+push|${BINPFX}supabase${FLAGS}[[:space:]]+db[[:space:]]+push|${BINPFX}eas${FLAGS}[[:space:]]+submit)"
+# WORD BOUNDARY after the boundary keyword. PUSHPUB_INNER ends on a bare keyword
+# (push/publish/deploy/…) with no trailing anchor, so the substring grep fired on
+# a LONGER word that merely starts with it — "git push-upstream", "docker
+# pushpull", "npm publisher", "yarn publish-lite" were all DENY at tort. PUSHPUB_END
+# requires the keyword to END at a real boundary: whitespace, end of line, or a
+# shell separator (; & | ) } backtick) — NOT a letter/digit/-/_ that would make it
+# a different word. "git push", "git push origin main" (space after), "npm publish"
+# (EOL) stay DENY; the four look-alikes above now PASS. A separator boundary keeps a
+# genuine "git push;"/"git push && …" DENY.
+PUSHPUB_END='([[:space:]]|[;&|)}`]|$)'
 # ENVPFX may recur after WRAP too ("sudo HUSKY=0 git push"); it matches empty in
 # the common case, so no false positive is introduced.
-PUSHPUB_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${PUSHPUB_INNER}"
+PUSHPUB_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${PUSHPUB_INNER}${PUSHPUB_END}"
 
 # SSH remote command that carries a push (best-effort, documented): "ssh host
 # git push". Fires only when ssh sits at command position and "git push" appears
@@ -364,11 +374,16 @@ SKILLS_DIR="${SKILLS_NEST}(\.claude/skills/|skills/)[^[:space:];&|/]+"
 # colon-safe detectors, so a legit clone FROM a skills-repo URL PASSES.
 SKILLS_WRITE_INNER='((cp|mv|rsync|install|ln)[[:space:]]|tee[[:space:]]|curl[^;&|]*[[:space:]](-o|--output[[:space:]=]|--output-dir[[:space:]=])|wget[^;&|]*[[:space:]](-O|--output-document[[:space:]=]|-P|--directory-prefix[[:space:]=])|dd[^;&|]*[[:space:]]of=)'
 SKILLS_WRITE_RX="${PFX}${SKILLS_WRITE_INNER}([^;&|]*[[:space:]\"'/])?${SKILLS_DIR}"
-# A redirect (> or >>) into a skills path is a write regardless of command position —
-# it FOLLOWS the producing command ("cat payload > .claude/skills/x/SKILL.md"), so it
-# is matched unanchored. Only the redirect's immediate target ([[:space:]]* then the
-# path) counts, so a skills path sitting further along as a separate arg does not fire.
-SKILLS_REDIR_RX=">[[:space:]]*${SKILLS_DIR}"
+# A redirect (>, >>, or the force-clobber >|) into a skills path is a write regardless
+# of command position — it FOLLOWS the producing command ("cat payload >
+# .claude/skills/x/SKILL.md"), so it is matched unanchored. The optional [|] right
+# after ">" covers the bash force-clobber operator ">|" (">| .claude/skills/x/SKILL.md"),
+# which erases noclobber and writes exactly like ">"; without it a ">|" redirect
+# bypassed the guard. ">>" is already covered because its SECOND ">" matches this same
+# pattern (">>" = ">" + ">", and the second ">" is immediately followed by the space or
+# path). Only the redirect's immediate target ([[:space:]]* then the path) counts, so a
+# skills path sitting further along as a separate arg does not fire.
+SKILLS_REDIR_RX=">[|]?[[:space:]]*${SKILLS_DIR}"
 # "git -C <skills-dir> clone URL": the skills target is the -C value that sits
 # BEFORE "clone", so SKILLS_WRITE_RX (which needs the path AFTER the write verb)
 # cannot reach it. Match git -> optional flags -> -C -> a skills path -> then

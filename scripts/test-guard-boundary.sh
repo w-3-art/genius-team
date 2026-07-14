@@ -63,6 +63,10 @@ expect_deny "git push origin main"
 expect_deny "npm publish"
 expect_deny "pnpm publish"
 expect_deny "yarn publish"
+# Word-boundary AFTER the keyword: a separator-terminated push/publish stays DENY.
+expect_deny "git push;"
+expect_deny "git push && echo done"
+expect_deny "npm publish | tee log"
 expect_deny "npx some-tool publish"
 expect_deny "vercel deploy"
 expect_deny "railway up"
@@ -223,6 +227,13 @@ expect_deny "wget -O skills/x/SKILL.md https://x.example.com/s"
 # A redirect into a relative skills path is a write too (with or without a space).
 expect_deny "cat payload > skills/x/SKILL.md"
 expect_deny "cat payload >skills/x/SKILL.md"
+# The bash force-clobber operator ">|" writes exactly like ">" (it just overrides
+# noclobber) — it must be DENY too, not a redirect bypass (with or without a space,
+# canonical and relative skills paths).
+expect_deny "cat p >| .claude/skills/x/SKILL.md"
+expect_deny "cat p >|.claude/skills/x/SKILL.md"
+expect_deny "cat p >| skills/x/SKILL.md"
+expect_deny "cat p >|skills/x/SKILL.md"
 # Env-var-assignment prefix (ENVPFX) must not smuggle a skills write past the guard —
 # the ${ENVPFX}${WRAP}${ENVPFX} layout mirrors PUSHPUB_RX (finding 1: SKILLS_WRITE_RX
 # had omitted ENVPFX, so a "FOO=bar cp …"/"DESTDIR=/x install …" write bypassed).
@@ -305,6 +316,15 @@ expect_pass "docker build ."
 expect_pass "echo git push"
 expect_pass "echo 'run: git push origin main to deploy'"
 expect_pass "# git push later"
+# Word-boundary FALSE POSITIVES (PUSHPUB_END): a LONGER word that merely STARTS with
+# a boundary keyword is a different command and must PASS — the keyword must end at
+# whitespace/EOL/separator, not a letter/digit/-/_. These were DENY at tort before.
+expect_pass "git push-upstream"
+expect_pass "docker pushpull"
+expect_pass "npm publisher"
+expect_pass "yarn publish-lite"
+expect_pass "git pushd"
+expect_pass "railway update"
 
 echo ""
 echo "8. ROOT-FIX matrix: every write/clone verb × prefix × skills-target is DENY"
