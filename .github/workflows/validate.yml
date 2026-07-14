@@ -87,6 +87,14 @@ jobs:
       - name: Reproducible e2e install test (no claude smoke)
         run: bash scripts/e2e-install-test.sh
 
+  e2e-upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reproducible e2e upgrade test (aged install → current)
+        run: bash scripts/e2e-upgrade-test.sh
+
   workflows-skills:
     runs-on: ubuntu-latest
     steps:
