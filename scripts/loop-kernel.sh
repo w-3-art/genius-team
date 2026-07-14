@@ -427,9 +427,17 @@ cortex_report() {
 # resolvability check. Leading inline env assignments (NAME=val) are skipped so
 # `CI=1 npm test` is judged on `npm`, not the un-runnable token `CI=1`. A
 # subshell `( ... )` or brace group `{ ...; }` has no single leading command —
-# its resolvability is internal — so an empty string is echoed and the caller
-# treats it as runnable. A real missing command (nonexistent-cmd-xyz) still
-# yields that token, so the caller still rejects it.
+# its resolvability is internal — so an empty string is echoed with return 0 and
+# the caller treats it as runnable. A real missing command (nonexistent-cmd-xyz)
+# still yields that token, so the caller still rejects it.
+#
+# Return codes let the caller tell the two "empty token" outcomes apart:
+#   0  compound `( … )` / `{ …; }`, OR a resolvable single token echoed  → runnable
+#   2  the line is ONLY env assignments (`FOO=1 BAR=2`) with no command to run.
+#      This is a DEGENERATE gate: it always exits 0 and controls nothing, so the
+#      caller must REJECT it rather than skip the resolvability check. Without a
+#      distinct code, "only assignments" (empty token) was indistinguishable from
+#      the runnable compound case and slipped through as accepted.
 _gate_lead_cmd() {
   local line tok
   line=$(printf '%s' "$1" | sed -E 's/^[[:space:]]+//')
@@ -443,7 +451,7 @@ _gate_lead_cmd() {
       [A-Za-z_][A-Za-z0-9_]*=*)
         line=$(printf '%s' "$line" \
           | sed -E 's/^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]*//')
-        [ -n "$line" ] || return 0 ;;   # only assignments → nothing to resolve
+        [ -n "$line" ] || return 2 ;;   # ONLY assignments → degenerate gate, reject
       *) break ;;
     esac
   done
@@ -465,7 +473,7 @@ contract_validate() {
   done
 
   # --- gate: must be a real, executable pass/fail command -------------------
-  local gate first_line first_tok
+  local gate first_line first_tok lead_rc
   gate=$(_gate_cmd "$contract")
   if [ -z "$gate" ]; then
     echo "❌ gate: no command found in the fenced block of ## Gate"
@@ -480,8 +488,16 @@ contract_validate() {
     first_line=$(echo "$gate" | head -1)
     # Effective command word: skips leading `NAME=val` env assignments and is
     # empty for a subshell `( ... )` / brace group `{ ...; }` (runnable compound).
-    first_tok=$(_gate_lead_cmd "$first_line")
-    if [ -n "$first_tok" ] && ! command -v "$first_tok" >/dev/null 2>&1; then
+    # Capture both the token and the return code. The assignment sits in an `if`
+    # condition so `set -e` does not abort on the deliberate non-zero (rc=2,
+    # only-assignments) return of _gate_lead_cmd.
+    if first_tok=$(_gate_lead_cmd "$first_line"); then lead_rc=0; else lead_rc=$?; fi
+    if [ "$lead_rc" -eq 2 ]; then
+      # Gate is ONLY env assignments (FOO=1 BAR=2): always exits 0, controls
+      # nothing — a degenerate always-pass gate is "no gate" for the loop.
+      echo "❌ gate: only env assignments — a gate needs at least one non-assignment command token (a gate of only 'NAME=val' always exits 0 and controls nothing)"
+      errors=$((errors + 1))
+    elif [ -n "$first_tok" ] && ! command -v "$first_tok" >/dev/null 2>&1; then
       echo "❌ gate: '$first_tok' is not an executable command on this machine"
       errors=$((errors + 1))
     fi
@@ -568,7 +584,7 @@ EOF
   # --- workflow (LP-09): if a ## Workflow table is present, every step needs
   # --- a real deterministic gate and a checkpoint of auto|human ---------------
   if grep -qE '^## Workflow' "$contract"; then
-    local rows name cp wgate wtok dupes
+    local rows name cp wgate wtok wtok_rc dupes
     rows=$(_workflow_rows "$contract")
     if [ -z "$rows" ]; then
       echo "❌ workflow: ## Workflow section has no step rows (| step | gate | checkpoint |)"
@@ -596,9 +612,14 @@ EOF
           errors=$((errors + 1))
         else
           # same resolvability rule as ## Gate: skip leading env assignments,
-          # accept subshell/brace-group compounds (see _gate_lead_cmd).
-          wtok=$(_gate_lead_cmd "$wgate")
-          if [ -n "$wtok" ] && ! command -v "$wtok" >/dev/null 2>&1; then
+          # accept subshell/brace-group compounds, reject an only-assignments
+          # (degenerate always-pass) gate (see _gate_lead_cmd).
+          # `if`-condition assignment so `set -e` tolerates the rc=2 return.
+          if wtok=$(_gate_lead_cmd "$wgate"); then wtok_rc=0; else wtok_rc=$?; fi
+          if [ "$wtok_rc" -eq 2 ]; then
+            echo "❌ workflow: step '$name' gate is only env assignments — needs at least one non-assignment command token"
+            errors=$((errors + 1))
+          elif [ -n "$wtok" ] && ! command -v "$wtok" >/dev/null 2>&1; then
             echo "❌ workflow: step '$name' gate '$wtok' is not an executable command"
             errors=$((errors + 1))
           fi

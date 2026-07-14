@@ -370,6 +370,11 @@ gate_expect "{ cd x && make; }" PASS
 # genuinely broken gates must still fail
 gate_expect "nonexistent-cmd-xyz --run" FAIL
 gate_expect "<exact command>" FAIL
+# A gate of ONLY env assignments is degenerate: it always exits 0 and controls
+# nothing. The env-assignment peel used to leave an empty token and silently skip
+# the resolvability check, accepting it. It must be REJECTED, distinct from the
+# runnable compound `( … )` case which stays PASS above.
+gate_expect "FOO=1 BAR=2" FAIL
 rm -rf "$GV_DIR"
 
 # --- result ------------------------------------------------------------------------
