@@ -83,6 +83,7 @@ check_json() {
 check_json ".genius/state.json"
 check_json ".genius/config.json"
 check_json ".genius/install-manifest.json"   # P4-06
+check_json ".genius/workflows.json"          # README workflow registry (from templates/)
 echo ""
 
 # ── 3. .claude/skills present ────────────────────────────────

@@ -591,7 +591,10 @@ upgrade_to_v21() {
   done
 
   # ── Workflow registry ──────────────────────────────────────────────────────
-  download_file ".genius/workflows.json" ".genius/workflows.json"
+  # The canonical file ships at templates/workflows.json (the .genius/ copy is
+  # gitignored and absent from the source, so sourcing it here silently no-ops).
+  # setup.sh installs it the same way on a fresh install.
+  download_file "templates/workflows.json" ".genius/workflows.json"
 
   # ── New scripts (v21) ─────────────────────────────────────────────────────
   log_info "New scripts (v21: validators, migration, session recovery)..."
