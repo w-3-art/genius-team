@@ -362,6 +362,47 @@ expect_pass "cp f myskills/foo/SKILL.md"
 expect_pass "timeout 30 npm test"
 
 echo ""
+echo "10. Lexical-evasion normalization (P2 guard): shell splits that EXECUTE as a"
+echo "    real push/publish must be DENY, benign quoted/escaped lookalikes PASS"
+# The regex detectors match the command TEXT; before normalization an empty quote
+# pair or a backslash escape splits the keyword so the shell still runs "git push"
+# yet PUSHPUB_RX saw "git p\"\"ush" and PASSED. normalize_cmd reproduces the shell's
+# token-gluing before any detector runs, so every form below reduces to the real
+# command and is DENY.
+# 10a. empty-quote-pair evasion (both quote flavours, anywhere in the token).
+expect_deny 'git p""ush'
+expect_deny "git pu''sh"
+expect_deny 'git ""push'
+expect_deny 'git push""'
+expect_deny 'npm pub""lish'
+expect_deny "n''pm publish"
+expect_deny 'gi""t push'
+expect_deny 'yarn pub""lish'
+expect_deny 'sudo git p""ush'
+expect_deny 'NODE_ENV=production npm pub""lish'
+# empty-quote evasion of a skills-write install too (same normalization path).
+expect_deny 'c""p tpl .claude/skills/evil/SKILL.md'
+# 10b. backslash-escape evasion: ordinary "\x" outside quotes is shell-unescaping.
+expect_deny 'git pu\sh'
+expect_deny 'git \push'
+expect_deny 'npm pu\blish'
+# 10c. backslash-NEWLINE line continuation splitting the keyword.
+deny_nl=$(printf 'git pu\\\nsh')
+expect_deny "$deny_nl"
+deny_nl2=$(printf 'npm pub\\\nlish')
+expect_deny "$deny_nl2"
+# 10d. §5.1 SAFETY — the SAME keyword inside a REAL, non-empty quoted string is NOT
+# normalized and stays PASS (no separator precedes it at command position). Zero
+# over-blocking: empty-pair collapse must not turn a benign quoted arg into a hit.
+expect_pass "echo 'git push'"
+expect_pass 'echo "git push"'
+expect_pass "echo 'git p\"\"ush'"
+expect_pass 'git commit -m "wire up git push in ci"'
+expect_pass "# git pu\\sh"
+expect_pass 'echo "" && git status'
+expect_pass 'echo "a\"b then git push"'
+
+echo ""
 if [ "$failures" -gt 0 ]; then
   echo "$failures check(s) FAILED"
   exit 1

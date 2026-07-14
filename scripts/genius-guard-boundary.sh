@@ -82,6 +82,70 @@ emit_deny() {
     '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$r}}'
 }
 
+# --- Lexical normalization (runs BEFORE every detector) ----------------------
+# A regex detector matches the command TEXT, so an attacker can split a boundary
+# keyword with shell constructs that the shell erases at parse time but the regex
+# does not: an empty quote pair (git p""ush / git pu''sh) and a backslash escape
+# — line continuation (git pu\<newline>sh) or an ordinary backslash before a word
+# char (git pu\sh). All three EXECUTE as a real "git push" yet slip past PUSHPUB_RX
+# because the raw text is not literally "git push". The structural fix is one
+# normalization pass that reproduces the shell's own token-gluing BEFORE any
+# detector runs — not another regex chasing each variant.
+#
+# §5.1 SAFETY (string/comment). The pass tracks quote state and copies the CONTENT
+# of a REAL, non-empty quoted string VERBATIM — it collapses nothing inside it. So
+# a benign keyword in a quoted arg ("echo 'git push'") is untouched and still lacks
+# a command-position separator, exactly as before. Only the UNQUOTED shell level is
+# normalized: there, an empty '' / "" pair is a pure token-glue no-op (dropped) and
+# a backslash is shell-unescaping (dropped, its escaped char kept; a lone trailing
+# backslash and a backslash-newline continuation both collapse the split).
+#
+# DOCUMENTED LIMITATION (best-effort, like SSH_PUSH_RX / SHELLC_RX §5.1): a
+# continuation or escape placed INSIDE a quoted string is left verbatim (quoted
+# content is never rewritten). Such content is not at command position for the
+# detectors either, so it cannot form a fired boundary keyword; a shell -c / ssh
+# payload that smuggles one is the same accepted best-effort gap already noted for
+# those two detectors.
+normalize_cmd() {
+  local s="$1" out="" i=0 n c d
+  n=${#s}
+  while [ "$i" -lt "$n" ]; do
+    c=${s:i:1}
+    case "$c" in
+      "'"|'"')
+        d=${s:i+1:1}
+        if [ "$d" = "$c" ]; then
+          # empty quote pair '' or "" — token-glue no-op: drop both chars.
+          i=$((i + 2)); continue
+        fi
+        # real, non-empty quoted string: copy quotes + content verbatim up to and
+        # including the matching close quote (no normalization inside — §5.1).
+        out+="$c"; i=$((i + 1))
+        while [ "$i" -lt "$n" ]; do
+          d=${s:i:1}; out+="$d"; i=$((i + 1))
+          [ "$d" = "$c" ] && break
+        done
+        ;;
+      '\')
+        if [ "$i" -eq $((n - 1)) ]; then
+          out+="$c"; i=$((i + 1))                 # lone trailing backslash: keep
+        else
+          d=${s:i+1:1}
+          if [ "$d" = $'\n' ]; then
+            i=$((i + 2))                          # backslash-newline continuation: drop both
+          else
+            out+="$d"; i=$((i + 2))               # \x outside quotes -> x
+          fi
+        fi
+        ;;
+      *)
+        out+="$c"; i=$((i + 1))
+        ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
 # --- Boundary detection ------------------------------------------------------
 
 # Command position: start of a line, or right after a shell separator
@@ -308,16 +372,20 @@ GIT_CLONE_DIR_RX="${PFX}git${FLAGS}[[:space:]]+clone[[:space:]]+[^;&|]*[[:space:
 IS_PUSHPUB=false
 IS_INSTALL=false
 
-# Push/publish/deploy is a shell-only boundary (Bash).
+# Push/publish/deploy is a shell-only boundary (Bash). Detectors run against the
+# NORMALIZED command so lexical-evasion splits (empty quotes, backslash escapes)
+# cannot smuggle a keyword past the regexes (see normalize_cmd above). The raw
+# $CMD is kept intact for the audit log / deny message (what the user typed).
 if [ "$TOOL" = "Bash" ] && [ -n "$CMD" ]; then
-  printf '%s' "$CMD" | grep -qE "$PUSHPUB_RX"     && IS_PUSHPUB=true
-  printf '%s' "$CMD" | grep -qE "$SSH_PUSH_RX"     && IS_PUSHPUB=true
-  printf '%s' "$CMD" | grep -qE "$SHELLC_RX"       && IS_PUSHPUB=true
-  printf '%s' "$CMD" | grep -qE "$INSTALL_RX"      && IS_INSTALL=true
-  printf '%s' "$CMD" | grep -qE "$SKILLS_WRITE_RX"  && IS_INSTALL=true
-  printf '%s' "$CMD" | grep -qE "$SKILLS_REDIR_RX"  && IS_INSTALL=true
-  printf '%s' "$CMD" | grep -qE "$GIT_C_CLONE_RX"   && IS_INSTALL=true
-  printf '%s' "$CMD" | grep -qE "$GIT_CLONE_DIR_RX"  && IS_INSTALL=true
+  NCMD=$(normalize_cmd "$CMD")
+  printf '%s' "$NCMD" | grep -qE "$PUSHPUB_RX"     && IS_PUSHPUB=true
+  printf '%s' "$NCMD" | grep -qE "$SSH_PUSH_RX"     && IS_PUSHPUB=true
+  printf '%s' "$NCMD" | grep -qE "$SHELLC_RX"       && IS_PUSHPUB=true
+  printf '%s' "$NCMD" | grep -qE "$INSTALL_RX"      && IS_INSTALL=true
+  printf '%s' "$NCMD" | grep -qE "$SKILLS_WRITE_RX"  && IS_INSTALL=true
+  printf '%s' "$NCMD" | grep -qE "$SKILLS_REDIR_RX"  && IS_INSTALL=true
+  printf '%s' "$NCMD" | grep -qE "$GIT_C_CLONE_RX"   && IS_INSTALL=true
+  printf '%s' "$NCMD" | grep -qE "$GIT_CLONE_DIR_RX"  && IS_INSTALL=true
 fi
 
 # Write tool: deny creating/replacing a skill file inside a skills directory.
