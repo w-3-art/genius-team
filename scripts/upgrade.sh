@@ -17,7 +17,12 @@ NC='\033[0m'
 
 # Config
 BRANCH="${GENIUS_TEAM_BRANCH:-main}"
-TARGET_VERSION="22.0.0"
+# Last-resort fallback only. Both the "version this script implements"
+# (SHIPPED_VERSION) and the release we upgrade TO (TARGET_VERSION) are derived
+# from the VERSION file that travels with the source — see the version-resolution
+# block after source detection. Do NOT bump releases by editing this literal:
+# bump the VERSION file and everything follows automatically.
+TARGET_VERSION_FALLBACK="22.0.0"
 CLAUDE_SKILL_DIR=".claude/skills"
 LOCAL_SOURCE_ROOT=""
 USE_LOCAL_SOURCE=false
@@ -74,18 +79,55 @@ else
   REPO_URL="https://raw.githubusercontent.com/w-3-art/genius-team/${BRANCH}"
 fi
 
+# ── Version resolution — derived from the VERSION file, never hardcoded ───────
+# SHIPPED_VERSION  = the release this script file implements. Used only to decide
+#                    whether a stale script must self-heal (re-exec latest).
+# TARGET_VERSION   = the release we upgrade the project TO.
+# Both are read from the VERSION file that ships with the source so they can never
+# drift from an out-of-date literal. The hardcoded fallback is used only when no
+# VERSION file is reachable (pure `curl | bash`, before self-heal fetches latest).
+resolve_shipped_version() {
+  # 1. Explicit local source (GENIUS_TEAM_SOURCE_DIR) or cloned checkout root.
+  if [ "$USE_LOCAL_SOURCE" = true ] && [ -f "${LOCAL_SOURCE_ROOT}/VERSION" ]; then
+    tr -d '[:space:]' < "${LOCAL_SOURCE_ROOT}/VERSION"
+    return 0
+  fi
+  # 2. VERSION file sitting next to this script (saved checkout, not /dev/fd).
+  case "${BASH_SOURCE[0]}" in
+    /dev/fd/*|/proc/self/fd/*) ;;   # curl | bash: nothing on disk to read
+    *)
+      local _root
+      if _root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd)" \
+         && [ -f "${_root}/VERSION" ]; then
+        tr -d '[:space:]' < "${_root}/VERSION"
+        return 0
+      fi
+      ;;
+  esac
+  # 3. Nothing on disk — fall back to the baked baseline.
+  printf '%s' "$TARGET_VERSION_FALLBACK"
+}
+SHIPPED_VERSION="$(resolve_shipped_version)"
+[ -n "$SHIPPED_VERSION" ] || SHIPPED_VERSION="$TARGET_VERSION_FALLBACK"
+TARGET_VERSION="$SHIPPED_VERSION"
+
 # ── Self-Healing: re-exec from GitHub if this script is older than the source ─
 # Only makes sense on the canonical `main` branch; feature-branch tests should
 # run whatever script the user fetched (that's the whole point of --branch).
 _REMOTE_VER=""
 if [ "$USE_LOCAL_SOURCE" = false ] && [ "$BRANCH" = "main" ]; then
-  _REMOTE_VER=$(curl -sfL --max-time 5 "https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION" 2>/dev/null || echo "")
+  _REMOTE_VER=$(curl -sfL --max-time 5 "https://raw.githubusercontent.com/w-3-art/genius-team/main/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "")
 fi
-if [ "$USE_LOCAL_SOURCE" = false ] && [ "$BRANCH" = "main" ] && [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$TARGET_VERSION" ]; then
-  echo -e "⚠️  This upgrade script targets v$TARGET_VERSION but latest Genius Team is v$_REMOTE_VER."
+if [ "$USE_LOCAL_SOURCE" = false ] && [ "$BRANCH" = "main" ] && [ -n "$_REMOTE_VER" ] && [ "$_REMOTE_VER" != "$SHIPPED_VERSION" ]; then
+  echo -e "⚠️  This upgrade script implements v$SHIPPED_VERSION but latest Genius Team is v$_REMOTE_VER."
   echo -e "   Fetching the latest upgrade script from GitHub..."
   echo ""
   exec bash <(curl -fsSL "https://raw.githubusercontent.com/w-3-art/genius-team/main/scripts/upgrade.sh") "$@"
+fi
+# Remote path: we pull whatever the remote branch ships, so that is the real
+# target (self-heal above already reconciled a stale script against it).
+if [ "$USE_LOCAL_SOURCE" = false ] && [ -n "$_REMOTE_VER" ]; then
+  TARGET_VERSION="$_REMOTE_VER"
 fi
 
 # Stats
