@@ -272,12 +272,15 @@ PUSHPUB_INNER="(${BINPFX}git${FLAGS}[[:space:]]+push|${BINPFX}(npm|pnpm|yarn)${F
 # (push/publish/deploy/…) with no trailing anchor, so the substring grep fired on
 # a LONGER word that merely starts with it — "git push-upstream", "docker
 # pushpull", "npm publisher", "yarn publish-lite" were all DENY at tort. PUSHPUB_END
-# requires the keyword to END at a real boundary: whitespace, end of line, or a
-# shell separator (; & | ) } backtick) — NOT a letter/digit/-/_ that would make it
-# a different word. "git push", "git push origin main" (space after), "npm publish"
+# requires the keyword to END at a real boundary: whitespace, end of line, a shell
+# separator (; & | ) } backtick), OR a redirection operator (< >) — NOT a
+# letter/digit/-/_ that would make it a different word. Redirections bind directly
+# to the keyword with no intervening space ("git push>/dev/null 2>&1",
+# "npm publish>log", "docker push>x"), so without < and > here those forms escaped
+# the boundary. "git push", "git push origin main" (space after), "npm publish"
 # (EOL) stay DENY; the four look-alikes above now PASS. A separator boundary keeps a
-# genuine "git push;"/"git push && …" DENY.
-PUSHPUB_END='([[:space:]]|[;&|)}`]|$)'
+# genuine "git push;"/"git push && …"/"git push>out" DENY.
+PUSHPUB_END='([[:space:]]|[<>;&|)}`]|$)'
 # ENVPFX may recur after WRAP too ("sudo HUSKY=0 git push"); it matches empty in
 # the common case, so no false positive is introduced.
 PUSHPUB_RX="${CMDPOS}${ENVPFX}${WRAP}${ENVPFX}${PUSHPUB_INNER}${PUSHPUB_END}"

@@ -67,6 +67,11 @@ expect_deny "yarn publish"
 expect_deny "git push;"
 expect_deny "git push && echo done"
 expect_deny "npm publish | tee log"
+# A redirection operator (< >) binds to the keyword with NO space — it is a real
+# word boundary, so these irreversible actions must stay DENY (regression e60eb86).
+expect_deny "git push>/dev/null 2>&1"
+expect_deny "npm publish>log"
+expect_deny "docker push>x"
 expect_deny "npx some-tool publish"
 expect_deny "vercel deploy"
 expect_deny "railway up"
