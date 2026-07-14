@@ -396,9 +396,35 @@ contract_validate() {
       errors=$((errors + 1))
     fi
   done
+  # token_budget must be PRESENT and PARSE to a positive number. Presence alone is
+  # not enough: Cortex's parseTokenBudget (genius-cortex src/core/loops.ts) reads a
+  # leading [0-9.]+ run with an optional k/M suffix and returns undefined for a
+  # non-numeric value ("abc") — and "no budget, no loop" then REFUSES registration.
+  # A grep-for-presence check let "abc" PASS here while Cortex refused it, so the
+  # operator saw a green contract while the loop ran with NO control plane. Mirror
+  # Cortex's front-anchored parse and also reject a non-positive (zero) budget.
   if ! grep -qE '^- *token_budget:' "$contract"; then
     echo "❌ brakes: 'token_budget' missing"
     errors=$((errors + 1))
+  else
+    local tb_raw tb_lead
+    tb_raw=$(grep -E '^- *token_budget:' "$contract" | head -1 \
+      | sed -E 's/^- *token_budget: *//; s/^[[:space:]]+//')
+    if ! printf '%s' "$tb_raw" | grep -qE '^[0-9.]*[0-9]'; then
+      # Does not start with a number (leading [0-9.]+ with at least one digit) —
+      # Cortex's parseTokenBudget returns undefined and refuses to register.
+      echo "❌ brakes: 'token_budget' is not a number (got '${tb_raw%%[[:space:]]*}') — Cortex refuses to register a loop without a parsable budget, so the loop would run with NO control plane. Use a positive value like '200k'."
+      errors=$((errors + 1))
+    else
+      # Leading numeric run only (ignore any trailing k/M suffix and inline comment,
+      # exactly like Cortex's front-anchored match). A run with no nonzero digit is
+      # zero → a non-positive budget the loop can never spend under.
+      tb_lead=$(printf '%s' "$tb_raw" | sed -E 's/^([0-9.]+).*/\1/')
+      if ! printf '%s' "$tb_lead" | grep -qE '[1-9]'; then
+        echo "❌ brakes: 'token_budget' must be a positive number (got '$tb_lead')."
+        errors=$((errors + 1))
+      fi
+    fi
   fi
 
   # --- autonomy_level: must be declared, L1-L4 -------------------------------

@@ -214,6 +214,78 @@ after=$(grep -c -- "--heartbeat" "$MOCK_LOG")
 [ "$before" -eq "$after" ]; check "terminal heartbeat is idempotent (no duplicate on re-poll)" $? "before=$before after=$after"
 grep -q "^- final_heartbeat: yes" "$LOOP_DIR/STATE.md"; check "STATE records the one-shot final_heartbeat flag" $?
 
+# --- 9. LP-07: token_budget must PARSE, not merely be present ---------------------
+echo ""
+echo "9. contract_validate rejects an unparsable/non-positive token_budget"
+# A present-but-unparsable budget ("abc") used to PASS contract_validate while
+# Cortex's parseTokenBudget returned undefined and REFUSED to register the loop —
+# the operator saw a green contract while the loop ran with NO control plane.
+# contract_validate now mirrors Cortex's front-anchored numeric parse (positive
+# number, optional k/M suffix) so the two agree.
+TB_DIR="$TMP/project/.genius/loops/tb-loop"
+mkdir -p "$TB_DIR"
+write_tb_contract() { # write_tb_contract <token_budget-value>
+  cat > "$TB_DIR/CONTRACT.md" <<EOF
+# Loop Contract: tb loop
+
+- slug: tb-loop
+- autonomy_level: L2
+
+## Goal (stopping condition)
+The gate exits 0.
+
+## Gate (objective pass/fail)
+\`\`\`bash
+true
+\`\`\`
+
+## Proof of completion
+Gate exit code 0.
+
+## Blast radius (do-not-touch boundary)
+- allowed_files:
+  - src/**
+
+## Brakes (hard caps)
+- max_iterations: 10
+- token_budget: $1
+- no_progress_after: 5
+
+## Checker (separate from maker)
+genius-reviewer.
+
+## State
+- path: .genius/loops/tb-loop/STATE.md
+EOF
+}
+tb_expect() { # tb_expect <value> <PASS|FAIL>
+  local want="$2" out rc
+  write_tb_contract "$1"
+  out=$(CORTEX_BIN="$TMP/no-such-cortex" bash "$KERNEL" contract_validate "$TB_DIR" 2>/dev/null); rc=$?
+  if [ "$want" = "FAIL" ]; then
+    { [ "$rc" -ne 0 ] && echo "$out" | grep -q "token_budget"; }
+    check "token_budget '$1' -> FAIL (Cortex would refuse)" $? "rc=$rc out=$out"
+  else
+    [ "$rc" -eq 0 ]
+    check "token_budget '$1' -> PASS" $? "rc=$rc out=$out"
+  fi
+}
+# non-numeric (Cortex parseTokenBudget -> undefined -> registration refused)
+tb_expect "abc" FAIL
+tb_expect "-5" FAIL
+tb_expect "." FAIL
+tb_expect "abc # 200k" FAIL
+# non-positive (zero budget the loop can never run under)
+tb_expect "0" FAIL
+tb_expect "0k" FAIL
+# valid budgets (plain int, k/M suffix, decimal, with trailing inline comment)
+tb_expect "100k" PASS
+tb_expect "200000" PASS
+tb_expect "1.5k" PASS
+tb_expect "1M" PASS
+tb_expect "500k   # REQUIRED — Cortex refuses a loop without it" PASS
+rm -rf "$TB_DIR"
+
 # --- result ------------------------------------------------------------------------
 echo ""
 if [ "$failures" -gt 0 ]; then
