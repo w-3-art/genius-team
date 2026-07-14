@@ -382,6 +382,24 @@ expect_deny 'sudo git p""ush'
 expect_deny 'NODE_ENV=production npm pub""lish'
 # empty-quote evasion of a skills-write install too (same normalization path).
 expect_deny 'c""p tpl .claude/skills/evil/SKILL.md'
+# 10a-bis. NON-EMPTY quoted-fragment evasion: a quoted fragment re-glues to the
+# keyword identically to an empty pair ("git \"push\"" word-splits to "git push"),
+# so normalize_cmd must strip the quote CHARS and keep their CONTENT, not copy the
+# quotes verbatim. Both flavours, fragment before/after/mid the keyword, prefixed.
+expect_deny 'git "push"'
+expect_deny "git 'push'"
+expect_deny "git 'pu'sh"
+expect_deny 'git pu"sh"'
+expect_deny 'git "pu"sh'
+expect_deny 'npm "publish"'
+expect_deny "npm 'publish'"
+expect_deny 'npm pub"lish"'
+expect_deny 'yarn "publish"'
+expect_deny 'vercel "deploy"'
+expect_deny 'sudo git "push"'
+expect_deny 'NODE_ENV=production npm "publish"'
+# non-empty quoted-fragment evasion of a skills-write install too.
+expect_deny 'cp tpl ".claude"/skills/evil/SKILL.md'
 # 10b. backslash-escape evasion: ordinary "\x" outside quotes is shell-unescaping.
 expect_deny 'git pu\sh'
 expect_deny 'git \push'
@@ -401,6 +419,17 @@ expect_pass 'git commit -m "wire up git push in ci"'
 expect_pass "# git pu\\sh"
 expect_pass 'echo "" && git status'
 expect_pass 'echo "a\"b then git push"'
+# NEW keyword+quote lookalikes that stay PASS under quote-stripping: the keyword
+# glues to its OWN command (echo/commit), not to a command-position separator.
+expect_pass 'git commit -m "push later"'
+expect_pass 'git commit -m "publish the docs"'
+expect_pass 'echo "run git push to deploy"'
+# §5.1: a shell separator INSIDE a quoted arg must NOT synthesize a command
+# position — stripping the quotes maps it to a space, so no fake ";git push" is
+# forged (the shell runs neither as a second command).
+expect_pass 'echo "; git push"'
+expect_pass 'git commit -m "; git push"'
+expect_pass 'echo "a | git push"'
 
 echo ""
 if [ "$failures" -gt 0 ]; then

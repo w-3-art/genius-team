@@ -85,46 +85,88 @@ emit_deny() {
 # --- Lexical normalization (runs BEFORE every detector) ----------------------
 # A regex detector matches the command TEXT, so an attacker can split a boundary
 # keyword with shell constructs that the shell erases at parse time but the regex
-# does not: an empty quote pair (git p""ush / git pu''sh) and a backslash escape
-# — line continuation (git pu\<newline>sh) or an ordinary backslash before a word
-# char (git pu\sh). All three EXECUTE as a real "git push" yet slip past PUSHPUB_RX
-# because the raw text is not literally "git push". The structural fix is one
-# normalization pass that reproduces the shell's own token-gluing BEFORE any
-# detector runs — not another regex chasing each variant.
+# does not: a quote pair — EMPTY (git p""ush / git pu''sh) or NON-EMPTY (git
+# "push" / git 'pu'sh / git pu"sh") — and a backslash escape — line continuation
+# (git pu\<newline>sh) or an ordinary backslash before a word char (git pu\sh).
+# All EXECUTE as a real "git push" (a quoted fragment re-glues to the keyword
+# identically to an empty pair) yet slip past PUSHPUB_RX because the raw text is
+# not literally "git push". The structural fix is one normalization pass that
+# reproduces the shell's own token-gluing BEFORE any detector runs — not another
+# regex chasing each variant.
 #
-# §5.1 SAFETY (string/comment). The pass tracks quote state and copies the CONTENT
-# of a REAL, non-empty quoted string VERBATIM — it collapses nothing inside it. So
-# a benign keyword in a quoted arg ("echo 'git push'") is untouched and still lacks
-# a command-position separator, exactly as before. Only the UNQUOTED shell level is
-# normalized: there, an empty '' / "" pair is a pure token-glue no-op (dropped) and
-# a backslash is shell-unescaping (dropped, its escaped char kept; a lone trailing
-# backslash and a backslash-newline continuation both collapse the split).
+# QUOTE HANDLING = the shell's. Quote CHARACTERS are removed and their CONTENT is
+# glued to the adjacent tokens — so both the empty pair ('' / "") AND a non-empty
+# quoted fragment ("push", 'pu'sh) collapse onto the keyword exactly as the shell
+# glues them, and the recomposed keyword is what the detectors see.
+#
+# §5.1 SAFETY (string/comment) & the re-quote rule. Dropping quote chars must NOT
+# (a) let a quoted argument forge a fake command-position separator, nor (b) break
+# the word-grouping that some detectors read THROUGH the quotes. So the content of
+# a quoted fragment is post-processed:
+#   - any shell separator (; & | ` ( ) { } newline) inside it -> a space, so a
+#     hostile quoted arg ("; git push") can never forge a ";" command position.
+#   - if the resulting content has NO interior whitespace, it is emitted RAW —
+#     the empty pair ('' / "") and a bare fragment ("push" / 'pu'sh) re-glue onto
+#     the keyword exactly as the shell does (git "push" -> git push), which is what
+#     PUSHPUB_RX must see. A real push keyword never carries interior whitespace,
+#     so this never re-splits one (git "push origin" is NOT a push and stays PASS).
+#   - if it DOES have interior whitespace, the shell protected that whitespace from
+#     word-splitting, so the fragment stays ONE word: it is RE-WRAPPED in a quote.
+#     A quoted token is exactly what the quote-aware detectors need — ENVPFX/ASSIGN
+#     consume a spaced value as one token (GIT_SSH_COMMAND="ssh -i k" git push keeps
+#     the guard's grip on the real push after it), and SHELLC_RX/SSH_PUSH_RX read the
+#     real git-push spaces inside a -c / ssh payload (bash -c "git push"). Meanwhile
+#     a benign spaced arg ("echo 'git push'", "; git push") keeps its keyword walled
+#     behind the re-wrapped quote with no command-position separator, so it PASSES —
+#     exactly as the shell runs them. A separator OUTSIDE the quotes is real and kept,
+#     so a genuine "…; git push" stays DENY. The UNQUOTED level is normalized too: an
+#     empty pair is a token-glue no-op and a backslash is shell-unescaping (dropped,
+#     its escaped char kept; a lone trailing backslash and a backslash-newline
+#     continuation both collapse the split).
 #
 # DOCUMENTED LIMITATION (best-effort, like SSH_PUSH_RX / SHELLC_RX §5.1): a
-# continuation or escape placed INSIDE a quoted string is left verbatim (quoted
-# content is never rewritten). Such content is not at command position for the
-# detectors either, so it cannot form a fired boundary keyword; a shell -c / ssh
-# payload that smuggles one is the same accepted best-effort gap already noted for
-# those two detectors.
+# backslash escape INSIDE a quoted string is left verbatim (quoted content is not
+# unescaped — the close quote is the first matching quote char). Such content is
+# not at command position for the detectors either, so it cannot form a fired
+# boundary keyword; a shell -c / ssh payload that smuggles one is the same accepted
+# best-effort gap already noted for those two detectors.
 normalize_cmd() {
-  local s="$1" out="" i=0 n c d
+  local s="$1" out="" i=0 n c d NL=$'\n' q hasws
   n=${#s}
   while [ "$i" -lt "$n" ]; do
     c=${s:i:1}
     case "$c" in
       "'"|'"')
-        d=${s:i+1:1}
-        if [ "$d" = "$c" ]; then
-          # empty quote pair '' or "" — token-glue no-op: drop both chars.
-          i=$((i + 2)); continue
-        fi
-        # real, non-empty quoted string: copy quotes + content verbatim up to and
-        # including the matching close quote (no normalization inside — §5.1).
-        out+="$c"; i=$((i + 1))
+        # Quoted string: the shell strips the quote CHARS and glues the CONTENT to
+        # the adjacent tokens. Collect the content up to the matching close quote,
+        # mapping any shell SEPARATOR inside it to a space (§5.1 — a quoted "; git
+        # push" must never forge a command position). Then: emit RAW if it has no
+        # interior whitespace (git "push" -> git push, so the keyword re-glues for
+        # PUSHPUB_RX), or RE-WRAP it in a quote if it does (a spaced value/payload
+        # stays one word so ENVPFX/ASSIGN and SHELLC_RX/SSH_PUSH_RX still read it).
+        # See the re-quote rule above for why this reconciles all four cases.
+        q=""; hasws=0
+        i=$((i + 1))                              # skip opening quote (drop it)
         while [ "$i" -lt "$n" ]; do
-          d=${s:i:1}; out+="$d"; i=$((i + 1))
-          [ "$d" = "$c" ] && break
+          d=${s:i:1}; i=$((i + 1))
+          [ "$d" = "$c" ] && break                # matching close quote: drop it
+          case "$d" in
+            ' '|$'\t'|"$NL") q+=' '; hasws=1 ;;    # protected whitespace -> keep, flag
+            ';'|'&'|'|'|'`'|'('|')'|'{'|'}') q+=' '; hasws=1 ;;  # separator -> space (no forged cmd pos)
+            *) q+="$d" ;;
+          esac
         done
+        if [ "$hasws" -eq 1 ]; then
+          # Re-wrap so the fragment stays ONE token. Pick a quote flavour the
+          # content does not itself contain, so the detectors' "[^"]* / '[^']*'
+          # value classes still span it.
+          case "$q" in
+            *'"'*) out+="'$q'" ;;
+            *) out+="\"$q\"" ;;
+          esac
+        else
+          out+="$q"                               # bare fragment: glue raw
+        fi
         ;;
       '\')
         if [ "$i" -eq $((n - 1)) ]; then
